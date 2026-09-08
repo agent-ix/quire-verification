@@ -47,7 +47,7 @@ logical violation.
   duplicate exact results are ambiguous, and every simultaneous independent
   finding is enumerated. No sufficiency decision or aggregate score is emitted.
 - The retained local portfolio at source revision
-  `b28579cc42dee3d3faad2943ebceea4bf4548aa0` executed two complementary
+  `46900c2f793fc7a3bcc0f6f84aa112846093b9c8` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
@@ -58,7 +58,7 @@ logical violation.
 
 The one-time implementation window was measured from the E02 claim at
 `2026-09-08T00:41:35Z` through the retained local portfolio at
-`2026-09-08T01:51:39Z`: 1 hour 10 minutes 4 seconds. It includes
+`2026-09-08T01:56:01Z`: 1 hour 14 minutes 26 seconds. It includes
 contract/adapter/planner/result code, fixture
 construction, the bounded executable portfolio, documentation, failure
 correction, and tests after the claim. It excludes earlier source reading and

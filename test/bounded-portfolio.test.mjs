@@ -41,7 +41,7 @@ test("retained local portfolio names its executable revision and incomplete revi
   );
   assert.equal(
     report.sourceRevision,
-    "b28579cc42dee3d3faad2943ebceea4bf4548aa0",
+    "46900c2f793fc7a3bcc0f6f84aa112846093b9c8",
   );
   validateVerificationPlan(report.plan);
   report.results.forEach(validateTechniqueResult);
