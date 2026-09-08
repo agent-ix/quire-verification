@@ -47,7 +47,7 @@ logical violation.
   duplicate exact results are ambiguous, and every simultaneous independent
   finding is enumerated. No sufficiency decision or aggregate score is emitted.
 - The retained local portfolio at source revision
-  `60ebba49b6e32a15e5a2a1b296b2e59a1eaa45ce` executed two complementary
+  `b28579cc42dee3d3faad2943ebceea4bf4548aa0` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
@@ -58,7 +58,7 @@ logical violation.
 
 The one-time implementation window was measured from the E02 claim at
 `2026-09-08T00:41:35Z` through the retained local portfolio at
-`2026-09-08T01:37:05Z`: 55 minutes 30 seconds. It includes
+`2026-09-08T01:51:39Z`: 1 hour 10 minutes 4 seconds. It includes
 contract/adapter/planner/result code, fixture
 construction, the bounded executable portfolio, documentation, failure
 correction, and tests after the claim. It excludes earlier source reading and
@@ -68,9 +68,9 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Seven-file dependency-free test suite | 0.20 s | 64,528 KiB |
-| Plan/result fixture rendering | 0.03 s | 48,384 KiB |
-| Bounded local portfolio | 0.04 s | 56,008 KiB |
+| Seven-file dependency-free test suite | 0.20 s | 64,600 KiB |
+| Plan/result fixture rendering | 0.03 s | 48,896 KiB |
+| Bounded local portfolio | 0.04 s | 56,000 KiB |
 | Exact-source Quoin parity check | 1.49 s | 292,132 KiB |
 
 These are local workflow measurements, not delivery estimates or efficacy/ROI

@@ -4,7 +4,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { runBoundedPortfolio } from "../src/index.mjs";
+import {
+  runBoundedPortfolio,
+  validateTechniqueResult,
+  validateVerificationPlan,
+} from "../src/index.mjs";
 
 test("runs two complementary local methods and retains manual work", async () => {
   const report = await runBoundedPortfolio({
@@ -37,8 +41,10 @@ test("retained local portfolio names its executable revision and incomplete revi
   );
   assert.equal(
     report.sourceRevision,
-    "60ebba49b6e32a15e5a2a1b296b2e59a1eaa45ce",
+    "b28579cc42dee3d3faad2943ebceea4bf4548aa0",
   );
+  validateVerificationPlan(report.plan);
+  report.results.forEach(validateTechniqueResult);
   assert.deepEqual(
     report.assessment.obligations.map((obligation) => obligation.status),
     ["supported", "supported", "incomplete"],
