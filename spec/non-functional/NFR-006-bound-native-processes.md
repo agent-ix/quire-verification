@@ -24,6 +24,8 @@ are unavailable or refuse the required flags, the adapter refuses with
 `unsupported_execution_profile` before launching a candidate. It does not
 redefine the parser CLI, operate a shell, invoke a network service, authorize
 production execution, or claim another operating-system profile.
+The declared child-execution deadline excludes the separate post-signal cleanup
+phase, which has its own at-most-one-second observation budget.
 
 ## Rationale
 
@@ -39,7 +41,7 @@ typed results.
 | Metric | Target | Threshold | Method |
 |--------|--------|-----------|--------|
 | Shell-mediated native invocations | 0 | 0 | Test (TC-038) |
-| Maximum accepted per-invocation wall-clock budget | At most 10 seconds | 10 seconds | Test (TC-038) |
+| Maximum accepted child-execution deadline | At most 10 seconds | 10 seconds | Test (TC-038) |
 | Captured standard output | At most 16 MiB | 16 MiB | Test (TC-038) |
 | Captured standard error | At most 16 MiB | 16 MiB | Test (TC-038) |
 | Undeclared inherited environment entries | 0 | 0 | Test (TC-038) |
