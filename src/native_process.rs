@@ -28,6 +28,7 @@ pub const MAX_NATIVE_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 pub const MAX_NATIVE_DEADLINE_SECONDS: f64 = 10.0;
 
 const MONITOR_INTERVAL: Duration = Duration::from_millis(1);
+const PROCESS_GROUP_CLEANUP_BUDGET: Duration = Duration::from_secs(1);
 const PROC_DESCRIPTOR_ROOT: &str = "/proc/self/fd";
 
 /// Exact per-invocation inputs for one admitted native executable.
@@ -394,32 +395,119 @@ fn terminate_group_reap_and_join(
     mut running: RunningProcess,
     failure: CaptureFailure,
 ) -> Result<NativeProcessOutput, VerificationError> {
-    let group_termination = terminate_process_group(running.group);
-    let fallback_kill_error = group_termination
-        .as_ref()
-        .err()
-        .and_then(|_| running.child.kill().err());
-    let reap_result = running.child.wait();
-    let reaped = reap_result.is_ok();
-    let _ = running.stdout_reader.join();
-    let _ = running.stderr_reader.join();
-    let mut error = capture_error(failure, running.pid, reaped, group_termination.is_ok());
-    if let Err(termination_error) = group_termination {
-        error = error.with_context("group_termination_error", termination_error.to_string());
+    let cleanup = cleanup_process_group(&mut running.child, running.group);
+    if cleanup.group_terminated {
+        let _ = running.stdout_reader.join();
+        let _ = running.stderr_reader.join();
+        return Err(capture_error(failure, running.pid, cleanup.reaped, true));
     }
-    if let Some(kill_error) = fallback_kill_error {
-        error = error.with_context("fallback_termination_error", kill_error.to_string());
-    }
-    if let Err(reap_error) = reap_result {
-        error = error.with_context("reap_error", reap_error.to_string());
-    }
-    Err(error)
+    Err(containment_failure(
+        &failure,
+        running.pid,
+        cleanup.reaped,
+        cleanup.observation_error,
+        cleanup.signal_error,
+    ))
 }
 
-fn terminate_process_group(group: Pid) -> Result<(), Errno> {
+fn signal_process_group(group: Pid) -> Result<(), Errno> {
     match kill_process_group(group, Signal::KILL) {
         Ok(()) | Err(Errno::SRCH) => Ok(()),
         Err(error) => Err(error),
+    }
+}
+
+#[derive(Debug)]
+struct CleanupStatus {
+    reaped: bool,
+    group_terminated: bool,
+    signal_error: Option<String>,
+    observation_error: Option<Errno>,
+}
+
+fn cleanup_process_group(child: &mut Child, group: Pid) -> CleanupStatus {
+    let cleanup_deadline = Instant::now()
+        .checked_add(PROCESS_GROUP_CLEANUP_BUDGET)
+        .unwrap_or_else(Instant::now);
+    let signal_error = signal_process_group(group).err();
+    let fallback_error = signal_error
+        .as_ref()
+        .and_then(|_| child.kill().err())
+        .map(|error| error.to_string());
+    let reap_error = wait_for_child_reap_until(child, cleanup_deadline).err();
+    let mut observation_error = reap_error.as_ref().map_or_else(
+        || wait_for_process_group_exit_until(group, cleanup_deadline).err(),
+        |_| Some(Errno::TIMEDOUT),
+    );
+    if Instant::now() > cleanup_deadline && observation_error.is_none() {
+        observation_error = Some(Errno::TIMEDOUT);
+    }
+    let group_terminated = signal_error.is_none()
+        && fallback_error.is_none()
+        && reap_error.is_none()
+        && observation_error.is_none();
+    let mut signal_context = signal_error.map(|error| error.to_string());
+    if let Some(error) = fallback_error {
+        append_context(&mut signal_context, "fallback direct-child kill", &error);
+    }
+    if let Some(error) = &reap_error {
+        append_context(&mut signal_context, "direct-child reap", error);
+    }
+    CleanupStatus {
+        reaped: reap_error.is_none(),
+        group_terminated,
+        signal_error: signal_context,
+        observation_error,
+    }
+}
+
+fn append_context(context: &mut Option<String>, action: &str, error: &str) {
+    match context {
+        Some(context) => {
+            context.push_str("; ");
+            context.push_str(action);
+            context.push_str(": ");
+            context.push_str(error);
+        }
+        None => *context = Some(format!("{action}: {error}")),
+    }
+}
+
+fn wait_for_child_reap_until(child: &mut Child, deadline: Instant) -> Result<(), String> {
+    loop {
+        match child.try_wait() {
+            Ok(Some(_)) => return Ok(()),
+            Ok(None) if Instant::now() < deadline => {
+                thread::park_timeout(
+                    MONITOR_INTERVAL.min(deadline.saturating_duration_since(Instant::now())),
+                );
+            }
+            Ok(None) => return Err("cleanup budget expired before direct-child reap".to_owned()),
+            Err(error) => return Err(error.to_string()),
+        }
+    }
+}
+
+fn wait_for_process_group_exit_until(group: Pid, deadline: Instant) -> Result<(), Errno> {
+    wait_for_process_group_exit_with(deadline.saturating_duration_since(Instant::now()), || {
+        process_group_exists(group)
+    })
+}
+
+fn wait_for_process_group_exit_with(
+    budget: Duration,
+    mut group_exists: impl FnMut() -> Result<bool, Errno>,
+) -> Result<(), Errno> {
+    let started = Instant::now();
+    loop {
+        if !group_exists()? {
+            return Ok(());
+        }
+        let elapsed = started.elapsed();
+        if elapsed >= budget {
+            return Err(Errno::TIMEDOUT);
+        }
+        thread::park_timeout(budget.saturating_sub(elapsed).min(MONITOR_INTERVAL));
     }
 }
 
@@ -468,6 +556,47 @@ fn capture_error(
         .with_context("process_group", pid.to_string())
         .with_context("reaped", reaped.to_string())
         .with_context("process_group_terminated", group_terminated.to_string())
+}
+
+fn containment_failure(
+    trigger: &CaptureFailure,
+    pid: u32,
+    reaped: bool,
+    observation_error: Option<Errno>,
+    signal_error: Option<String>,
+) -> VerificationError {
+    let trigger_code = capture_failure_code(trigger);
+    let mut error = VerificationError::new(
+        VerificationErrorCode::ProcessContainmentFailure,
+        "native process-group containment could not be observed",
+    )
+    .with_context("trigger", trigger_code.as_str())
+    .with_context("pid", pid.to_string())
+    .with_context("process_group", pid.to_string())
+    .with_context("reaped", reaped.to_string())
+    .with_context("process_group_terminated", "false");
+    if let Some(error_value) = signal_error {
+        error = error.with_context("group_signal_error", error_value);
+    }
+    if let Some(error_value) = observation_error {
+        error = error.with_context("group_observation_error", error_value.to_string());
+    }
+    error
+}
+
+fn capture_failure_code(failure: &CaptureFailure) -> VerificationErrorCode {
+    match failure {
+        CaptureFailure::Timeout => VerificationErrorCode::ExecutionTimeout,
+        CaptureFailure::Limit { .. } => VerificationErrorCode::OutputLimitExceeded,
+        CaptureFailure::Read { .. } | CaptureFailure::Monitor(_) => {
+            VerificationErrorCode::IoFailure
+        }
+        CaptureFailure::Exit(status) if status.signal().is_some() => {
+            VerificationErrorCode::ProcessSignaled
+        }
+        CaptureFailure::Exit(_) => VerificationErrorCode::UnexpectedExitStatus,
+        CaptureFailure::UnexpectedDescendant => VerificationErrorCode::UnexpectedProcessDescendant,
+    }
 }
 
 fn exit_error(status: ExitStatus) -> VerificationError {
@@ -564,24 +693,28 @@ fn process_group_id(pid: u32) -> Option<Pid> {
 }
 
 fn reap_after_setup_failure(child: &mut Child, pid: u32, message: &str) -> VerificationError {
-    let group_termination = process_group_id(pid).map(terminate_process_group);
-    let group_terminated = matches!(group_termination, Some(Ok(())));
-    let fallback_kill_error = (!group_terminated).then(|| child.kill().err()).flatten();
-    let reap_result = child.wait();
-    let mut error = VerificationError::new(VerificationErrorCode::IoFailure, message)
-        .with_context("pid", pid.to_string())
-        .with_context("reaped", reap_result.is_ok().to_string())
-        .with_context("process_group_terminated", group_terminated.to_string());
-    if let Some(Err(termination_error)) = group_termination {
-        error = error.with_context("group_termination_error", termination_error.to_string());
+    let Some(group) = process_group_id(pid) else {
+        return VerificationError::new(VerificationErrorCode::ProcessContainmentFailure, message)
+            .with_context("trigger", VerificationErrorCode::IoFailure.as_str())
+            .with_context("pid", pid.to_string())
+            .with_context("reaped", "false")
+            .with_context("process_group_terminated", "false");
+    };
+    let cleanup = cleanup_process_group(child, group);
+    if cleanup.group_terminated {
+        VerificationError::new(VerificationErrorCode::IoFailure, message)
+            .with_context("pid", pid.to_string())
+            .with_context("reaped", cleanup.reaped.to_string())
+            .with_context("process_group_terminated", "true")
+    } else {
+        containment_failure(
+            &CaptureFailure::Monitor(message.to_owned()),
+            pid,
+            cleanup.reaped,
+            cleanup.observation_error,
+            cleanup.signal_error,
+        )
     }
-    if let Some(kill_error) = fallback_kill_error {
-        error = error.with_context("fallback_termination_error", kill_error.to_string());
-    }
-    if let Err(reap_error) = reap_result {
-        error = error.with_context("reap_error", reap_error.to_string());
-    }
-    error
 }
 
 fn decode_stream(bytes: Vec<u8>, stream: Stream, pid: u32) -> Result<String, VerificationError> {
@@ -624,6 +757,34 @@ mod tests {
         assert_eq!(
             descriptor_open_error(Errno::LOOP, Path::new("/candidate")).code(),
             VerificationErrorCode::InvalidExecutablePath
+        );
+    }
+
+    #[trace("TC-038", "NFR-006-AC-8")]
+    #[test]
+    fn tc_038_containment_observation_timeout_preserves_the_trigger() {
+        let wait_error = wait_for_process_group_exit_with(Duration::ZERO, || Ok(true))
+            .expect_err("persisting group must exhaust cleanup budget");
+        let error =
+            containment_failure(&CaptureFailure::Timeout, 41, false, Some(wait_error), None);
+        assert_eq!(
+            error.code(),
+            VerificationErrorCode::ProcessContainmentFailure
+        );
+        assert_eq!(
+            VerificationErrorCode::from_code("process_containment_failure"),
+            Some(VerificationErrorCode::ProcessContainmentFailure)
+        );
+        assert_eq!(
+            error.context().get("trigger").map(String::as_str),
+            Some("execution_timeout")
+        );
+        assert_eq!(
+            error
+                .context()
+                .get("process_group_terminated")
+                .map(String::as_str),
+            Some("false")
         );
     }
 }

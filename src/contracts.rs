@@ -94,6 +94,8 @@ pub enum VerificationErrorCode {
     UnsupportedExecutionProfile,
     /// A native descendant remained after its direct child completed.
     UnexpectedProcessDescendant,
+    /// Native process-group signaling, reaping, or termination observation failed.
+    ProcessContainmentFailure,
 }
 
 impl VerificationErrorCode {
@@ -133,6 +135,7 @@ impl VerificationErrorCode {
             Self::MalformedMethodResponse => "malformed_method_response",
             Self::UnsupportedExecutionProfile => "unsupported_execution_profile",
             Self::UnexpectedProcessDescendant => "unexpected_process_descendant",
+            Self::ProcessContainmentFailure => "process_containment_failure",
         }
     }
 
@@ -172,6 +175,7 @@ impl VerificationErrorCode {
             Self::MalformedMethodResponse,
             Self::UnsupportedExecutionProfile,
             Self::UnexpectedProcessDescendant,
+            Self::ProcessContainmentFailure,
         ]
     }
 

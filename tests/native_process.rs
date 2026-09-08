@@ -26,10 +26,15 @@ struct Candidate {
 
 impl Candidate {
     fn new() -> Self {
-        let root = tempfile::tempdir().expect("candidate root");
+        let built_fixture = Path::new(env!("CARGO_BIN_EXE_native-process-fixture"));
+        let fixture_directory = built_fixture.parent().expect("fixture build directory");
+        let root = tempfile::Builder::new()
+            .prefix("quire-verification-native-process-")
+            .tempdir_in(fixture_directory)
+            .expect("candidate root beside completed Cargo fixture");
         let executable = root.path().join("native-process-fixture");
-        fs::copy(env!("CARGO_BIN_EXE_native-process-fixture"), &executable)
-            .expect("copy controlled native child");
+        fs::hard_link(built_fixture, &executable)
+            .expect("link completed controlled native child without a writer");
         Self { root, executable }
     }
 
@@ -53,6 +58,12 @@ fn process_is_absent(error_context: &BTreeMap<String, String>) {
         .expect("bounded child error carries pid");
     assert_eq!(
         error_context.get("reaped").map(String::as_str),
+        Some("true")
+    );
+    assert_eq!(
+        error_context
+            .get("process_group_terminated")
+            .map(String::as_str),
         Some("true")
     );
     assert!(
@@ -157,7 +168,13 @@ fn tc_038_pins_the_admitted_descriptor_and_refuses_path_escape() {
     );
 }
 
-#[trace("TC-038", "NFR-006-AC-2", "NFR-006-AC-3", "NFR-006-AC-5")]
+#[trace(
+    "TC-038",
+    "NFR-006-AC-2",
+    "NFR-006-AC-3",
+    "NFR-006-AC-5",
+    "NFR-006-AC-8"
+)]
 #[test]
 fn tc_038_refuses_invalid_deadlines_and_contains_the_process_group() {
     let candidate = Candidate::new();
