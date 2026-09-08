@@ -80,7 +80,7 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | TC-019 | Return violated and failed results | Unit | P0 | FR-009-AC-3..FR-009-AC-4 | ✅ Passed |
 | TC-020 | Retain pending human work and claim limits | Unit | P0 | FR-009-AC-5..FR-009-AC-6, NFR-003-AC-2 | ✅ Passed |
 | TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
-| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-4 | 🚧 Pending |
+| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-4 | ✅ Passed |
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 
 ## Option Permutation Matrix

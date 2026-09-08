@@ -25,9 +25,9 @@ the package metadata needed to build that source.
 
 ## Verdict
 
-**CONDITIONAL** — no open Rust-code finding remains. NFR-004-AC-4 and TC-022
-remain pending until GitHub CI proves the exact candidate builds without a
-cross-repository credential.
+**PASS** — no open Rust-code finding remains. GitHub Actions run `34196284641`
+proved head `a6be6c6` builds and passes every configured gate on a clean runner
+without a cross-repository credential.
 
 ## Findings
 
@@ -82,4 +82,4 @@ was introduced.
 - `cargo run --locked --offline --bin validate-fixtures`: PASS (`validated 4 fixtures and 52 public contract instances against e02-draft-1.schema.json`).
 - `quire validate --scope /home/peter/dev/quire-verification-agent-b "spec/**/*.md"`: PASS (exit 0).
 - QUOIN coverage with the repository-local source exclusion: PASS (`79/79`, `25/25`, zero unbacked rows, status lies, or untracked symbols; one excluded third-party source file).
-- Clean GitHub runner: PENDING.
+- Clean GitHub runner: PASS (run `34196284641`, head `a6be6c6`, 4m34s).
