@@ -3,7 +3,7 @@ id: SR-035
 title: "Risk and complexity review of the VP02 native-planning specification"
 type: SpecReview
 analysis: risk-complexity
-scope: "quire-verification@611f33f; FR-013..FR-016"
+scope: "quire-verification@f7a3dcf; FR-013..FR-016"
 review_set: all
 ---
 # Risk and Complexity Review of the VP02 Native-Planning Specification
@@ -21,6 +21,7 @@ dependency uncertainty.
 | FND-002 | high | Fault runner authorization is safety-sensitive; any partial binding must keep the request null and invocation false. | FR-014-AC-3, TC-027 |
 | FND-003 | medium | Prerequisite coalescing and deterministic dependency identifiers have combinatorial cases but remain isolated within the current Rust planner. | FR-013, TC-026 |
 | FND-004 | medium | Five closed input variants and a heterogeneous parser fixture require a schema revision and broad fixture refresh after FR-016 unblocks. | FR-015, TC-028, TC-030 |
+| FND-005 | medium | Composite task identity must remain injective for arbitrary schema-valid component strings; delimiter-collision cases belong in the prerequisite property test. | FR-013-AC-5, TC-026 |
 
 ## Classification
 
