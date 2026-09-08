@@ -31,7 +31,7 @@ the completed Task-011 checkpoint cannot qualify VP02 as a whole.
 | FND-001 | high | Task-012 is blocked because the reviewed shared specification cannot yet encode B's JCS identity domain and exact trace, fault-model, and review-procedure roles. | Task-012, FR-016, TC-029, TC-031 |
 | FND-002 | high | Tasks 013 through 015 remain blocked on Task-012 and downstream dependencies; each is P0 and Plan-003 cannot pass its qualification gate. | Task-013, Task-014, Task-015 |
 | FND-003 | high | Quire reports 93/113 rows backed; the remaining implementation rows belong to FR-014 through FR-016 and TC-027 through TC-031. | FR-014, FR-015, FR-016, TC-027..TC-031 |
-| FND-004 | medium | Quire reports the vendored `ix-trace-rs` self-test tag `FR-003-CON-1` as untracked even though the repository-local traceability manifest declares `vendor/**` excluded; the active module configuration is not applying that exclusion. | vendor/ix-trace-rs/src/lib.rs::tests::the_kind_vocabulary_is_deliberately_not_checked, .ix/modules/quire-verification/manifest.yaml |
+| FND-004 | medium | Quire reports the vendored `ix-trace-rs` self-test tag `FR-003-CON-1` as untracked because `coverage` bypasses the scoped module discovery used by `validate`; supplying the same local module through `IX_FILAMENT_MODULES_PATH` applies `vendor/**` and removes the finding. Upstream defect: `agent-ix/quire-cli#80`. | vendor/ix-trace-rs/src/lib.rs::tests::the_kind_vocabulary_is_deliberately_not_checked, .ix/modules/quire-verification/manifest.yaml |
 
 ## Coverage
 
@@ -45,6 +45,12 @@ the completed Task-011 checkpoint cannot qualify VP02 as a whole.
 - Reconciliation: Quire coverage 0.31.0 / engine `ca7362d4`; 93/113 rows backed,
   22 unbacked reference rows after rollups, 0 status lies, and 1 untracked
   vendored symbol.
+- FND-004 control: with `.ix/modules` explicitly present in
+  `IX_FILAMENT_MODULES_PATH`, the same Quire build reports 28/28 Rust candidates
+  tagged and bound and zero untracked symbols. Source inspection confirms that
+  `validate` adds `<scope>/.ix/modules`, while `coverage` calls
+  `Registry::from_env()` despite promising the same discovery behavior. The
+  reproducer is recorded in `agent-ix/quire-cli#80`.
 - FR-013 reconciliation: 5/5 acceptance criteria backed by TC-026. The test calls
   the public planner and exercises missing prerequisite kinds, shared coalescing,
   resource allocation, exact and near matches, forced policy freshness, task
