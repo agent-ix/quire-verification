@@ -55,7 +55,7 @@ an adapted field corruption, and an adapter exception.
   resolves methods by `techniqueId`, and injected violations or execution
   errors are retained as violated or failed `TechniqueResult` records.
 - The retained local portfolio at source revision
-  `cc42165317ec0658b5c8eb4c85ae009143db6d3f` executed two complementary
+  `d6a46b5f755271b902a197d91af9324a76d1ae76` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
