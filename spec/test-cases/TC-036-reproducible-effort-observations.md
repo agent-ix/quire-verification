@@ -18,11 +18,14 @@ retain invalid samples, and produce exactly recomputable per-phase summaries.
 Collect the prescribed five repetitions from a controlled monotonic clock,
 including one invalid observation. Inspect raw order and identities, recompute
 each valid phase's count, minimum, median, and maximum, and mutate one environment
-identity before recomputation.
+identity before recomputation. Exercise negative, fractional, maximum-safe-integer,
+and one-above-maximum duration values.
 
 ## Expected Results
 
 The report retains every raw sample in order. Setup never enters an incremental
 summary. The invalid and identity-mismatched observations keep their reasons,
-are not rewritten as zero, and are excluded from summaries. Each remaining
-integer-nanosecond summary recomputes exactly from its own phase.
+are not rewritten as zero, and are excluded from summaries. Zero and the maximum
+safe integer are admitted; negative, fractional, and larger values remain
+invalid. Each remaining integer-nanosecond summary recomputes exactly from its
+own phase using the declared lower-median rule.

@@ -43,6 +43,7 @@ When the bounded parser portfolio records execution effort, the report writer SH
 |----|------------|------|------------|
 | FR-020-CON-1 | Elapsed observations SHALL use a monotonic process-local clock and non-negative integer nanoseconds. | Measurement integrity | Test |
 | FR-020-CON-2 | The report SHALL NOT convert the bounded observations into ROI, delivery estimates, production throughput, scale limits, or a general performance claim. | Claim boundary | Inspection |
+| FR-020-CON-3 | Each serialized elapsed duration SHALL be an integer from 0 through 9007199254740991 nanoseconds. | Interchange integrity | Test |
 
 ## Acceptance Criteria
 
@@ -53,11 +54,13 @@ When the bounded parser portfolio records execution effort, the report writer SH
 | FR-020-AC-3 | Invalid, interrupted, or identity-mismatched observations retain a reason, do not become zero-duration samples, and do not enter numeric summaries. | Test (TC-036) |
 | FR-020-AC-4 | Each phase summary reports only its valid sample count, minimum, median, and maximum in integer nanoseconds using the documented deterministic calculation. | Test (TC-036) |
 | FR-020-AC-5 | Recomputing summaries from the retained raw observations produces the report values exactly. | Test (TC-036) |
-| FR-020-AC-6 | The report states the measurement population, exclusions, clock, command order, cache treatment, environmental differences, uncertainty, and plausible alternative explanations. | Inspection (TC-037) |
-| FR-020-AC-7 | The report limits interpretation to this candidate and fixture and makes no ROI, delivery, throughput, scale, broad-effectiveness, certification, or sufficiency claim. | Inspection (TC-037) |
+| FR-020-AC-6 | The report states the measurement population, exclusions, clock, command order, cache treatment, environmental differences, uncertainty, and plausible alternative explanations. | Test (TC-037) |
+| FR-020-AC-7 | The report limits interpretation to this candidate and fixture and makes no ROI, delivery, throughput, scale, broad-effectiveness, certification, or sufficiency claim. | Test (TC-037) |
+| FR-020-AC-8 | A negative, fractional, or larger-than-9007199254740991 duration is retained as invalid with its reason and never enters a numeric summary. | Test (TC-036) |
 
 ## Dependencies
 
 - Implements [US-003](../usecase/US-003-detect-compatibility-regressions.md).
 - Measures the execution defined by [FR-019](./FR-019-execute-bounded-parser-portfolio.md).
 - Uses [MP-001](../assurance/MP-001-parser-portfolio-effort.md) as the reproducible observation contract.
+- Supplies the effort section of [FR-021](./FR-021-bind-portfolio-report.md)'s immutable automated report core.

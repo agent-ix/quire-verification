@@ -11,13 +11,15 @@ relationships:
 ## Description
 
 Verify that absent native prerequisites, expired results, and correlated or
-unknown observations remain distinct findings in the parser portfolio.
+unknown observations remain distinct findings in the parser portfolio and that
+manual work never reaches the native runner.
 
 ## Test Procedure
 
 Remove each required runner, binding, tool, and resource prerequisite in turn;
 assess an otherwise exact result at and after its earliest expiry; then reuse an
 observation across techniques and replace a declared relationship with unknown.
+Attempt to submit the manual task to the native runner.
 
 ## Expected Results
 
@@ -26,3 +28,5 @@ produces no invented result. The result is fresh at the exact expiry and stale
 one representable instant later without losing any independent finding. Shared
 and unknown dependence remain explicit and never create an independence or
 aggregate-sufficiency claim.
+The manual task retains its exact procedure and allowed dispositions, and the
+native runner refuses it without launching a child.

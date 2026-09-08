@@ -43,9 +43,10 @@ linking, evaluation, generated backends, and human review latency are excluded.
 Record candidate and environment identity, cache treatment, timer source, phase
 boundaries, and command order before collection. Observe setup once, then execute
 five sequential repetitions with a monotonic process-local clock. Store every
-phase observation in integer nanoseconds and collection order. Mark interrupted,
-identity-mismatched, or otherwise invalid observations with a reason; never
-replace one with zero or silently drop it.
+phase observation as an integer from 0 through 9007199254740991 nanoseconds and
+in collection order. Mark interrupted, out-of-domain, identity-mismatched, or
+otherwise invalid observations with a reason; never replace one with zero or
+silently drop it.
 
 ## Interpretation
 

@@ -21,6 +21,8 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-020"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-021"
+    type: "traces_to"
 ---
 # US-003: Detect compatibility regressions locally
 

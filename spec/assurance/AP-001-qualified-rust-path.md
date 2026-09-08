@@ -35,6 +35,15 @@ impact_assessments:
     detect_before_harm:
       expected: true
       control_ref: ix://agent-ix/quire-verification/NFR-004
+  - id: impact-unbounded-native-process
+    scenario: a native verification child hangs, floods output, inherits undeclared state, or is invoked through an ambiguous shell boundary
+    severity: material
+    verifiability:
+      class: cheap-conclusive
+      stochastic_dependency: none
+    detect_before_harm:
+      expected: true
+      control_ref: ix://agent-ix/quire-verification/NFR-006
 review_policy:
   mode: require
   operations: [spec-review, code-review, gap-analysis]
@@ -45,20 +54,24 @@ relationships:
     type: governs
   - target: ix://agent-ix/quire-verification/NFR-005
     type: governs
+  - target: ix://agent-ix/quire-verification/NFR-006
+    type: governs
 ---
 # Qualified Rust verification-path profile
 
 ## Decision Boundary
 
 This profile covers one candidate revision of the private bounded compatibility
-slice. It does not accept the provisional FS02/FS05 identity seam, authorize
-publication, or qualify any represented external verification tool.
+slice, including the bounded VP04 native process adapter. It does not accept the
+provisional FS02/FS05 identity seam, authorize publication, or qualify any
+represented external verification tool.
 
 ## Impact Scenarios
 
 The governed failures are false evidence support, resource exhaustion at JSON
-boundaries, and retention of non-Rust executable logic in the qualified path.
-Each can be detected before merge through deterministic tests and inspection.
+or native process boundaries, and retention of non-Rust executable logic in the
+qualified path. Each can be detected before merge through deterministic tests
+and inspection.
 
 ## Evidence Policy
 
@@ -71,4 +84,3 @@ mandatory for this candidate revision.
 
 No exceptions are authorized. JSON, JSON Schema, Markdown, and workflow YAML are
 data or configuration and are outside the executable-language restriction.
-

@@ -17,6 +17,8 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-019"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-021"
+    type: "traces_to"
 ---
 # US-002: Assess evidence without false attribution
 

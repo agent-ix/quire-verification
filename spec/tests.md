@@ -11,7 +11,7 @@ This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
 bounded-parser-portfolio slices to a concrete test case. The 27 implemented cases
 run in Rust through compiler-checked `ix-trace-rs` markers; TC-027 through TC-031
-and TC-033 through TC-037 remain pending until their reviewed implementation and
+and TC-033 through TC-038 remain pending until their reviewed implementation and
 dependencies are ready. The rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
@@ -35,7 +35,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | 🚧 Partial |
-| US-001, US-002, US-003 | Bounded native parser portfolio and measured effort | TC-034..TC-037 | ⛔ Blocked on VP02/VP03 |
+| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | ⛔ Blocked on VP02/VP03 |
 
 ### Functional Requirement Coverage
 
@@ -59,8 +59,9 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
 | FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FS05 role amendment |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
-| FR-019 | FR-019-AC-1..7 | TC-034, TC-035, TC-037, IT-003 | ⛔ Blocked on VP02/VP03 |
-| FR-020 | FR-020-AC-1..7 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
+| FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ⛔ Blocked on VP02/VP03 |
+| FR-020 | FR-020-AC-1..8 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
+| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ⛔ Blocked on shared roles and FR-019/FR-020 |
 
 ### Non-Functional Requirement Coverage
 
@@ -71,6 +72,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
 | NFR-004 | Rust source and quality gates | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
+| NFR-006 | Native process containment tests | TC-038 | ⛔ Blocked on VP02/VP03 |
 
 ## Test Case Summary
 
@@ -110,9 +112,10 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
 | TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ⛔ Blocked |
-| TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-5 | ⛔ Blocked |
-| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5 | ⛔ Blocked |
-| TC-037 | Bind portfolio disposition and claim limits | Demonstration | P0 | FR-019-AC-6, FR-020-AC-6..FR-020-AC-7, NFR-003-AC-2 | ⛔ Blocked |
+| TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
+| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8 | ⛔ Blocked |
+| TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-5 | ⛔ Blocked |
 
 ## Option Permutation Matrix
 
@@ -146,6 +149,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-034 | valid source | unreadable native response | exact native candidate | failed and not-evaluated |
 | TC-035 | exact result | shared observation | distinct techniques | correlation retained; no independence claim |
 | TC-037 | exact report | no disposition | otherwise complete execution | incomplete until human disposition |
+| TC-037 | exact sealed core | one foreign disposition | otherwise complete execution | stable refusal; no disposition adopted |
+| TC-038 | exact executable | shell-like argument characters | separate argument vector | child observes unchanged single argument |
 
 ## Constraint Boundary Tests
 
@@ -175,8 +180,17 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Measurement repetitions | Under prescribed | 4 repetitions | TC-036 | Report remains incomplete |
 | Elapsed duration | Min | 0 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
 | Elapsed duration | Under min | -1 nanosecond | TC-036 | Retain invalid reason; exclude from summary |
+| Elapsed duration | Max | 9007199254740991 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
+| Elapsed duration | Outside | 9007199254740992 nanoseconds | TC-036 | Retain invalid reason; exclude from summary |
+| Elapsed duration | Wrong type | 0.5 nanoseconds | TC-036 | Retain invalid reason; exclude from summary |
 | Manual dispositions | Exact | 1 report-bound value | TC-037 | Accept, revise, or reject is representable |
 | Manual dispositions | Above max | 2 values | TC-037 | Refuse ambiguous disposition |
+| Native invocation wall time | Exact | 10 seconds | TC-038 | Terminate and reap with `execution_timeout` |
+| Native invocation wall time | Inside | Last instant before 10 seconds | TC-038 | Do not time out |
+| Captured standard output | Exact | 16 MiB | TC-038 | Accept stream |
+| Captured standard output | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
+| Captured standard error | Exact | 16 MiB | TC-038 | Accept stream |
+| Captured standard error | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
 
 ## Error Paths
 
@@ -205,6 +219,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | ERR-021 | Required portfolio runner, binding, tool, or resource is absent | TC-035 | Blocked task, actionable setup, and no fabricated result |
 | ERR-022 | Measurement sample is interrupted, negative, or bound to another environment | TC-036 | Retained invalid sample with reason; excluded from summaries |
 | ERR-023 | Manual disposition is absent, duplicated, unsupported, or bound to another report | TC-037 | Incomplete or stable refusal; never accepted implicitly |
+| ERR-024 | Native process exceeds time or output bounds | TC-038 | Child terminated and reaped; typed failed result with no logical claim |
+| ERR-025 | Executable path or native response violates the selected process boundary | TC-038 | Refusal before launch or typed failed result after launch |
 
 ## State Transition Coverage
 
@@ -225,6 +241,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Domain portfolio | required native prerequisite present → absent | TC-035 | affected work becomes blocked; no result appears |
 | Domain evidence | at earliest expiry → one instant after | TC-035 | fresh result becomes stale with findings retained |
 | VP04 disposition | absent → one exact owner value | TC-037 | report becomes disposition-complete without changing automated results |
+| VP04 disposition | one exact owner value → foreign or duplicate | TC-037 | finalization refuses without changing the sealed core |
+| Native process | running → time/output limit | TC-038 | child is terminated and reaped; result becomes failed |
 
 ## Edge Cases
 
@@ -250,7 +268,10 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | EC-018 | Two parser techniques reuse one observation | FR-019 | TC-035 | Method count can be mistaken for independent corroboration |
 | EC-019 | Setup duration is combined with incremental run duration | FR-020 | TC-036 | Integration cost cannot be reproduced or compared honestly |
 | EC-020 | An invalid timing observation is rewritten as zero | FR-020 | TC-036 | Summaries become artificially favorable |
-| EC-021 | A disposition from another report is copied onto the candidate | FR-019 | TC-037 | Human acceptance can be falsely attributed |
+| EC-021 | A disposition from another report is copied onto the candidate | FR-021 | TC-037 | Human acceptance can be falsely attributed |
+| EC-022 | A disposition is included in the bytes whose digest it references | FR-021 | TC-037 | Report identity becomes circular or implementation-defined |
+| EC-023 | Shell text or inherited environment changes native invocation | NFR-006 | TC-038 | Reviewed arguments or execution context can be replaced silently |
+| EC-024 | A native child fills one pipe while the runner waits on another | NFR-006 | TC-038 | The qualified run can deadlock despite a nominal timeout |
 
 ## Integration Test Matrix
 
@@ -260,7 +281,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ⛔ Blocked |
-| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-037 | ⛔ Blocked |
+| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ⛔ Blocked |
 
 ### Integration Test Details
 
@@ -277,6 +298,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-035 | IT-003 | Missing prerequisite and expired exact result | Mutated plan and assessment time | Blocked work and stale finding remain explicit | P0 |
 | TC-036 | IT-003 | Five prescribed measured repetitions | Raw monotonic phase observations | Setup separated; summaries recompute exactly | P0 |
 | TC-037 | IT-003 | Exact report and review procedure | Verification-owner disposition | One bound value and bounded claims | P0 |
+| TC-038 | IT-003 | Controlled time, output, argument, environment, path, status, and protocol cases | Native process adapter | Bounded typed results and no orphan process | P0 |
 
 ## Resolved Coverage Gaps
 
@@ -293,9 +315,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
 | Unit | 16 | 16 | 0 | 0 | 100% |
-| Integration | 6 | 3 | 0 | 3 | 50% |
+| Integration | 8 | 3 | 0 | 5 | 38% |
 | Property | 11 | 6 | 0 | 5 | 55% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 1 | 0 | 0 | 1 | 0% |
-| Demonstration | 1 | 0 | 0 | 1 | 0% |
-| Overall | 37 | 27 | 0 | 10 | 73% |
+| Overall | 38 | 27 | 0 | 11 | 71% |

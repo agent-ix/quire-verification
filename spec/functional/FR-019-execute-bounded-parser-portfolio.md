@@ -34,12 +34,12 @@ disposition task over the same admitted subject and execution scope.
 - An exact reviewed `quire-spec-language` Rust candidate and `quire-spec` CLI binding.
 - A valid native source, one syntax-defect mutation derived from it, and their exact references.
 - A reviewed plan, policy, capabilities, runner requests, evidence obligations, and freshness limits.
-- A report-bound verification-owner procedure requiring `accept`, `revise`, or `reject`.
+- An exact verification-owner procedure for the separate manual task.
 
 ## Outputs
 
-- One reproducible parser-portfolio report containing the exact plan, native results,
-  assessment, effort observations, disposition state, and claim limits.
+- An immutable automated execution record containing the exact plan, native
+  results, assessment, and native artifact references.
 
 ## Behavior
 
@@ -74,8 +74,7 @@ disposition task over the same admitted subject and execution scope.
 | FR-019-AC-3 | Removing one required runner, binding, tool, or resource prerequisite leaves the affected task blocked, emits actionable setup work, and creates no fabricated execution result. | Test (TC-035) |
 | FR-019-AC-4 | Assessing an otherwise exact result after its earliest freshness bound reports stale and retains its logical, participation, assumption, adequacy, provenance, native-artifact, and dependence findings. | Test (TC-035) |
 | FR-019-AC-5 | Reused or unknown oracle and observation relationships remain explicit correlation findings; technique count does not imply independence or an aggregate score. | Test (TC-035) |
-| FR-019-AC-6 | The manual task remains not-run and incomplete until a verification owner records exactly one report-bound `accept`, `revise`, or `reject` disposition. | Demonstration (TC-037) |
-| FR-019-AC-7 | The retained report identifies the exact candidate, subject, mutation, commands, dependency closure, environment, plan, task, run, producer, adapter, and assessment time needed to reproduce every automated result. | Integration Test (IT-003) |
+| FR-019-AC-6 | The manual task remains separate from both native techniques, carries its exact review procedure and allowed dispositions, and cannot be passed to the native runner. | Test (TC-035) |
 
 ## Dependencies
 
@@ -89,3 +88,4 @@ disposition task over the same admitted subject and execution scope.
 - Requires the evidence dependence and freshness behaviors in
   [FR-017](./FR-017-retain-oracle-dependence.md) and
   [FR-018](./FR-018-enforce-evidence-freshness.md).
+- Native invocation is constrained by [NFR-006](../non-functional/NFR-006-bound-native-processes.md), and the immutable execution record is assembled into a retained report by [FR-021](./FR-021-bind-portfolio-report.md).

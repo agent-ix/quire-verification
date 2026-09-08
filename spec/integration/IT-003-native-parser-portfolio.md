@@ -7,6 +7,8 @@ relationships:
     type: "verifies"
   - target: "ix://agent-ix/quire-verification/FR-020"
     type: "verifies"
+  - target: "ix://agent-ix/quire-verification/FR-021"
+    type: "verifies"
 ---
 # IT-003: Native parser portfolio execution
 
@@ -29,7 +31,8 @@ remain Quoin-owned.
 ## Preconditions
 
 - VP02 and VP03 have passed their qualification gates at exact revisions.
-- The shared-reference packet is accepted for every role used by the portfolio.
+- The shared-reference packet is accepted for every role used by the portfolio,
+  including review procedure and review disposition.
 - The `quire-spec-language` candidate has passed its own Rust review and clean CI.
 - Exact valid and single-mutation source fixtures have reviewed redistribution terms.
 - The verification owner and the report-bound review procedure are identified.
@@ -48,25 +51,27 @@ remain Quoin-owned.
    - IT-003-SC-01: every reference is supported, exact, digest-valid, and role-correct.
 2. Build the portfolio plan with direct-parse, parse-format-reparse, and manual-disposition work.
    - IT-003-SC-02: both automated tasks are ready, the manual task is separately represented, and no input variant is guessed or collapsed.
-3. Execute the valid source through the real `quire-spec parse` command and the real parse-format-reparse sequence.
-   - IT-003-SC-03: both automated baseline results are completed and satisfied with exact native-artifact and observation references.
-4. Execute the one declared syntax mutation through the direct-parse technique.
-   - IT-003-SC-04: the expected located refusal becomes completed and violated; a crash or malformed protocol becomes failed and not-evaluated.
-5. Rerun the plan after removing one required native prerequisite.
-   - IT-003-SC-05: the affected task is blocked with actionable setup work and no fabricated result.
-6. Assess an otherwise exact retained result at its expiry and one representable instant later.
-   - IT-003-SC-06: the result is fresh at expiry, stale afterward, and all independent findings remain present.
-7. Collect the five prescribed measurement repetitions and recompute each phase summary from raw observations.
-   - IT-003-SC-07: setup is separate, invalid observations are retained and excluded, and every summary recomputes exactly.
-8. Bind one verification-owner disposition to the exact report and inspect its claims.
-   - IT-003-SC-08: exactly one `accept`, `revise`, or `reject` disposition is present, Quoin still owns sufficiency, and the bounded claim text excludes model, evaluator, production, scale, ROI, and broad-effectiveness conclusions.
+3. Exercise the native process time, output, argument, environment, path, status, and protocol boundaries.
+   - IT-003-SC-03: each boundary produces the NFR-006 result and no shell, orphan process, partial success, or logical claim.
+4. Execute the valid source through the real `quire-spec parse` command and the real parse-format-reparse sequence.
+   - IT-003-SC-04: both automated baseline results are completed and satisfied with exact native-artifact and observation references.
+5. Execute the one declared syntax mutation through the direct-parse technique.
+   - IT-003-SC-05: the expected located refusal becomes completed and violated; a crash or malformed protocol becomes failed and not-evaluated.
+6. Rerun the plan after removing one required native prerequisite.
+   - IT-003-SC-06: the affected task is blocked with actionable setup work and no fabricated result.
+7. Assess an otherwise exact retained result at its expiry and one representable instant later.
+   - IT-003-SC-07: the result is fresh at expiry, stale afterward, and all independent findings remain present.
+8. Collect the five prescribed measurement repetitions and recompute each phase summary from raw observations.
+   - IT-003-SC-08: setup is separate, invalid observations are retained and excluded, and every summary recomputes exactly.
+9. Seal the automated report core, then bind one verification-owner disposition to that exact core and inspect the final report claims.
+   - IT-003-SC-09: the disposition refers to the pre-disposition core digest, exactly one `accept`, `revise`, or `reject` value is present, Quoin still owns sufficiency, and the bounded claim text excludes model, evaluator, production, scale, ROI, and broad-effectiveness conclusions.
 
 ## Expected Results
 
 The integration produces a reproducible report with two complementary native
 baseline results, the declared adverse result, an explicit missing-prerequisite
 case, an exact stale-result case, phase-separated raw measurements, and one
-report-bound human disposition. Any unsupported reference, wrong role, missing
+human disposition bound to the sealed automated core. Any unsupported reference, wrong role, missing
 prerequisite, unexpected native failure, ambiguity, stale evidence, invalid
 measurement, or absent disposition remains visible and cannot be converted into
 support.
@@ -79,8 +84,9 @@ support.
 
 ## Dependencies
 
-- Verifies [FR-019](../functional/FR-019-execute-bounded-parser-portfolio.md)
-  and [FR-020](../functional/FR-020-record-portfolio-effort.md).
+- Verifies [FR-019](../functional/FR-019-execute-bounded-parser-portfolio.md),
+  [FR-020](../functional/FR-020-record-portfolio-effort.md), and
+  [FR-021](../functional/FR-021-bind-portfolio-report.md).
 - Requires accepted VP02 and VP03 qualification evidence.
 
 ## Notes
