@@ -9,8 +9,8 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, and VP02 native-planning slice to a concrete test case. The
-25 implemented cases run in Rust through compiler-checked `ix-trace-rs` markers;
-TC-026 through TC-031 remain pending until the reviewed implementation and shared
+26 implemented cases run in Rust through compiler-checked `ix-trace-rs` markers;
+TC-027 through TC-031 remain pending until their reviewed implementation and shared
 reference dependency are ready. The rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
