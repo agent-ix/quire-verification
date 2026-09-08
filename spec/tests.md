@@ -50,7 +50,7 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | FR-010 | FR-010-AC-1..2 | TC-010, TC-024 | ✅ Complete |
 | FR-011 | FR-011-AC-1..2 | TC-024 | ✅ Complete |
 | FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
-| FR-013 | FR-013-AC-1..4 | TC-026, TC-030 | 🚧 Planned |
+| FR-013 | FR-013-AC-1..5 | TC-026, TC-030 | 🚧 Planned |
 | FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
 | FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
 | FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
@@ -94,7 +94,7 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 | TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
 | TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
-| TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-4 | 🚧 Planned |
+| TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-5 | 🚧 Planned |
 | TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
 | TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-015-AC-1..FR-015-AC-4 | 🚧 Planned |
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |

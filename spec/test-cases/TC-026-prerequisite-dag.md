@@ -18,7 +18,8 @@ and one verification-task dependency.
 Build table-driven plans that remove each capability prerequisite, use a stale
 policy, and omit a capability-declared resource allocation. Include one missing
 need shared by two verification tasks and near-miss available prerequisites with
-the wrong kind or identifier.
+the wrong kind or identifier. Include distinct prerequisite and selection tuples
+whose components would collide under delimiter joining.
 
 ## Expected Results
 
@@ -26,5 +27,6 @@ Distinct missing needs produce one deterministic plan-level setup task each; all
 affected tasks depend on it; duplicates coalesce by exact identity; `requiredBy`
 lists the affected verification-task IDs in sorted order; no fake property or
 technique ID is attached. Required work stays blocked and near matches or caller
-claims cannot satisfy the need.
+claims cannot satisfy the need. Composite task identifiers remain distinct when a
+component contains the delimiter.
 Runtime budget exhaustion is outside this planning test and remains a result state.
