@@ -20,9 +20,9 @@ standards_alignment:
 ## 1. Purpose
 
 This specification defines the observable behavior of the private bounded E02
-verification compatibility slice. It gives maintainers a reviewed requirements
-baseline for the code, fixtures, retained reports, and continuous-integration
-checks already present in this repository.
+verification compatibility slice. It gives maintainers the reviewed and
+implemented requirements baseline for the code, fixtures, retained reports,
+and continuous-integration checks present in this repository.
 
 ## 2. Scope
 
@@ -70,24 +70,24 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 
 | ID | Title | Status |
 |----|-------|--------|
-| US-001 | Plan portable verification work | Specified; Rust pending |
-| US-002 | Assess evidence without false attribution | Specified; Rust pending |
-| US-003 | Detect compatibility regressions locally | Specified; Rust pending |
-| FR-001 | Validate the five public contracts | Specified; Rust pending |
-| FR-002 | Derive runtime contract behavior from the schema | Specified; Rust pending |
-| FR-003 | Validate every fixture through an explicit handler | Specified; Rust pending |
-| FR-004 | Adapt Quoin catalog and advice without changing meaning | Specified; Rust pending |
-| FR-005 | Build prerequisite-aware verification plans | Specified; Rust pending |
-| FR-006 | Match evidence by exact identity and execution scope | Specified; Rust pending |
-| FR-007 | Preserve independent result findings | Specified; Rust pending |
-| FR-008 | Canonicalize digest and identity inputs with JCS | Specified; Rust pending |
-| FR-009 | Retain bounded portfolio failures as results | Specified; Rust pending |
-| NFR-001 | Deterministic structured comparison | Specified; Rust pending |
-| NFR-002 | Contract source maintainability | Specified; Rust pending |
-| NFR-003 | Conservative assurance claims | Specified; Rust pending |
-| NFR-004 | Rust implementation for the qualified path | Specified; Rust pending |
-| NFR-005 | Bounded JSON ingestion | Specified; Rust pending |
-| IT-001 | Real Quoin method-catalog parity | Specified; Rust pending |
+| US-001 | Plan portable verification work | Implemented; verified |
+| US-002 | Assess evidence without false attribution | Implemented; verified |
+| US-003 | Detect compatibility regressions locally | Implemented; verified |
+| FR-001 | Validate the five public contracts | Implemented; verified |
+| FR-002 | Derive runtime contract behavior from the schema | Implemented; verified |
+| FR-003 | Validate every fixture through an explicit handler | Implemented; verified |
+| FR-004 | Adapt Quoin catalog and advice without changing meaning | Implemented; verified |
+| FR-005 | Build prerequisite-aware verification plans | Implemented; verified |
+| FR-006 | Match evidence by exact identity and execution scope | Implemented; verified |
+| FR-007 | Preserve independent result findings | Implemented; verified |
+| FR-008 | Canonicalize digest and identity inputs with JCS | Implemented; verified |
+| FR-009 | Retain bounded portfolio failures as results | Implemented; verified |
+| NFR-001 | Deterministic structured comparison | Implemented; verified |
+| NFR-002 | Contract source maintainability | Implemented; verified |
+| NFR-003 | Conservative assurance claims | Implemented; verified |
+| NFR-004 | Rust implementation for the qualified path | Implemented; verified |
+| NFR-005 | Bounded JSON ingestion | Implemented; verified |
+| IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 
 ## 6. Identification and Traceability
 
@@ -104,11 +104,13 @@ catalog from a pinned checkout and compares it with the retained export.
 
 ## 8. Lifecycle and Change Control
 
-This specification describes a private compatibility slice being migrated to its
-required Rust implementation. A future
-FS02/FS05 decision may require a reviewed migration of the provisional artifact
-reference seam. Such a migration must update requirements, tests, fixtures, and
-retained reports before implementation claims change.
+This specification describes a private compatibility slice implemented and
+verified in Rust. This lifecycle correction was made after the Rust rewrite was
+merged; it records the already reviewed and verified state and introduces no new
+behavioral requirement. A future FS02/FS05 decision may require a reviewed
+migration of the provisional artifact reference seam. Such a migration must
+update requirements, tests, fixtures, and retained reports before implementation
+claims change.
 
 ## 9. References
 
