@@ -168,13 +168,10 @@ fn tc_038_pins_the_admitted_descriptor_and_refuses_path_escape() {
     );
 }
 
-#[trace(
-    "TC-038",
-    "NFR-006-AC-2",
-    "NFR-006-AC-3",
-    "NFR-006-AC-5",
-    "NFR-006-AC-8"
-)]
+#[trace("TC-038", "NFR-006-AC-2")]
+#[trace("TC-038", "NFR-006-AC-3")]
+#[trace("TC-038", "NFR-006-AC-5")]
+#[trace("TC-038", "NFR-006-AC-8")]
 #[test]
 fn tc_038_refuses_invalid_deadlines_and_contains_the_process_group() {
     let candidate = Candidate::new();
