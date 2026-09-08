@@ -72,7 +72,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
 | NFR-004 | Rust source and quality gates | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
-| NFR-006 | Native process containment tests | TC-038 | ⛔ Blocked on VP02/VP03 |
+| NFR-006 | Native process containment tests | TC-038 | 🚧 Planned |
 
 ## Test Case Summary
 
@@ -115,7 +115,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
-| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-6 | ⛔ Blocked |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-7 | 🚧 Planned |
 
 ## Option Permutation Matrix
 
@@ -194,6 +194,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Captured standard output | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
 | Captured standard error | Exact | 16 MiB | TC-038 | Accept stream |
 | Captured standard error | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
+| Admitted executable identity | Exact | Pathname replaced after descriptor admission | TC-038 | Execute the admitted descriptor; replacement cannot substitute bytes |
+| Native process group | Outside | Direct child exits while one descendant holds both pipes | TC-038 | Terminate group, reap direct child, and return no live member |
 
 ## Error Paths
 
@@ -276,6 +278,8 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | EC-022 | A disposition is included in the bytes whose digest it references | FR-021 | TC-037 | Report identity becomes circular or implementation-defined |
 | EC-023 | Shell text or inherited environment changes native invocation | NFR-006 | TC-038 | Reviewed arguments or execution context can be replaced silently |
 | EC-024 | A native child fills one pipe while the runner waits on another | NFR-006 | TC-038 | The qualified run can deadlock despite a nominal timeout |
+| EC-025 | Candidate pathname changes after validation but before execution | NFR-006 | TC-038 | Different executable bytes can replace the reviewed candidate |
+| EC-026 | A direct child exits while a descendant retains the output pipes | NFR-006 | TC-038 | The runner can block beyond its deadline or leave a live orphan |
 
 ## Integration Test Matrix
 

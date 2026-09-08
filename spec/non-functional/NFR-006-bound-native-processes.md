@@ -12,21 +12,27 @@ relationships:
 ## Statement
 
 When the VP04 runner invokes a native candidate, the process executor SHALL use
-an exact direct-process request with finite time, output, environment, and
-working-directory bounds.
+an admitted executable descriptor and a dedicated process group with finite
+time, output, environment, and working-directory bounds.
 
 ## Scope
 
 This requirement constrains only the repository-owned VP04 native process
-adapter in the exact reviewed Linux execution environment. It does not redefine
-the parser CLI, operate a shell, invoke a network service, authorize production
-execution, or claim another operating-system profile.
+adapter in the exact reviewed Linux execution environment. That profile requires
+Linux `openat2`, `/proc/self/fd`, and process-group signaling. If those facilities
+are unavailable or refuse the required flags, the adapter refuses with
+`unsupported_execution_profile` before launching a candidate. It does not
+redefine the parser CLI, operate a shell, invoke a network service, authorize
+production execution, or claim another operating-system profile.
 
 ## Rationale
 
 An exact reviewed binary can still hang, flood pipes, inherit unstable or secret
-environment state, receive ambiguous shell text, or escape the selected run
-directory. The runner must turn those conditions into bounded typed results.
+environment state, receive ambiguous shell text, escape the selected run
+directory, change between path validation and execution, or leave descendants
+holding pipes after the direct child exits. The runner must pin the admitted
+file, contain the whole process group, and turn those conditions into bounded
+typed results.
 
 ## Measurement and Evaluation
 
@@ -37,13 +43,16 @@ directory. The runner must turn those conditions into bounded typed results.
 | Captured standard output | At most 16 MiB | 16 MiB | Test (TC-038) |
 | Captured standard error | At most 16 MiB | 16 MiB | Test (TC-038) |
 | Undeclared inherited environment entries | 0 | 0 | Test (TC-038) |
+| Request-path resolutions after executable admission | 0 | 0 | Test (TC-038) |
+| Live process-group members when the executor returns | 0 | 0 | Test (TC-038) |
 
 ## Verification
 
 A Rust integration harness invokes controlled native child fixtures that expose
 arguments and environment, exceed each output and time boundary separately and
-simultaneously, exit by code or signal, and emit invalid UTF-8 or malformed
-protocol output.
+simultaneously, exit by code or signal, emit invalid UTF-8 or malformed protocol
+output, replace the admitted pathname, and leave a descendant holding both
+pipes.
 
 ## Acceptance Criteria
 
@@ -51,10 +60,11 @@ protocol output.
 |----|----------|--------------|
 | NFR-006-AC-1 | The executor invokes an exact absolute executable with a separate argument vector, no shell, a fresh run directory, and only explicitly declared environment entries. | Test (TC-038) |
 | NFR-006-AC-2 | A request accepts a positive declared deadline no greater than 10 seconds and refuses an absent, zero, negative, non-finite, or larger deadline with `invalid_execution_deadline` before child launch. | Test (TC-038) |
-| NFR-006-AC-3 | A child still running at its accepted declared deadline is terminated and reaped, and the returned failed result carries `execution_timeout` without a logical outcome claim. | Test (TC-038) |
-| NFR-006-AC-4 | Standard output or error is accepted through exactly 16 MiB; the first excess byte terminates and reaps the child and returns `output_limit_exceeded` with the stream name, count, and limit but not the excess bytes. | Test (TC-038) |
-| NFR-006-AC-5 | A signal, unexpected exit code, invalid UTF-8, or malformed method response returns a distinct typed failed result without panic, orphan process, partial success, or logical outcome claim. | Test (TC-038) |
-| NFR-006-AC-6 | A candidate path that is relative, outside the selected execution root, absent, non-regular, or resolves through a symbolic link is refused before child launch. | Test (TC-038) |
+| NFR-006-AC-3 | A process group still live at its accepted declared deadline is terminated; the direct child is reaped; no live group member remains; and the returned failed result carries `execution_timeout` without a logical outcome claim. | Test (TC-038) |
+| NFR-006-AC-4 | Standard output or error is accepted through exactly 16 MiB; the first excess byte terminates the process group, reaps the direct child, and returns `output_limit_exceeded` with the stream name, count, and limit but not the excess bytes. | Test (TC-038) |
+| NFR-006-AC-5 | A signal, unexpected exit code, invalid UTF-8, malformed method response, or descendant surviving the direct child returns a distinct typed failed result without panic, live process-group member, partial success, or logical outcome claim. | Test (TC-038) |
+| NFR-006-AC-6 | A candidate path that is relative, outside the selected execution root, absent, non-regular, or resolves through a symbolic link is refused before child launch; lack of the selected Linux descriptor/process-group profile refuses with `unsupported_execution_profile`. | Test (TC-038) |
+| NFR-006-AC-7 | The executor opens the root and root-relative candidate with `openat2` using `RESOLVE_BENEATH`, `RESOLVE_NO_MAGICLINKS`, and `RESOLVE_NO_SYMLINKS`, retains the admitted descriptor through launch, and invokes only its trusted descriptor-backed `/proc/self/fd` path; replacing the request pathname after admission cannot substitute the executed bytes. | Test (TC-038) |
 
 ## Dependencies
 
