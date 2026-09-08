@@ -21,7 +21,7 @@ relationships:
 
 ### Non-Functional Requirements
 
-- [x] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, protocol, and observed containment.
+- [ ] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, protocol, observed containment, and complete trace binding.
 
 ## Dependency Graph
 
@@ -57,7 +57,7 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ### Native process boundary
 
-- [x] **TC-038** (`NFR-006-AC-1..7`): exercise descriptor-pinned direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; root-relative no-symlink admission; pathname substitution; dedicated process groups; descendant cleanup; and direct-child reaping.
+- [ ] **TC-038** (`NFR-006-AC-1..8`): exercise descriptor-pinned direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; root-relative no-symlink admission; pathname substitution; dedicated process groups; descendant cleanup; direct-child reaping; and Quire binding of every compiled marker argument.
 
 ### Portfolio execution
 
@@ -77,9 +77,9 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ## Remaining Work
 
-### Track P: Process primitive (complete)
+### Track P: Process primitive (trace remediation)
 
-- **P1 = Task-020** Bounded native process executor — Complete at remediation implementation `8d0aa4c`; exact Rust review SR-079 passes at `6762a33` after SR-071 through SR-078 reviewed the observed-containment amendment.
+- **P1 = Task-020** Bounded native process executor — Process behavior is complete at `8d0aa4c`; trace status is reopened because current coverage leaves NFR-006-AC-2 and AC-3 unbound despite the compiled multiline marker. SR-081 through SR-088 govern the formatting-only remediation.
 
 ### Track A: Critical Path (serial, dependency-gated)
 
@@ -102,7 +102,7 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | done |
+| Task-020 | P | NFR-006 | TC-038 | in_progress |
 | Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
 | Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
 | Task-023 | A | FR-021 | TC-037 | blocked |

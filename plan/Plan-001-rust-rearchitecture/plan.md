@@ -2,7 +2,7 @@
 id: Plan-001
 title: "Rust rearchitecture of the bounded verification path"
 type: Plan
-status: done
+status: active
 relationships:
   - { target: "ix://agent-ix/quire-verification/StR-001", type: references }
   - { target: "ix://agent-ix/quire-verification/FR-001", type: references }
@@ -45,7 +45,7 @@ relationships:
 - [x] **NFR-001**: Produce deterministic structured comparison output.
 - [x] **NFR-002**: Maintain one authored public-contract source.
 - [x] **NFR-003**: Preserve conservative assurance claims.
-- [x] **NFR-004**: Implement every executable path in Rust.
+- [ ] **NFR-004**: Implement every executable path in Rust and bind every acceptance-marker argument through Quire.
 - [x] **NFR-005**: Enforce bounded JSON ingestion.
 
 ## Dependency Graph
@@ -97,16 +97,16 @@ accepted deliverable.
 - [x] **TC-018**: Compare catalog parity by technique identifier.
 - [x] **TC-019**: Return violated and failed portfolio results.
 - [x] **TC-020**: Retain pending human work and bounded claims.
-- [x] **TC-022**: Enforce the Rust qualified-path implementation.
+- [ ] **TC-022**: Enforce the Rust qualified-path implementation and cross-reader trace binding.
 
-## Completed Work
+## Completed Work and Open Remediation
 
 ### Track A: Critical Path
 
 - **A1 = Task-001** Rust contract core — Hard; exit: generated wire types, runtime schema validation, JCS, stable errors, and resource limits pass TC-001..TC-004, TC-016, TC-017, and TC-023.
 - **A2 = Task-004** Rust evidence assessor — Hard; exit: every binding dimension and independent finding passes TC-012..TC-015.
 - **A3 = Task-006** Rust bounded portfolio — Hard; exit: parity, permutation, violated, failed, and pending-human outcomes pass TC-018..TC-020.
-- **Gate = Task-007** Qualified-path review — Hard; pass: Quoin validation, Rust gates, exact rust-review, and gap-analysis all succeed with no high finding.
+- **Gate = Task-007** Qualified-path review — Reopened; pass: Quoin validation, Rust gates, exact rust-review, and gap-analysis all succeed with every compiled marker argument bound by Quire.
 
 ### Track B: Parallel After Contract Core
 
@@ -135,7 +135,7 @@ Task-001 ─┬─ Task-002 ─ Task-005 ─┐
 | Task-004 | A | FR-006, FR-007, NFR-001, NFR-003 | TC-012..TC-015 | done |
 | Task-005 | C | FR-003 | TC-005, TC-006, TC-021 | done |
 | Task-006 | A | FR-009 | TC-018..TC-020 | done |
-| Task-007 | Gate | StR-001, NFR-004 | TC-021, TC-022 | done |
+| Task-007 | Gate | StR-001, NFR-004 | TC-021, TC-022 | in_progress |
 
 ## Coordination Rules
 
