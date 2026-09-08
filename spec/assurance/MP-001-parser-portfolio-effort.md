@@ -9,7 +9,7 @@ definition_version: quire-verification.parser-portfolio-effort-v1
 stage: baseline
 statistical_design:
   population: valid phase observations from one exact parser-portfolio candidate, fixture pair, dependency closure, environment, and command order
-  sampling: five sequential repetitions after one separately observed setup phase, retaining each phase observation in collection order
+  sampling: one setup observation at repetition zero followed by direct-parse, parse-format-reparse, and complete-run observations for each of five sequential repetitions, retaining all 16 slots in collection order
   repetitions: 5
   estimator: per-phase valid-sample count, minimum, lower median at sorted zero-based index (count minus one) divided by two, and maximum in integer nanoseconds
   error_model: process scheduling, filesystem cache state, clock granularity, build residue, thermal state, and invalid or interrupted executions
@@ -32,8 +32,8 @@ They do not approve the candidate or establish a performance threshold.
 
 ## Population
 
-The population is the valid setup, direct-parse, parse-format-reparse, and
-complete automated-run observations from one exact candidate, fixture pair,
+The population is the 16 setup, direct-parse, parse-format-reparse, and complete
+automated-run observation slots from one exact candidate, fixture pair,
 dependency closure, environment, and prescribed command order. Build/download
 time outside the declared setup phase, other machines, other fixtures, model
 linking, evaluation, generated backends, and human review latency are excluded.
@@ -41,10 +41,12 @@ linking, evaluation, generated backends, and human review latency are excluded.
 ## Collection Procedure
 
 Record candidate and environment identity, cache treatment, timer source, phase
-boundaries, and command order before collection. Observe setup once, then execute
-five sequential repetitions with a monotonic process-local clock. Store every
-phase observation as an integer from 0 through 9007199254740991 nanoseconds and
-in collection order. Mark interrupted, out-of-domain, identity-mismatched, or
+boundaries, and command order before collection. Observe setup as repetition
+zero, then execute the three automated phases for repetitions one through five
+with a monotonic process-local clock. Give every slot a nonempty unique
+observation ID and unique phase/repetition pair. Store every phase observation as
+an integer from 0 through 9007199254740991 nanoseconds and in collection order.
+Mark interrupted, out-of-domain, identity-mismatched, or
 otherwise invalid observations with a reason; never replace one with zero or
 silently drop it.
 

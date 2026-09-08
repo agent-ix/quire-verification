@@ -17,15 +17,16 @@ orphan process or logical claim.
 ## Test Procedure
 
 Invoke controlled native child fixtures through the public runner with exact and
-adverse executable paths, arguments, environments, working directories, 10-second
-time boundaries, separate and simultaneous 16-MiB stream boundaries, exit
+adverse executable paths, arguments, environments, working directories, positive
+declared deadlines through the 10-second cap, separate and simultaneous 16-MiB stream boundaries, exit
 statuses, signals, UTF-8, and method responses. After every adverse case, verify
 the child has been reaped.
 
 ## Expected Results
 
 The exact bounded request succeeds. Relative, external, absent, non-regular, and
-symbolic-link paths refuse before launch. A child at the time limit or one byte
+symbolic-link paths refuse before launch. An absent, zero, or above-cap deadline
+refuses; a child at its accepted declared deadline or one byte
 over either stream limit is terminated and reaped with its stable error. Signals,
 unexpected codes, invalid UTF-8, and malformed responses remain distinct failed
 results with no panic, partial success, or logical outcome.

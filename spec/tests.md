@@ -60,7 +60,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FS05 role amendment |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
 | FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ⛔ Blocked on VP02/VP03 |
-| FR-020 | FR-020-AC-1..8 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
+| FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ⛔ Blocked on shared roles and FR-019/FR-020 |
 
 ### Non-Functional Requirement Coverage
@@ -113,9 +113,9 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
 | TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ⛔ Blocked |
 | TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
-| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8 | ⛔ Blocked |
+| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
-| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-5 | ⛔ Blocked |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-6 | ⛔ Blocked |
 
 ## Option Permutation Matrix
 
@@ -178,6 +178,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Required feature set | Duplicate | Same decoded feature twice | TC-029 | Refuse before comparison |
 | Measurement repetitions | Exact | 5 repetitions | TC-036 | Retain every phase observation |
 | Measurement repetitions | Under prescribed | 4 repetitions | TC-036 | Report remains incomplete |
+| Measurement series | Exact | 1 setup plus 5 repetitions of 3 automated phases | TC-036 | 16 unique ordered observations |
 | Elapsed duration | Min | 0 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
 | Elapsed duration | Under min | -1 nanosecond | TC-036 | Retain invalid reason; exclude from summary |
 | Elapsed duration | Max | 9007199254740991 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
@@ -185,8 +186,10 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Elapsed duration | Wrong type | 0.5 nanoseconds | TC-036 | Retain invalid reason; exclude from summary |
 | Manual dispositions | Exact | 1 report-bound value | TC-037 | Accept, revise, or reject is representable |
 | Manual dispositions | Above max | 2 values | TC-037 | Refuse ambiguous disposition |
-| Native invocation wall time | Exact | 10 seconds | TC-038 | Terminate and reap with `execution_timeout` |
-| Native invocation wall time | Inside | Last instant before 10 seconds | TC-038 | Do not time out |
+| Native invocation deadline | Min | Smallest positive represented duration | TC-038 | Accept declared deadline |
+| Native invocation deadline | Max | 10 seconds | TC-038 | Accept declared deadline; terminate at that deadline |
+| Native invocation deadline | Under min | 0 seconds | TC-038 | Refuse before launch |
+| Native invocation deadline | Outside | More than 10 seconds | TC-038 | Refuse before launch |
 | Captured standard output | Exact | 16 MiB | TC-038 | Accept stream |
 | Captured standard output | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
 | Captured standard error | Exact | 16 MiB | TC-038 | Accept stream |
@@ -221,6 +224,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | ERR-023 | Manual disposition is absent, duplicated, unsupported, or bound to another report | TC-037 | Incomplete or stable refusal; never accepted implicitly |
 | ERR-024 | Native process exceeds time or output bounds | TC-038 | Child terminated and reaped; typed failed result with no logical claim |
 | ERR-025 | Executable path or native response violates the selected process boundary | TC-038 | Refusal before launch or typed failed result after launch |
+| ERR-026 | Measurement observation identity, phase/repetition cardinality, or order is invalid | TC-036 | `invalid_measurement_series` refusal |
 
 ## State Transition Coverage
 

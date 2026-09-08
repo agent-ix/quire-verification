@@ -65,7 +65,7 @@ that refers to that core without creating a circular digest.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-021-AC-1 | One closed internal schema definition validates the VP04 report envelope without admitting it as a sixth public contract or duplicating its Rust shape by hand. | Test (TC-037) |
-| FR-021-AC-2 | The sealed core contains the exact candidate, subject, mutation, commands, dependency closure, environment, plan, tasks, runs, producers, adapters, assessment time, raw effort observations, interpretation, and claim limits needed to reproduce the automated evidence. | Test (TC-037) |
+| FR-021-AC-2 | The sealed core has a nonempty report ID and contains the exact candidate, subject, mutation, commands, dependency closure, environment, plan, tasks, runs, producers, adapters, assessment time, uniquely identified raw effort observations, interpretation, and claim limits needed to reproduce the automated evidence. | Test (TC-037) |
 | FR-021-AC-3 | The core digest excludes the disposition, and one verified disposition artifact refers to that digest with a unique nonempty disposition ID, exact reviewer and procedure identity, observation time, and value `accept`, `revise`, or `reject`. | Test (TC-037) |
 | FR-021-AC-4 | An absent disposition leaves the report incomplete; duplicate, foreign, unsupported, digest-invalid, or procedure-invalid dispositions refuse with the corresponding stable code. | Test (TC-037) |
 | FR-021-AC-5 | Finalization preserves every automated result and measurement unchanged, identifies Quoin as evidence owner, records sufficiency as `not-made`, and makes no claim that supplied reviewer provenance is cryptographically authenticated. | Test (TC-037) |

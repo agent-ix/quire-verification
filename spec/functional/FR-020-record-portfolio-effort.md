@@ -27,9 +27,13 @@ When the bounded parser portfolio records execution effort, the report writer SH
 ## Behavior
 
 - The report writer SHALL label each observation as setup, direct-parse,
-  parse-format-reparse, manual-disposition, or complete automated run.
+  parse-format-reparse, or complete automated run.
 - The report writer SHALL retain every collected observation in collection order
   with elapsed nanoseconds and a valid or invalid status.
+- The report writer SHALL assign each observation a nonempty ID unique within the
+  automated report core and one unique `(phase, repetition)` pair.
+- The report writer SHALL assign repetition zero only to the single setup
+  observation and repetitions one through five to each automated phase.
 - When an observation is invalid, the report writer SHALL retain its reason and
   exclude it from numeric summaries without replacing it with zero.
 - For each phase with valid observations, the report writer SHALL compute the
@@ -50,13 +54,14 @@ When the bounded parser portfolio records execution effort, the report writer SH
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-020-AC-1 | Setup and binding observations are stored in a phase distinct from every incremental method and complete-run observation. | Test (TC-036) |
-| FR-020-AC-2 | Five prescribed repetitions retain every raw valid or invalid phase observation in collection order with exact candidate and environment identity. | Test (TC-036) |
+| FR-020-AC-2 | The series contains exactly one setup observation at repetition zero and one direct-parse, parse-format-reparse, and complete-run observation for each repetition one through five, retaining all 16 raw valid or invalid observations in collection order with exact candidate and environment identity. | Test (TC-036) |
 | FR-020-AC-3 | Invalid, interrupted, or identity-mismatched observations retain a reason, do not become zero-duration samples, and do not enter numeric summaries. | Test (TC-036) |
 | FR-020-AC-4 | Each phase summary reports only its valid sample count, minimum, median, and maximum in integer nanoseconds using the documented deterministic calculation. | Test (TC-036) |
 | FR-020-AC-5 | Recomputing summaries from the retained raw observations produces the report values exactly. | Test (TC-036) |
 | FR-020-AC-6 | The report states the measurement population, exclusions, clock, command order, cache treatment, environmental differences, uncertainty, and plausible alternative explanations. | Test (TC-037) |
 | FR-020-AC-7 | The report limits interpretation to this candidate and fixture and makes no ROI, delivery, throughput, scale, broad-effectiveness, certification, or sufficiency claim. | Test (TC-037) |
 | FR-020-AC-8 | A negative, fractional, or larger-than-9007199254740991 duration is retained as invalid with its reason and never enters a numeric summary. | Test (TC-036) |
+| FR-020-AC-9 | An empty or duplicate observation ID, duplicate or missing phase/repetition pair, repetition outside zero through five, or reordered prescribed series refuses with `invalid_measurement_series`. | Test (TC-036) |
 
 ## Dependencies
 
