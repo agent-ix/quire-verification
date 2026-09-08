@@ -3,7 +3,7 @@ id: SR-052
 title: "Integrity review of the VP04 native parser portfolio specification"
 type: SpecReview
 analysis: integrity
-scope: "quire-verification@21c894d; VP04 identity, report, process and claim boundaries"
+scope: "quire-verification@d3dbf5b; VP04 identity, report, process and claim boundaries"
 review_set: all
 ---
 # Integrity Review of the VP04 Native Parser Portfolio Specification
@@ -22,6 +22,7 @@ disposition, and ownership identities plus their negative controls and traces.
 | FND-003 | medium | Resolved: the core digest explicitly excludes the disposition, and the closed internal report definition is derived from the authoritative E02 schema without becoming a sixth public contract. | FR-021-AC-1, FR-021-AC-3, TC-037 |
 | FND-004 | low | Expected diagnostic, unexpected native failure, blocked work, stale evidence, correlation, invalid timing, and human disposition states remain distinct and cannot collapse into support. | TC-034..TC-038 |
 | FND-005 | low | StR-001 traces through US-001/US-002/US-003 to all new FR/NFR criteria and detailed Test Cases; IT-003 covers the external producer boundary. | StR-001, US-001..US-003, TM-001 |
+| FND-006 | high | Resolved during re-review: validation of a pathname did not bind the later executed inode. NFR-006 now requires a retained admitted descriptor, trusted descriptor-backed launch, and a substitution test before exact candidate identity can be claimed. | NFR-006-AC-7, TC-038 |
 
 ## Trust Boundaries
 

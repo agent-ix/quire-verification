@@ -3,7 +3,7 @@ id: SR-053
 title: "Dependency review of the VP04 native parser portfolio specification"
 type: SpecReview
 analysis: dependency
-scope: "quire-verification@21c894d; FR-019..FR-021, NFR-006, MP-001 and IT-003"
+scope: "quire-verification@d3dbf5b; FR-019..FR-021, NFR-006, MP-001 and IT-003"
 review_set: all
 ---
 # Dependency Review of the VP04 Native Parser Portfolio Specification
@@ -21,7 +21,8 @@ as a qualified portfolio while that external contract remains conditional.
 | FND-001 | high | FS02/FS05 amendments and Plan-003/Plan-004 completion are hard predecessors of FR-019 and IT-003; FR-020 and FR-021 are downstream and cannot bypass them. | FR-016..FR-021, IT-003 |
 | FND-002 | high | FR-021 additionally requires a shared review-disposition role and an actual external verification-owner disposition after the automated core is sealed. | FR-021, TC-037 |
 | FND-003 | medium | The exact native parser revision, its own Rust qualification, and fixture redistribution terms must be selected before IT-003 execution; a local worktree is not acceptance evidence. | IT-003-SC-01, IT-003 Preconditions |
-| FND-004 | low | The current installed MeasurementPlan schema validates MP-001; Agent C retains the reusable Engineering Assurance provider and migration, while B owns only this domain-specific observation/report behavior. | MP-001, FR-020, engineering-assurance#59 |
+| FND-004 | low | The current installed MeasurementPlan schema validates MP-001; Agent C retains the reusable Engineering Assurance provider and migration, while B owns only this domain-specific observation/report behavior. | MP-001, FR-020, quire-research#59 |
+| FND-005 | medium | The selected native containment profile adds an explicit Linux facility dependency: `openat2`, `/proc/self/fd`, and process-group signaling must all be available before admission; lack of any facility refuses rather than falling back to pathname execution or direct-child-only cleanup. | NFR-006 Scope, NFR-006-AC-6..7 |
 
 ## Dependency Graph
 

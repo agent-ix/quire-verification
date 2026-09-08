@@ -3,14 +3,14 @@ id: SR-057
 title: "EARS conformance review of the VP04 native parser portfolio specification"
 type: SpecReview
 analysis: ears-conformance
-scope: "quire-verification@21c894d; spec/**/*.md"
+scope: "quire-verification@d3dbf5b; spec/**/*.md"
 review_set: all
 ---
 # EARS Conformance Review of the VP04 Native Parser Portfolio Specification
 
 ## Summary
 
-Quire 0.31.0 reports 117 of 117 documents grammar-clean with zero EARS findings
+Quire 0.31.0 reports 125 of 125 documents grammar-clean with zero EARS findings
 after multi-response constraints and passive ownership wording were split or
 assigned to named components.
 
