@@ -1,24 +1,25 @@
 ---
 id: SR-001
-title: "Base review of the Rust bounded compatibility specification"
+title: "Base review of the VP01 qualification specification"
 type: SpecReview
 analysis: base
-scope: "spec/**/*.md"
+scope: "quire-verification@1d30fed; spec/**/*.md"
 review_set: all
 ---
-# Base review of the Rust bounded compatibility specification
+# Base review of the VP01 qualification specification
 
 ## Summary
 
-The specification, 55 normative criteria, 23 test cases, and matrix were checked
-for identifiers, atomic requirements, concrete adverse paths, link integrity,
-and all six coverage rules. Quire reports 54 of 54 documents grammar-clean; all
-test rows remain honestly pending until the traced Rust implementation exists.
+The owner-selected `all` review checked the VP01 candidate at `1d30fed` for
+identifier format, atomicity, link integrity, adverse cases, and all six test
+coverage rules. Quire reports 75 of 75 documents grammar-clean; 23 existing Rust
+cases remain backed and the two newly specified cases remain honestly pending.
 
 ## Findings
 
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
-| FND-001 | low | The active TestMatrix archetype requires `Coverage Status`, while the active traceability declaration looks for `Status`; the document follows the validating archetype and coverage reports the catalog mismatch. | spec/tests.md |
-| FND-002 | low | The added `ix-trace-rs` marker and unknown-version refusal are specified before their tests exist; matrix rows remain pending until implementation evidence is available. | NFR-004-AC-3, FR-001-AC-5 |
-| FND-003 | low | JCS invalid-input language was narrowed to values representable at Rust serialization or byte-ingestion boundaries; JavaScript-only runtime shapes carry no compatibility promise. | FR-008-AC-3 |
+| FND-001 | medium | Resolved during review: the initial combined selection requirement was split into FR-010, FR-011, and FR-012, and the explicit StR satisfaction map now covers all three. | FR-010, FR-011, FR-012, StR-001 |
+| FND-002 | medium | Resolved during review: an empty classification is now an explicit refusal case, so every emitted classification must be authored and non-empty or `unknown`. | FR-011-AC-2, TC-024 |
+| FND-003 | low | The coverage engine reports 79 of 87 rows backed because six new VP01 criteria and two new test rows intentionally have no Rust symbols before implementation. | FR-010..FR-012, TC-024, TC-025 |
+| FND-004 | low | VP01 acceptance remains gated on open E02 and a recorded reviewer disposition; this reviewed implementation increment cannot close VP01 by itself. | spec/spec.md, FR-010..FR-012 |
