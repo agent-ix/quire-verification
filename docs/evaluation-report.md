@@ -88,12 +88,15 @@ TypeScript development tooling, which dominates its memory use.
 
 ## Disposition and limitations
 
-Agent B disposition: the bounded implementation and verification work in this
-repository is complete. It produces useful gaps without changing catalog or
-evidence ownership. Broader interface promotion and publication remain tracked
-under E01, FS02, FS05, and E04; those separate decisions do not prevent this
-local portfolio from recording its own supported, violated, failed, or
-incomplete outcomes.
+Agent B disposition: the bounded compatibility implementation in this pull
+request is complete and produces useful gaps without changing catalog or
+evidence ownership. This is not completion of parent E02 or its VP01–VP04
+track. VP01 still needs its acceptance dependencies and reviewed migration;
+VP02/VP03 still need the accepted shared identity/version seam and consumer
+integration; VP03 still lacks correlated-oracle evidence; and VP04 still needs
+a reviewed native parser or aggregate producer portfolio, a seeded domain
+defect, agreed thresholds, and the recorded reviewer disposition. E01, FS02,
+FS05, and E04 remain open.
 
 Fixture and local portfolio success establish only the represented
 adapter/planner/intake cases and the two named adapter properties. They do not
