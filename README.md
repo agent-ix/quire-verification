@@ -1,14 +1,45 @@
 # quire-verification
 
-Private bootstrap, 2026-09-07. Repository shell and specification work only; no implemented or released capability is claimed.
+Private bounded E02 implementation, 2026-09-07. The compatibility adapter,
+planning interfaces, and evidence assessment in this repository are provisional
+until their E01, FS02, and FS05 dependencies are reviewed. No represented native
+verification tool is claimed to have run merely because its fixture validates.
 
 ## Charter
 
 Portable technique/capability/policy/plan/result contracts and qualified planning integration with Quoin.
 
-## First work
+## Implemented slice
 
-Inspect current Quoin catalog/advisor/intake; define TechniqueDefinition, ToolCapability, SelectionPolicy, VerificationPlan and TechniqueResult; preserve method IDs and create parity fixtures; model prerequisites, scope, freshness and adequacy separately; retain native runner and Quoin evidence ownership. Decide code ownership/license before extracting existing implementation.
+The current slice defines `TechniqueDefinition`, `ToolCapability`,
+`SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a pinned
+Quoin catalog export without relocating it; constructs prerequisite-aware task
+plans; and assesses result scope and freshness without storing evidence or
+making sufficiency decisions.
+
+Run the complete dependency-free check with:
+
+```sh
+npm test
+npm run fixtures
+```
+
+After independently checking out the pinned Quoin and module revisions, recheck
+the captured catalog (the Quoin checkout must have its locked development
+dependencies installed):
+
+```sh
+cd /path/to/quoin
+node --no-warnings --loader ts-node/esm --input-type=module \
+  -e 'import { loadMethodCatalog } from "./src/advisor/index.ts"; console.log(JSON.stringify(loadMethodCatalog([process.argv[1]]), null, 2));' \
+  /path/to/spec-artifacts-process/spec_artifacts_process \
+  | node /path/to/quire-verification/scripts/check-quoin-baseline.mjs
+```
+
+The fixture suite covers catalog identity parity, conflicting definitions,
+applicability versus readiness, state/relational/fault/manual input shapes,
+missing prerequisites, stale evidence, untriggered behavior, missing
+observations, and exact-scope mismatches.
 
 ## Boundaries
 
@@ -21,4 +52,8 @@ No duplicate evidence store, hidden normative dependency, or unqualified backend
 - [First specification issue](https://github.com/agent-ix/quire-verification/issues/1)
 - [Private formalization board](https://github.com/orgs/agent-ix/projects/20)
 
-Read [license decision](LICENSE-DECISION.md) before adding code or normative artifacts. Publication requires a fresh review; do not flip private history public.
+Read [the interface decision](docs/interface-decision.md), [compatibility map](docs/quoin-compatibility.md),
+the [evaluation report](docs/evaluation-report.md), and [artifact rights inventory](docs/artifact-rights.md)
+before extending the slice. Read [license decision](LICENSE-DECISION.md) before adding code or
+normative artifacts. Publication requires a fresh review; do not flip private
+history public.

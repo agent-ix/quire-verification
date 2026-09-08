@@ -1,0 +1,14 @@
+{
+  "name": "@agent-ix/quire-verification",
+  "version": "0.0.0-private",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "fixtures": "node scripts/render-fixtures.mjs"
+  }
+}

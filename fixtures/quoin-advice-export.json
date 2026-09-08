@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "quire-verification/quoin-advice-export/v1",
+  "source": {
+    "quoinRevision": "7072d65db7e236e819d99be42e094ba548e9496a",
+    "moduleRevision": "61a20e010d5e758f52864ad3152ccdb304a39d27"
+  },
+  "cases": [
+    {
+      "id": "state-invariant",
+      "statement": "For every parser state, the invariant holds for every input",
+      "propertyShape": "invariant",
+      "archetype": "FR"
+    },
+    {
+      "id": "relational-roundtrip",
+      "statement": "Every serialized value round-trips to a semantically equivalent value",
+      "propertyShape": "round-trip",
+      "archetype": "FR"
+    },
+    {
+      "id": "fault-recovery",
+      "statement": "The system recovers after a failure and remains fault-tolerant",
+      "objectTypes": [
+        "failure_mode"
+      ],
+      "archetype": "NFR"
+    },
+    {
+      "id": "manual-review",
+      "statement": "A person reviews the document for readable judgement",
+      "archetype": "StR"
+    },
+    {
+      "id": "unknown",
+      "statement": "The implementation does the required thing",
+      "archetype": "FR"
+    }
+  ],
+  "advice": [
+    {
+      "obligation": "state-invariant",
+      "recommended": [
+        {
+          "method": "compile-time-check",
+          "class": "Analysis",
+          "evidenceKind": "Compile",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "invariance"
+            },
+            {
+              "rule": "property_shapes",
+              "value": "invariant"
+            }
+          ]
+        },
+        {
+          "method": "property-based-testing",
+          "class": "Test",
+          "evidenceKind": "Property",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "universally-quantified"
+            },
+            {
+              "rule": "property_shapes",
+              "value": "invariant"
+            }
+          ]
+        },
+        {
+          "method": "design-by-contract",
+          "class": "Test",
+          "evidenceKind": "Compile",
+          "reasons": [
+            {
+              "rule": "property_shapes",
+              "value": "invariant"
+            }
+          ]
+        },
+        {
+          "method": "fuzzing",
+          "class": "Test",
+          "evidenceKind": "Fuzz",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "parser"
+            }
+          ]
+        },
+        {
+          "method": "runtime-monitoring",
+          "class": "Test",
+          "evidenceKind": "Integration",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "invariance"
+            }
+          ]
+        }
+      ],
+      "authored": null,
+      "mismatch": false,
+      "uncatalogued": false,
+      "inconclusive": false
+    },
+    {
+      "obligation": "relational-roundtrip",
+      "recommended": [
+        {
+          "method": "concolic-execution",
+          "class": "Analysis",
+          "evidenceKind": "Fuzz",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "reference-equivalence"
+            }
+          ]
+        },
+        {
+          "method": "golden-approval-testing",
+          "class": "Test",
+          "evidenceKind": "Snapshot",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "serialization"
+            }
+          ]
+        },
+        {
+          "method": "metamorphic-testing",
+          "class": "Test",
+          "evidenceKind": "Property",
+          "reasons": [
+            {
+              "rule": "property_shapes",
+              "value": "round-trip"
+            }
+          ]
+        },
+        {
+          "method": "property-based-testing",
+          "class": "Test",
+          "evidenceKind": "Property",
+          "reasons": [
+            {
+              "rule": "property_shapes",
+              "value": "round-trip"
+            }
+          ]
+        }
+      ],
+      "authored": null,
+      "mismatch": false,
+      "uncatalogued": false,
+      "inconclusive": false
+    },
+    {
+      "obligation": "fault-recovery",
+      "recommended": [
+        {
+          "method": "fault-injection",
+          "class": "Test",
+          "evidenceKind": "Integration",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "fault-tolerance"
+            },
+            {
+              "rule": "characteristics",
+              "value": "reliability"
+            },
+            {
+              "rule": "object_types",
+              "value": "failure_mode"
+            }
+          ]
+        }
+      ],
+      "authored": null,
+      "mismatch": false,
+      "uncatalogued": false,
+      "inconclusive": false
+    },
+    {
+      "obligation": "manual-review",
+      "recommended": [
+        {
+          "method": "inspection",
+          "class": "Inspection",
+          "evidenceKind": "Manual",
+          "reasons": [
+            {
+              "rule": "characteristics",
+              "value": "no-executable-oracle"
+            }
+          ]
+        }
+      ],
+      "authored": null,
+      "mismatch": false,
+      "uncatalogued": false,
+      "inconclusive": false
+    },
+    {
+      "obligation": "unknown",
+      "recommended": [],
+      "authored": null,
+      "mismatch": false,
+      "uncatalogued": false,
+      "inconclusive": true
+    }
+  ]
+}

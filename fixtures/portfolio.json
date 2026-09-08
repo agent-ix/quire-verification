@@ -1,0 +1,637 @@
+{
+  "schemaVersion": "quire-verification/portfolio-fixture/v1",
+  "claimLimit": "Synthetic planning/result fixture. No external verification or fault tool was executed.",
+  "planRequest": {
+    "planId": "PLAN-PARSER-E02-FIXTURE",
+    "policy": {
+      "contractVersion": "quire-verification/e02-draft-1",
+      "kind": "SelectionPolicy",
+      "policyId": "POLICY-PARSER-FIXTURE",
+      "version": "1",
+      "sourceRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "policy:parser-baseline",
+        "revision": "policy-r1",
+        "digest": "sha256:policyparserbaseline",
+        "profile": "quire-selection-policy/e02-fixture-v1"
+      },
+      "provenance": {
+        "kind": "project-authored",
+        "standardDerived": false,
+        "rights": "AGPL-3.0-or-later"
+      },
+      "rules": [
+        {
+          "ruleId": "state-property",
+          "priority": "required",
+          "explanation": "Exercise the invariant with generated states."
+        },
+        {
+          "ruleId": "state-fuzz",
+          "priority": "recommended",
+          "explanation": "Exercise malformed parser inputs independently."
+        },
+        {
+          "ruleId": "relation",
+          "priority": "required",
+          "explanation": "Compare parse/serialize executions over a common domain."
+        },
+        {
+          "ruleId": "trace",
+          "priority": "recommended",
+          "explanation": "Replay event ordering only with qualified observations."
+        },
+        {
+          "ruleId": "fault",
+          "priority": "required",
+          "explanation": "Plan recovery work while refusing unapproved injection."
+        },
+        {
+          "ruleId": "manual",
+          "priority": "required",
+          "explanation": "Retain a human source-correspondence disposition."
+        }
+      ]
+    },
+    "properties": [
+      {
+        "propertyId": "PROP-STATE",
+        "classification": "unknown",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "property:parser-state-invariant",
+          "revision": "property-r1",
+          "digest": "sha256:propertyparserstateinvariant",
+          "profile": "quire-state/e02-fixture-v1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:parser",
+            "revision": "parser-r1",
+            "digest": "sha256:subjectparser000",
+            "profile": "quire-state/e02-fixture-v1"
+          }
+        ],
+        "profile": "quire-state/e02-fixture-v1",
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "binding:parser-state",
+            "revision": "binding-r1",
+            "digest": "sha256:bindingparserstate",
+            "profile": "quire-state/e02-fixture-v1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-state-r1",
+        "executionScope": {
+          "repository": "fixture-parser",
+          "revision": "parser-r1",
+          "paths": [
+            "src/parser.mjs"
+          ]
+        },
+        "input": {
+          "kind": "state",
+          "snapshotRef": {
+            "authority": "fixture.agent-ix.local",
+            "identity": "snapshot:parser-valid",
+            "revision": "snapshot-r1",
+            "digest": "sha256:snapshotparservalid",
+            "profile": "quire-state/e02-fixture-v1"
+          },
+          "property": "state is internally consistent"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        }
+      },
+      {
+        "propertyId": "PROP-RELATION",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "property:parser-roundtrip",
+          "revision": "property-r1",
+          "digest": "sha256:propertyparserroundtrip",
+          "profile": "quire-relational/e02-fixture-v1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:parser-before",
+            "revision": "parser-r1",
+            "digest": "sha256:subjectparserbefore",
+            "profile": "quire-relational/e02-fixture-v1"
+          },
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:parser-after",
+            "revision": "parser-r1",
+            "digest": "sha256:subjectparserafter",
+            "profile": "quire-relational/e02-fixture-v1"
+          }
+        ],
+        "profile": "quire-relational/e02-fixture-v1",
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "binding:roundtrip",
+            "revision": "binding-r1",
+            "digest": "sha256:bindingroundtrip",
+            "profile": "quire-relational/e02-fixture-v1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-relation-r1",
+        "executionScope": {
+          "repository": "fixture-parser",
+          "revision": "parser-r1",
+          "paths": [
+            "src/parser.mjs"
+          ]
+        },
+        "input": {
+          "kind": "relational",
+          "leftSubject": "subject:parser-before",
+          "rightSubject": "subject:parser-after",
+          "relation": "semantic-equivalence"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        }
+      },
+      {
+        "propertyId": "PROP-TRACE",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "property:parser-event-order",
+          "revision": "property-r1",
+          "digest": "sha256:propertyparsereventorder",
+          "profile": "quire-trace/e02-fixture-v1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:parser-trace",
+            "revision": "parser-r1",
+            "digest": "sha256:subjectparsertrace",
+            "profile": "quire-trace/e02-fixture-v1"
+          }
+        ],
+        "profile": "quire-trace/e02-fixture-v1",
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "binding:parser-events",
+            "revision": "binding-r1",
+            "digest": "sha256:bindingparserevents",
+            "profile": "quire-trace/e02-fixture-v1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-trace-r1",
+        "executionScope": {
+          "repository": "fixture-parser",
+          "revision": "parser-r1",
+          "paths": [
+            "src/parser.mjs"
+          ]
+        },
+        "input": {
+          "kind": "trace",
+          "traceRef": {
+            "authority": "fixture.agent-ix.local",
+            "identity": "trace:parser-events",
+            "revision": "trace-fixture-r1",
+            "digest": "sha256:traceparserevents",
+            "profile": "quire-trace/e02-fixture-v1"
+          },
+          "clockProfile": "event-indexed",
+          "completion": "closed-fixture"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        }
+      },
+      {
+        "propertyId": "PROP-FAULT",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "property:parser-recovery",
+          "revision": "property-r1",
+          "digest": "sha256:propertyparserrecovery",
+          "profile": "quire-fault/e02-fixture-v1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:parser",
+            "revision": "parser-r1",
+            "digest": "sha256:subjectparser000",
+            "profile": "quire-fault/e02-fixture-v1"
+          }
+        ],
+        "profile": "quire-fault/e02-fixture-v1",
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "binding:parser-fault",
+            "revision": "binding-r1",
+            "digest": "sha256:bindingparserfault",
+            "profile": "quire-fault/e02-fixture-v1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-fault-r1",
+        "executionScope": {
+          "repository": "fixture-parser",
+          "revision": "parser-r1",
+          "paths": [
+            "src/parser.mjs"
+          ],
+          "environment": "disposable-fixture-only"
+        },
+        "input": {
+          "kind": "fault",
+          "faultModelRef": {
+            "authority": "fixture.agent-ix.local",
+            "identity": "fault:read-error",
+            "revision": "fault-r1",
+            "digest": "sha256:faultreaderror00",
+            "profile": "quire-fault/e02-fixture-v1"
+          },
+          "requestedInjectionSite": "fixture-only",
+          "mitigationOracle": "independent recovery event"
+        },
+        "freshness": {
+          "maxAgeSeconds": 3600
+        }
+      },
+      {
+        "propertyId": "PROP-MANUAL",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "property:source-correspondence-review",
+          "revision": "property-r1",
+          "digest": "sha256:propertysourcecorrespondencereview",
+          "profile": "quire-manual/e02-fixture-v1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "identity": "subject:source-map",
+            "revision": "source-map-r1",
+            "digest": "sha256:subjectsourcemap",
+            "profile": "quire-manual/e02-fixture-v1"
+          }
+        ],
+        "profile": "quire-manual/e02-fixture-v1",
+        "bindingRefs": [],
+        "dependencyClosure": "sha256:closure-manual-r1",
+        "executionScope": {
+          "repository": "fixture-parser",
+          "revision": "parser-r1",
+          "paths": [
+            "fixtures/source-map.json"
+          ]
+        },
+        "input": {
+          "kind": "manual",
+          "reviewProcedure": "Compare source spans to the authored fixture.",
+          "requiredDisposition": [
+            "accept",
+            "revise",
+            "reject"
+          ]
+        },
+        "freshness": {
+          "maxAgeSeconds": 604800
+        }
+      }
+    ],
+    "selections": [
+      {
+        "propertyId": "PROP-STATE",
+        "techniqueId": "property-based-testing",
+        "applicability": "applicable",
+        "priority": "required",
+        "reasons": [
+          {
+            "rule": "property_shapes",
+            "value": "invariant"
+          }
+        ]
+      },
+      {
+        "propertyId": "PROP-STATE",
+        "techniqueId": "fuzzing",
+        "applicability": "applicable",
+        "priority": "recommended",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "parser"
+          }
+        ]
+      },
+      {
+        "propertyId": "PROP-RELATION",
+        "techniqueId": "metamorphic-testing",
+        "applicability": "applicable",
+        "priority": "required",
+        "reasons": [
+          {
+            "rule": "property_shapes",
+            "value": "round-trip"
+          }
+        ]
+      },
+      {
+        "propertyId": "PROP-TRACE",
+        "techniqueId": "runtime-monitoring",
+        "applicability": "applicable",
+        "priority": "recommended",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "temporal"
+          }
+        ]
+      },
+      {
+        "propertyId": "PROP-FAULT",
+        "techniqueId": "fault-injection",
+        "applicability": "applicable",
+        "priority": "required",
+        "reasons": [
+          {
+            "rule": "object_types",
+            "value": "failure_mode"
+          }
+        ]
+      },
+      {
+        "propertyId": "PROP-MANUAL",
+        "techniqueId": "inspection",
+        "applicability": "applicable",
+        "priority": "required",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "no-executable-oracle"
+          }
+        ]
+      }
+    ],
+    "capabilities": [
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-PROPERTY",
+        "techniqueId": "property-based-testing",
+        "qualification": "qualified",
+        "inputKinds": [
+          "state"
+        ],
+        "profiles": [
+          "quire-state/e02-fixture-v1"
+        ],
+        "prerequisites": [
+          {
+            "kind": "generator",
+            "id": "parser-state-generator",
+            "required": true
+          },
+          {
+            "kind": "harness",
+            "id": "parser-harness",
+            "required": true
+          }
+        ],
+        "runner": {
+          "kind": "native-producer",
+          "adapterId": "adapter:CAP-PROPERTY",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [
+          "read-fixture"
+        ],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      },
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-FUZZ",
+        "techniqueId": "fuzzing",
+        "qualification": "qualified",
+        "inputKinds": [
+          "state"
+        ],
+        "profiles": [
+          "quire-state/e02-fixture-v1"
+        ],
+        "prerequisites": [
+          {
+            "kind": "harness",
+            "id": "parser-harness",
+            "required": true
+          },
+          {
+            "kind": "corpus",
+            "id": "parser-seeds",
+            "required": true
+          }
+        ],
+        "runner": {
+          "kind": "native-producer",
+          "adapterId": "adapter:CAP-FUZZ",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [
+          "read-fixture"
+        ],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      },
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-RELATION",
+        "techniqueId": "metamorphic-testing",
+        "qualification": "provisional",
+        "inputKinds": [
+          "relational"
+        ],
+        "profiles": [
+          "quire-relational/e02-fixture-v1"
+        ],
+        "prerequisites": [
+          {
+            "kind": "common-domain",
+            "id": "parser-roundtrip-domain",
+            "required": true
+          },
+          {
+            "kind": "relation-binding",
+            "id": "roundtrip-equivalence",
+            "required": true
+          }
+        ],
+        "runner": {
+          "kind": "native-producer",
+          "adapterId": "adapter:CAP-RELATION",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [
+          "read-fixture"
+        ],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      },
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-TRACE",
+        "techniqueId": "runtime-monitoring",
+        "qualification": "provisional",
+        "inputKinds": [
+          "trace"
+        ],
+        "profiles": [
+          "quire-trace/e02-fixture-v1"
+        ],
+        "prerequisites": [
+          {
+            "kind": "observation-binding",
+            "id": "parser-event-binding",
+            "required": true
+          }
+        ],
+        "runner": {
+          "kind": "native-producer",
+          "adapterId": "adapter:CAP-TRACE",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [
+          "read-fixture"
+        ],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      },
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-FAULT",
+        "techniqueId": "fault-injection",
+        "qualification": "qualified",
+        "inputKinds": [
+          "fault"
+        ],
+        "profiles": [
+          "quire-fault/e02-fixture-v1"
+        ],
+        "prerequisites": [],
+        "runner": {
+          "kind": "native-producer",
+          "adapterId": "adapter:CAP-FAULT",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [
+          "read-fixture"
+        ],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      },
+      {
+        "contractVersion": "quire-verification/e02-draft-1",
+        "kind": "ToolCapability",
+        "capabilityId": "CAP-MANUAL",
+        "techniqueId": "inspection",
+        "qualification": "qualified",
+        "inputKinds": [
+          "manual"
+        ],
+        "profiles": [
+          "quire-manual/e02-fixture-v1"
+        ],
+        "prerequisites": [
+          {
+            "kind": "reviewer",
+            "id": "domain-owner",
+            "required": true
+          }
+        ],
+        "runner": {
+          "kind": "manual",
+          "adapterId": "adapter:CAP-MANUAL",
+          "adapterVersion": "fixture-v1"
+        },
+        "environmentPermissions": [],
+        "nativeArtifactInterface": {
+          "mode": "reference-only",
+          "mediaTypes": [
+            "application/json"
+          ]
+        },
+        "limits": {
+          "executionClaim": "fixture-only; represented external tool not executed"
+        }
+      }
+    ],
+    "availablePrerequisites": [
+      {
+        "kind": "generator",
+        "id": "parser-state-generator"
+      },
+      {
+        "kind": "harness",
+        "id": "parser-harness"
+      },
+      {
+        "kind": "corpus",
+        "id": "parser-seeds"
+      },
+      {
+        "kind": "reviewer",
+        "id": "domain-owner"
+      }
+    ],
+    "budget": {
+      "wallClockSeconds": 60,
+      "parallelism": 1
+    }
+  }
+}
