@@ -53,7 +53,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-STATE-PROPERTY:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-STATE-FUZZ",
@@ -105,7 +120,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "fuzzing"
+      "techniqueId": "fuzzing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-STATE-FUZZ:fuzzing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-RELATION",
@@ -159,7 +189,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "metamorphic-testing"
+      "techniqueId": "metamorphic-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-RELATION:metamorphic-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-TRACE",
@@ -212,7 +257,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "runtime-monitoring"
+      "techniqueId": "runtime-monitoring",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-TRACE:runtime-monitoring",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-FAULT",
@@ -266,7 +326,22 @@
       "freshness": {
         "maxAgeSeconds": 3600
       },
-      "techniqueId": "fault-injection"
+      "techniqueId": "fault-injection",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-FAULT:fault-injection",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-MANUAL",
@@ -308,7 +383,22 @@
       "freshness": {
         "maxAgeSeconds": 604800
       },
-      "techniqueId": "inspection"
+      "techniqueId": "inspection",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-MANUAL:inspection",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-MISSING",
@@ -360,7 +450,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-MISSING:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-SCOPE",
@@ -412,7 +517,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-SCOPE:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-INCOMPLETE",
@@ -464,7 +584,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-INCOMPLETE:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-VIOLATED",
@@ -516,7 +651,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-VIOLATED:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-PARTIAL",
@@ -568,7 +718,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-PARTIAL:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     },
     {
       "propertyId": "OBL-ASSUMPTION",
@@ -620,7 +785,22 @@
       "freshness": {
         "maxAgeSeconds": 86400
       },
-      "techniqueId": "property-based-testing"
+      "techniqueId": "property-based-testing",
+      "resultBinding": {
+        "planId": "PLAN-PARSER-E02-FIXTURE",
+        "taskId": "fixture:OBL-ASSUMPTION:property-based-testing",
+        "runRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "run:parser-e02-fixture",
+          "revision": "run-r1",
+          "digest": "sha256:runparsere02fixture",
+          "profile": "quire-run/e02-fixture-v1"
+        },
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1"
+      }
     }
   ],
   "results": [
@@ -632,6 +812,13 @@
       "taskId": "fixture:OBL-STATE-PROPERTY:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:00:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:parser-state-invariant",
@@ -694,20 +881,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-SUPPORTED.json",
           "digest": "sha256:RESULTSUPPORTED0",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -717,6 +905,13 @@
       "taskId": "fixture:OBL-STATE-FUZZ:fuzzing",
       "techniqueId": "fuzzing",
       "producedAt": "2026-09-07T20:01:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:parser-state-invariant",
@@ -777,20 +972,21 @@
         "status": "not-assessed",
         "observations": []
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-FAILED.json",
           "digest": "sha256:RESULTFAILED0000",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -800,6 +996,13 @@
       "taskId": "fixture:OBL-RELATION:metamorphic-testing",
       "techniqueId": "metamorphic-testing",
       "producedAt": "2026-09-07T20:02:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:parser-roundtrip",
@@ -860,20 +1063,21 @@
         "status": "not-assessed",
         "observations": []
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-UNSUPPORTED.json",
           "digest": "sha256:RESULTUNSUPPORTED",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -883,6 +1087,13 @@
       "taskId": "fixture:OBL-TRACE:runtime-monitoring",
       "techniqueId": "runtime-monitoring",
       "producedAt": "2026-09-07T20:03:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:parser-event-order",
@@ -948,20 +1159,21 @@
           "parse-finish"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-INADQUATE.json",
           "digest": "sha256:RESULTINADQUATE0",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -971,6 +1183,13 @@
       "taskId": "fixture:OBL-FAULT:fault-injection",
       "techniqueId": "fault-injection",
       "producedAt": "2026-09-07T20:04:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:parser-recovery",
@@ -1035,20 +1254,21 @@
           "healthy-control-only"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-UNTRIGGERED.json",
           "digest": "sha256:RESULTUNTRIGGERED",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1058,6 +1278,13 @@
       "taskId": "fixture:OBL-MANUAL:inspection",
       "techniqueId": "inspection",
       "producedAt": "2026-08-01T20:00:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:source-correspondence-review",
@@ -1112,20 +1339,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-STALE.json",
           "digest": "sha256:RESULTSTALE00000",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1135,6 +1363,13 @@
       "taskId": "fixture:OBL-SCOPE:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:05:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:scope",
@@ -1197,20 +1432,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-SCOPE-MISMATCH.json",
           "digest": "sha256:RESULTSCOPEMISMATCH",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1220,6 +1456,13 @@
       "taskId": "fixture:OBL-INCOMPLETE:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:06:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:incomplete",
@@ -1280,20 +1523,21 @@
         "status": "unknown",
         "observations": []
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-INCOMPLETE.json",
           "digest": "sha256:RESULTINCOMPLETE",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1303,6 +1547,13 @@
       "taskId": "fixture:OBL-VIOLATED:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:07:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:violated",
@@ -1366,20 +1617,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-VIOLATED.json",
           "digest": "sha256:RESULTVIOLATED00",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1389,6 +1641,13 @@
       "taskId": "fixture:OBL-PARTIAL:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:08:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:partial",
@@ -1454,20 +1713,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-PARTIAL.json",
           "digest": "sha256:RESULTPARTIAL000",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     },
     {
       "contractVersion": "quire-verification/e02-draft-1",
@@ -1477,6 +1737,13 @@
       "taskId": "fixture:OBL-ASSUMPTION:property-based-testing",
       "techniqueId": "property-based-testing",
       "producedAt": "2026-09-07T20:09:00Z",
+      "runRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "run:parser-e02-fixture",
+        "revision": "run-r1",
+        "digest": "sha256:runparsere02fixture",
+        "profile": "quire-run/e02-fixture-v1"
+      },
       "propertyRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "property:assumption",
@@ -1539,20 +1806,21 @@
           "fixture-output"
         ]
       },
-      "provenance": {
-        "producer": "quire-verification-fixture",
-        "producerVersion": "e02-draft-1",
-        "adapter": "fixture-replay",
-        "sourceRevision": "parser-r1",
-        "executionMode": "fixture-replay"
-      },
       "nativeArtifacts": [
         {
           "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json",
           "digest": "sha256:RESULTASSUMPTIONUNMET",
           "mediaType": "application/json"
         }
-      ]
+      ],
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "adapterVersion": "1",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      }
     }
   ],
   "expectedStatuses": {

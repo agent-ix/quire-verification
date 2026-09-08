@@ -202,7 +202,13 @@ export function validateTechniqueResult(value) {
   requireRecord(result.participation, "participation");
   requireRecord(result.executionScope, "executionScope");
   requireRecord(result.provenance, "provenance");
-  for (const field of ["producer", "producerVersion", "adapter", "sourceRevision"]) {
+  for (const field of [
+    "producer",
+    "producerVersion",
+    "adapter",
+    "adapterVersion",
+    "sourceRevision",
+  ]) {
     requireString(result.provenance[field], `provenance.${field}`);
   }
   requireEnum(execution.status, EXECUTION_STATUSES, "execution.status");
@@ -218,6 +224,7 @@ export function validateTechniqueResult(value) {
     "adequacy.status",
   );
   validateArtifactRef(result.propertyRef, "TechniqueResult.propertyRef");
+  validateArtifactRef(result.runRef, "TechniqueResult.runRef");
   if (!Array.isArray(result.subjectRefs) || !Array.isArray(result.bindingRefs)) {
     throw new TypeError("TechniqueResult subjectRefs and bindingRefs must be arrays");
   }
@@ -266,7 +273,7 @@ export function validateTechniqueResult(value) {
   return result;
 }
 
-export function validateInventoryProperty(value) {
+export function validateInventoryProperty(value, { requireResultBinding = false } = {}) {
   const property = requireRecord(value, "inventory property");
   requireString(property.propertyId, "inventory property.propertyId");
   validateArtifactRef(property.propertyRef, "inventory property.propertyRef");
@@ -282,8 +289,29 @@ export function validateInventoryProperty(value) {
   requireString(property.profile, "inventory property.profile");
   requireString(property.dependencyClosure, "inventory property.dependencyClosure");
   requireRecord(property.executionScope, "inventory property.executionScope");
+  if (property.resultBinding !== undefined) {
+    validateResultBinding(property.resultBinding);
+  } else if (requireResultBinding) {
+    throw new TypeError("inventory property.resultBinding must be an object");
+  }
   validateInput(property.input, "inventory property.input");
   return property;
+}
+
+export function validateResultBinding(value) {
+  const binding = requireRecord(value, "inventory property.resultBinding");
+  for (const field of [
+    "planId",
+    "taskId",
+    "producer",
+    "producerVersion",
+    "adapter",
+    "adapterVersion",
+  ]) {
+    requireString(binding[field], `inventory property.resultBinding.${field}`);
+  }
+  validateArtifactRef(binding.runRef, "inventory property.resultBinding.runRef");
+  return binding;
 }
 
 export function validateInput(value, label = "input") {

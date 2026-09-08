@@ -41,3 +41,21 @@ test("the input contract keeps all five subject shapes explicit", () => {
     ["state", "relational", "trace", "fault", "manual"],
   );
 });
+
+test("result intake exposes exact plan, task, run, producer, and adapter binding", () => {
+  assert.deepEqual(schema.$defs.ResultBinding.required, [
+    "planId",
+    "taskId",
+    "runRef",
+    "producer",
+    "producerVersion",
+    "adapter",
+    "adapterVersion",
+  ]);
+  assert.ok(schema.$defs.TechniqueResult.required.includes("runRef"));
+  assert.ok(
+    schema.$defs.TechniqueResult.properties.provenance.required.includes(
+      "adapterVersion",
+    ),
+  );
+});

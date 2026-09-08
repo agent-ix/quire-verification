@@ -12,36 +12,63 @@ export function assessEvidence({ inventory, results, asOf }) {
   }
   const at = Date.parse(asOf);
   if (!Number.isFinite(at)) throw new TypeError("asOf must be an ISO timestamp");
-  for (const result of results) validateTechniqueResult(result);
+  const resultIds = new Set();
+  for (const result of results) {
+    validateTechniqueResult(result);
+    if (resultIds.has(result.resultId)) {
+      throw new TypeError(`duplicate result id ${result.resultId}`);
+    }
+    resultIds.add(result.resultId);
+  }
 
   const obligations = inventory.map((property) => {
-    validateInventoryProperty(property);
+    validateInventoryProperty(property, { requireResultBinding: true });
     const candidates = results.filter(
       (result) => result.propertyRef.identity === property.propertyRef.identity,
     );
     const exact = candidates
       .filter((result) => scopeDifferences(property, result).length === 0)
-      .sort((a, b) => Date.parse(b.producedAt) - Date.parse(a.producedAt));
+      .sort((a, b) => compare(a.resultId, b.resultId));
     if (exact.length === 0) {
       return {
         propertyId: property.propertyId,
         status: "missing",
         resultId: null,
-        gaps: candidates.flatMap((result) =>
-          scopeDifferences(property, result).map((dimension) => ({
-            kind: "scope-mismatch",
-            dimension,
-            resultId: result.resultId,
-          })),
-        ),
+        gaps: candidates
+          .flatMap((result) =>
+            scopeDifferences(property, result).map((dimension) => ({
+              kind: "scope-mismatch",
+              dimension,
+              resultId: result.resultId,
+            })),
+          )
+          .sort((a, b) => compare(exactValue(a), exactValue(b))),
+      };
+    }
+    if (exact.length > 1) {
+      return {
+        propertyId: property.propertyId,
+        status: "ambiguous",
+        resultId: null,
+        candidateResultIds: exact.map((result) => result.resultId),
+        gaps: [
+          {
+            kind: "ambiguous-results",
+            resultIds: exact.map((result) => result.resultId),
+          },
+        ],
       };
     }
     const result = exact[0];
+    const findings = findingsFor(result);
     if (isStale(property, result, at)) {
-      return view(property, result, "stale", [{ kind: "freshness-expired" }]);
+      return view(property, result, "stale", [
+        { kind: "freshness-expired" },
+        ...findings,
+      ]);
     }
     const status = classify(result);
-    return view(property, result, status, gapsFor(result, status));
+    return view(property, result, status, findings);
   });
 
   return {
@@ -50,6 +77,8 @@ export function assessEvidence({ inventory, results, asOf }) {
     obligations,
     evidenceOwner: "Quoin",
     sufficiencyDecision: "not-made",
+    statusSemantics:
+      "compatibility summary only; gaps enumerate every applicable independent result finding",
   };
 }
 
@@ -62,6 +91,21 @@ export function scopeDifferences(property, result) {
     ["bindingRefs", property.bindingRefs, result.bindingRefs],
     ["dependencyClosure", property.dependencyClosure, result.dependencyClosure],
     ["executionScope", property.executionScope, result.executionScope],
+    ["planId", property.resultBinding.planId, result.planId],
+    ["taskId", property.resultBinding.taskId, result.taskId],
+    ["runRef", property.resultBinding.runRef, result.runRef],
+    ["producer", property.resultBinding.producer, result.provenance.producer],
+    [
+      "producerVersion",
+      property.resultBinding.producerVersion,
+      result.provenance.producerVersion,
+    ],
+    ["adapter", property.resultBinding.adapter, result.provenance.adapter],
+    [
+      "adapterVersion",
+      property.resultBinding.adapterVersion,
+      result.provenance.adapterVersion,
+    ],
   ];
   return pairs
     .filter(([, expected, actual]) => exactValue(expected) !== exactValue(actual))
@@ -98,21 +142,53 @@ function classify(result) {
   return "inconclusive";
 }
 
-function gapsFor(result, status) {
+export function findingsFor(result) {
   const gaps = [];
-  if (status === "untriggered") gaps.push({ kind: "required-activation-absent" });
-  if (status === "inadequate") {
+  if (result.execution.status === "unsupported") {
+    gaps.push({ kind: "unsupported", detail: result.execution.detail ?? null });
+  } else if (result.execution.status === "failed") {
+    gaps.push({ kind: "failed", detail: result.execution.detail ?? null });
+  } else if (result.execution.status !== "completed") {
+    gaps.push({ kind: "incomplete", detail: result.execution.detail ?? null });
+  }
+  if (result.activation.status === "not-activated") {
+    gaps.push({ kind: "required-activation-absent" });
+  } else if (result.activation.status === "unknown") {
+    gaps.push({ kind: "activation-unknown" });
+  }
+  if (["inadequate", "unknown", "not-assessed"].includes(result.adequacy.status)) {
     gaps.push({
       kind: "observation-inadequate",
       missing: result.adequacy.missingObservations ?? [],
     });
   }
-  if (status === "partial") gaps.push({ kind: "partial-participation" });
-  if (status === "assumption-unmet") gaps.push({ kind: "assumption-unmet" });
-  if (["failed", "incomplete", "unsupported", "inconclusive"].includes(status)) {
-    gaps.push({ kind: status, detail: result.execution.detail ?? null });
+  if (["partial", "not-started", "unknown"].includes(result.participation.status)) {
+    gaps.push({
+      kind: "partial-participation",
+      status: result.participation.status,
+      missing: result.participation.missingParticipants ?? [],
+    });
   }
-  return gaps;
+  for (const assumption of result.assumptions) {
+    if (assumption.status === "not-met") {
+      gaps.push({ kind: "assumption-unmet", assumptionId: assumption.assumptionId });
+    } else if (assumption.status !== "met") {
+      gaps.push({
+        kind: "assumption-inconclusive",
+        assumptionId: assumption.assumptionId,
+        status: assumption.status,
+      });
+    }
+  }
+  if (result.logical.outcome === "violated") {
+    gaps.push({ kind: "logical-violation" });
+  } else if (
+    result.execution.status === "completed" &&
+    !["satisfied", "violated"].includes(result.logical.outcome)
+  ) {
+    gaps.push({ kind: "logical-inconclusive", outcome: result.logical.outcome });
+  }
+  return gaps.sort((a, b) => compare(exactValue(a), exactValue(b)));
 }
 
 function view(property, result, status, gaps) {
@@ -131,4 +207,8 @@ function view(property, result, status, gaps) {
     nativeArtifacts: result.nativeArtifacts,
     gaps,
   };
+}
+
+function compare(a, b) {
+  return a === b ? 0 : a < b ? -1 : 1;
 }

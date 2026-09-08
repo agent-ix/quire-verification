@@ -16,6 +16,7 @@ test("accounts for every obligation without collapsing result states", () => {
   assert.equal(report.obligations.length, fixture.inventory.length);
   assert.equal(report.evidenceOwner, "Quoin");
   assert.equal(report.sufficiencyDecision, "not-made");
+  assert.match(report.statusSemantics, /gaps enumerate every applicable/);
   const statuses = Object.fromEntries(
     report.obligations.map((obligation) => [
       obligation.propertyId,
@@ -63,7 +64,10 @@ test("keeps activation and observation adequacy distinct from logical truth", ()
   );
   assert.equal(inadequate.logical.outcome, "unknown");
   assert.equal(inadequate.adequacy.status, "inadequate");
-  assert.deepEqual(inadequate.gaps[0].missing, ["parse-finish"]);
+  assert.deepEqual(
+    inadequate.gaps.find((gap) => gap.kind === "observation-inadequate").missing,
+    ["parse-finish"],
+  );
 });
 
 test("keeps partial participation and unmet assumptions visible", () => {
@@ -98,12 +102,90 @@ test("joins every required identity and scope dimension exactly", () => {
     ["bindingRefs", (result) => (result.bindingRefs[0].revision = "binding-r2")],
     ["dependencyClosure", (result) => (result.dependencyClosure = "sha256:other")],
     ["executionScope", (result) => (result.executionScope.revision = "parser-r2")],
+    ["planId", (result) => (result.planId = "PLAN-OTHER")],
+    ["taskId", (result) => (result.taskId = "task:other")],
+    ["runRef", (result) => (result.runRef.revision = "run-r2")],
+    ["producer", (result) => (result.provenance.producer = "other-producer")],
+    [
+      "producerVersion",
+      (result) => (result.provenance.producerVersion = "other-version"),
+    ],
+    ["adapter", (result) => (result.provenance.adapter = "other-adapter")],
+    [
+      "adapterVersion",
+      (result) => (result.provenance.adapterVersion = "other-version"),
+    ],
   ];
   for (const [dimension, mutate] of mutations) {
     const result = structuredClone(source);
     mutate(result);
     assert.ok(scopeDifferences(expected, result).includes(dimension), dimension);
   }
+});
+
+test("refuses multiple results for one exact plan/task/run binding", () => {
+  const input = structuredClone(fixture);
+  input.inventory = [
+    input.inventory.find(
+      (obligation) => obligation.propertyId === "OBL-STATE-PROPERTY",
+    ),
+  ];
+  const first = input.results.find(
+    (result) => result.resultId === "RESULT-SUPPORTED",
+  );
+  const second = structuredClone(first);
+  second.resultId = "RESULT-SUPPORTED-DUPLICATE";
+  second.producedAt = first.producedAt;
+  input.results = [second, first];
+
+  const [obligation] = assessEvidence(input).obligations;
+  assert.equal(obligation.status, "ambiguous");
+  assert.deepEqual(obligation.candidateResultIds, [
+    "RESULT-SUPPORTED",
+    "RESULT-SUPPORTED-DUPLICATE",
+  ]);
+  assert.deepEqual(obligation.gaps, [
+    {
+      kind: "ambiguous-results",
+      resultIds: ["RESULT-SUPPORTED", "RESULT-SUPPORTED-DUPLICATE"],
+    },
+  ]);
+});
+
+test("rejects duplicate result identities", () => {
+  const input = structuredClone(fixture);
+  const duplicate = structuredClone(input.results[0]);
+  input.results.push(duplicate);
+  assert.throws(() => assessEvidence(input), /duplicate result id/);
+});
+
+test("enumerates simultaneous independent result failures", () => {
+  const input = structuredClone(fixture);
+  input.inventory = [
+    input.inventory.find(
+      (obligation) => obligation.propertyId === "OBL-STATE-PROPERTY",
+    ),
+  ];
+  const result = structuredClone(
+    input.results.find((candidate) => candidate.resultId === "RESULT-SUPPORTED"),
+  );
+  result.logical.outcome = "violated";
+  result.participation = {
+    status: "partial",
+    participants: ["parser"],
+    missingParticipants: ["serializer"],
+  };
+  result.assumptions = [
+    { assumptionId: "fixture-inputs-synthetic", status: "not-met" },
+  ];
+  input.results = [result];
+
+  const [obligation] = assessEvidence(input).obligations;
+  assert.equal(obligation.status, "partial");
+  assert.deepEqual(
+    obligation.gaps.map((gap) => gap.kind),
+    ["assumption-unmet", "logical-violation", "partial-participation"],
+  );
 });
 
 test("retains native artifacts as references in the assessment view", () => {

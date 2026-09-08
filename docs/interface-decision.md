@@ -75,11 +75,18 @@ turn an operational diagnostic into a new authority.
 ## Result matching and freshness
 
 Evidence joins require exact property, subject revision, semantic profile,
-bindings, dependency closure, and execution scope. Tool name and method ID alone
-never match an obligation. A matching result can still be stale, failed,
-incomplete, partially participating, assumption-invalid, unsupported,
-untriggered, observation-inadequate, violated, or supported. The inventory
-denominator includes properties with no result.
+bindings, dependency closure, execution scope, plan, task, run, producer and
+adapter identities and versions. Tool name and method ID alone never match an
+obligation. More than one result for the same exact binding is ambiguous and is
+refused rather than resolved by timestamp or input order.
+
+A matching result can still be stale, failed, incomplete, partially
+participating, assumption-invalid, unsupported, untriggered,
+observation-inadequate, violated, or supported. The single `status` field is a
+compatibility summary only. `gaps` enumerates every applicable independent
+dimension, so a partial, assumption-invalid, logically violated result exposes
+all three findings. The inventory denominator includes properties with no
+result.
 
 No global score, certification status, or inferred sufficiency is produced.
 

@@ -934,6 +934,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -981,6 +982,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -995,6 +997,13 @@
           {
             "kind": "failed",
             "detail": "fixture producer exited unsuccessfully"
+          },
+          {
+            "kind": "activation-unknown"
+          },
+          {
+            "kind": "observation-inadequate",
+            "missing": []
           }
         ]
       },
@@ -1026,6 +1035,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1040,6 +1050,15 @@
           {
             "kind": "unsupported",
             "detail": "common-domain binding unavailable"
+          },
+          {
+            "kind": "observation-inadequate",
+            "missing": []
+          },
+          {
+            "kind": "partial-participation",
+            "status": "not-started",
+            "missing": []
           }
         ]
       },
@@ -1083,6 +1102,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1095,10 +1115,22 @@
         ],
         "gaps": [
           {
+            "kind": "activation-unknown"
+          },
+          {
+            "kind": "logical-inconclusive",
+            "outcome": "unknown"
+          },
+          {
             "kind": "observation-inadequate",
             "missing": [
               "parse-finish"
             ]
+          },
+          {
+            "kind": "partial-participation",
+            "status": "partial",
+            "missing": []
           }
         ]
       },
@@ -1140,6 +1172,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1193,6 +1226,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1262,6 +1296,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1276,6 +1311,10 @@
           {
             "kind": "incomplete",
             "detail": "fixture budget exhausted"
+          },
+          {
+            "kind": "observation-inadequate",
+            "missing": []
           }
         ]
       },
@@ -1317,6 +1356,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1327,7 +1367,11 @@
             "mediaType": "application/json"
           }
         ],
-        "gaps": []
+        "gaps": [
+          {
+            "kind": "logical-violation"
+          }
+        ]
       },
       {
         "propertyId": "OBL-PARTIAL",
@@ -1369,6 +1413,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1381,7 +1426,11 @@
         ],
         "gaps": [
           {
-            "kind": "partial-participation"
+            "kind": "partial-participation",
+            "status": "partial",
+            "missing": [
+              "serializer"
+            ]
           }
         ]
       },
@@ -1422,6 +1471,7 @@
           "producer": "quire-verification-fixture",
           "producerVersion": "e02-draft-1",
           "adapter": "fixture-replay",
+          "adapterVersion": "1",
           "sourceRevision": "parser-r1",
           "executionMode": "fixture-replay"
         },
@@ -1434,12 +1484,14 @@
         ],
         "gaps": [
           {
-            "kind": "assumption-unmet"
+            "kind": "assumption-unmet",
+            "assumptionId": "fixture-inputs-synthetic"
           }
         ]
       }
     ],
     "evidenceOwner": "Quoin",
-    "sufficiencyDecision": "not-made"
+    "sufficiencyDecision": "not-made",
+    "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding"
   }
 }

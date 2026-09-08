@@ -124,9 +124,24 @@
         "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
         "dependencyClosure": { "type": "string", "minLength": 1 },
         "executionScope": { "type": "object" },
+        "resultBinding": { "$ref": "#/$defs/ResultBinding" },
         "input": { "$ref": "#/$defs/Input" }
       },
       "additionalProperties": true
+    },
+    "ResultBinding": {
+      "type": "object",
+      "required": ["planId", "taskId", "runRef", "producer", "producerVersion", "adapter", "adapterVersion"],
+      "properties": {
+        "planId": { "type": "string", "minLength": 1 },
+        "taskId": { "type": "string", "minLength": 1 },
+        "runRef": { "$ref": "#/$defs/ArtifactRef" },
+        "producer": { "type": "string", "minLength": 1 },
+        "producerVersion": { "type": "string", "minLength": 1 },
+        "adapter": { "type": "string", "minLength": 1 },
+        "adapterVersion": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
     },
     "ToolCapability": {
       "type": "object",
@@ -219,13 +234,14 @@
     },
     "TechniqueResult": {
       "type": "object",
-      "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts"],
+      "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "runRef", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts"],
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-1" },
         "kind": { "const": "TechniqueResult" },
         "resultId": { "type": "string" },
         "planId": { "type": "string" },
         "taskId": { "type": "string" },
+        "runRef": { "$ref": "#/$defs/ArtifactRef" },
         "techniqueId": { "type": "string" },
         "producedAt": { "type": "string", "format": "date-time" },
         "propertyRef": { "$ref": "#/$defs/ArtifactRef" },
@@ -276,7 +292,18 @@
           "properties": { "status": { "enum": ["adequate", "inadequate", "unknown", "not-assessed"] } },
           "additionalProperties": true
         },
-        "provenance": { "type": "object" },
+        "provenance": {
+          "type": "object",
+          "required": ["producer", "producerVersion", "adapter", "adapterVersion", "sourceRevision"],
+          "properties": {
+            "producer": { "type": "string", "minLength": 1 },
+            "producerVersion": { "type": "string", "minLength": 1 },
+            "adapter": { "type": "string", "minLength": 1 },
+            "adapterVersion": { "type": "string", "minLength": 1 },
+            "sourceRevision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        },
         "nativeArtifacts": { "type": "array" }
       },
       "additionalProperties": true

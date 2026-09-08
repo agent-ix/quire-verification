@@ -33,6 +33,7 @@ test("requires participation, assumptions, scope, provenance, and native artifac
     "participation",
     "assumptions",
     "executionScope",
+    "runRef",
     "provenance",
     "nativeArtifacts",
   ]) {
@@ -40,4 +41,10 @@ test("requires participation, assumptions, scope, provenance, and native artifac
     delete result[field];
     assert.throws(() => validateTechniqueResult(result), new RegExp(field));
   }
+});
+
+test("requires versioned adapter provenance", () => {
+  const result = structuredClone(results.results[0]);
+  delete result.provenance.adapterVersion;
+  assert.throws(() => validateTechniqueResult(result), /adapterVersion/);
 });

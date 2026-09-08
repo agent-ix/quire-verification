@@ -42,6 +42,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
     },
     freshness: { maxAgeSeconds: 2_592_000 },
   };
+  const runRef = ref("run:local-catalog-portfolio");
   const properties = [
     {
       ...common,
@@ -137,6 +138,14 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
     ),
     selection("LOCAL-HUMAN-REVIEW", "inspection", "required"),
   ];
+  for (const [index, property] of properties.entries()) {
+    property.techniqueId = selections[index].techniqueId;
+    property.resultBinding = resultBinding({
+      planId: "PLAN-LOCAL-CATALOG-PORTFOLIO",
+      taskId: `verify:${property.propertyId}:${selections[index].techniqueId}`,
+      runRef,
+    });
+  }
   const plan = buildVerificationPlan({
     planId: "PLAN-LOCAL-CATALOG-PORTFOLIO",
     asOf: producedAt,
@@ -184,10 +193,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
   }
   const metamorphicMilliseconds = performance.now() - metamorphicStart;
 
-  const evidenceInventory = properties.map((property, index) => ({
-    ...property,
-    techniqueId: selections[index].techniqueId,
-  }));
+  const evidenceInventory = properties;
   const results = [
     successfulResult({
       property: evidenceInventory[0],
@@ -195,6 +201,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
       resultId: "RESULT-LOCAL-UNIT",
       producedAt,
       sourceRevision,
+      runRef,
       milliseconds: unitMilliseconds,
       detail: `checked ${baseline.techniques.length} method definitions`,
     }),
@@ -204,6 +211,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
       resultId: "RESULT-LOCAL-METAMORPHIC",
       producedAt,
       sourceRevision,
+      runRef,
       milliseconds: metamorphicMilliseconds,
       detail: "checked reversed and rotated catalog orders",
     }),
@@ -211,6 +219,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
       property: evidenceInventory[2],
       producedAt,
       sourceRevision,
+      runRef,
     }),
   ];
   return {
@@ -275,6 +284,7 @@ function successfulResult({
   resultId,
   producedAt,
   sourceRevision,
+  runRef,
   milliseconds,
   detail,
 }) {
@@ -284,6 +294,7 @@ function successfulResult({
     resultId,
     producedAt,
     sourceRevision,
+    runRef,
     execution: { status: "completed", detail, elapsedMilliseconds: milliseconds },
     logical: { outcome: "satisfied" },
     activation: { status: "not-required" },
@@ -293,13 +304,14 @@ function successfulResult({
   });
 }
 
-function incompleteManualResult({ property, producedAt, sourceRevision }) {
+function incompleteManualResult({ property, producedAt, sourceRevision, runRef }) {
   return resultBase({
     property,
     techniqueId: "inspection",
     resultId: "RESULT-LOCAL-HUMAN-REVIEW-PENDING",
     producedAt,
     sourceRevision,
+    runRef,
     execution: { status: "not-run", detail: "verification-owner review pending" },
     logical: { outcome: "not-evaluated" },
     activation: { status: "not-required" },
@@ -315,6 +327,7 @@ function resultBase({
   resultId,
   producedAt,
   sourceRevision,
+  runRef,
   ...dimensions
 }) {
   return {
@@ -325,6 +338,7 @@ function resultBase({
     taskId: `verify:${property.propertyId}:${techniqueId}`,
     techniqueId,
     producedAt,
+    runRef,
     propertyRef: property.propertyRef,
     subjectRefs: property.subjectRefs,
     profile: property.profile,
@@ -336,11 +350,24 @@ function resultBase({
       producer: "quire-verification-local-portfolio",
       producerVersion: "1",
       adapter: "native-node",
+      adapterVersion: "1",
       sourceRevision,
       nodeVersion: process.version,
       executionMode: "native-local",
     },
     nativeArtifacts: [],
+  };
+}
+
+function resultBinding({ planId, taskId, runRef }) {
+  return {
+    planId,
+    taskId,
+    runRef,
+    producer: "quire-verification-local-portfolio",
+    producerVersion: "1",
+    adapter: "native-node",
+    adapterVersion: "1",
   };
 }
 

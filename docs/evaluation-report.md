@@ -21,7 +21,9 @@ Adverse/refusal controls are a duplicate definition, unreadable catalog source,
 unknown/not-applicable advice, stale policy, absent capability, provisional relational/trace
 capabilities, missing fault authorization/injection/observation bindings,
 failed/exhausted execution, wrong execution scope, stale evidence, missing
-evidence, untriggered recovery, missing observations, and a logical violation.
+evidence, duplicate results for one exact run binding, untriggered recovery,
+missing observations, simultaneous partial/assumption/logical failures, and a
+logical violation.
 
 ## Results
 
@@ -41,7 +43,9 @@ evidence, untriggered recovery, missing observations, and a logical violation.
   and one violated.
 - Execution, logical outcome, activation, participation, assumptions, adequacy,
   freshness, provenance, and native artifact references remain independently
-  inspectable. No sufficiency decision or aggregate score is emitted.
+  inspectable. Exact plan/task/run/producer/adapter bindings are required,
+  duplicate exact results are ambiguous, and every simultaneous independent
+  finding is enumerated. No sufficiency decision or aggregate score is emitted.
 - The retained local portfolio at source revision
   `60ebba49b6e32a15e5a2a1b296b2e59a1eaa45ce` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field

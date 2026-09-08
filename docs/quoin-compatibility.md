@@ -45,11 +45,20 @@ changing Quoin execution/evidence ownership.
 Quoin's current `RunEntry.outcome` is limited to pass/fail/skip/error, while its
 adapter contract separately reports producer states that cannot be represented.
 Its `RunRecord` pins suite, commit, tool, evidence kind, timestamp, and entries;
-it does not carry the full E02 property/profile/binding/dependency/scope or
-activation/adequacy tuple. VP03 therefore needs an additive intake/envelope or
-linked result reference owned by Quoin. Mapping unsupported, exhausted,
+it does not carry the full E02 property/profile/binding/dependency/scope,
+plan/task/run/producer/adapter binding, or activation/adequacy tuple. VP03
+therefore needs an additive intake/envelope or linked result reference owned by
+Quoin. Mapping unsupported, exhausted,
 untriggered, or observation-inadequate records onto the nearest `RunEntry`
 outcome would lose information and is explicitly refused by this slice.
+
+Portable intake now requires one exact result binding. Multiple results for the
+same plan/task/run/producer/adapter tuple are reported as ambiguous. A
+compatibility summary status remains for current consumers, while the gap list
+enumerates all simultaneous execution, activation, participation, assumption,
+adequacy, and logical findings. The `runRef` role and version domains remain
+provisional pending FS02/FS05; this repository does not invent a Quoin-side run
+identity.
 
 The current cargo-mutants adapter aggregates caught/missed/timeout outcomes per
 production function, excludes unviable mutants, and intentionally binds no
