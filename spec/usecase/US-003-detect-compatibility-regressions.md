@@ -17,6 +17,10 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-012"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-019"
+    type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-020"
+    type: "traces_to"
 ---
 # US-003: Detect compatibility regressions locally
 
@@ -54,4 +58,5 @@ bug and a thrown check can erase the evidence needed to diagnose it.
 ## Traceability (Informative)
 
 The story drives fixture execution, catalog adaptation, and bounded portfolio
-failure-retention and qualified selection requirements.
+failure retention, qualified selection, native domain execution, and reproducible
+effort-reporting requirements.

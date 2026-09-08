@@ -21,7 +21,8 @@ standards_alignment:
 
 This specification defines the observable behavior of the private E02
 compatibility boundary, the VP01 registry/policy qualification slice, the VP02
-native planning contract, and the VP03 evidence-assessment contract. It
+native planning contract, the VP03 evidence-assessment contract, and the VP04
+bounded native parser portfolio. It
 gives maintainers the reviewed requirements baseline for the code, fixtures,
 retained reports, and continuous-integration checks in this repository.
 
@@ -46,6 +47,8 @@ retained reports, and continuous-integration checks in this repository.
 - Explicit oracle and observation dependence without aggregate scoring.
 - RFC 8785 JSON Canonicalization Scheme for digests and structured equality.
 - A bounded local catalog portfolio that retains its own failures as results.
+- A bounded native parser portfolio with direct and metamorphic techniques, a seeded syntax defect, and a report-bound manual disposition.
+- Reproducible separation of one-time setup effort from incremental technique and run effort.
 - Fixture validation, retained reports, and Rust repository CI checks for this slice.
 
 ### 2.2 Out of Scope
@@ -53,9 +56,10 @@ retained reports, and continuous-integration checks in this repository.
 - Acceptance or replacement of the shared FS02/FS05 identity and version model.
 - Acceptance of E02, VP01, or VP02 before their recorded prerequisite and disposition gates close.
 - Publication of these private provisional contracts as cross-repository authority.
-- Execution of a native parser, model checker, fuzzer, fault injector, or production system.
-- A domain-subject portfolio or aggregate producer portfolio.
-- A human acceptance disposition or an automated evidence-sufficiency decision.
+- Execution of a model checker, fuzzer, fault injector, generated backend, evaluator, or production system.
+- A parser portfolio outside the reviewed bounded syntax profile or a general parser-effectiveness claim.
+- An automated evidence-sufficiency decision.
+- ROI, delivery, production-throughput, scale, or certification conclusions from bounded timing observations.
 - A duplicate evidence store or migration of Quoin-owned evidence.
 - Backward compatibility for the rejected JavaScript module API, npm package, scripts, or runtime behavior outside the versioned JSON contracts and fixtures.
 
@@ -69,6 +73,11 @@ external verification techniques have run.
 
 VP02 adds a native-runner and strict-reference consumer contract without
 absorbing native tools or Quoin evidence storage.
+
+VP04 composes the accepted VP02 and VP03 behaviors with one exact native parser
+candidate. It runs direct parse acceptance and parse-format-reparse stability,
+retains a separate human disposition, and records setup and incremental effort
+without extending the observed syntax-fixture claim.
 
 The intended users are verification integrators, evidence assessors, and
 maintainers of the Quoin compatibility boundary.
@@ -84,9 +93,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 
 | ID | Title | Status |
 |----|-------|--------|
-| US-001 | Plan portable verification work | Implemented; verified |
-| US-002 | Assess evidence without false attribution | Implemented; verified |
-| US-003 | Detect compatibility regressions locally | Implemented; verified |
+| US-001 | Plan portable verification work | Partial; VP04 specified and blocked |
+| US-002 | Assess evidence without false attribution | Partial; VP03/VP04 blocked |
+| US-003 | Detect compatibility regressions locally | Partial; VP04 specified and blocked |
 | FR-001 | Validate the five public contracts | Implemented; verified |
 | FR-002 | Derive runtime contract behavior from the schema | Implemented; verified |
 | FR-003 | Validate every fixture through an explicit handler | Implemented; verified |
@@ -105,6 +114,8 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-016 | Read shared references strictly | Specified; blocked on FS02/FS05 amendment |
 | FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FS05 role amendment |
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
+| FR-019 | Execute a bounded native parser portfolio | Specified; blocked on VP02/VP03 |
+| FR-020 | Record reproducible portfolio effort | Specified; blocked on FR-019 |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -112,6 +123,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-005 | Bounded JSON ingestion | Implemented; verified |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 | IT-002 | Independent shared-reference consumer qualification | Specified; blocked on FS02/FS05 amendment |
+| IT-003 | Native parser portfolio execution | Specified; blocked on VP02/VP03 |
 
 ## 6. Identification and Traceability
 
@@ -126,7 +138,9 @@ native planning, strict shared references, and metamorphic order invariance.
 Fixture validation executes the versioned schema against every JSON fixture.
 The Quoin integration test loads the real method catalog from a pinned checkout;
 the shared-reference integration test uses only the pinned data packet through
-an independent Rust consumer.
+an independent Rust consumer. The native parser integration runs exact real
+`parse` and `format` commands, records adverse and incomplete cases, and retains
+the report-bound human disposition and raw effort observations.
 
 ## 8. Lifecycle and Change Control
 
@@ -135,10 +149,12 @@ verified in Rust, the VP01 registry/policy qualification increment, the specifie
 VP02 planning increment, and the specified VP03 evidence-assessment increment.
 VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
 VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
-E02 and FS05. FR-016, FR-017, and IT-002 cannot proceed until the shared owner
-resolves B's recorded canonical-domain and reference-role findings. Any accepted
-breaking draft-2 transition must update requirements, tests, fixtures, and
-retained reports without reinterpreting draft-1 evidence.
+E02 and FS05. VP04 acceptance remains gated on VP02, VP03, exact native producer
+qualification, fixture rights, and one report-bound verification-owner disposition.
+FR-016, FR-017, and IT-002 cannot proceed until the shared owner resolves B's
+recorded canonical-domain and reference-role findings. Any accepted breaking
+draft-2 transition must update requirements, tests, fixtures, and retained reports
+without reinterpreting draft-1 evidence.
 
 ## 9. References
 
@@ -146,3 +162,4 @@ retained reports without reinterpreting draft-1 evidence.
 - ISO/IEC/IEEE 29148, Requirements Engineering.
 - `contracts/e02-draft-1.schema.json`, the private versioned contract packet.
 - `agent-ix/quire-specification` PR #8 at `609790e`, conditional shared-reference input.
+- `agent-ix/quire-spec-language`, the exact reviewed Rust parser candidate selected by IT-003.

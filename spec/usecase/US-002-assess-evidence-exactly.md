@@ -15,6 +15,8 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-018"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-019"
+    type: "traces_to"
 ---
 # US-002: Assess evidence without false attribution
 
@@ -65,4 +67,4 @@ evidence into an unsupported assurance claim.
 
 The story drives exact matching, independent finding preservation, canonical
 structured comparison, conservative freshness, and explicit oracle dependence
-without aggregate scoring.
+without aggregate scoring, including the bounded parser portfolio.
