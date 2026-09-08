@@ -1,27 +1,46 @@
-# E02 artifact and dependency rights inventory
+# E02 artifact, dependency, and executable inventory
 
-Status: private implementation inventory, 2026-09-07. This resolves the exact
-terms for this bounded slice; it does not complete E04's ecosystem-wide review.
+Status: private Rust implementation inventory, 2026-09-07. This resolves the
+exact terms and executable ownership for this bounded slice; it does not
+complete E04's ecosystem-wide review.
+
+## Retained artifacts and dependencies
 
 | Artifact | Origin/inbound basis | Terms in this repository | Remaining release question |
 |---|---|---|---|
-| `src/**`, `test/**` | New Agent-IX implementation; no copied Quoin source | `AGPL-3.0-or-later` | Confirm contributor authority and release packet. |
-| Private interface/compatibility prose | Newly authored from maintained private architecture and observed behavior | `AGPL-3.0-or-later` for this implementation packet | E01/E04 must select terms for any public normative prose. |
-| `fixtures/quoin-catalog-export.json` | Generated from Quoin `7072d65` reading spec-artifacts-process `61a20e` catalog data | Preserved under compatible `AGPL-3.0-or-later`; provenance embedded | Decide whether a public fixture should contain full definitions or only stable IDs/behavior vectors. |
+| `src/**/*.rs`, `tests/**/*.rs`, and `build.rs` | New Agent-IX Rust implementation; no copied Quoin source | `AGPL-3.0-or-later` | Confirm contributor authority and release packet. |
+| `contracts/e02-draft-1.schema.json` and private interface prose | Newly authored from maintained private architecture and observed behavior | `AGPL-3.0-or-later` for this implementation packet | E01/E04 must select terms for public normative prose and conformance vectors. |
+| `fixtures/quoin-catalog-export.json` | Generated from Quoin `7072d65` reading spec-artifacts-process `61a20e` catalog data | Preserved under compatible `AGPL-3.0-or-later`; provenance embedded | Decide whether a public fixture should contain full definitions or only stable IDs and behavior vectors. |
 | Plan/result fixtures and local portfolio report | Newly authored synthetic/local data; no real users, traces, credentials, standards tables, or production configuration | `AGPL-3.0-or-later` | Public conformance-vector terms remain an E01/E04 decision. |
 | Native artifact references | Synthetic URI/digest references only; target artifacts are not copied | No inbound artifact included | Each real producer artifact keeps its own terms and retention policy. |
-| Node.js runtime | External runtime used to execute tests and scripts | Runtime's own terms | Recheck supported/runtime license for a release image. |
-| `ajv@8.20.0`, `ajv-formats@3.0.1` | npm packages used to compile and execute the draft 2020-12 contract schema | MIT | Preserve dependency license notices in redistributed bundles. |
-| `canonicalize@4.0.0` | npm implementation of RFC 8785 JSON Canonicalization Scheme | Apache-2.0 | Preserve the license and any required notices in redistributed bundles. |
-| Transitive npm packages | `fast-deep-equal@3.1.3` (MIT), `fast-uri@3.1.7` (BSD-3-Clause), `json-schema-traverse@1.0.0` (MIT), `require-from-string@2.0.2` (MIT) | Upstream terms, exactly locked in `package-lock.json` | Preserve applicable license notices in redistributed bundles. |
-| CI actions | `actions/checkout@11d5960a326750d5838078e36cf38b85af677262` and `actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020` | Both declare `MIT`; revisions are pinned | Preserve upstream notices in any redistributed action bundle and requalify pin updates. |
+| Registry Rust dependencies | Runtime, schema, serialization, cryptography, generation, and test crates exactly locked in `Cargo.lock` | SPDX licenses accepted by `deny.toml`; checked by `cargo deny check` | Preserve required notices and re-run the dependency gate on every lock update. |
+| `ix-trace-rs` | Agent-IX test trace macros pinned to Git revision `2ce4ebf47f726b9d76388220545cd0abda8a5cfb` | `AGPL-3.0-or-later` | Requalify any pin update. |
+| Quoin TypeScript runtime and `ts-node` | External, pinned integration producer used only for IT-001; it is outside this crate and communicates through JSON | Upstream project's own terms | Keep this toolchain outside the Rust production and qualified execution path. |
+| CI action | `actions/checkout@11d5960a326750d5838078e36cf38b85af677262` | MIT; revision pinned | Preserve the upstream notice in any redistributed action bundle and requalify pin updates. |
 | GNU AGPL license text | Free Software Foundation verbatim license document | Verbatim AGPLv3 text in `LICENSE` | Preserve unmodified text. |
 
-The exact dependency versions, tarball integrity values, and complete transitive
-set are locked in `package-lock.json`; `npm audit --omit=dev` is part of the
-bounded verification pass. The implementation does not import or redistribute standards
-tables, third-party tool code, Quoin implementation source, private traces,
-templates, generated runtimes, or external corpora.
+`Cargo.lock` is the dependency source of truth. `cargo deny check` validates
+advisories, licenses, duplicate-version policy, and allowed sources. The
+implementation does not import or redistribute standards tables, third-party
+tool code, Quoin implementation source, private traces, templates, generated
+runtimes, or external corpora.
+
+## Executable disposition
+
+| Previous executable | Disposition | Rust replacement or boundary |
+|---|---|---|
+| `src/*.mjs` contract, catalog, planner, evidence, and portfolio modules | Deleted; no API or compatibility shim retained | Library modules under `src/*.rs` |
+| `scripts/validate-fixtures.mjs` | Deleted | `validate-fixtures` Rust binary |
+| `scripts/render-fixtures.mjs` | Deleted | `render-fixtures` Rust binary |
+| `scripts/run-bounded-portfolio.mjs` | Deleted | `run-bounded-portfolio` Rust binary |
+| `scripts/check-quoin-baseline.mjs` | Deleted | `check-quoin-baseline` Rust binary reading bounded JSON on standard input |
+| `test/*.mjs`, `package.json`, and `package-lock.json` | Deleted | `tests/verification.rs`, `Cargo.toml`, and `Cargo.lock` |
+| Quoin catalog production | Remains owned by Quoin; no duplicate implementation is introduced | Versioned JSON enters the Rust `check-quoin-baseline` boundary |
+| Engineering Assurance execution and evidence | Remains separately owned by Engineering Assurance | No framework, evidence store, or execution adapter is duplicated here |
+
+No first-party JavaScript or TypeScript executable is retained in the governed
+source, test, or script paths. Quoin's external TypeScript command is an
+integration fixture producer and is never loaded into this Rust process.
 
 Exact questions contributed to E04 are:
 

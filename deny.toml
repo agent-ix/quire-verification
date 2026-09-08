@@ -1,0 +1,30 @@
+[advisories]
+unmaintained = "workspace"
+
+[licenses]
+confidence-threshold = 0.93
+allow = [
+  "Apache-2.0",
+  "AGPL-3.0-or-later",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "CDLA-Permissive-2.0",
+  "ISC",
+  "MIT",
+  "MIT-0",
+  "MPL-2.0",
+  "Unicode-3.0",
+  "Zlib",
+]
+[bans]
+multiple-versions = "warn"
+# Cargo reports git dependencies without registry version requirements as
+# wildcards. ix-trace-rs is still immutable because Cargo.toml and Cargo.lock
+# pin its full Git revision and [sources] admits only its repository.
+wildcards = "allow"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = ["https://github.com/agent-ix/ix-trace-rs.git"]

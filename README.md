@@ -17,21 +17,22 @@ Quoin catalog export without relocating it; constructs prerequisite-aware task
 plans; and assesses result scope and freshness without storing evidence or
 making sufficiency decisions.
 
-Install the exact locked validator and canonicalization dependencies, then run
-the complete checks with:
+Run the complete Rust checks with:
 
 ```sh
-npm ci
-npm run validate:fixtures
-npm test
-npm run fixtures
+cargo run --locked --bin validate-fixtures
+cargo fmt --check
+cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+cargo test --workspace --all-features --locked
+cargo deny check
+cargo run --locked --bin render-fixtures
 ```
 
 Run the bounded local portfolio against an exact checkout revision and retain
 its JSON report from standard output with:
 
 ```sh
-npm run portfolio -- "$(git rev-parse HEAD)" 2026-09-08T02:00:00Z
+cargo run --locked --bin run-bounded-portfolio -- "$(git rev-parse HEAD)" 2026-09-08T02:00:00Z
 ```
 
 That command executes catalog field parity keyed by `techniqueId` and
@@ -50,7 +51,7 @@ cd /path/to/quoin
 node --no-warnings --loader ts-node/esm --input-type=module \
   -e 'import { loadMethodCatalog } from "./src/advisor/index.ts"; console.log(JSON.stringify(loadMethodCatalog([process.argv[1]]), null, 2));' \
   /path/to/spec-artifacts-process/spec_artifacts_process \
-  | node /path/to/quire-verification/scripts/check-quoin-baseline.mjs
+  | cargo run --locked --manifest-path /path/to/quire-verification/Cargo.toml --bin check-quoin-baseline
 ```
 
 The fixture suite covers catalog identity parity, conflicting definitions,
@@ -61,7 +62,7 @@ results, and simultaneous independent failures.
 
 ## Boundaries
 
-No duplicate evidence store, hidden normative dependency, or unqualified backend promise. Existing Quire/Quoin/Filament interfaces must be inspected before replacement or extraction. Research and private issue links must not enter a public release packet.
+No duplicate evidence store, hidden normative dependency, or unqualified backend promise. Quoin retains its existing orchestration and catalog ownership across the versioned JSON boundary. Engineering Assurance owns its Rust-native execution and evidence implementation; this crate owns the portable contract and planning surface. Existing Quire/Quoin/Filament interfaces must be inspected before replacement or extraction. Research and private issue links must not enter a public release packet.
 
 ## Tracking
 
