@@ -3,11 +3,13 @@
   "claimLimit": "Synthetic planning/result fixture. No external verification or fault tool was executed.",
   "planRequest": {
     "planId": "PLAN-PARSER-E02-FIXTURE",
+    "asOf": "2026-09-07T21:00:00Z",
     "policy": {
       "contractVersion": "quire-verification/e02-draft-1",
       "kind": "SelectionPolicy",
       "policyId": "POLICY-PARSER-FIXTURE",
       "version": "1",
+      "validUntil": "2026-09-30T00:00:00Z",
       "sourceRef": {
         "authority": "fixture.agent-ix.local",
         "identity": "policy:parser-baseline",

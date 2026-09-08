@@ -14,7 +14,9 @@
         "revision": "policy-r1",
         "digest": "sha256:policyparserbaseline",
         "profile": "quire-selection-policy/e02-fixture-v1"
-      }
+      },
+      "validUntil": "2026-09-30T00:00:00Z",
+      "freshness": "current"
     },
     "inventory": [
       {
@@ -893,7 +895,7 @@
   },
   "assessment": {
     "asOf": "2026-09-07T21:00:00Z",
-    "denominator": 10,
+    "denominator": 12,
     "obligations": [
       {
         "propertyId": "OBL-STATE-PROPERTY",
@@ -1326,6 +1328,115 @@
           }
         ],
         "gaps": []
+      },
+      {
+        "propertyId": "OBL-PARTIAL",
+        "status": "partial",
+        "freshness": "fresh",
+        "resultId": "RESULT-PARTIAL",
+        "execution": {
+          "status": "completed",
+          "detail": "fixture replay only; no external tool execution claimed"
+        },
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "activation": {
+          "status": "activated"
+        },
+        "participation": {
+          "status": "partial",
+          "participants": [
+            "parser"
+          ],
+          "missingParticipants": [
+            "serializer"
+          ]
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "met"
+          }
+        ],
+        "adequacy": {
+          "status": "adequate",
+          "observations": [
+            "fixture-output"
+          ]
+        },
+        "provenance": {
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "adapter": "fixture-replay",
+          "sourceRevision": "parser-r1",
+          "executionMode": "fixture-replay"
+        },
+        "nativeArtifacts": [
+          {
+            "uri": "fixture://native/RESULT-PARTIAL.json",
+            "digest": "sha256:RESULTPARTIAL000",
+            "mediaType": "application/json"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "partial-participation"
+          }
+        ]
+      },
+      {
+        "propertyId": "OBL-ASSUMPTION",
+        "status": "assumption-unmet",
+        "freshness": "fresh",
+        "resultId": "RESULT-ASSUMPTION-UNMET",
+        "execution": {
+          "status": "completed",
+          "detail": "fixture replay only; no external tool execution claimed"
+        },
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "activation": {
+          "status": "activated"
+        },
+        "participation": {
+          "status": "complete",
+          "participants": [
+            "fixture-subject"
+          ]
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "not-met"
+          }
+        ],
+        "adequacy": {
+          "status": "adequate",
+          "observations": [
+            "fixture-output"
+          ]
+        },
+        "provenance": {
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "adapter": "fixture-replay",
+          "sourceRevision": "parser-r1",
+          "executionMode": "fixture-replay"
+        },
+        "nativeArtifacts": [
+          {
+            "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json",
+            "digest": "sha256:RESULTASSUMPTIONUNMET",
+            "mediaType": "application/json"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "assumption-unmet"
+          }
+        ]
       }
     ],
     "evidenceOwner": "Quoin",

@@ -161,13 +161,15 @@
     },
     "SelectionPolicy": {
       "type": "object",
-      "required": ["contractVersion", "kind", "policyId", "version", "sourceRef", "rules"],
+      "required": ["contractVersion", "kind", "policyId", "version", "sourceRef", "rules", "provenance"],
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-1" },
         "kind": { "const": "SelectionPolicy" },
         "policyId": { "type": "string" },
         "version": { "type": "string" },
+        "validUntil": { "type": "string", "format": "date-time" },
         "sourceRef": { "$ref": "#/$defs/ArtifactRef" },
+        "provenance": { "type": "object" },
         "rules": {
           "type": "array",
           "items": {
@@ -250,8 +252,24 @@
           "properties": { "status": { "enum": ["activated", "not-activated", "unknown", "not-required"] } },
           "additionalProperties": true
         },
-        "participation": { "type": "object" },
-        "assumptions": { "type": "array" },
+        "participation": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["complete", "partial", "present", "not-started", "unknown", "not-required"] } },
+          "additionalProperties": true
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assumptionId", "status"],
+            "properties": {
+              "assumptionId": { "type": "string" },
+              "status": { "enum": ["met", "not-met", "unknown", "not-assessed"] }
+            },
+            "additionalProperties": true
+          }
+        },
         "adequacy": {
           "type": "object",
           "required": ["status"],

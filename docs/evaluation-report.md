@@ -17,7 +17,7 @@ unsupported, untriggered, and observation-inadequate cases.
 The healthy controls are the unconflicted 33-method export, ready state-property
 and fuzz tasks, a ready manual inspection, and a fresh supported fixture result.
 Adverse/refusal controls are a duplicate definition, unreadable catalog source,
-unknown applicability, absent capability, provisional relational/trace
+unknown/not-applicable advice, stale policy, absent capability, provisional relational/trace
 capabilities, missing fault authorization/injection/observation bindings,
 failed/exhausted execution, wrong execution scope, stale evidence, missing
 evidence, untriggered recovery, missing observations, and a logical violation.
@@ -33,10 +33,11 @@ evidence, untriggered recovery, missing observations, and a logical violation.
   prerequisite tasks. It distinguishes all five input shapes. State property,
   fuzz, and manual tasks are ready; relational, trace, and fault tasks are
   blocked. The fault task cannot be invoked.
-- The retained assessment accounts for all 10 declared obligations. Its expected
+- The retained assessment accounts for all 12 declared obligations. Its expected
   states are one supported, one failed, one unsupported, one observation-
   inadequate, one untriggered, one stale, two missing (one absent and one scope
-  mismatch), one incomplete, and one violated.
+  mismatch), one incomplete, one partial-participation, one unmet-assumption,
+  and one violated.
 - Execution, logical outcome, activation, participation, assumptions, adequacy,
   freshness, provenance, and native artifact references remain independently
   inspectable. No sufficiency decision or aggregate score is emitted.
@@ -44,8 +45,9 @@ evidence, untriggered recovery, missing observations, and a logical violation.
 ## Measured effort
 
 The one-time implementation window was measured from the E02 claim at
-`2026-09-08T00:41:35Z` through the measurement at `2026-09-08T01:10:31Z`:
-28 minutes 56 seconds. It includes contract/adapter/planner/result code, fixture
+`2026-09-08T00:41:35Z` through the semantic-review measurement at
+`2026-09-08T01:25:32Z`: 43 minutes 57 seconds. It includes
+contract/adapter/planner/result code, fixture
 construction, documentation, failure correction, and tests after the claim. It
 excludes earlier source reading and future owner review.
 

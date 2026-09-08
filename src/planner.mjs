@@ -21,6 +21,10 @@ export function buildVerificationPlan(request) {
   const input = requireRecord(request, "plan request");
   requireString(input.planId, "planId");
   const policy = validateSelectionPolicy(input.policy);
+  const asOf = Date.parse(input.asOf);
+  if (!Number.isFinite(asOf)) throw new TypeError("plan request asOf must be an ISO timestamp");
+  const policyStale =
+    policy.validUntil !== undefined && asOf > Date.parse(policy.validUntil);
   if (!Array.isArray(input.properties) || !Array.isArray(input.selections)) {
     throw new TypeError("properties and selections must be arrays");
   }
@@ -80,8 +84,19 @@ export function buildVerificationPlan(request) {
           },
         ]);
       }
+      if (policyStale) {
+        prerequisites = mergePrerequisites(prerequisites, [
+          {
+            kind: "policy-freshness",
+            id: `${policy.policyId}@${policy.version}`,
+          },
+        ]);
+      }
       const missing = prerequisites.filter(
-        (prerequisite) => prerequisite.required !== false && !available.has(prerequisiteKey(prerequisite)),
+        (prerequisite) =>
+          prerequisite.required !== false &&
+          (prerequisite.kind === "policy-freshness" ||
+            !available.has(prerequisiteKey(prerequisite))),
       );
       if (missing.length > 0) readiness = "blocked";
       for (const prerequisite of missing) {
@@ -128,7 +143,10 @@ export function buildVerificationPlan(request) {
         )
         .map((task) => task.taskId),
       missingPrerequisites: prerequisites.filter(
-        (prerequisite) => prerequisite.required !== false && !available.has(prerequisiteKey(prerequisite)),
+        (prerequisite) =>
+          prerequisite.required !== false &&
+          (prerequisite.kind === "policy-freshness" ||
+            !available.has(prerequisiteKey(prerequisite))),
       ),
       gaps,
       runnerRequest: capability
@@ -153,6 +171,8 @@ export function buildVerificationPlan(request) {
       policyId: policy.policyId,
       version: policy.version,
       sourceRef: policy.sourceRef,
+      validUntil: policy.validUntil ?? null,
+      freshness: policyStale ? "stale" : "current",
     },
     inventory: [...properties.values()],
     tasks,

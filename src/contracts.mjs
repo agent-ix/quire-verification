@@ -124,6 +124,9 @@ export function validateSelectionPolicy(value) {
   requireEnum(policy.contractVersion, [CONTRACT_VERSION], "contractVersion");
   requireString(policy.policyId, "SelectionPolicy.policyId");
   requireString(policy.version, "SelectionPolicy.version");
+  if (policy.validUntil !== undefined && !Number.isFinite(Date.parse(policy.validUntil))) {
+    throw new TypeError("SelectionPolicy.validUntil must be an ISO timestamp");
+  }
   validateArtifactRef(policy.sourceRef, "SelectionPolicy.sourceRef");
   if (!Array.isArray(policy.rules)) {
     throw new TypeError("SelectionPolicy.rules must be an array");
@@ -220,6 +223,20 @@ export function validateTechniqueResult(value) {
   }
   if (!Array.isArray(result.assumptions) || !Array.isArray(result.nativeArtifacts)) {
     throw new TypeError("TechniqueResult assumptions and nativeArtifacts must be arrays");
+  }
+  requireEnum(
+    result.participation.status,
+    ["complete", "partial", "present", "not-started", "unknown", "not-required"],
+    "participation.status",
+  );
+  for (const [index, assumption] of result.assumptions.entries()) {
+    requireRecord(assumption, `TechniqueResult.assumptions[${index}]`);
+    requireString(assumption.assumptionId, `TechniqueResult.assumptions[${index}].assumptionId`);
+    requireEnum(
+      assumption.status,
+      ["met", "not-met", "unknown", "not-assessed"],
+      `TechniqueResult.assumptions[${index}].status`,
+    );
   }
   for (const [index, artifact] of result.nativeArtifacts.entries()) {
     requireRecord(artifact, `TechniqueResult.nativeArtifacts[${index}]`);

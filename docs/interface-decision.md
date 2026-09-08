@@ -20,7 +20,9 @@ limits, qualification state, and claim limits. It never stores native results.
 an authored priority (`required`, `recommended`, or `optional`) rather than a
 calculated strength score. Standards-derived rules require an exact edition,
 objective, interpretation, and distribution-rights disposition. Unknown
-classification stays unknown.
+classification stays unknown. An expired policy adds a forced freshness
+prerequisite and cannot authorize invocation merely because a caller labels it
+available.
 
 `VerificationPlan` inventories properties before selecting tasks. Every task has
 one of five input shapes: `state`, `relational`, `trace`, `fault`, or `manual`.
@@ -75,8 +77,9 @@ turn an operational diagnostic into a new authority.
 Evidence joins require exact property, subject revision, semantic profile,
 bindings, dependency closure, and execution scope. Tool name and method ID alone
 never match an obligation. A matching result can still be stale, failed,
-incomplete, unsupported, untriggered, observation-inadequate, violated, or
-supported. The inventory denominator includes properties with no result.
+incomplete, partially participating, assumption-invalid, unsupported,
+untriggered, observation-inadequate, violated, or supported. The inventory
+denominator includes properties with no result.
 
 No global score, certification status, or inferred sufficiency is produced.
 

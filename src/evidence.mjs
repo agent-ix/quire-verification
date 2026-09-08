@@ -84,6 +84,15 @@ function classify(result) {
     return "inadequate";
   }
   if (result.activation.status === "unknown") return "incomplete";
+  if (["partial", "not-started", "unknown"].includes(result.participation.status)) {
+    return "partial";
+  }
+  if (result.assumptions.some((assumption) => assumption.status === "not-met")) {
+    return "assumption-unmet";
+  }
+  if (result.assumptions.some((assumption) => assumption.status !== "met")) {
+    return "inconclusive";
+  }
   if (result.logical.outcome === "violated") return "violated";
   if (result.logical.outcome === "satisfied") return "supported";
   return "inconclusive";
@@ -98,6 +107,8 @@ function gapsFor(result, status) {
       missing: result.adequacy.missingObservations ?? [],
     });
   }
+  if (status === "partial") gaps.push({ kind: "partial-participation" });
+  if (status === "assumption-unmet") gaps.push({ kind: "assumption-unmet" });
   if (["failed", "incomplete", "unsupported", "inconclusive"].includes(status)) {
     gaps.push({ kind: status, detail: result.execution.detail ?? null });
   }

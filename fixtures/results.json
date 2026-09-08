@@ -517,6 +517,110 @@
         "maxAgeSeconds": 86400
       },
       "techniqueId": "property-based-testing"
+    },
+    {
+      "propertyId": "OBL-PARTIAL",
+      "propertyRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "property:partial",
+        "revision": "property-r1",
+        "digest": "sha256:propertypartial0",
+        "profile": "quire-state/e02-fixture-v1"
+      },
+      "subjectRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "subject:parser",
+          "revision": "parser-r1",
+          "digest": "sha256:subjectparser000",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "profile": "quire-state/e02-fixture-v1",
+      "bindingRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "binding:parser-state",
+          "revision": "binding-r1",
+          "digest": "sha256:bindingparserstate",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "dependencyClosure": "sha256:closure-state-r1",
+      "executionScope": {
+        "repository": "fixture-parser",
+        "revision": "parser-r1",
+        "paths": [
+          "src/parser.mjs"
+        ]
+      },
+      "input": {
+        "kind": "state",
+        "snapshotRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "snapshot:parser-valid",
+          "revision": "snapshot-r1",
+          "digest": "sha256:snapshotparservalid",
+          "profile": "quire-state/e02-fixture-v1"
+        },
+        "property": "state is internally consistent"
+      },
+      "freshness": {
+        "maxAgeSeconds": 86400
+      },
+      "techniqueId": "property-based-testing"
+    },
+    {
+      "propertyId": "OBL-ASSUMPTION",
+      "propertyRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "property:assumption",
+        "revision": "property-r1",
+        "digest": "sha256:propertyassumption",
+        "profile": "quire-state/e02-fixture-v1"
+      },
+      "subjectRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "subject:parser",
+          "revision": "parser-r1",
+          "digest": "sha256:subjectparser000",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "profile": "quire-state/e02-fixture-v1",
+      "bindingRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "binding:parser-state",
+          "revision": "binding-r1",
+          "digest": "sha256:bindingparserstate",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "dependencyClosure": "sha256:closure-state-r1",
+      "executionScope": {
+        "repository": "fixture-parser",
+        "revision": "parser-r1",
+        "paths": [
+          "src/parser.mjs"
+        ]
+      },
+      "input": {
+        "kind": "state",
+        "snapshotRef": {
+          "authority": "fixture.agent-ix.local",
+          "identity": "snapshot:parser-valid",
+          "revision": "snapshot-r1",
+          "digest": "sha256:snapshotparservalid",
+          "profile": "quire-state/e02-fixture-v1"
+        },
+        "property": "state is internally consistent"
+      },
+      "freshness": {
+        "maxAgeSeconds": 86400
+      },
+      "techniqueId": "property-based-testing"
     }
   ],
   "results": [
@@ -1276,6 +1380,179 @@
           "mediaType": "application/json"
         }
       ]
+    },
+    {
+      "contractVersion": "quire-verification/e02-draft-1",
+      "kind": "TechniqueResult",
+      "resultId": "RESULT-PARTIAL",
+      "planId": "PLAN-PARSER-E02-FIXTURE",
+      "taskId": "fixture:OBL-PARTIAL:property-based-testing",
+      "techniqueId": "property-based-testing",
+      "producedAt": "2026-09-07T20:08:00Z",
+      "propertyRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "property:partial",
+        "revision": "property-r1",
+        "digest": "sha256:propertypartial0",
+        "profile": "quire-state/e02-fixture-v1"
+      },
+      "subjectRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "subject:parser",
+          "revision": "parser-r1",
+          "digest": "sha256:subjectparser000",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "profile": "quire-state/e02-fixture-v1",
+      "bindingRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "binding:parser-state",
+          "revision": "binding-r1",
+          "digest": "sha256:bindingparserstate",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "dependencyClosure": "sha256:closure-state-r1",
+      "executionScope": {
+        "repository": "fixture-parser",
+        "revision": "parser-r1",
+        "paths": [
+          "src/parser.mjs"
+        ]
+      },
+      "execution": {
+        "status": "completed",
+        "detail": "fixture replay only; no external tool execution claimed"
+      },
+      "logical": {
+        "outcome": "satisfied"
+      },
+      "activation": {
+        "status": "activated"
+      },
+      "participation": {
+        "status": "partial",
+        "participants": [
+          "parser"
+        ],
+        "missingParticipants": [
+          "serializer"
+        ]
+      },
+      "assumptions": [
+        {
+          "assumptionId": "fixture-inputs-synthetic",
+          "status": "met"
+        }
+      ],
+      "adequacy": {
+        "status": "adequate",
+        "observations": [
+          "fixture-output"
+        ]
+      },
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      },
+      "nativeArtifacts": [
+        {
+          "uri": "fixture://native/RESULT-PARTIAL.json",
+          "digest": "sha256:RESULTPARTIAL000",
+          "mediaType": "application/json"
+        }
+      ]
+    },
+    {
+      "contractVersion": "quire-verification/e02-draft-1",
+      "kind": "TechniqueResult",
+      "resultId": "RESULT-ASSUMPTION-UNMET",
+      "planId": "PLAN-PARSER-E02-FIXTURE",
+      "taskId": "fixture:OBL-ASSUMPTION:property-based-testing",
+      "techniqueId": "property-based-testing",
+      "producedAt": "2026-09-07T20:09:00Z",
+      "propertyRef": {
+        "authority": "fixture.agent-ix.local",
+        "identity": "property:assumption",
+        "revision": "property-r1",
+        "digest": "sha256:propertyassumption",
+        "profile": "quire-state/e02-fixture-v1"
+      },
+      "subjectRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "subject:parser",
+          "revision": "parser-r1",
+          "digest": "sha256:subjectparser000",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "profile": "quire-state/e02-fixture-v1",
+      "bindingRefs": [
+        {
+          "authority": "fixture.agent-ix.local",
+          "identity": "binding:parser-state",
+          "revision": "binding-r1",
+          "digest": "sha256:bindingparserstate",
+          "profile": "quire-state/e02-fixture-v1"
+        }
+      ],
+      "dependencyClosure": "sha256:closure-state-r1",
+      "executionScope": {
+        "repository": "fixture-parser",
+        "revision": "parser-r1",
+        "paths": [
+          "src/parser.mjs"
+        ]
+      },
+      "execution": {
+        "status": "completed",
+        "detail": "fixture replay only; no external tool execution claimed"
+      },
+      "logical": {
+        "outcome": "satisfied"
+      },
+      "activation": {
+        "status": "activated"
+      },
+      "participation": {
+        "status": "complete",
+        "participants": [
+          "fixture-subject"
+        ]
+      },
+      "assumptions": [
+        {
+          "assumptionId": "fixture-inputs-synthetic",
+          "status": "not-met"
+        }
+      ],
+      "adequacy": {
+        "status": "adequate",
+        "observations": [
+          "fixture-output"
+        ]
+      },
+      "provenance": {
+        "producer": "quire-verification-fixture",
+        "producerVersion": "e02-draft-1",
+        "adapter": "fixture-replay",
+        "sourceRevision": "parser-r1",
+        "executionMode": "fixture-replay"
+      },
+      "nativeArtifacts": [
+        {
+          "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json",
+          "digest": "sha256:RESULTASSUMPTIONUNMET",
+          "mediaType": "application/json"
+        }
+      ]
     }
   ],
   "expectedStatuses": {
@@ -1288,6 +1565,8 @@
     "OBL-MISSING": "missing",
     "OBL-SCOPE": "missing",
     "OBL-INCOMPLETE": "incomplete",
-    "OBL-VIOLATED": "violated"
+    "OBL-VIOLATED": "violated",
+    "OBL-PARTIAL": "partial",
+    "OBL-ASSUMPTION": "assumption-unmet"
   }
 }

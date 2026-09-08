@@ -120,3 +120,27 @@ test("standards-derived policy requires exact provenance and rights", () => {
     /provenance\.standard/,
   );
 });
+
+test("a stale policy blocks otherwise ready work and cannot be waived as available", () => {
+  const request = structuredClone(fixture.planRequest);
+  request.policy.validUntil = "2026-09-01T00:00:00Z";
+  request.availablePrerequisites.push({
+    kind: "policy-freshness",
+    id: `${request.policy.policyId}@${request.policy.version}`,
+  });
+  request.selections = request.selections.filter(
+    (selection) => selection.techniqueId === "property-based-testing",
+  );
+  const plan = buildVerificationPlan(request);
+  const verification = plan.tasks.find((task) => task.kind === "verification");
+  assert.equal(plan.policyRef.freshness, "stale");
+  assert.equal(verification.readiness, "blocked");
+  assert.equal(verification.invocationAllowed, false);
+  assert.deepEqual(verification.missingPrerequisites, [
+    {
+      required: true,
+      kind: "policy-freshness",
+      id: "POLICY-PARSER-FIXTURE@1",
+    },
+  ]);
+});
