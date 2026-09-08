@@ -9,7 +9,7 @@ use chrono::{DateTime, FixedOffset};
 use serde_json::{Value, json};
 
 use crate::contracts::{
-    VerificationError, VerificationErrorCode, contract_version, validate_contract,
+    VerificationError, VerificationErrorCode, contract_version, jcs_equal, validate_contract,
     validate_plan_value, validate_schema_definition,
 };
 use crate::value::{arrays_field, field, object, optional_array, string_field};
@@ -58,6 +58,7 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
             &available,
         )?);
     }
+    let mut tasks = coalesce_plan_tasks(tasks)?;
     tasks.sort_by(|left, right| {
         left.get("taskId")
             .and_then(Value::as_str)
@@ -137,7 +138,7 @@ fn build_selection_tasks(
     policy_stale: bool,
     properties: &BTreeMap<String, &Value>,
     capabilities: &BTreeMap<String, Vec<&Value>>,
-    available: &BTreeSet<String>,
+    available: &BTreeSet<(String, String)>,
 ) -> Result<Vec<Value>, VerificationError> {
     let property_id = string_field(selection, "propertyId", "selection")?;
     let technique_id = string_field(selection, "techniqueId", "selection")?;
@@ -161,10 +162,10 @@ fn build_selection_tasks(
     if !missing.is_empty() {
         readiness = "blocked";
     }
-    let (mut tasks, dependencies) =
-        setup_tasks(&missing, property_id, technique_id, applicability, priority)?;
+    let verification_id = verification_task_id(property_id, technique_id);
+    let (mut tasks, dependencies) = setup_tasks(&missing, &verification_id)?;
     tasks.push(json!({
-        "taskId": format!("verify:{property_id}:{technique_id}"), "kind": "verification",
+        "taskId": verification_id, "kind": "verification",
         "propertyId": property_id, "techniqueId": technique_id,
         "input": field(property, "input", "property")?, "applicability": applicability,
         "readiness": readiness, "priority": priority,
@@ -224,7 +225,7 @@ fn capability_prerequisites(
 
 fn missing_prerequisites(
     prerequisites: &[Value],
-    available: &BTreeSet<String>,
+    available: &BTreeSet<(String, String)>,
 ) -> Result<Vec<Value>, VerificationError> {
     let mut missing = Vec::new();
     for prerequisite in prerequisites {
@@ -240,30 +241,74 @@ fn missing_prerequisites(
 
 fn setup_tasks(
     missing: &[Value],
-    property_id: &str,
-    technique_id: &str,
-    applicability: &str,
-    priority: &str,
+    verification_id: &str,
 ) -> Result<(Vec<Value>, Vec<Value>), VerificationError> {
     let mut tasks = Vec::with_capacity(missing.len());
     let mut dependencies = Vec::with_capacity(missing.len());
     for prerequisite in missing {
         let kind = string_field(prerequisite, "kind", "prerequisite")?;
         let id = string_field(prerequisite, "id", "prerequisite")?;
-        let setup_id = format!("setup:{property_id}:{technique_id}:{kind}:{id}");
+        let setup_id = setup_task_id(kind, id);
         dependencies.push(Value::String(setup_id.clone()));
         tasks.push(json!({
-            "taskId": setup_id, "kind": "manual-prerequisite", "propertyId": property_id,
-            "techniqueId": technique_id,
+            "taskId": setup_id, "kind": "manual-prerequisite",
+            "prerequisite": prerequisite, "requiredBy": [verification_id],
             "input": {"kind": "manual", "action": "satisfy-prerequisite", "prerequisite": prerequisite,
                 "reviewProcedure": format!("Resolve {kind}:{id} and record its source and disposition."),
                 "requiredDisposition": ["satisfied", "deferred", "rejected"]},
-            "applicability": applicability, "readiness": "blocked", "priority": priority,
+            "readiness": "blocked",
             "dependencies": [], "missingPrerequisites": [prerequisite], "runnerRequest": null,
             "invocationAllowed": false,
         }));
     }
     Ok((tasks, dependencies))
+}
+
+fn coalesce_plan_tasks(tasks: Vec<Value>) -> Result<Vec<Value>, VerificationError> {
+    let mut by_id = BTreeMap::<String, Value>::new();
+    for task in tasks {
+        let task_id = string_field(&task, "taskId", "plan task")?.to_owned();
+        let Some(existing) = by_id.get_mut(&task_id) else {
+            by_id.insert(task_id, task);
+            continue;
+        };
+        if existing.get("kind").and_then(Value::as_str) != Some("manual-prerequisite")
+            || task.get("kind").and_then(Value::as_str) != Some("manual-prerequisite")
+        {
+            return Err(VerificationError::new(
+                VerificationErrorCode::DuplicateTaskId,
+                "duplicate task identifier",
+            )
+            .with_context("task_id", task_id));
+        }
+        if !jcs_equal(
+            field(existing, "prerequisite", "setup task")?,
+            field(&task, "prerequisite", "setup task")?,
+        )? {
+            return Err(VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "shared prerequisite identity has conflicting definitions",
+            )
+            .with_context("task_id", task_id));
+        }
+        let required_by = existing
+            .get_mut("requiredBy")
+            .and_then(Value::as_array_mut)
+            .ok_or_else(|| {
+                VerificationError::new(
+                    VerificationErrorCode::InvalidInput,
+                    "setup task requiredBy must be an array",
+                )
+            })?;
+        required_by.extend(
+            arrays_field(&task, "requiredBy", "setup task")?
+                .iter()
+                .cloned(),
+        );
+        required_by.sort_by(|left, right| left.as_str().cmp(&right.as_str()));
+        required_by.dedup();
+    }
+    Ok(by_id.into_values().collect())
 }
 
 fn runner_request(capability: Option<&Value>, property: &Value, request: &Value) -> Value {
@@ -333,12 +378,23 @@ fn merge_prerequisites(values: Vec<Value>) -> Result<Vec<Value>, VerificationErr
     Ok(merged.into_values().collect())
 }
 
-fn prerequisite_key(value: &Value) -> Result<String, VerificationError> {
-    Ok(format!(
-        "{}:{}",
-        string_field(value, "kind", "prerequisite")?,
-        string_field(value, "id", "prerequisite")?
+fn prerequisite_key(value: &Value) -> Result<(String, String), VerificationError> {
+    Ok((
+        string_field(value, "kind", "prerequisite")?.to_owned(),
+        string_field(value, "id", "prerequisite")?.to_owned(),
     ))
+}
+
+fn setup_task_id(kind: &str, id: &str) -> String {
+    composite_task_id("setup", kind, id)
+}
+
+pub(crate) fn verification_task_id(property_id: &str, technique_id: &str) -> String {
+    composite_task_id("verify", property_id, technique_id)
+}
+
+fn composite_task_id(prefix: &str, left: &str, right: &str) -> String {
+    format!("{prefix}:{}:{left}:{}:{right}", left.len(), right.len())
 }
 
 fn object_mut(value: &mut Value) -> Result<&mut serde_json::Map<String, Value>, VerificationError> {

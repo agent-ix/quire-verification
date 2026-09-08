@@ -259,12 +259,19 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["taskId", "kind", "propertyId", "techniqueId", "input", "applicability", "readiness", "priority", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
+            "required": ["taskId", "kind", "input", "readiness", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
             "properties": {
               "taskId": { "type": "string", "minLength": 1 },
               "kind": { "enum": ["verification", "manual-prerequisite"] },
               "propertyId": { "type": "string", "minLength": 1 },
               "techniqueId": { "type": "string", "minLength": 1 },
+              "prerequisite": { "$ref": "#/$defs/Prerequisite" },
+              "requiredBy": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "minLength": 1 }
+              },
               "input": { "$ref": "#/$defs/Input" },
               "applicability": { "enum": ["applicable", "not-applicable", "unknown"] },
               "readiness": { "enum": ["ready", "blocked", "unsupported"] },
@@ -308,8 +315,32 @@
                 },
                 "then": {
                   "type": "object",
-                  "required": ["reasons", "gaps"],
-                  "properties": { "reasons": true, "gaps": true }
+                  "required": ["propertyId", "techniqueId", "applicability", "priority", "reasons", "gaps"],
+                  "properties": {
+                    "propertyId": true,
+                    "techniqueId": true,
+                    "applicability": true,
+                    "priority": true,
+                    "reasons": true,
+                    "gaps": true
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "kind": { "const": "manual-prerequisite" } },
+                  "required": ["kind"]
+                },
+                "then": {
+                  "type": "object",
+                  "required": ["prerequisite", "requiredBy"],
+                  "properties": {
+                    "propertyId": false,
+                    "techniqueId": false,
+                    "prerequisite": true,
+                    "requiredBy": true
+                  }
                 }
               },
               {

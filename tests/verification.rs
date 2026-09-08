@@ -3,7 +3,7 @@
 
 //! Requirement-traced acceptance tests for the Rust verification boundary.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -86,6 +86,12 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
     assert!(validate_contract(contradiction).is_err());
 
     let plan = built_plan();
+    let verification_index = plan["tasks"]
+        .as_array()
+        .expect("tasks")
+        .iter()
+        .position(|task| task["kind"] == "verification")
+        .expect("verification task");
     for field_name in [
         "kind",
         "priority",
@@ -95,7 +101,21 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
         "techniqueId",
     ] {
         let mut invalid = plan.clone();
-        invalid["tasks"][0]
+        invalid["tasks"][verification_index]
+            .as_object_mut()
+            .expect("task object")
+            .remove(field_name);
+        assert!(validate_plan_value(&invalid).is_err(), "{field_name}");
+    }
+    let setup_index = plan["tasks"]
+        .as_array()
+        .expect("tasks")
+        .iter()
+        .position(|task| task["kind"] == "manual-prerequisite")
+        .expect("setup task");
+    for field_name in ["prerequisite", "requiredBy"] {
+        let mut invalid = plan.clone();
+        invalid["tasks"][setup_index]
             .as_object_mut()
             .expect("task object")
             .remove(field_name);
@@ -350,6 +370,218 @@ fn tc_010_exposes_unsupported_blocked_stale_and_fault_work() {
         .truncate(1);
     let stale_plan = build_verification_plan(&stale).expect("stale plan");
     assert_eq!(stale_plan["policyRef"]["freshness"], "stale");
+}
+
+#[trace("TC-026", "FR-013-AC-1", "FR-013-AC-2")]
+#[trace("FR-013-AC-3", "FR-013-AC-4", "FR-013-AC-5")]
+#[test]
+fn tc_026_coalesces_plan_level_prerequisites() {
+    let source = fixture("portfolio.json");
+    let plan = plan_with_every_prerequisite_missing(&source);
+    assert_plan_level_setup_tasks(&plan);
+    assert_near_match_remains_missing(&source);
+    assert_stale_policy_remains_missing(&source);
+    assert_delimiter_bearing_selection_ids_remain_distinct(&source);
+}
+
+fn plan_with_every_prerequisite_missing(source: &Value) -> Value {
+    let mut request = source["planRequest"].clone();
+    let property_capability = request["capabilities"]
+        .as_array_mut()
+        .expect("capabilities")
+        .iter_mut()
+        .find(|item| item["capabilityId"] == "CAP-PROPERTY")
+        .expect("property capability");
+    property_capability["prerequisites"]
+        .as_array_mut()
+        .expect("prerequisites")
+        .push(json!({
+            "kind": "resource-allocation",
+            "id": "cpu-seconds-10",
+            "required": true
+        }));
+    request["availablePrerequisites"] = json!([]);
+    build_verification_plan(&request).expect("blocked plan")
+}
+
+fn assert_plan_level_setup_tasks(plan: &Value) {
+    let tasks = plan["tasks"].as_array().expect("tasks");
+    let setup_ids = tasks
+        .iter()
+        .filter(|task| task["kind"] == "manual-prerequisite")
+        .map(|task| task["taskId"].as_str().expect("setup task id"))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(
+        setup_ids,
+        [
+            "setup:24:capability-qualification:12:CAP-RELATION",
+            "setup:24:capability-qualification:9:CAP-TRACE",
+            "setup:13:common-domain:23:parser-roundtrip-domain",
+            "setup:6:corpus:12:parser-seeds",
+            "setup:25:environment-authorization:26:non-production-fault-scope",
+            "setup:9:generator:22:parser-state-generator",
+            "setup:7:harness:14:parser-harness",
+            "setup:17:injection-binding:24:confirmed-injection-site",
+            "setup:19:observation-binding:30:independent-effect-observation",
+            "setup:19:observation-binding:20:parser-event-binding",
+            "setup:16:relation-binding:21:roundtrip-equivalence",
+            "setup:19:resource-allocation:14:cpu-seconds-10",
+            "setup:8:reviewer:12:domain-owner",
+        ]
+        .into_iter()
+        .collect()
+    );
+    for setup in tasks
+        .iter()
+        .filter(|task| task["kind"] == "manual-prerequisite")
+    {
+        assert!(setup.get("propertyId").is_none());
+        assert!(setup.get("techniqueId").is_none());
+        let required_by = setup["requiredBy"].as_array().expect("requiredBy");
+        assert!(!required_by.is_empty());
+        assert!(required_by.windows(2).all(|pair| {
+            pair[0].as_str().expect("requiredBy identifier")
+                < pair[1].as_str().expect("requiredBy identifier")
+        }));
+        assert_eq!(setup["missingPrerequisites"][0], setup["prerequisite"]);
+    }
+    let harness_id = "setup:7:harness:14:parser-harness";
+    let setup = find_by(tasks, "taskId", harness_id);
+    assert_eq!(
+        setup["prerequisite"],
+        json!({"kind":"harness","id":"parser-harness","required":true})
+    );
+    assert_eq!(
+        setup["requiredBy"],
+        json!([
+            "verify:10:PROP-STATE:22:property-based-testing",
+            "verify:10:PROP-STATE:7:fuzzing"
+        ])
+    );
+    assert_eq!(
+        tasks
+            .iter()
+            .filter(|task| task["taskId"] == harness_id)
+            .count(),
+        1
+    );
+    for id in [
+        "verify:10:PROP-STATE:7:fuzzing",
+        "verify:10:PROP-STATE:22:property-based-testing",
+    ] {
+        let task = find_by(tasks, "taskId", id);
+        assert_eq!(task["readiness"], "blocked");
+        assert!(
+            task["dependencies"]
+                .as_array()
+                .expect("dependencies")
+                .contains(&json!(harness_id))
+        );
+    }
+}
+
+fn assert_near_match_remains_missing(source: &Value) {
+    let mut near_match = source["planRequest"].clone();
+    near_match["selections"]
+        .as_array_mut()
+        .expect("selections")
+        .truncate(1);
+    near_match["availablePrerequisites"] = json!([
+        {"kind": "generator", "id": "parser-state-generator-near"},
+        {"kind": "near-generator", "id": "parser-state-generator"},
+        {"kind": "harness", "id": "parser-harness"}
+    ]);
+    near_match["capabilities"][0]["prerequisites"]
+        .as_array_mut()
+        .expect("prerequisites")
+        .push(json!({"kind": "a:b", "id": "c", "required": true}));
+    near_match["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .push(json!({"kind": "a", "id": "b:c"}));
+    let near_plan = build_verification_plan(&near_match).expect("near-match plan");
+    let near_tasks = near_plan["tasks"].as_array().expect("near-match tasks");
+    assert!(
+        near_tasks
+            .iter()
+            .any(|task| { task["taskId"] == "setup:9:generator:22:parser-state-generator" })
+    );
+    assert!(
+        !near_tasks
+            .iter()
+            .any(|task| task["taskId"] == "setup:7:harness:14:parser-harness")
+    );
+    assert!(
+        near_tasks
+            .iter()
+            .any(|task| task["taskId"] == "setup:3:a:b:1:c")
+    );
+}
+
+fn assert_stale_policy_remains_missing(source: &Value) {
+    let mut stale = source["planRequest"].clone();
+    stale["selections"]
+        .as_array_mut()
+        .expect("selections")
+        .truncate(1);
+    stale["asOf"] = json!("2026-10-01T00:00:00Z");
+    stale["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .push(json!({
+            "kind": "policy-freshness",
+            "id": "POLICY-PARSER-FIXTURE@1"
+        }));
+    let stale_plan = build_verification_plan(&stale).expect("stale plan");
+    let stale_tasks = stale_plan["tasks"].as_array().expect("stale tasks");
+    assert!(
+        stale_tasks.iter().any(|task| {
+            task["taskId"] == "setup:16:policy-freshness:23:POLICY-PARSER-FIXTURE@1"
+        })
+    );
+    assert_eq!(
+        find_by(
+            stale_tasks,
+            "taskId",
+            "verify:10:PROP-STATE:22:property-based-testing"
+        )["invocationAllowed"],
+        false
+    );
+}
+
+fn assert_delimiter_bearing_selection_ids_remain_distinct(source: &Value) {
+    let mut request = source["planRequest"].clone();
+    let property = request["properties"][0].clone();
+    let capability = request["capabilities"][0].clone();
+    let selection = request["selections"][0].clone();
+    request["properties"] = json!([property.clone(), property]);
+    request["properties"][0]["propertyId"] = json!("a:b");
+    request["properties"][1]["propertyId"] = json!("a");
+    request["capabilities"] = json!([capability.clone(), capability]);
+    request["capabilities"][0]["capabilityId"] = json!("CAP-C");
+    request["capabilities"][0]["techniqueId"] = json!("c");
+    request["capabilities"][0]["prerequisites"] = json!([]);
+    request["capabilities"][1]["capabilityId"] = json!("CAP-B-C");
+    request["capabilities"][1]["techniqueId"] = json!("b:c");
+    request["capabilities"][1]["prerequisites"] = json!([]);
+    request["selections"] = json!([selection.clone(), selection]);
+    request["selections"][0]["propertyId"] = json!("a:b");
+    request["selections"][0]["techniqueId"] = json!("c");
+    request["selections"][1]["propertyId"] = json!("a");
+    request["selections"][1]["techniqueId"] = json!("b:c");
+
+    let plan = build_verification_plan(&request).expect("delimiter-bearing plan");
+    let tasks = plan["tasks"].as_array().expect("tasks");
+    assert!(
+        tasks
+            .iter()
+            .any(|task| task["taskId"] == "verify:3:a:b:1:c")
+    );
+    assert!(
+        tasks
+            .iter()
+            .any(|task| task["taskId"] == "verify:1:a:3:b:c")
+    );
 }
 
 #[trace("TC-011", "FR-005-AC-6")]

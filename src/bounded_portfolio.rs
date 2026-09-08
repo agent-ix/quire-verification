@@ -13,7 +13,7 @@ use crate::contracts::{
     validate_schema_definition,
 };
 use crate::evidence::assess_evidence;
-use crate::planner::build_verification_plan;
+use crate::planner::{build_verification_plan, verification_task_id};
 use crate::value::{arrays_field, field, string_field};
 
 const PROFILE: &str = "quire-verification/local-catalog-portfolio-v1";
@@ -467,7 +467,7 @@ fn result_base(
     let property_id = string_field(property, "propertyId", "portfolio property")?;
     let mut result = json!({
         "contractVersion": contract_version(), "kind": "TechniqueResult", "resultId": result_id, "planId": PLAN_ID,
-        "taskId": format!("verify:{property_id}:{technique}"), "techniqueId": technique,
+        "taskId": verification_task_id(property_id, technique), "techniqueId": technique,
         "producedAt": produced_at, "runRef": run_ref,
         "propertyRef": field(property, "propertyRef", "portfolio property")?,
         "subjectRefs": field(property, "subjectRefs", "portfolio property")?, "profile": PROFILE,
@@ -488,7 +488,7 @@ fn result_base(
 }
 
 fn result_binding(property_id: &str, technique: &str, run_ref: &Value) -> Value {
-    json!({"planId": PLAN_ID, "taskId": format!("verify:{property_id}:{technique}"), "runRef": run_ref, "producer": PRODUCER, "producerVersion": "1", "adapter": ADAPTER, "adapterVersion": "1"})
+    json!({"planId": PLAN_ID, "taskId": verification_task_id(property_id, technique), "runRef": run_ref, "producer": PRODUCER, "producerVersion": "1", "adapter": ADAPTER, "adapterVersion": "1"})
 }
 
 fn object_mut(value: &mut Value) -> Result<&mut Map<String, Value>, VerificationError> {
