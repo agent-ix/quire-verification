@@ -2,7 +2,7 @@
 id: Task-006
 title: "Rust bounded portfolio"
 type: Task
-status: not_started
+status: done
 track: A
 priority: P0
 relationships:
@@ -23,10 +23,10 @@ that retains satisfied, violated, failed, and pending-human results.
 
 ## Subtasks
 
-- [ ] Key complete field parity by technique identifier.
-- [ ] Check reverse and rotate permutations.
-- [ ] Inject comparison violations and adapter errors through a trait seam.
-- [ ] Preserve claim limits and no-sufficiency ownership.
+- [x] Key complete field parity by technique identifier.
+- [x] Check reverse and rotate permutations.
+- [x] Inject comparison violations and adapter errors through a callable seam.
+- [x] Preserve claim limits and no-sufficiency ownership.
 
 ## Deliverables
 
@@ -35,4 +35,3 @@ that retains satisfied, violated, failed, and pending-human results.
 ## Notes
 
 - A check error is data in the returned report, not a panic or lost process output.
-

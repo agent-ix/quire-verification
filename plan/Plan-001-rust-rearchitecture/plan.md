@@ -2,7 +2,7 @@
 id: Plan-001
 title: "Rust rearchitecture of the bounded verification path"
 type: Plan
-status: active
+status: done
 relationships:
   - { target: "ix://agent-ix/quire-verification/StR-001", type: references }
   - { target: "ix://agent-ix/quire-verification/FR-001", type: references }
@@ -26,27 +26,27 @@ relationships:
 
 ### Stakeholder Requirements
 
-- [ ] **StR-001**: Deliver a Rust core for the qualified verification path.
+- [x] **StR-001**: Deliver a Rust core for the qualified verification path.
 
 ### Functional Requirements
 
-- [ ] **FR-001**: Validate the five public contracts.
-- [ ] **FR-002**: Derive runtime contract behavior from the schema.
-- [ ] **FR-003**: Validate every fixture through an explicit handler.
-- [ ] **FR-004**: Adapt Quoin catalog and advice without changing meaning.
-- [ ] **FR-005**: Build prerequisite-aware verification plans.
-- [ ] **FR-006**: Match evidence by exact identity and execution scope.
-- [ ] **FR-007**: Preserve independent result findings.
-- [ ] **FR-008**: Canonicalize digest and identity inputs with JCS.
-- [ ] **FR-009**: Retain bounded portfolio failures as results.
+- [x] **FR-001**: Validate the five public contracts.
+- [x] **FR-002**: Derive runtime contract behavior from the schema.
+- [x] **FR-003**: Validate every fixture through an explicit handler.
+- [x] **FR-004**: Adapt Quoin catalog and advice without changing meaning.
+- [x] **FR-005**: Build prerequisite-aware verification plans.
+- [x] **FR-006**: Match evidence by exact identity and execution scope.
+- [x] **FR-007**: Preserve independent result findings.
+- [x] **FR-008**: Canonicalize digest and identity inputs with JCS.
+- [x] **FR-009**: Retain bounded portfolio failures as results.
 
 ### Non-Functional Requirements
 
-- [ ] **NFR-001**: Produce deterministic structured comparison output.
-- [ ] **NFR-002**: Maintain one authored public-contract source.
-- [ ] **NFR-003**: Preserve conservative assurance claims.
-- [ ] **NFR-004**: Implement every executable path in Rust.
-- [ ] **NFR-005**: Enforce bounded JSON ingestion.
+- [x] **NFR-001**: Produce deterministic structured comparison output.
+- [x] **NFR-002**: Maintain one authored public-contract source.
+- [x] **NFR-003**: Preserve conservative assurance claims.
+- [x] **NFR-004**: Implement every executable path in Rust.
+- [x] **NFR-005**: Enforce bounded JSON ingestion.
 
 ## Dependency Graph
 
@@ -66,40 +66,40 @@ accepted deliverable.
 
 ### Contract and Canonicalization
 
-- [ ] **TC-001**: Accept only the five public contract kinds.
-- [ ] **TC-002**: Reject contradictory and malformed contracts.
-- [ ] **TC-003**: Derive runtime definitions from the schema.
-- [ ] **TC-004**: Reject invalid plan dependency graphs.
-- [ ] **TC-016**: Canonicalize valid JSON with JCS.
-- [ ] **TC-017**: Reject values outside the JCS domain.
-- [ ] **TC-023**: Enforce the JSON resource envelope.
+- [x] **TC-001**: Accept only the five public contract kinds.
+- [x] **TC-002**: Reject contradictory and malformed contracts.
+- [x] **TC-003**: Derive runtime definitions from the schema.
+- [x] **TC-004**: Reject invalid plan dependency graphs.
+- [x] **TC-016**: Canonicalize valid JSON with JCS.
+- [x] **TC-017**: Reject values outside the JCS domain.
+- [x] **TC-023**: Enforce the JSON resource envelope.
 
 ### Fixtures and Quoin Integration
 
-- [ ] **TC-005**: Execute the schema against every retained fixture.
-- [ ] **TC-006**: Reject an unhandled fixture and inspect CI.
-- [ ] **TC-007**: Preserve complete Quoin method records.
-- [ ] **TC-008**: Qualify catalog conflicts and advice.
-- [ ] **TC-021**: Execute the real Quoin catalog baseline.
+- [x] **TC-005**: Execute the schema against every retained fixture.
+- [x] **TC-006**: Reject an unhandled fixture and inspect CI.
+- [x] **TC-007**: Preserve complete Quoin method records.
+- [x] **TC-008**: Qualify catalog conflicts and advice.
+- [x] **TC-021**: Execute the real Quoin catalog baseline.
 
 ### Planning and Evidence
 
-- [ ] **TC-009**: Build ready tasks across distinct input kinds.
-- [ ] **TC-010**: Expose unsupported and blocked verification work.
-- [ ] **TC-011**: Reject an ambiguous compatible capability selection.
-- [ ] **TC-012**: Reject every exact evidence-binding mismatch.
-- [ ] **TC-013**: Refuse ambiguous or malformed evidence identity.
-- [ ] **TC-014**: Distinguish freshness and result states.
-- [ ] **TC-015**: Retain all findings and ownership fields.
+- [x] **TC-009**: Build ready tasks across distinct input kinds.
+- [x] **TC-010**: Expose unsupported and blocked verification work.
+- [x] **TC-011**: Reject an ambiguous compatible capability selection.
+- [x] **TC-012**: Reject every exact evidence-binding mismatch.
+- [x] **TC-013**: Refuse ambiguous or malformed evidence identity.
+- [x] **TC-014**: Distinguish freshness and result states.
+- [x] **TC-015**: Retain all findings and ownership fields.
 
 ### Portfolio and Qualified-Path Gate
 
-- [ ] **TC-018**: Compare catalog parity by technique identifier.
-- [ ] **TC-019**: Return violated and failed portfolio results.
-- [ ] **TC-020**: Retain pending human work and bounded claims.
-- [ ] **TC-022**: Enforce the Rust qualified-path implementation.
+- [x] **TC-018**: Compare catalog parity by technique identifier.
+- [x] **TC-019**: Return violated and failed portfolio results.
+- [x] **TC-020**: Retain pending human work and bounded claims.
+- [x] **TC-022**: Enforce the Rust qualified-path implementation.
 
-## Remaining Work
+## Completed Work
 
 ### Track A: Critical Path
 
@@ -129,13 +129,13 @@ Task-001 ─┬─ Task-002 ─ Task-005 ─┐
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-001 | A | FR-001, FR-002, FR-008, NFR-002, NFR-005 | TC-001..TC-004, TC-016, TC-017, TC-023 | not_started |
-| Task-002 | B | FR-004 | TC-007, TC-008 | not_started |
-| Task-003 | B | FR-005 | TC-009..TC-011 | not_started |
-| Task-004 | A | FR-006, FR-007, NFR-001, NFR-003 | TC-012..TC-015 | not_started |
-| Task-005 | C | FR-003 | TC-005, TC-006, TC-021 | not_started |
-| Task-006 | A | FR-009 | TC-018..TC-020 | not_started |
-| Task-007 | Gate | StR-001, NFR-004 | TC-021, TC-022 | not_started |
+| Task-001 | A | FR-001, FR-002, FR-008, NFR-002, NFR-005 | TC-001..TC-004, TC-016, TC-017, TC-023 | done |
+| Task-002 | B | FR-004 | TC-007, TC-008 | done |
+| Task-003 | B | FR-005 | TC-009..TC-011 | done |
+| Task-004 | A | FR-006, FR-007, NFR-001, NFR-003 | TC-012..TC-015 | done |
+| Task-005 | C | FR-003 | TC-005, TC-006, TC-021 | done |
+| Task-006 | A | FR-009 | TC-018..TC-020 | done |
+| Task-007 | Gate | StR-001, NFR-004 | TC-021, TC-022 | done |
 
 ## Coordination Rules
 

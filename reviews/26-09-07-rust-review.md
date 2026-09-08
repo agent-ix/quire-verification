@@ -17,7 +17,7 @@ portable Rust-style checklist to the complete Rust replacement. The review
 covered error and panic surfaces, generated wire contracts, untrusted JSON,
 resource bounds, deterministic ordering, identity types, public visibility,
 the injected adapter seam, trace markers, test substance, dependencies, and CI.
-Four code-quality and traceability findings were found and resolved during the
+Six code-quality and traceability findings were found and resolved during the
 review; no open finding remains.
 
 ## Verdict
@@ -33,6 +33,8 @@ Low finding, and every required Rust gate exits successfully.
 | FND-002 | medium | Resolved: a multiline trace marker compiled but left three FR-007 criteria invisible to QUOIN's static reconciler | `tests/verification.rs:466` |
 | FND-003 | low | Resolved: planner and portfolio orchestration used broad `too_many_lines` exemptions that obscured their separate validation and result-building phases | `src/planner.rs:27`, `src/bounded_portfolio.rs:51` |
 | FND-004 | low | Resolved: technique identifiers used an ad-hoc parser and exposed an indexing helper beyond the crate | `src/catalog.rs:26`, `src/catalog.rs:216` |
+| FND-005 | medium | Resolved: definition validators were recompiled for every result on an evidence intake path | `src/contracts.rs:325` |
+| FND-006 | low | Resolved: the stable unsupported-version error code had no producer or discriminating assertion | `src/contracts.rs:269`, `tests/verification.rs:109` |
 
 ## Failure Scenarios and Resolutions
 
@@ -57,6 +59,17 @@ FND-004 allowed two technique identifiers to be confused at call sites and
 added a utility to the external API only to support tests. `TechniqueId` now
 implements `FromStr`, remains crate-private, and the public API contains only
 the adapter behavior consumers need.
+
+FND-005 made schema-validation cost grow with the number of result records even
+when every record used the same definition. Named validators are now compiled
+once on demand, stored behind a short-lived mutex as `Arc<Validator>`, and used
+without holding the cache lock during validation. This crate has no async
+worker, so the initialization lock cannot block an executor.
+
+FND-006 made an unknown protocol version indistinguishable from a generic shape
+failure and left one public stable error code unused. Both root-contract and
+named-definition boundaries now refuse a foreign `contractVersion` with
+`unsupported_contract_version`, and TC-002 asserts the code.
 
 ## Boundary Review
 

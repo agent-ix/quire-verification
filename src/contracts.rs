@@ -6,7 +6,7 @@
 //! Governing requirements: FR-001, FR-002, FR-008, NFR-002, and NFR-005.
 
 use std::collections::BTreeMap;
-use std::sync::OnceLock;
+use std::sync::{Arc, Mutex, OnceLock};
 
 use jsonschema::{Draft, Validator};
 use serde::Serialize;
@@ -189,6 +189,7 @@ impl VerificationError {
 
 static CONTRACT_SCHEMA: OnceLock<Result<Value, String>> = OnceLock::new();
 static CONTRACT_VALIDATOR: OnceLock<Result<Validator, String>> = OnceLock::new();
+static DEFINITION_VALIDATORS: OnceLock<Mutex<BTreeMap<String, Arc<Validator>>>> = OnceLock::new();
 
 /// One of the five schema-generated public contract values.
 #[derive(Clone, Debug)]
@@ -267,6 +268,7 @@ pub fn validate_resource_envelope(value: &Value) -> Result<(), VerificationError
 /// Returns a schema or graph error when the value is outside the public packet.
 pub fn validate_contract(value: Value) -> Result<PublicContract, VerificationError> {
     validate_resource_envelope(&value)?;
+    reject_unknown_contract_version(&value)?;
     validate_with(contract_validator()?, &value, "E02 contract")?;
     let kind = value.get("kind").and_then(Value::as_str).ok_or_else(|| {
         VerificationError::new(
@@ -310,8 +312,26 @@ pub fn validate_plan_value(value: &Value) -> Result<(), VerificationError> {
 ///
 /// # Errors
 /// Returns an unknown-definition, resource, schema-compilation, or validation error.
-pub fn validate_schema_definition(name: &str, value: &Value) -> Result<(), VerificationError> {
+pub(crate) fn validate_schema_definition(
+    name: &str,
+    value: &Value,
+) -> Result<(), VerificationError> {
     validate_resource_envelope(value)?;
+    reject_unknown_contract_version(value)?;
+    let validator = definition_validator(name)?;
+    validate_with(&validator, value, name)
+}
+
+fn definition_validator(name: &str) -> Result<Arc<Validator>, VerificationError> {
+    let cache = DEFINITION_VALIDATORS.get_or_init(|| Mutex::new(BTreeMap::new()));
+    if let Some(validator) = cache
+        .lock()
+        .map_err(|_| validator_cache_error())?
+        .get(name)
+        .cloned()
+    {
+        return Ok(validator);
+    }
     let schema = contract_schema()?;
     if schema.pointer(&format!("/$defs/{name}")).is_none() {
         return Err(VerificationError::new(
@@ -337,7 +357,32 @@ pub fn validate_schema_definition(name: &str, value: &Value) -> Result<(), Verif
         .map_err(|error| {
             VerificationError::new(VerificationErrorCode::SchemaViolation, error.to_string())
         })?;
-    validate_with(&validator, value, name)
+    let validator = Arc::new(validator);
+    let mut validators = cache.lock().map_err(|_| validator_cache_error())?;
+    Ok(validators
+        .entry(name.to_owned())
+        .or_insert_with(|| Arc::clone(&validator))
+        .clone())
+}
+
+fn validator_cache_error() -> VerificationError {
+    VerificationError::new(
+        VerificationErrorCode::SchemaViolation,
+        "schema validator cache is poisoned",
+    )
+}
+
+fn reject_unknown_contract_version(value: &Value) -> Result<(), VerificationError> {
+    if let Some(version) = value.get("contractVersion").and_then(Value::as_str)
+        && version != contract_version()
+    {
+        return Err(VerificationError::new(
+            VerificationErrorCode::UnsupportedContractVersion,
+            "unsupported contract version",
+        )
+        .with_context("contract_version", version));
+    }
+    Ok(())
 }
 
 /// Returns the contract version from the authoritative schema.
@@ -346,10 +391,10 @@ pub fn contract_version() -> &'static str {
     wire::CONTRACT_VERSION
 }
 
-/// Returns the five input-kind constants from the authoritative schema.
+/// Returns the five input-kind constants from the authoritative schema without allocation.
 #[must_use]
-pub fn input_kinds() -> Vec<&'static str> {
-    wire::INPUT_KINDS.to_vec()
+pub const fn input_kinds() -> &'static [&'static str] {
+    wire::INPUT_KINDS
 }
 
 /// Serializes a JSON value according to RFC 8785 JCS.

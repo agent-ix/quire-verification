@@ -8,9 +8,9 @@ type: TestMatrix
 ## Overview
 
 This matrix maps every normative acceptance criterion in the bounded E02
-compatibility slice to a concrete test case. Its overall status is 🚧 pending
-the complete traced Rust implementation. The rejected JavaScript prototype is
-not accepted as evidence for any row.
+compatibility slice to a concrete test case. Its overall status is complete:
+all 23 cases run in Rust and bind through compiler-checked `ix-trace-rs`
+markers. The rejected JavaScript prototype is not accepted as evidence.
 
 ## Test Matrix Rules
 
@@ -27,19 +27,19 @@ not accepted as evidence for any row.
 
 | User Story | Acceptance Criteria | Test Cases | Coverage Status |
 |------------|---------------------|------------|-----------------|
-| US-001 | Ready task; unsafe fault task | TC-001..TC-004, TC-009..TC-011 | 🚧 TC-004 and TC-011 pending |
+| US-001 | Ready task; unsafe fault task | TC-001..TC-004, TC-009..TC-011 | ✅ Complete |
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
-| US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | 🚧 TC-006 pending |
+| US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 
 ### Functional Requirement Coverage
 
 | Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |----------------|---------------------|------------|-----------------|
-| FR-001 | FR-001-AC-1..4 | TC-001, TC-002 | ✅ Complete |
-| FR-002 | FR-002-AC-1..3 | TC-003, TC-004 | 🚧 TC-004 pending |
-| FR-003 | FR-003-AC-1..3 | TC-005, TC-006 | 🚧 TC-006 dynamic error path pending |
+| FR-001 | FR-001-AC-1..5 | TC-001, TC-002 | ✅ Complete |
+| FR-002 | FR-002-AC-1..3 | TC-003, TC-004 | ✅ Complete |
+| FR-003 | FR-003-AC-1..3 | TC-005, TC-006 | ✅ Complete |
 | FR-004 | FR-004-AC-1..3 | TC-007, TC-008, TC-021 | ✅ Complete |
-| FR-005 | FR-005-AC-1..6 | TC-009, TC-010, TC-011 | 🚧 TC-011 pending |
+| FR-005 | FR-005-AC-1..6 | TC-009, TC-010, TC-011 | ✅ Complete |
 | FR-006 | FR-006-AC-1..5 | TC-012, TC-013, TC-014 | ✅ Complete |
 | FR-007 | FR-007-AC-1..5 | TC-014, TC-015 | ✅ Complete |
 | FR-008 | FR-008-AC-1..4 | TC-016, TC-017 | ✅ Complete |
@@ -50,38 +50,38 @@ not accepted as evidence for any row.
 | Non-Functional Req | Verification Method | Evidence/Test Cases | Status |
 |--------------------|---------------------|---------------------|--------|
 | NFR-001 | Property and deterministic-order tests | TC-012, TC-013, TC-015, TC-016, TC-018 | ✅ Complete |
-| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006 | 🚧 TC-006 error path pending |
+| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006 | ✅ Complete |
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
-| NFR-004 | Rust source and quality gates | TC-022 | 🚧 Rust migration pending |
-| NFR-005 | Boundary resource-limit tests | TC-023 | 🚧 Rust migration pending |
+| NFR-004 | Rust source and quality gates | TC-022 | ✅ Complete |
+| NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
 
 ## Test Case Summary
 
 | Test ID | Title | Type | Priority | Traces To | Status |
 |---------|-------|------|----------|-----------|--------|
-| TC-001 | Accept only five public contract kinds | Unit | P0 | FR-001-AC-1..FR-001-AC-2 | 🚧 Rust migration pending |
-| TC-002 | Reject contradictory and malformed contracts | Unit | P0 | FR-001-AC-3..FR-001-AC-5 | 🚧 Rust migration pending |
-| TC-003 | Derive runtime definitions from schema | Static | P0 | FR-002-AC-1..FR-002-AC-2, NFR-002-AC-1 | 🚧 Rust migration pending |
-| TC-004 | Reject invalid plan dependency graphs | Unit | P1 | FR-002-AC-3 | 🚧 test automation pending |
-| TC-005 | Execute schema against every retained fixture | Integration | P0 | FR-003-AC-1, NFR-002-AC-2 | 🚧 Rust migration pending |
-| TC-006 | Reject unhandled fixture and inspect CI | Integration | P1 | FR-003-AC-2..FR-003-AC-3, NFR-002-AC-2 | 🚧 dynamic error-path test pending |
-| TC-007 | Preserve complete Quoin method records | Unit | P0 | FR-004-AC-1 | 🚧 Rust migration pending |
-| TC-008 | Qualify catalog conflicts and advice | Unit | P0 | FR-004-AC-2..FR-004-AC-3, NFR-003-AC-1 | 🚧 Rust migration pending |
-| TC-009 | Build ready tasks across input kinds | Unit | P0 | FR-005-AC-1..FR-005-AC-2 | 🚧 Rust migration pending |
-| TC-010 | Expose unsupported and blocked work | Unit | P0 | FR-005-AC-3..FR-005-AC-5 | 🚧 Rust migration pending |
-| TC-011 | Reject ambiguous compatible capability | Unit | P1 | FR-005-AC-6 | 🚧 test automation pending |
-| TC-012 | Reject every evidence-binding mismatch | Property | P0 | FR-006-AC-1..FR-006-AC-2, NFR-001-AC-2 | 🚧 Rust migration pending |
-| TC-013 | Refuse ambiguous or malformed identity | Unit | P0 | FR-006-AC-3..FR-006-AC-4, NFR-001-AC-2 | 🚧 Rust migration pending |
-| TC-014 | Distinguish freshness and result states | Unit | P0 | FR-006-AC-5, FR-007-AC-1, NFR-003-AC-1 | 🚧 Rust migration pending |
-| TC-015 | Retain findings and ownership fields | Unit | P0 | FR-007-AC-2..FR-007-AC-5, NFR-001-AC-2, NFR-003-AC-1 | 🚧 Rust migration pending |
-| TC-016 | Canonicalize valid JSON with JCS | Property | P0 | FR-008-AC-1..FR-008-AC-2, NFR-001-AC-1 | 🚧 Rust migration pending |
-| TC-017 | Reject values outside the JCS domain | Unit | P0 | FR-008-AC-3..FR-008-AC-4 | 🚧 Rust migration pending |
-| TC-018 | Compare catalog parity by technique ID | Property | P0 | FR-009-AC-1..FR-009-AC-2, NFR-001-AC-1 | 🚧 Rust migration pending |
-| TC-019 | Return violated and failed results | Unit | P0 | FR-009-AC-3..FR-009-AC-4 | 🚧 Rust migration pending |
-| TC-020 | Retain pending human work and claim limits | Unit | P0 | FR-009-AC-5..FR-009-AC-6, NFR-003-AC-2 | 🚧 Rust migration pending |
-| TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | 🚧 Rust migration pending |
-| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-3 | 🚧 Rust migration pending |
-| TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | 🚧 Rust migration pending |
+| TC-001 | Accept only five public contract kinds | Unit | P0 | FR-001-AC-1..FR-001-AC-2 | ✅ Passed |
+| TC-002 | Reject contradictory and malformed contracts | Unit | P0 | FR-001-AC-3..FR-001-AC-5 | ✅ Passed |
+| TC-003 | Derive runtime definitions from schema | Static | P0 | FR-002-AC-1..FR-002-AC-2, NFR-002-AC-1 | ✅ Passed |
+| TC-004 | Reject invalid plan dependency graphs | Unit | P1 | FR-002-AC-3 | ✅ Passed |
+| TC-005 | Execute schema against every retained fixture | Integration | P0 | FR-003-AC-1, NFR-002-AC-2 | ✅ Passed |
+| TC-006 | Reject unhandled fixture and inspect CI | Integration | P1 | FR-003-AC-2..FR-003-AC-3, NFR-002-AC-2 | ✅ Passed |
+| TC-007 | Preserve complete Quoin method records | Unit | P0 | FR-004-AC-1 | ✅ Passed |
+| TC-008 | Qualify catalog conflicts and advice | Unit | P0 | FR-004-AC-2..FR-004-AC-3, NFR-003-AC-1 | ✅ Passed |
+| TC-009 | Build ready tasks across input kinds | Unit | P0 | FR-005-AC-1..FR-005-AC-2 | ✅ Passed |
+| TC-010 | Expose unsupported and blocked work | Unit | P0 | FR-005-AC-3..FR-005-AC-5 | ✅ Passed |
+| TC-011 | Reject ambiguous compatible capability | Unit | P1 | FR-005-AC-6 | ✅ Passed |
+| TC-012 | Reject every evidence-binding mismatch | Property | P0 | FR-006-AC-1..FR-006-AC-2, NFR-001-AC-2 | ✅ Passed |
+| TC-013 | Refuse ambiguous or malformed identity | Unit | P0 | FR-006-AC-3..FR-006-AC-4, NFR-001-AC-2 | ✅ Passed |
+| TC-014 | Distinguish freshness and result states | Unit | P0 | FR-006-AC-5, FR-007-AC-1, NFR-003-AC-1 | ✅ Passed |
+| TC-015 | Retain findings and ownership fields | Unit | P0 | FR-007-AC-2..FR-007-AC-5, NFR-001-AC-2, NFR-003-AC-1 | ✅ Passed |
+| TC-016 | Canonicalize valid JSON with JCS | Property | P0 | FR-008-AC-1..FR-008-AC-2, NFR-001-AC-1 | ✅ Passed |
+| TC-017 | Reject values outside the JCS domain | Unit | P0 | FR-008-AC-3..FR-008-AC-4 | ✅ Passed |
+| TC-018 | Compare catalog parity by technique ID | Property | P0 | FR-009-AC-1..FR-009-AC-2, NFR-001-AC-1 | ✅ Passed |
+| TC-019 | Return violated and failed results | Unit | P0 | FR-009-AC-3..FR-009-AC-4 | ✅ Passed |
+| TC-020 | Retain pending human work and claim limits | Unit | P0 | FR-009-AC-5..FR-009-AC-6, NFR-003-AC-2 | ✅ Passed |
+| TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
+| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-3 | ✅ Passed |
+| TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 
 ## Option Permutation Matrix
 
@@ -169,22 +169,22 @@ not accepted as evidence for any row.
 | TC-021 | IT-001 | Producer or fixture drift | Any missing, extra, or changed method field | Nonzero comparison exit | P0 |
 | TC-021 | IT-001 | Unreadable or conflicting module | Real loader diagnostic | Nonzero comparison exit | P0 |
 
-## Coverage Gaps
+## Resolved Coverage Gaps
 
-| Gap ID | Description | Risk Level | Mitigation |
-|--------|-------------|------------|------------|
-| GAP-001 | TC-004 has no automated mutation test for all three graph failures. | Med | Add table-driven tests before marking the matrix complete. |
-| GAP-002 | TC-006 does not dynamically create an unhandled fixture. | Med | Add an injectable fixture-directory seam or isolated child-process test. |
-| GAP-003 | TC-011 has no automated ambiguous-capability test. | Med | Add a planner request with two compatible capabilities and no selected ID. |
-| GAP-004 | TC-022 fails because executable implementation and tests are JavaScript. | High | Replace the implementation with a Rust crate and enforce Rust gates in CI. |
-| GAP-005 | TC-023 has no Rust boundary implementation or resource-limit tests. | High | Enforce size, depth, and collection limits in every public JSON ingestion path. |
+| Gap ID | Resolution | Evidence |
+|--------|------------|----------|
+| GAP-001 | Added table-driven duplicate, unknown-edge, and cycle rejection. | TC-004 |
+| GAP-002 | Added an isolated temporary fixture directory and unhandled-file refusal. | TC-006 |
+| GAP-003 | Added ambiguous compatible capability refusal. | TC-011 |
+| GAP-004 | Replaced every governed executable and test with Rust and added CI gates. | TC-022 |
+| GAP-005 | Added byte, nesting, and array-size limits at public ingestion boundaries. | TC-023 |
 
 ## Test Execution Summary
 
 | Category | Total | Passed | Failed | Blocked | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 14 | 0 | 0 | 14 | 0% |
-| Integration | 3 | 0 | 0 | 3 | 0% |
-| Property | 4 | 0 | 0 | 4 | 0% |
-| Static | 2 | 0 | 0 | 2 | 0% |
-| Overall | 23 | 0 | 0 | 23 | 0% |
+| Unit | 14 | 14 | 0 | 0 | 100% |
+| Integration | 3 | 3 | 0 | 0 | 100% |
+| Property | 4 | 4 | 0 | 0 | 100% |
+| Static | 2 | 2 | 0 | 0 | 100% |
+| Overall | 23 | 23 | 0 | 0 | 100% |

@@ -17,10 +17,10 @@ fixtures and their embedded or adapted public contracts.
 
 ## Test Procedure
 
-Run `npm run validate:fixtures` and the fixture-schema-validation unit test.
+Run `cargo run --locked --bin validate-fixtures` and the traced Rust fixture
+validation test.
 
 ## Expected Results
 
 The command reports four fixtures and 52 public contract instances, and the unit
 test lists the four expected filenames.
-

@@ -2,7 +2,7 @@
 id: Task-005
 title: "Rust fixture and baseline binaries"
 type: Task
-status: not_started
+status: done
 track: C
 priority: P0
 relationships:
@@ -22,10 +22,10 @@ validation, fixture rendering, local portfolio output, and Quoin baseline input.
 
 ## Subtasks
 
-- [ ] Discover every fixture and fail on an unhandled JSON file.
-- [ ] Validate whole fixture wrappers and every embedded public contract.
-- [ ] Compare real Quoin standard-input output by technique identifier.
-- [ ] Emit deterministic JSON without unbounded reads.
+- [x] Discover every fixture and fail on an unhandled JSON file.
+- [x] Validate whole fixture wrappers and every embedded public contract.
+- [x] Compare real Quoin standard-input output by technique identifier.
+- [x] Emit deterministic JSON without unbounded reads.
 
 ## Deliverables
 
@@ -34,4 +34,3 @@ validation, fixture rendering, local portfolio output, and Quoin baseline input.
 ## Notes
 
 - IT-001 uses real Quoin and real filesystem module loading.
-

@@ -2,7 +2,7 @@
 id: Task-001
 title: "Rust contract core"
 type: Task
-status: not_started
+status: done
 track: A
 priority: P0
 relationships:
@@ -29,12 +29,12 @@ and bounded JSON ingestion.
 
 ## Subtasks
 
-- [ ] Configure Rust 2024, forbid unsafe code, workspace lints, and dependency policy.
-- [ ] Generate wire types from the checked-in schema without a second authored definition.
-- [ ] Compile the schema once and derive contract vocabularies from it.
-- [ ] Implement JCS equality and `sha256-jcs` digests.
-- [ ] Enforce byte, depth, collection, duplicate-ID, unknown-edge, and cycle limits.
-- [ ] Implement traced tests before downstream modules.
+- [x] Configure Rust 2024, forbid unsafe code, workspace lints, and dependency policy.
+- [x] Generate wire types from the checked-in schema without a second authored definition.
+- [x] Compile the schema once and derive contract vocabularies from it.
+- [x] Implement JCS equality and `sha256-jcs` digests.
+- [x] Enforce byte, depth, collection, duplicate-ID, unknown-edge, and cycle limits.
+- [x] Implement traced tests before downstream modules.
 
 ## Deliverables
 
@@ -44,4 +44,3 @@ and bounded JSON ingestion.
 
 - No public API returns `String` or `Box<dyn Error>` errors.
 - No caller-controlled recursive graph walk or unsafe code is permitted.
-

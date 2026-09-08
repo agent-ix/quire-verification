@@ -1,922 +1,18 @@
 {
-  "schemaVersion": "quire-verification/e02-evidence-packet/v1",
-  "claimLimit": "Fixture planning and intake only; no represented external verification or fault tool executed.",
-  "plan": {
-    "contractVersion": "quire-verification/e02-draft-1",
-    "kind": "VerificationPlan",
-    "planId": "PLAN-PARSER-E02-FIXTURE",
-    "policyRef": {
-      "policyId": "POLICY-PARSER-FIXTURE",
-      "version": "1",
-      "sourceRef": {
-        "authority": "fixture.agent-ix.local",
-        "identity": "policy:parser-baseline",
-        "revision": "policy-r1",
-        "digest": "sha256:policyparserbaseline",
-        "profile": "quire-selection-policy/e02-fixture-v1"
-      },
-      "validUntil": "2026-09-30T00:00:00Z",
-      "freshness": "current"
-    },
-    "inventory": [
-      {
-        "propertyId": "PROP-STATE",
-        "classification": "unknown",
-        "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "identity": "property:parser-state-invariant",
-          "revision": "property-r1",
-          "digest": "sha256:propertyparserstateinvariant",
-          "profile": "quire-state/e02-fixture-v1"
-        },
-        "subjectRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:parser",
-            "revision": "parser-r1",
-            "digest": "sha256:subjectparser000",
-            "profile": "quire-state/e02-fixture-v1"
-          }
-        ],
-        "profile": "quire-state/e02-fixture-v1",
-        "bindingRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "binding:parser-state",
-            "revision": "binding-r1",
-            "digest": "sha256:bindingparserstate",
-            "profile": "quire-state/e02-fixture-v1"
-          }
-        ],
-        "dependencyClosure": "sha256:closure-state-r1",
-        "executionScope": {
-          "repository": "fixture-parser",
-          "revision": "parser-r1",
-          "paths": [
-            "src/parser.mjs"
-          ]
-        },
-        "input": {
-          "kind": "state",
-          "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "snapshot:parser-valid",
-            "revision": "snapshot-r1",
-            "digest": "sha256:snapshotparservalid",
-            "profile": "quire-state/e02-fixture-v1"
-          },
-          "property": "state is internally consistent"
-        },
-        "freshness": {
-          "maxAgeSeconds": 86400
-        }
-      },
-      {
-        "propertyId": "PROP-RELATION",
-        "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "identity": "property:parser-roundtrip",
-          "revision": "property-r1",
-          "digest": "sha256:propertyparserroundtrip",
-          "profile": "quire-relational/e02-fixture-v1"
-        },
-        "subjectRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:parser-before",
-            "revision": "parser-r1",
-            "digest": "sha256:subjectparserbefore",
-            "profile": "quire-relational/e02-fixture-v1"
-          },
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:parser-after",
-            "revision": "parser-r1",
-            "digest": "sha256:subjectparserafter",
-            "profile": "quire-relational/e02-fixture-v1"
-          }
-        ],
-        "profile": "quire-relational/e02-fixture-v1",
-        "bindingRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "binding:roundtrip",
-            "revision": "binding-r1",
-            "digest": "sha256:bindingroundtrip",
-            "profile": "quire-relational/e02-fixture-v1"
-          }
-        ],
-        "dependencyClosure": "sha256:closure-relation-r1",
-        "executionScope": {
-          "repository": "fixture-parser",
-          "revision": "parser-r1",
-          "paths": [
-            "src/parser.mjs"
-          ]
-        },
-        "input": {
-          "kind": "relational",
-          "leftSubject": "subject:parser-before",
-          "rightSubject": "subject:parser-after",
-          "relation": "semantic-equivalence"
-        },
-        "freshness": {
-          "maxAgeSeconds": 86400
-        }
-      },
-      {
-        "propertyId": "PROP-TRACE",
-        "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "identity": "property:parser-event-order",
-          "revision": "property-r1",
-          "digest": "sha256:propertyparsereventorder",
-          "profile": "quire-trace/e02-fixture-v1"
-        },
-        "subjectRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:parser-trace",
-            "revision": "parser-r1",
-            "digest": "sha256:subjectparsertrace",
-            "profile": "quire-trace/e02-fixture-v1"
-          }
-        ],
-        "profile": "quire-trace/e02-fixture-v1",
-        "bindingRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "binding:parser-events",
-            "revision": "binding-r1",
-            "digest": "sha256:bindingparserevents",
-            "profile": "quire-trace/e02-fixture-v1"
-          }
-        ],
-        "dependencyClosure": "sha256:closure-trace-r1",
-        "executionScope": {
-          "repository": "fixture-parser",
-          "revision": "parser-r1",
-          "paths": [
-            "src/parser.mjs"
-          ]
-        },
-        "input": {
-          "kind": "trace",
-          "traceRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "trace:parser-events",
-            "revision": "trace-fixture-r1",
-            "digest": "sha256:traceparserevents",
-            "profile": "quire-trace/e02-fixture-v1"
-          },
-          "clockProfile": "event-indexed",
-          "completion": "closed-fixture"
-        },
-        "freshness": {
-          "maxAgeSeconds": 86400
-        }
-      },
-      {
-        "propertyId": "PROP-FAULT",
-        "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "identity": "property:parser-recovery",
-          "revision": "property-r1",
-          "digest": "sha256:propertyparserrecovery",
-          "profile": "quire-fault/e02-fixture-v1"
-        },
-        "subjectRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:parser",
-            "revision": "parser-r1",
-            "digest": "sha256:subjectparser000",
-            "profile": "quire-fault/e02-fixture-v1"
-          }
-        ],
-        "profile": "quire-fault/e02-fixture-v1",
-        "bindingRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "binding:parser-fault",
-            "revision": "binding-r1",
-            "digest": "sha256:bindingparserfault",
-            "profile": "quire-fault/e02-fixture-v1"
-          }
-        ],
-        "dependencyClosure": "sha256:closure-fault-r1",
-        "executionScope": {
-          "repository": "fixture-parser",
-          "revision": "parser-r1",
-          "paths": [
-            "src/parser.mjs"
-          ],
-          "environment": "disposable-fixture-only"
-        },
-        "input": {
-          "kind": "fault",
-          "faultModelRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "fault:read-error",
-            "revision": "fault-r1",
-            "digest": "sha256:faultreaderror00",
-            "profile": "quire-fault/e02-fixture-v1"
-          },
-          "requestedInjectionSite": "fixture-only",
-          "mitigationOracle": "independent recovery event"
-        },
-        "freshness": {
-          "maxAgeSeconds": 3600
-        }
-      },
-      {
-        "propertyId": "PROP-MANUAL",
-        "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "identity": "property:source-correspondence-review",
-          "revision": "property-r1",
-          "digest": "sha256:propertysourcecorrespondencereview",
-          "profile": "quire-manual/e02-fixture-v1"
-        },
-        "subjectRefs": [
-          {
-            "authority": "fixture.agent-ix.local",
-            "identity": "subject:source-map",
-            "revision": "source-map-r1",
-            "digest": "sha256:subjectsourcemap",
-            "profile": "quire-manual/e02-fixture-v1"
-          }
-        ],
-        "profile": "quire-manual/e02-fixture-v1",
-        "bindingRefs": [],
-        "dependencyClosure": "sha256:closure-manual-r1",
-        "executionScope": {
-          "repository": "fixture-parser",
-          "revision": "parser-r1",
-          "paths": [
-            "fixtures/source-map.json"
-          ]
-        },
-        "input": {
-          "kind": "manual",
-          "reviewProcedure": "Compare source spans to the authored fixture.",
-          "requiredDisposition": [
-            "accept",
-            "revise",
-            "reject"
-          ]
-        },
-        "freshness": {
-          "maxAgeSeconds": 604800
-        }
-      }
-    ],
-    "tasks": [
-      {
-        "taskId": "setup:PROP-FAULT:fault-injection:environment-authorization:non-production-fault-scope",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-FAULT",
-        "techniqueId": "fault-injection",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "environment-authorization",
-            "id": "non-production-fault-scope"
-          },
-          "reviewProcedure": "Resolve environment-authorization:non-production-fault-scope and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "environment-authorization",
-            "id": "non-production-fault-scope"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-FAULT:fault-injection:injection-binding:confirmed-injection-site",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-FAULT",
-        "techniqueId": "fault-injection",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "injection-binding",
-            "id": "confirmed-injection-site"
-          },
-          "reviewProcedure": "Resolve injection-binding:confirmed-injection-site and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "injection-binding",
-            "id": "confirmed-injection-site"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-FAULT:fault-injection:observation-binding:independent-effect-observation",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-FAULT",
-        "techniqueId": "fault-injection",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "independent-effect-observation"
-          },
-          "reviewProcedure": "Resolve observation-binding:independent-effect-observation and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "independent-effect-observation"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-RELATION:metamorphic-testing:capability-qualification:CAP-RELATION",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-RELATION",
-        "techniqueId": "metamorphic-testing",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-RELATION"
-          },
-          "reviewProcedure": "Resolve capability-qualification:CAP-RELATION and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-RELATION"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-RELATION:metamorphic-testing:common-domain:parser-roundtrip-domain",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-RELATION",
-        "techniqueId": "metamorphic-testing",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "common-domain",
-            "id": "parser-roundtrip-domain"
-          },
-          "reviewProcedure": "Resolve common-domain:parser-roundtrip-domain and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "common-domain",
-            "id": "parser-roundtrip-domain"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-RELATION:metamorphic-testing:relation-binding:roundtrip-equivalence",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-RELATION",
-        "techniqueId": "metamorphic-testing",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "relation-binding",
-            "id": "roundtrip-equivalence"
-          },
-          "reviewProcedure": "Resolve relation-binding:roundtrip-equivalence and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "relation-binding",
-            "id": "roundtrip-equivalence"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-TRACE:runtime-monitoring:capability-qualification:CAP-TRACE",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-TRACE",
-        "techniqueId": "runtime-monitoring",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-TRACE"
-          },
-          "reviewProcedure": "Resolve capability-qualification:CAP-TRACE and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "recommended",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-TRACE"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "setup:PROP-TRACE:runtime-monitoring:observation-binding:parser-event-binding",
-        "kind": "manual-prerequisite",
-        "propertyId": "PROP-TRACE",
-        "techniqueId": "runtime-monitoring",
-        "input": {
-          "kind": "manual",
-          "action": "satisfy-prerequisite",
-          "prerequisite": {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "parser-event-binding"
-          },
-          "reviewProcedure": "Resolve observation-binding:parser-event-binding and record its source and disposition.",
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "recommended",
-        "dependencies": [],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "parser-event-binding"
-          }
-        ],
-        "runnerRequest": null,
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "verify:PROP-FAULT:fault-injection",
-        "kind": "verification",
-        "propertyId": "PROP-FAULT",
-        "techniqueId": "fault-injection",
-        "input": {
-          "kind": "fault",
-          "faultModelRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "fault:read-error",
-            "revision": "fault-r1",
-            "digest": "sha256:faultreaderror00",
-            "profile": "quire-fault/e02-fixture-v1"
-          },
-          "requestedInjectionSite": "fixture-only",
-          "mitigationOracle": "independent recovery event"
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "reasons": [
-          {
-            "rule": "object_types",
-            "value": "failure_mode"
-          }
-        ],
-        "dependencies": [
-          "setup:PROP-FAULT:fault-injection:environment-authorization:non-production-fault-scope",
-          "setup:PROP-FAULT:fault-injection:injection-binding:confirmed-injection-site",
-          "setup:PROP-FAULT:fault-injection:observation-binding:independent-effect-observation"
-        ],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "environment-authorization",
-            "id": "non-production-fault-scope"
-          },
-          {
-            "required": true,
-            "kind": "injection-binding",
-            "id": "confirmed-injection-site"
-          },
-          {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "independent-effect-observation"
-          }
-        ],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "native-producer",
-          "adapterId": "adapter:CAP-FAULT",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-FAULT",
-          "environmentPermissions": [
-            "read-fixture"
-          ],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "verify:PROP-MANUAL:inspection",
-        "kind": "verification",
-        "propertyId": "PROP-MANUAL",
-        "techniqueId": "inspection",
-        "input": {
-          "kind": "manual",
-          "reviewProcedure": "Compare source spans to the authored fixture.",
-          "requiredDisposition": [
-            "accept",
-            "revise",
-            "reject"
-          ]
-        },
-        "applicability": "applicable",
-        "readiness": "ready",
-        "priority": "required",
-        "reasons": [
-          {
-            "rule": "characteristics",
-            "value": "no-executable-oracle"
-          }
-        ],
-        "dependencies": [],
-        "missingPrerequisites": [],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "manual",
-          "adapterId": "adapter:CAP-MANUAL",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-MANUAL",
-          "environmentPermissions": [],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": true
-      },
-      {
-        "taskId": "verify:PROP-RELATION:metamorphic-testing",
-        "kind": "verification",
-        "propertyId": "PROP-RELATION",
-        "techniqueId": "metamorphic-testing",
-        "input": {
-          "kind": "relational",
-          "leftSubject": "subject:parser-before",
-          "rightSubject": "subject:parser-after",
-          "relation": "semantic-equivalence"
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "required",
-        "reasons": [
-          {
-            "rule": "property_shapes",
-            "value": "round-trip"
-          }
-        ],
-        "dependencies": [
-          "setup:PROP-RELATION:metamorphic-testing:capability-qualification:CAP-RELATION",
-          "setup:PROP-RELATION:metamorphic-testing:common-domain:parser-roundtrip-domain",
-          "setup:PROP-RELATION:metamorphic-testing:relation-binding:roundtrip-equivalence"
-        ],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-RELATION"
-          },
-          {
-            "required": true,
-            "kind": "common-domain",
-            "id": "parser-roundtrip-domain"
-          },
-          {
-            "required": true,
-            "kind": "relation-binding",
-            "id": "roundtrip-equivalence"
-          }
-        ],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "native-producer",
-          "adapterId": "adapter:CAP-RELATION",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-RELATION",
-          "environmentPermissions": [
-            "read-fixture"
-          ],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": false
-      },
-      {
-        "taskId": "verify:PROP-STATE:fuzzing",
-        "kind": "verification",
-        "propertyId": "PROP-STATE",
-        "techniqueId": "fuzzing",
-        "input": {
-          "kind": "state",
-          "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "snapshot:parser-valid",
-            "revision": "snapshot-r1",
-            "digest": "sha256:snapshotparservalid",
-            "profile": "quire-state/e02-fixture-v1"
-          },
-          "property": "state is internally consistent"
-        },
-        "applicability": "applicable",
-        "readiness": "ready",
-        "priority": "recommended",
-        "reasons": [
-          {
-            "rule": "characteristics",
-            "value": "parser"
-          }
-        ],
-        "dependencies": [],
-        "missingPrerequisites": [],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "native-producer",
-          "adapterId": "adapter:CAP-FUZZ",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-FUZZ",
-          "environmentPermissions": [
-            "read-fixture"
-          ],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": true
-      },
-      {
-        "taskId": "verify:PROP-STATE:property-based-testing",
-        "kind": "verification",
-        "propertyId": "PROP-STATE",
-        "techniqueId": "property-based-testing",
-        "input": {
-          "kind": "state",
-          "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "snapshot:parser-valid",
-            "revision": "snapshot-r1",
-            "digest": "sha256:snapshotparservalid",
-            "profile": "quire-state/e02-fixture-v1"
-          },
-          "property": "state is internally consistent"
-        },
-        "applicability": "applicable",
-        "readiness": "ready",
-        "priority": "required",
-        "reasons": [
-          {
-            "rule": "property_shapes",
-            "value": "invariant"
-          }
-        ],
-        "dependencies": [],
-        "missingPrerequisites": [],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "native-producer",
-          "adapterId": "adapter:CAP-PROPERTY",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-PROPERTY",
-          "environmentPermissions": [
-            "read-fixture"
-          ],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": true
-      },
-      {
-        "taskId": "verify:PROP-TRACE:runtime-monitoring",
-        "kind": "verification",
-        "propertyId": "PROP-TRACE",
-        "techniqueId": "runtime-monitoring",
-        "input": {
-          "kind": "trace",
-          "traceRef": {
-            "authority": "fixture.agent-ix.local",
-            "identity": "trace:parser-events",
-            "revision": "trace-fixture-r1",
-            "digest": "sha256:traceparserevents",
-            "profile": "quire-trace/e02-fixture-v1"
-          },
-          "clockProfile": "event-indexed",
-          "completion": "closed-fixture"
-        },
-        "applicability": "applicable",
-        "readiness": "blocked",
-        "priority": "recommended",
-        "reasons": [
-          {
-            "rule": "characteristics",
-            "value": "temporal"
-          }
-        ],
-        "dependencies": [
-          "setup:PROP-TRACE:runtime-monitoring:capability-qualification:CAP-TRACE",
-          "setup:PROP-TRACE:runtime-monitoring:observation-binding:parser-event-binding"
-        ],
-        "missingPrerequisites": [
-          {
-            "required": true,
-            "kind": "capability-qualification",
-            "id": "CAP-TRACE"
-          },
-          {
-            "required": true,
-            "kind": "observation-binding",
-            "id": "parser-event-binding"
-          }
-        ],
-        "gaps": [],
-        "runnerRequest": {
-          "kind": "native-producer",
-          "adapterId": "adapter:CAP-TRACE",
-          "adapterVersion": "fixture-v1",
-          "capabilityId": "CAP-TRACE",
-          "environmentPermissions": [
-            "read-fixture"
-          ],
-          "budget": {
-            "wallClockSeconds": 60,
-            "parallelism": 1
-          },
-          "nativeArtifactInterface": {
-            "mode": "reference-only",
-            "mediaTypes": [
-              "application/json"
-            ]
-          }
-        },
-        "invocationAllowed": false
-      }
-    ],
-    "budget": {
-      "wallClockSeconds": 60,
-      "parallelism": 1
-    },
-    "evidenceOwner": "Quoin",
-    "sufficiencyOwner": "authored-human-decision"
-  },
   "assessment": {
     "asOf": "2026-09-07T21:00:00Z",
     "denominator": 12,
+    "evidenceOwner": "Quoin",
     "obligations": [
       {
-        "propertyId": "OBL-STATE-PROPERTY",
-        "status": "supported",
-        "freshness": "fresh",
-        "resultId": "RESULT-SUPPORTED",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
-        "logical": {
-          "outcome": "satisfied"
-        },
         "activation": {
           "status": "activated"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -924,49 +20,47 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "fixture-output"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
+        "freshness": "fresh",
+        "gaps": [],
+        "logical": {
+          "outcome": "satisfied"
         },
         "nativeArtifacts": [
           {
-            "uri": "fixture://native/RESULT-SUPPORTED.json",
             "digest": "sha256:RESULTSUPPORTED0",
-            "mediaType": "application/json"
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-SUPPORTED.json"
           }
         ],
-        "gaps": []
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-STATE-PROPERTY",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-SUPPORTED",
+        "status": "supported"
       },
       {
-        "propertyId": "OBL-STATE-FUZZ",
-        "status": "failed",
-        "freshness": "fresh",
-        "resultId": "RESULT-FAILED",
-        "execution": {
-          "status": "failed",
-          "detail": "fixture producer exited unsuccessfully"
-        },
-        "logical": {
-          "outcome": "not-evaluated"
-        },
         "activation": {
           "status": "unknown"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [],
+          "status": "not-assessed"
         },
         "assumptions": [
           {
@@ -974,29 +68,15 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "not-assessed",
-          "observations": []
+        "execution": {
+          "detail": "fixture producer exited unsuccessfully",
+          "status": "failed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-FAILED.json",
-            "digest": "sha256:RESULTFAILED0000",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
-            "kind": "failed",
-            "detail": "fixture producer exited unsuccessfully"
+            "detail": "fixture producer exited unsuccessfully",
+            "kind": "failed"
           },
           {
             "kind": "activation-unknown"
@@ -1005,51 +85,53 @@
             "kind": "observation-inadequate",
             "missing": []
           }
-        ]
-      },
-      {
-        "propertyId": "OBL-RELATION",
-        "status": "unsupported",
-        "freshness": "fresh",
-        "resultId": "RESULT-UNSUPPORTED",
-        "execution": {
-          "status": "unsupported",
-          "detail": "common-domain binding unavailable"
-        },
+        ],
         "logical": {
           "outcome": "not-evaluated"
         },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTFAILED0000",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-FAILED.json"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-STATE-FUZZ",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-FAILED",
+        "status": "failed"
+      },
+      {
         "activation": {
           "status": "not-required"
         },
-        "participation": {
-          "status": "not-started",
-          "participants": []
+        "adequacy": {
+          "observations": [],
+          "status": "not-assessed"
         },
         "assumptions": [],
-        "adequacy": {
-          "status": "not-assessed",
-          "observations": []
+        "execution": {
+          "detail": "common-domain binding unavailable",
+          "status": "unsupported"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-UNSUPPORTED.json",
-            "digest": "sha256:RESULTUNSUPPORTED",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
-            "kind": "unsupported",
-            "detail": "common-domain binding unavailable"
+            "detail": "common-domain binding unavailable",
+            "kind": "unsupported"
           },
           {
             "kind": "observation-inadequate",
@@ -1057,31 +139,48 @@
           },
           {
             "kind": "partial-participation",
-            "status": "not-started",
-            "missing": []
+            "missing": [],
+            "status": "not-started"
           }
-        ]
+        ],
+        "logical": {
+          "outcome": "not-evaluated"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTUNSUPPORTED",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-UNSUPPORTED.json"
+          }
+        ],
+        "participation": {
+          "participants": [],
+          "status": "not-started"
+        },
+        "propertyId": "OBL-RELATION",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-UNSUPPORTED",
+        "status": "unsupported"
       },
       {
-        "propertyId": "OBL-TRACE",
-        "status": "inadequate",
-        "freshness": "fresh",
-        "resultId": "RESULT-INADQUATE",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
-        "logical": {
-          "outcome": "unknown"
-        },
         "activation": {
           "status": "unknown"
         },
-        "participation": {
-          "status": "partial",
-          "participants": [
-            "parser"
-          ]
+        "adequacy": {
+          "missingObservations": [
+            "parse-finish"
+          ],
+          "observations": [
+            "parse-start"
+          ],
+          "status": "inadequate"
         },
         "assumptions": [
           {
@@ -1089,30 +188,11 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "inadequate",
-          "observations": [
-            "parse-start"
-          ],
-          "missingObservations": [
-            "parse-finish"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-INADQUATE.json",
-            "digest": "sha256:RESULTINADQUATE0",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
             "kind": "activation-unknown"
@@ -1129,32 +209,48 @@
           },
           {
             "kind": "partial-participation",
-            "status": "partial",
-            "missing": []
+            "missing": [],
+            "status": "partial"
           }
-        ]
-      },
-      {
-        "propertyId": "OBL-FAULT",
-        "status": "untriggered",
-        "freshness": "fresh",
-        "resultId": "RESULT-UNTRIGGERED",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
+        ],
         "logical": {
-          "outcome": "satisfied"
+          "outcome": "unknown"
         },
-        "activation": {
-          "status": "not-activated",
-          "receipt": null
-        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTINADQUATE0",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-INADQUATE.json"
+          }
+        ],
         "participation": {
-          "status": "present",
           "participants": [
             "parser"
-          ]
+          ],
+          "status": "partial"
+        },
+        "propertyId": "OBL-TRACE",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-INADQUATE",
+        "status": "inadequate"
+      },
+      {
+        "activation": {
+          "receipt": null,
+          "status": "not-activated"
+        },
+        "adequacy": {
+          "observations": [
+            "healthy-control-only"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -1162,53 +258,53 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "healthy-control-only"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-UNTRIGGERED.json",
-            "digest": "sha256:RESULTUNTRIGGERED",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
             "kind": "required-activation-absent"
           }
-        ]
-      },
-      {
-        "propertyId": "OBL-MANUAL",
-        "status": "stale",
-        "freshness": "stale",
-        "resultId": "RESULT-STALE",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
+        ],
         "logical": {
           "outcome": "satisfied"
         },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTUNTRIGGERED",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-UNTRIGGERED.json"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "parser"
+          ],
+          "status": "present"
+        },
+        "propertyId": "OBL-FAULT",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-UNTRIGGERED",
+        "status": "untriggered"
+      },
+      {
         "activation": {
           "status": "not-required"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -1216,71 +312,69 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "fixture-output"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-STALE.json",
-            "digest": "sha256:RESULTSTALE00000",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "stale",
         "gaps": [
           {
             "kind": "freshness-expired"
           }
-        ]
+        ],
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTSTALE00000",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-STALE.json"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-MANUAL",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-STALE",
+        "status": "stale"
       },
       {
+        "gaps": [],
         "propertyId": "OBL-MISSING",
-        "status": "missing",
         "resultId": null,
-        "gaps": []
+        "status": "missing"
       },
       {
-        "propertyId": "OBL-SCOPE",
-        "status": "missing",
-        "resultId": null,
         "gaps": [
           {
-            "kind": "scope-mismatch",
             "dimension": "executionScope",
+            "kind": "scope-mismatch",
             "resultId": "RESULT-SCOPE-MISMATCH"
           }
-        ]
+        ],
+        "propertyId": "OBL-SCOPE",
+        "resultId": null,
+        "status": "missing"
       },
       {
-        "propertyId": "OBL-INCOMPLETE",
-        "status": "incomplete",
-        "freshness": "fresh",
-        "resultId": "RESULT-INCOMPLETE",
-        "execution": {
-          "status": "exhausted",
-          "detail": "fixture budget exhausted"
-        },
-        "logical": {
-          "outcome": "unknown"
-        },
         "activation": {
           "status": "activated"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [],
+          "status": "unknown"
         },
         "assumptions": [
           {
@@ -1288,57 +382,58 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "unknown",
-          "observations": []
+        "execution": {
+          "detail": "fixture budget exhausted",
+          "status": "exhausted"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-INCOMPLETE.json",
-            "digest": "sha256:RESULTINCOMPLETE",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
-            "kind": "incomplete",
-            "detail": "fixture budget exhausted"
+            "detail": "fixture budget exhausted",
+            "kind": "incomplete"
           },
           {
             "kind": "observation-inadequate",
             "missing": []
           }
-        ]
+        ],
+        "logical": {
+          "outcome": "unknown"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTINCOMPLETE",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-INCOMPLETE.json"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-INCOMPLETE",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-INCOMPLETE",
+        "status": "incomplete"
       },
       {
-        "propertyId": "OBL-VIOLATED",
-        "status": "violated",
-        "freshness": "fresh",
-        "resultId": "RESULT-VIOLATED",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
-        "logical": {
-          "outcome": "violated",
-          "witness": "fixture://witness/state-violation"
-        },
         "activation": {
           "status": "activated"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -1346,56 +441,54 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "fixture-output"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-VIOLATED.json",
-            "digest": "sha256:RESULTVIOLATED00",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
             "kind": "logical-violation"
           }
-        ]
+        ],
+        "logical": {
+          "outcome": "violated",
+          "witness": "fixture://witness/state-violation"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTVIOLATED00",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-VIOLATED.json"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-VIOLATED",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-VIOLATED",
+        "status": "violated"
       },
       {
-        "propertyId": "OBL-PARTIAL",
-        "status": "partial",
-        "freshness": "fresh",
-        "resultId": "RESULT-PARTIAL",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
-        "logical": {
-          "outcome": "satisfied"
-        },
         "activation": {
           "status": "activated"
         },
-        "participation": {
-          "status": "partial",
-          "participants": [
-            "parser"
+        "adequacy": {
+          "observations": [
+            "fixture-output"
           ],
-          "missingParticipants": [
-            "serializer"
-          ]
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -1403,57 +496,60 @@
             "status": "met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "fixture-output"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
-        },
-        "nativeArtifacts": [
-          {
-            "uri": "fixture://native/RESULT-PARTIAL.json",
-            "digest": "sha256:RESULTPARTIAL000",
-            "mediaType": "application/json"
-          }
-        ],
+        "freshness": "fresh",
         "gaps": [
           {
             "kind": "partial-participation",
-            "status": "partial",
             "missing": [
               "serializer"
-            ]
+            ],
+            "status": "partial"
           }
-        ]
-      },
-      {
-        "propertyId": "OBL-ASSUMPTION",
-        "status": "assumption-unmet",
-        "freshness": "fresh",
-        "resultId": "RESULT-ASSUMPTION-UNMET",
-        "execution": {
-          "status": "completed",
-          "detail": "fixture replay only; no external tool execution claimed"
-        },
+        ],
         "logical": {
           "outcome": "satisfied"
         },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTPARTIAL000",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-PARTIAL.json"
+          }
+        ],
+        "participation": {
+          "missingParticipants": [
+            "serializer"
+          ],
+          "participants": [
+            "parser"
+          ],
+          "status": "partial"
+        },
+        "propertyId": "OBL-PARTIAL",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-PARTIAL",
+        "status": "partial"
+      },
+      {
         "activation": {
           "status": "activated"
         },
-        "participation": {
-          "status": "complete",
-          "participants": [
-            "fixture-subject"
-          ]
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -1461,37 +557,941 @@
             "status": "not-met"
           }
         ],
-        "adequacy": {
-          "status": "adequate",
-          "observations": [
-            "fixture-output"
-          ]
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
-        "provenance": {
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "sourceRevision": "parser-r1",
-          "executionMode": "fixture-replay"
+        "freshness": "fresh",
+        "gaps": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "kind": "assumption-unmet"
+          }
+        ],
+        "logical": {
+          "outcome": "satisfied"
         },
         "nativeArtifacts": [
           {
-            "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json",
             "digest": "sha256:RESULTASSUMPTIONUNMET",
-            "mediaType": "application/json"
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json"
           }
         ],
-        "gaps": [
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-ASSUMPTION",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-1",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-ASSUMPTION-UNMET",
+        "status": "assumption-unmet"
+      }
+    ],
+    "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding",
+    "sufficiencyDecision": "not-made"
+  },
+  "claimLimit": "Fixture planning and intake only; no represented external verification or fault tool executed.",
+  "plan": {
+    "budget": {
+      "parallelism": 1,
+      "wallClockSeconds": 60
+    },
+    "contractVersion": "quire-verification/e02-draft-1",
+    "evidenceOwner": "Quoin",
+    "inventory": [
+      {
+        "bindingRefs": [
           {
-            "kind": "assumption-unmet",
-            "assumptionId": "fixture-inputs-synthetic"
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:bindingparserfault",
+            "identity": "binding:parser-fault",
+            "profile": "quire-fault/e02-fixture-v1",
+            "revision": "binding-r1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-fault-r1",
+        "executionScope": {
+          "environment": "disposable-fixture-only",
+          "paths": [
+            "src/parser.mjs"
+          ],
+          "repository": "fixture-parser",
+          "revision": "parser-r1"
+        },
+        "freshness": {
+          "maxAgeSeconds": 3600
+        },
+        "input": {
+          "faultModelRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:faultreaderror00",
+            "identity": "fault:read-error",
+            "profile": "quire-fault/e02-fixture-v1",
+            "revision": "fault-r1"
+          },
+          "kind": "fault",
+          "mitigationOracle": "independent recovery event",
+          "requestedInjectionSite": "fixture-only"
+        },
+        "profile": "quire-fault/e02-fixture-v1",
+        "propertyId": "PROP-FAULT",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "digest": "sha256:propertyparserrecovery",
+          "identity": "property:parser-recovery",
+          "profile": "quire-fault/e02-fixture-v1",
+          "revision": "property-r1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectparser000",
+            "identity": "subject:parser",
+            "profile": "quire-fault/e02-fixture-v1",
+            "revision": "parser-r1"
+          }
+        ]
+      },
+      {
+        "bindingRefs": [],
+        "dependencyClosure": "sha256:closure-manual-r1",
+        "executionScope": {
+          "paths": [
+            "fixtures/source-map.json"
+          ],
+          "repository": "fixture-parser",
+          "revision": "parser-r1"
+        },
+        "freshness": {
+          "maxAgeSeconds": 604800
+        },
+        "input": {
+          "kind": "manual",
+          "requiredDisposition": [
+            "accept",
+            "revise",
+            "reject"
+          ],
+          "reviewProcedure": "Compare source spans to the authored fixture."
+        },
+        "profile": "quire-manual/e02-fixture-v1",
+        "propertyId": "PROP-MANUAL",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "digest": "sha256:propertysourcecorrespondencereview",
+          "identity": "property:source-correspondence-review",
+          "profile": "quire-manual/e02-fixture-v1",
+          "revision": "property-r1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectsourcemap",
+            "identity": "subject:source-map",
+            "profile": "quire-manual/e02-fixture-v1",
+            "revision": "source-map-r1"
+          }
+        ]
+      },
+      {
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:bindingroundtrip",
+            "identity": "binding:roundtrip",
+            "profile": "quire-relational/e02-fixture-v1",
+            "revision": "binding-r1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-relation-r1",
+        "executionScope": {
+          "paths": [
+            "src/parser.mjs"
+          ],
+          "repository": "fixture-parser",
+          "revision": "parser-r1"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        },
+        "input": {
+          "kind": "relational",
+          "leftSubject": "subject:parser-before",
+          "relation": "semantic-equivalence",
+          "rightSubject": "subject:parser-after"
+        },
+        "profile": "quire-relational/e02-fixture-v1",
+        "propertyId": "PROP-RELATION",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "digest": "sha256:propertyparserroundtrip",
+          "identity": "property:parser-roundtrip",
+          "profile": "quire-relational/e02-fixture-v1",
+          "revision": "property-r1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectparserbefore",
+            "identity": "subject:parser-before",
+            "profile": "quire-relational/e02-fixture-v1",
+            "revision": "parser-r1"
+          },
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectparserafter",
+            "identity": "subject:parser-after",
+            "profile": "quire-relational/e02-fixture-v1",
+            "revision": "parser-r1"
+          }
+        ]
+      },
+      {
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:bindingparserstate",
+            "identity": "binding:parser-state",
+            "profile": "quire-state/e02-fixture-v1",
+            "revision": "binding-r1"
+          }
+        ],
+        "classification": "unknown",
+        "dependencyClosure": "sha256:closure-state-r1",
+        "executionScope": {
+          "paths": [
+            "src/parser.mjs"
+          ],
+          "repository": "fixture-parser",
+          "revision": "parser-r1"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        },
+        "input": {
+          "kind": "state",
+          "property": "state is internally consistent",
+          "snapshotRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:snapshotparservalid",
+            "identity": "snapshot:parser-valid",
+            "profile": "quire-state/e02-fixture-v1",
+            "revision": "snapshot-r1"
+          }
+        },
+        "profile": "quire-state/e02-fixture-v1",
+        "propertyId": "PROP-STATE",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "digest": "sha256:propertyparserstateinvariant",
+          "identity": "property:parser-state-invariant",
+          "profile": "quire-state/e02-fixture-v1",
+          "revision": "property-r1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectparser000",
+            "identity": "subject:parser",
+            "profile": "quire-state/e02-fixture-v1",
+            "revision": "parser-r1"
+          }
+        ]
+      },
+      {
+        "bindingRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:bindingparserevents",
+            "identity": "binding:parser-events",
+            "profile": "quire-trace/e02-fixture-v1",
+            "revision": "binding-r1"
+          }
+        ],
+        "dependencyClosure": "sha256:closure-trace-r1",
+        "executionScope": {
+          "paths": [
+            "src/parser.mjs"
+          ],
+          "repository": "fixture-parser",
+          "revision": "parser-r1"
+        },
+        "freshness": {
+          "maxAgeSeconds": 86400
+        },
+        "input": {
+          "clockProfile": "event-indexed",
+          "completion": "closed-fixture",
+          "kind": "trace",
+          "traceRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:traceparserevents",
+            "identity": "trace:parser-events",
+            "profile": "quire-trace/e02-fixture-v1",
+            "revision": "trace-fixture-r1"
+          }
+        },
+        "profile": "quire-trace/e02-fixture-v1",
+        "propertyId": "PROP-TRACE",
+        "propertyRef": {
+          "authority": "fixture.agent-ix.local",
+          "digest": "sha256:propertyparsereventorder",
+          "identity": "property:parser-event-order",
+          "profile": "quire-trace/e02-fixture-v1",
+          "revision": "property-r1"
+        },
+        "subjectRefs": [
+          {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:subjectparsertrace",
+            "identity": "subject:parser-trace",
+            "profile": "quire-trace/e02-fixture-v1",
+            "revision": "parser-r1"
           }
         ]
       }
     ],
-    "evidenceOwner": "Quoin",
-    "sufficiencyDecision": "not-made",
-    "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding"
-  }
+    "kind": "VerificationPlan",
+    "planId": "PLAN-PARSER-E02-FIXTURE",
+    "policyRef": {
+      "freshness": "current",
+      "policyId": "POLICY-PARSER-FIXTURE",
+      "sourceRef": {
+        "authority": "fixture.agent-ix.local",
+        "digest": "sha256:policyparserbaseline",
+        "identity": "policy:parser-baseline",
+        "profile": "quire-selection-policy/e02-fixture-v1",
+        "revision": "policy-r1"
+      },
+      "validUntil": "2026-09-30T00:00:00Z",
+      "version": "1"
+    },
+    "sufficiencyOwner": "authored-human-decision",
+    "tasks": [
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "non-production-fault-scope",
+            "kind": "environment-authorization",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve environment-authorization:non-production-fault-scope and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "non-production-fault-scope",
+            "kind": "environment-authorization",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-FAULT",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-FAULT:fault-injection:environment-authorization:non-production-fault-scope",
+        "techniqueId": "fault-injection"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "confirmed-injection-site",
+            "kind": "injection-binding",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve injection-binding:confirmed-injection-site and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "confirmed-injection-site",
+            "kind": "injection-binding",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-FAULT",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-FAULT:fault-injection:injection-binding:confirmed-injection-site",
+        "techniqueId": "fault-injection"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "independent-effect-observation",
+            "kind": "observation-binding",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve observation-binding:independent-effect-observation and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "independent-effect-observation",
+            "kind": "observation-binding",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-FAULT",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-FAULT:fault-injection:observation-binding:independent-effect-observation",
+        "techniqueId": "fault-injection"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "CAP-RELATION",
+            "kind": "capability-qualification",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve capability-qualification:CAP-RELATION and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "CAP-RELATION",
+            "kind": "capability-qualification",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-RELATION",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-RELATION:metamorphic-testing:capability-qualification:CAP-RELATION",
+        "techniqueId": "metamorphic-testing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "parser-roundtrip-domain",
+            "kind": "common-domain",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve common-domain:parser-roundtrip-domain and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "parser-roundtrip-domain",
+            "kind": "common-domain",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-RELATION",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-RELATION:metamorphic-testing:common-domain:parser-roundtrip-domain",
+        "techniqueId": "metamorphic-testing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "roundtrip-equivalence",
+            "kind": "relation-binding",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve relation-binding:roundtrip-equivalence and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "roundtrip-equivalence",
+            "kind": "relation-binding",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-RELATION",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-RELATION:metamorphic-testing:relation-binding:roundtrip-equivalence",
+        "techniqueId": "metamorphic-testing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "CAP-TRACE",
+            "kind": "capability-qualification",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve capability-qualification:CAP-TRACE and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "CAP-TRACE",
+            "kind": "capability-qualification",
+            "required": true
+          }
+        ],
+        "priority": "recommended",
+        "propertyId": "PROP-TRACE",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-TRACE:runtime-monitoring:capability-qualification:CAP-TRACE",
+        "techniqueId": "runtime-monitoring"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "input": {
+          "action": "satisfy-prerequisite",
+          "kind": "manual",
+          "prerequisite": {
+            "id": "parser-event-binding",
+            "kind": "observation-binding",
+            "required": true
+          },
+          "requiredDisposition": [
+            "satisfied",
+            "deferred",
+            "rejected"
+          ],
+          "reviewProcedure": "Resolve observation-binding:parser-event-binding and record its source and disposition."
+        },
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
+            "id": "parser-event-binding",
+            "kind": "observation-binding",
+            "required": true
+          }
+        ],
+        "priority": "recommended",
+        "propertyId": "PROP-TRACE",
+        "readiness": "blocked",
+        "runnerRequest": null,
+        "taskId": "setup:PROP-TRACE:runtime-monitoring:observation-binding:parser-event-binding",
+        "techniqueId": "runtime-monitoring"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [
+          "setup:PROP-FAULT:fault-injection:environment-authorization:non-production-fault-scope",
+          "setup:PROP-FAULT:fault-injection:injection-binding:confirmed-injection-site",
+          "setup:PROP-FAULT:fault-injection:observation-binding:independent-effect-observation"
+        ],
+        "gaps": [],
+        "input": {
+          "faultModelRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:faultreaderror00",
+            "identity": "fault:read-error",
+            "profile": "quire-fault/e02-fixture-v1",
+            "revision": "fault-r1"
+          },
+          "kind": "fault",
+          "mitigationOracle": "independent recovery event",
+          "requestedInjectionSite": "fixture-only"
+        },
+        "invocationAllowed": false,
+        "kind": "verification",
+        "missingPrerequisites": [
+          {
+            "id": "non-production-fault-scope",
+            "kind": "environment-authorization",
+            "required": true
+          },
+          {
+            "id": "confirmed-injection-site",
+            "kind": "injection-binding",
+            "required": true
+          },
+          {
+            "id": "independent-effect-observation",
+            "kind": "observation-binding",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-FAULT",
+        "readiness": "blocked",
+        "reasons": [
+          {
+            "rule": "object_types",
+            "value": "failure_mode"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-FAULT",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-FAULT",
+          "environmentPermissions": [
+            "read-fixture"
+          ],
+          "kind": "native-producer",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-FAULT:fault-injection",
+        "techniqueId": "fault-injection"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "gaps": [],
+        "input": {
+          "kind": "manual",
+          "requiredDisposition": [
+            "accept",
+            "revise",
+            "reject"
+          ],
+          "reviewProcedure": "Compare source spans to the authored fixture."
+        },
+        "invocationAllowed": true,
+        "kind": "verification",
+        "missingPrerequisites": [],
+        "priority": "required",
+        "propertyId": "PROP-MANUAL",
+        "readiness": "ready",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "no-executable-oracle"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-MANUAL",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-MANUAL",
+          "environmentPermissions": [],
+          "kind": "manual",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-MANUAL:inspection",
+        "techniqueId": "inspection"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [
+          "setup:PROP-RELATION:metamorphic-testing:capability-qualification:CAP-RELATION",
+          "setup:PROP-RELATION:metamorphic-testing:common-domain:parser-roundtrip-domain",
+          "setup:PROP-RELATION:metamorphic-testing:relation-binding:roundtrip-equivalence"
+        ],
+        "gaps": [],
+        "input": {
+          "kind": "relational",
+          "leftSubject": "subject:parser-before",
+          "relation": "semantic-equivalence",
+          "rightSubject": "subject:parser-after"
+        },
+        "invocationAllowed": false,
+        "kind": "verification",
+        "missingPrerequisites": [
+          {
+            "id": "CAP-RELATION",
+            "kind": "capability-qualification",
+            "required": true
+          },
+          {
+            "id": "parser-roundtrip-domain",
+            "kind": "common-domain",
+            "required": true
+          },
+          {
+            "id": "roundtrip-equivalence",
+            "kind": "relation-binding",
+            "required": true
+          }
+        ],
+        "priority": "required",
+        "propertyId": "PROP-RELATION",
+        "readiness": "blocked",
+        "reasons": [
+          {
+            "rule": "property_shapes",
+            "value": "round-trip"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-RELATION",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-RELATION",
+          "environmentPermissions": [
+            "read-fixture"
+          ],
+          "kind": "native-producer",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-RELATION:metamorphic-testing",
+        "techniqueId": "metamorphic-testing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "gaps": [],
+        "input": {
+          "kind": "state",
+          "property": "state is internally consistent",
+          "snapshotRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:snapshotparservalid",
+            "identity": "snapshot:parser-valid",
+            "profile": "quire-state/e02-fixture-v1",
+            "revision": "snapshot-r1"
+          }
+        },
+        "invocationAllowed": true,
+        "kind": "verification",
+        "missingPrerequisites": [],
+        "priority": "recommended",
+        "propertyId": "PROP-STATE",
+        "readiness": "ready",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "parser"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-FUZZ",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-FUZZ",
+          "environmentPermissions": [
+            "read-fixture"
+          ],
+          "kind": "native-producer",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-STATE:fuzzing",
+        "techniqueId": "fuzzing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [],
+        "gaps": [],
+        "input": {
+          "kind": "state",
+          "property": "state is internally consistent",
+          "snapshotRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:snapshotparservalid",
+            "identity": "snapshot:parser-valid",
+            "profile": "quire-state/e02-fixture-v1",
+            "revision": "snapshot-r1"
+          }
+        },
+        "invocationAllowed": true,
+        "kind": "verification",
+        "missingPrerequisites": [],
+        "priority": "required",
+        "propertyId": "PROP-STATE",
+        "readiness": "ready",
+        "reasons": [
+          {
+            "rule": "property_shapes",
+            "value": "invariant"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-PROPERTY",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-PROPERTY",
+          "environmentPermissions": [
+            "read-fixture"
+          ],
+          "kind": "native-producer",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-STATE:property-based-testing",
+        "techniqueId": "property-based-testing"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [
+          "setup:PROP-TRACE:runtime-monitoring:capability-qualification:CAP-TRACE",
+          "setup:PROP-TRACE:runtime-monitoring:observation-binding:parser-event-binding"
+        ],
+        "gaps": [],
+        "input": {
+          "clockProfile": "event-indexed",
+          "completion": "closed-fixture",
+          "kind": "trace",
+          "traceRef": {
+            "authority": "fixture.agent-ix.local",
+            "digest": "sha256:traceparserevents",
+            "identity": "trace:parser-events",
+            "profile": "quire-trace/e02-fixture-v1",
+            "revision": "trace-fixture-r1"
+          }
+        },
+        "invocationAllowed": false,
+        "kind": "verification",
+        "missingPrerequisites": [
+          {
+            "id": "CAP-TRACE",
+            "kind": "capability-qualification",
+            "required": true
+          },
+          {
+            "id": "parser-event-binding",
+            "kind": "observation-binding",
+            "required": true
+          }
+        ],
+        "priority": "recommended",
+        "propertyId": "PROP-TRACE",
+        "readiness": "blocked",
+        "reasons": [
+          {
+            "rule": "characteristics",
+            "value": "temporal"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "adapter:CAP-TRACE",
+          "adapterVersion": "fixture-v1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 60
+          },
+          "capabilityId": "CAP-TRACE",
+          "environmentPermissions": [
+            "read-fixture"
+          ],
+          "kind": "native-producer",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "reference-only"
+          }
+        },
+        "taskId": "verify:PROP-TRACE:runtime-monitoring",
+        "techniqueId": "runtime-monitoring"
+      }
+    ]
+  },
+  "schemaVersion": "quire-verification/e02-evidence-packet/v1"
 }

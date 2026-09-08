@@ -2,7 +2,7 @@
 id: Task-002
 title: "Rust Quoin adapter"
 type: Task
-status: not_started
+status: done
 track: B
 priority: P0
 relationships:
@@ -20,10 +20,10 @@ adaptation with first-wins diagnostics and explicit qualification.
 
 ## Subtasks
 
-- [ ] Model the external JSON boundary with unknown-field refusal where the producer contract is closed.
-- [ ] Preserve every required method field and stable technique identifier.
-- [ ] Retain duplicate and unreadable diagnostics without qualifying the snapshot.
-- [ ] Map positive and inconclusive advice without inventing non-applicability.
+- [x] Model the external JSON boundary with unknown-field refusal where the producer contract is closed.
+- [x] Preserve every required method field and stable technique identifier.
+- [x] Retain duplicate and unreadable diagnostics without qualifying the snapshot.
+- [x] Map positive and inconclusive advice without inventing non-applicability.
 
 ## Deliverables
 
@@ -32,4 +32,3 @@ adaptation with first-wins diagnostics and explicit qualification.
 ## Notes
 
 - Quoin remains an external TypeScript producer reached through JSON.
-

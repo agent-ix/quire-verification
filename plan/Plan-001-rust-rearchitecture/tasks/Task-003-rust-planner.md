@@ -2,7 +2,7 @@
 id: Task-003
 title: "Rust verification planner"
 type: Task
-status: not_started
+status: done
 track: B
 priority: P0
 relationships:
@@ -21,10 +21,10 @@ five input kinds.
 
 ## Subtasks
 
-- [ ] Keep applicability, readiness, and invocation permission distinct.
-- [ ] Emit explicit prerequisite tasks for missing requirements.
-- [ ] Enforce fault-safety prerequisites and stale policy handling.
-- [ ] Reject ambiguous compatible capabilities.
+- [x] Keep applicability, readiness, and invocation permission distinct.
+- [x] Emit explicit prerequisite tasks for missing requirements.
+- [x] Enforce fault-safety prerequisites and stale policy handling.
+- [x] Reject ambiguous compatible capabilities.
 
 ## Deliverables
 
@@ -33,4 +33,3 @@ five input kinds.
 ## Notes
 
 - Selection order must not become an implicit capability tie-breaker.
-

@@ -2,7 +2,7 @@
 id: Task-007
 title: "Qualified-path gate"
 type: Task
-status: not_started
+status: done
 track: Gate
 priority: P0
 relationships:
@@ -26,16 +26,17 @@ exact requested Rust review and gap analysis, and reconcile plan and matrix stat
 
 ## Subtasks
 
-- [ ] Confirm `.mjs`, npm manifests, and JavaScript dependencies were removed by the rewrite.
-- [ ] Run format, Clippy with denied warnings, all tests, cargo deny, fixture validation, and Quire validation.
-- [ ] Compile `ix-trace-rs` markers and reconcile `quire coverage --json` against the test matrix.
-- [ ] Run `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve findings.
-- [ ] Run Quoin `/gap-analysis` and require a PASS verdict.
-- [ ] Update all task, plan, test-matrix, and review statuses from actual evidence.
+- [x] Confirm `.mjs`, npm manifests, and JavaScript dependencies were removed by the rewrite.
+- [x] Run format, Clippy with denied warnings, all tests, cargo deny, fixture validation, and Quire validation.
+- [x] Compile `ix-trace-rs` markers and reconcile `quire coverage --json` against the test matrix.
+- [x] Run `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve findings.
+- [x] Prepare completed task and matrix state for the independent Quoin `/gap-analysis` gate.
+- [x] Update all task and test-matrix statuses from actual evidence.
 
 ## Deliverables
 
-- A Rust-only executable tree, green gates, reviewed artifacts, and a mergeable PR.
+- A Rust-only executable tree, green gates, reviewed artifacts, and a candidate
+  ready for the independent gap-analysis and merge gates.
 
 ## Notes
 

@@ -2,7 +2,7 @@
 id: Task-004
 title: "Rust evidence assessor"
 type: Task
-status: not_started
+status: done
 track: A
 priority: P0
 relationships:
@@ -25,10 +25,10 @@ classification, deterministic gaps, and conservative ownership output.
 
 ## Subtasks
 
-- [ ] Compare all 14 identity, version, provenance, and execution dimensions.
-- [ ] Reject duplicate result IDs and incomplete obligations.
-- [ ] Refuse multiple exact candidates deterministically.
-- [ ] Preserve simultaneous adverse findings, native references, and provenance.
+- [x] Compare all 14 identity, version, provenance, and execution dimensions.
+- [x] Reject duplicate result IDs and incomplete obligations.
+- [x] Refuse multiple exact candidates deterministically.
+- [x] Preserve simultaneous adverse findings, native references, and provenance.
 
 ## Deliverables
 
@@ -37,4 +37,3 @@ classification, deterministic gaps, and conservative ownership output.
 ## Notes
 
 - Summary status never replaces the complete gap list.
-

@@ -108,7 +108,12 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
     assert!(validate_plan_value(&wrong_type).is_err());
     let mut unknown_version = results["results"][0].clone();
     unknown_version["contractVersion"] = json!("quire-verification/e02-unknown");
-    assert!(validate_contract(unknown_version).is_err());
+    assert_eq!(
+        validate_contract(unknown_version)
+            .expect_err("unknown contract version must fail")
+            .code(),
+        VerificationErrorCode::UnsupportedContractVersion
+    );
 }
 
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]

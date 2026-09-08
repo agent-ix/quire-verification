@@ -62,7 +62,7 @@ and future production consumers are affected stakeholders at the JSON boundary.
 
 ## Context and Assumptions
 
-The current JavaScript implementation is a rejected prototype and supplies
+The prior JavaScript implementation was a rejected prototype and supplied
 behavioral discovery input only. FS02 and FS05 identity decisions remain
 provisional and may require a later reviewed migration.
 
@@ -87,4 +87,3 @@ the full rearchitecture.
 
 All FR and NFR artifacts in this bounded slice satisfy a portion of this
 stakeholder need; the Rust gate is stated explicitly in NFR-004.
-
