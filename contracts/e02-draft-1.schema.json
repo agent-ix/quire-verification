@@ -117,7 +117,7 @@
       "required": ["propertyId", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "input"],
       "properties": {
         "propertyId": { "type": "string", "minLength": 1 },
-        "classification": { "type": "string" },
+        "classification": { "type": "string", "minLength": 1 },
         "propertyRef": { "$ref": "#/$defs/ArtifactRef" },
         "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
         "profile": { "type": "string", "minLength": 1 },

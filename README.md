@@ -56,6 +56,7 @@ node --no-warnings --loader ts-node/esm --input-type=module \
 
 The fixture suite covers catalog identity parity, conflicting definitions,
 applicability versus readiness, state/relational/trace/fault/manual input shapes,
+authored-or-unknown classification, authored policy priority and score refusal,
 missing prerequisites, stale evidence, untriggered behavior, missing
 observations, exact plan/task/run/producer/adapter mismatches, ambiguous duplicate
 results, and simultaneous independent failures.

@@ -37,6 +37,10 @@ an adapted field corruption, and an adapter exception.
   prerequisite tasks. It distinguishes all five input shapes. State property,
   fuzz, and manual tasks are ready; relational, trace, and fault tasks are
   blocked. The fault task cannot be invoked.
+- Applicability remains independent from readiness. Property classification is
+  either preserved as a non-empty authored value or emitted as `unknown`; empty
+  classification and ordinal policy scores are rejected, while authored
+  priorities and reasons remain unchanged.
 - The retained assessment accounts for all 12 declared obligations. Its expected
   states are one supported, one failed, one unsupported, one observation-
   inadequate, one untriggered, one stale, two missing (one absent and one scope
@@ -75,7 +79,7 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Complete Rust test suite (25 tests) | 0.55 s | 165,828 KiB |
+| Complete Rust test suite (27 first-party tests) | 0.59 s | 166,984 KiB |
 | Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
 | Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
 | Release bounded local portfolio | 0.01 s | 9,940 KiB |

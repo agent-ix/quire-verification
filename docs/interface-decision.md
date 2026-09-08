@@ -81,6 +81,8 @@ obligation. More than one result for the same exact binding is ambiguous and is
 refused rather than resolved by timestamp or input order.
 
 `PropertyInventoryItem` is the pre-run property shape used by a plan.
+Its non-empty authored classification is preserved; an omitted classification
+is emitted as `unknown`, and an explicitly empty value is rejected.
 `EvidenceObligation` adds the selected `techniqueId` and required
 `resultBinding` for intake assessment; this prevents a plan property with
 several selected methods from pretending it already identifies one result.

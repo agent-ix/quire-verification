@@ -304,7 +304,7 @@ fn tc_009_builds_ready_tasks_across_all_input_kinds() {
     assert_eq!(plan["sufficiencyOwner"], "authored-human-decision");
 }
 
-#[trace("TC-010", "FR-005-AC-3", "FR-005-AC-4", "FR-005-AC-5")]
+#[trace("TC-010", "FR-005-AC-3", "FR-005-AC-4", "FR-005-AC-5", "FR-010-AC-2")]
 #[test]
 fn tc_010_exposes_unsupported_blocked_stale_and_fault_work() {
     let source = fixture("portfolio.json");
@@ -372,6 +372,109 @@ fn tc_011_rejects_ambiguous_capabilities() {
             .expect_err("ambiguous capability must fail")
             .code(),
         VerificationErrorCode::AmbiguousCapability
+    );
+}
+
+#[trace("TC-024", "FR-010-AC-1", "FR-011-AC-1", "FR-011-AC-2")]
+#[test]
+fn tc_024_keeps_applicability_readiness_and_classification_independent() {
+    let source = fixture("portfolio.json");
+    for applicability in ["applicable", "not-applicable", "unknown"] {
+        let mut request = source["planRequest"].clone();
+        request["selections"]
+            .as_array_mut()
+            .expect("selections")
+            .truncate(1);
+        request["selections"][0]["applicability"] = json!(applicability);
+        request["properties"][0]["classification"] = json!("safety-critical");
+        let plan = build_verification_plan(&request).expect("qualified plan");
+        let task = find_by(
+            plan["tasks"].as_array().expect("tasks"),
+            "kind",
+            "verification",
+        );
+        assert_eq!(task["applicability"], applicability);
+        assert_eq!(task["readiness"], "ready");
+        assert_eq!(task["invocationAllowed"], applicability == "applicable");
+
+        let inventory = plan["inventory"].as_array().expect("inventory");
+        assert_eq!(
+            find_by(inventory, "propertyId", "PROP-STATE")["classification"],
+            "safety-critical"
+        );
+        assert!(inventory.iter().all(|item| {
+            item["classification"] == "safety-critical" || item["classification"] == "unknown"
+        }));
+    }
+
+    let mut unsupported = source["planRequest"].clone();
+    unsupported["selections"]
+        .as_array_mut()
+        .expect("selections")
+        .truncate(1);
+    unsupported["capabilities"]
+        .as_array_mut()
+        .expect("capabilities")
+        .retain(|item| item["techniqueId"] != "property-based-testing");
+    let unsupported_plan = build_verification_plan(&unsupported).expect("unsupported plan");
+    let unsupported_task = find_by(
+        unsupported_plan["tasks"].as_array().expect("tasks"),
+        "kind",
+        "verification",
+    );
+    assert_eq!(unsupported_task["applicability"], "applicable");
+    assert_eq!(unsupported_task["readiness"], "unsupported");
+    assert_eq!(unsupported_task["invocationAllowed"], false);
+
+    let mut empty = source["planRequest"].clone();
+    empty["properties"][0]["classification"] = json!("");
+    assert_eq!(
+        build_verification_plan(&empty)
+            .expect_err("empty classification must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+}
+
+#[trace("TC-025", "FR-012-AC-1", "FR-012-AC-2")]
+#[test]
+fn tc_025_retains_authored_policy_and_rejects_ordinal_scoring() {
+    let source = fixture("portfolio.json");
+    let mut policy = source["planRequest"]["policy"].clone();
+    policy["rules"] = json!([
+        {"ruleId": "required-rule", "priority": "required", "explanation": "Authored required reason."},
+        {"ruleId": "recommended-rule", "priority": "recommended", "explanation": "Authored recommended reason."},
+        {"ruleId": "optional-rule", "priority": "optional", "explanation": "Authored optional reason."}
+    ]);
+    validate_contract(policy.clone()).expect("authored priorities and explanations must validate");
+
+    for priority in ["required", "recommended", "optional"] {
+        let reasons = json!([{"rule": "authored-policy", "value": priority}]);
+        let mut request = source["planRequest"].clone();
+        request["policy"] = policy.clone();
+        request["selections"]
+            .as_array_mut()
+            .expect("selections")
+            .truncate(1);
+        request["selections"][0]["priority"] = json!(priority);
+        request["selections"][0]["reasons"] = reasons.clone();
+        let plan = build_verification_plan(&request).expect("authored policy plan");
+        let task = find_by(
+            plan["tasks"].as_array().expect("tasks"),
+            "kind",
+            "verification",
+        );
+        assert_eq!(task["priority"], priority);
+        assert_eq!(task["reasons"], reasons);
+        assert!(task.get("score").is_none());
+    }
+
+    policy["rules"][0]["score"] = json!(3);
+    assert_eq!(
+        validate_contract(policy)
+            .expect_err("ordinal score must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
     );
 }
 

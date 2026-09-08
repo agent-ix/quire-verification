@@ -85,9 +85,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-007 | Preserve independent result findings | Implemented; verified |
 | FR-008 | Canonicalize digest and identity inputs with JCS | Implemented; verified |
 | FR-009 | Retain bounded portfolio failures as results | Implemented; verified |
-| FR-010 | Keep applicability and readiness independent | Specified; pending implementation |
-| FR-011 | Emit authored or unknown classification | Specified; pending implementation |
-| FR-012 | Preserve authored prioritization | Specified; pending implementation |
+| FR-010 | Keep applicability and readiness independent | Implemented; verified |
+| FR-011 | Emit authored or unknown classification | Implemented; verified |
+| FR-012 | Preserve authored prioritization | Implemented; verified |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -111,7 +111,7 @@ catalog from a pinned checkout and compares it with the retained export.
 ## 8. Lifecycle and Change Control
 
 This specification describes a private compatibility slice implemented and
-verified in Rust plus a VP01 qualification increment awaiting implementation.
+verified in Rust, including the VP01 registry/policy qualification increment.
 VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
 A future FS02/FS05 decision may require a reviewed migration of the provisional
 artifact reference seam. Such a migration must update requirements, tests,

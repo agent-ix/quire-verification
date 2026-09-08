@@ -8,10 +8,9 @@ type: TestMatrix
 ## Overview
 
 This matrix maps every normative acceptance criterion in the E02 compatibility
-and VP01 qualification slice to a concrete test case. The 23 merged cases run in
-Rust and bind through compiler-checked `ix-trace-rs` markers. TC-024 and TC-025
-are specified for the VP01 increment and remain pending implementation. The
-rejected JavaScript prototype is not accepted as evidence.
+and VP01 qualification slice to a concrete test case. All 25 cases run in Rust
+and bind through compiler-checked `ix-trace-rs` markers. The rejected JavaScript
+prototype is not accepted as evidence.
 
 ## Test Matrix Rules
 
@@ -31,7 +30,7 @@ rejected JavaScript prototype is not accepted as evidence.
 | US-001 | Ready task; unsafe fault task | TC-001..TC-004, TC-009..TC-011 | ✅ Complete |
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
-| US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | 🚧 Pending |
+| US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 
 ### Functional Requirement Coverage
 
@@ -46,9 +45,9 @@ rejected JavaScript prototype is not accepted as evidence.
 | FR-007 | FR-007-AC-1..5 | TC-014, TC-015 | ✅ Complete |
 | FR-008 | FR-008-AC-1..4 | TC-016, TC-017 | ✅ Complete |
 | FR-009 | FR-009-AC-1..6 | TC-018, TC-019, TC-020 | ✅ Complete |
-| FR-010 | FR-010-AC-1..2 | TC-010, TC-024 | 🚧 Pending |
-| FR-011 | FR-011-AC-1..2 | TC-024 | 🚧 Pending |
-| FR-012 | FR-012-AC-1..2 | TC-025 | 🚧 Pending |
+| FR-010 | FR-010-AC-1..2 | TC-010, TC-024 | ✅ Complete |
+| FR-011 | FR-011-AC-1..2 | TC-024 | ✅ Complete |
+| FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
 
 ### Non-Functional Requirement Coverage
 
@@ -87,8 +86,8 @@ rejected JavaScript prototype is not accepted as evidence.
 | TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
 | TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-4 | ✅ Passed |
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
-| TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | 🚧 Pending |
-| TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | 🚧 Pending |
+| TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
+| TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
 
 ## Option Permutation Matrix
 
@@ -196,8 +195,8 @@ rejected JavaScript prototype is not accepted as evidence.
 
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 16 | 14 | 0 | 2 | 87.5% |
+| Unit | 16 | 16 | 0 | 0 | 100% |
 | Integration | 3 | 3 | 0 | 0 | 100% |
 | Property | 4 | 4 | 0 | 0 | 100% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 25 | 23 | 0 | 2 | 92% |
+| Overall | 25 | 25 | 0 | 0 | 100% |

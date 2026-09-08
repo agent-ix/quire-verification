@@ -40,6 +40,7 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
         .transpose()?
         .unwrap_or(false);
     let properties = collect_properties(request)?;
+    let inventory = normalized_inventory(&properties)?;
     let capabilities = collect_capabilities(request)?;
     let available = optional_array(request, "availablePrerequisites", "plan request")?
         .iter()
@@ -73,7 +74,7 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
             "validUntil": policy.get("validUntil").cloned().unwrap_or(Value::Null),
             "freshness": if policy_stale { "stale" } else { "current" },
         },
-        "inventory": properties.values().copied().cloned().collect::<Vec<_>>(),
+        "inventory": inventory,
         "tasks": tasks,
         "budget": request.get("budget").cloned().unwrap_or(Value::Null),
         "evidenceOwner": "Quoin",
@@ -97,6 +98,22 @@ fn collect_properties(request: &Value) -> Result<BTreeMap<String, &Value>, Verif
         }
     }
     Ok(properties)
+}
+
+fn normalized_inventory(
+    properties: &BTreeMap<String, &Value>,
+) -> Result<Vec<Value>, VerificationError> {
+    properties
+        .values()
+        .map(|property| {
+            let mut normalized = (*property).clone();
+            let fields = object_mut(&mut normalized)?;
+            fields
+                .entry("classification".to_owned())
+                .or_insert_with(|| Value::String("unknown".to_owned()));
+            Ok(normalized)
+        })
+        .collect()
 }
 
 fn collect_capabilities(
