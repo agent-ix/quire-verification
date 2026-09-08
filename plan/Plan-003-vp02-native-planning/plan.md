@@ -17,7 +17,7 @@ relationships:
 
 ### Functional Requirements
 
-- [ ] **FR-013**: Emit an actionable prerequisite DAG.
+- [x] **FR-013**: Emit an actionable prerequisite DAG.
 - [ ] **FR-014**: Construct exact native runner requests.
 - [ ] **FR-015**: Preserve role-specific verification inputs.
 - [ ] **FR-016**: Read shared references strictly.
@@ -49,7 +49,7 @@ producers retain native artifacts and Agent A owns the shared schema.
 
 ### Prerequisites
 
-- [ ] **TC-026**: Coalesce exact missing needs, retain mandatory work, and reject near matches.
+- [x] **TC-026**: Coalesce exact missing needs, retain mandatory work, and reject near matches.
 
 ### Native request and input variants
 
@@ -88,7 +88,7 @@ FS02 + FS05 ------> Task-012 -> Task-013 --------+-> Task-014 -> Task-015
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-011 | A | FR-013 | TC-026 | in_progress |
+| Task-011 | A | FR-013 | TC-026 | done |
 | Task-012 | A | FR-016 | TC-029, TC-031 | blocked |
 | Task-013 | A | FR-015 | TC-028, TC-030 | blocked |
 | Task-014 | A | FR-014 | TC-027, TC-030 | blocked |

@@ -2,7 +2,7 @@
 id: Task-011
 title: "Actionable prerequisite DAG"
 type: Task
-status: in_progress
+status: done
 track: A
 priority: P0
 relationships:
@@ -20,10 +20,10 @@ through a sorted `requiredBy` relation.
 
 ## Subtasks
 
-- [ ] Test every missing prerequisite kind, shared duplicate need, near match, stale policy, and absent resource allocation.
-- [ ] Generate exactly one plan-level setup task per exact missing identity without fake property or technique identity.
-- [ ] Preserve required blocked work and exact dependency identifiers.
-- [ ] Bind TC-026 and FR-013 criteria with `ix-trace-rs`.
+- [x] Test every missing prerequisite kind, shared duplicate need, near match, stale policy, absent resource allocation, and delimiter collision.
+- [x] Generate exactly one plan-level setup task per exact missing identity without fake property or technique identity.
+- [x] Preserve required blocked work and injective dependency identifiers.
+- [x] Bind TC-026 and every FR-013 criterion with `ix-trace-rs`.
 
 ## Deliverables
 
