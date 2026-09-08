@@ -2,7 +2,7 @@
 id: Task-016
 title: "Conservative evidence freshness"
 type: Task
-status: in_progress
+status: done
 track: A
 priority: P0
 relationships:
@@ -19,10 +19,10 @@ invalid temporal relationships refuse before classification.
 
 ## Subtasks
 
-- [ ] Add the reviewed freshness shape and stable temporal-order error to the single schema-derived contract path.
-- [ ] Write TC-032 first with earliest-bound, exact-boundary, offset-equivalence, invalid-order, malformed, missing, boundary, and overflow cases.
-- [ ] Implement checked Rust instant arithmetic and preserve all findings for stale results.
-- [ ] Bind TC-032 and all FR-018 criteria with `ix-trace-rs`.
+- [x] Add the reviewed freshness shape and stable temporal-order error to the single schema-derived contract path.
+- [x] Write TC-032 first with earliest-bound, exact-boundary, offset-equivalence, invalid-order, malformed, missing, boundary, and overflow cases.
+- [x] Implement checked Rust instant arithmetic and preserve all findings for stale results.
+- [x] Bind TC-032 and all FR-018 criteria with `ix-trace-rs`.
 
 ## Deliverables
 

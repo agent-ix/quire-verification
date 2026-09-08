@@ -14,7 +14,7 @@ relationships:
 ### Functional Requirements
 
 - [ ] **FR-017**: Retain oracle dependence without aggregation.
-- [ ] **FR-018**: Enforce every evidence freshness bound.
+- [x] **FR-018**: Enforce every evidence freshness bound.
 
 ## Dependency Graph
 
@@ -45,7 +45,7 @@ assessment path after Plan-003's strict reader is available.
 
 ### Freshness
 
-- [ ] **TC-032**: Apply the earliest result/obligation expiry, exact instant boundaries, offset equivalence, invalid order, and checked overflow.
+- [x] **TC-032**: Apply the earliest result/obligation expiry, exact instant boundaries, offset equivalence, invalid order, and checked overflow.
 
 ### Oracle dependence
 
@@ -76,7 +76,7 @@ Plan-003/Task-012 + FS05 -> Task-017 -> Task-018 -------------+-> Task-019
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-016 | A | FR-018 | TC-032 | in_progress |
+| Task-016 | A | FR-018 | TC-032 | done |
 | Task-017 | A | FR-017 | TC-033 | blocked |
 | Task-018 | A | FR-017 | TC-033 | blocked |
 | Task-019 | Gate | FR-017, FR-018 | TC-032, TC-033 | blocked |

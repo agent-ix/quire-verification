@@ -104,7 +104,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-015 | Preserve role-specific verification inputs | Specified; pending implementation |
 | FR-016 | Read shared references strictly | Specified; blocked on FS02/FS05 amendment |
 | FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FS05 role amendment |
-| FR-018 | Enforce every evidence freshness bound | Specified; pending implementation |
+| FR-018 | Enforce every evidence freshness bound | Implemented; verified |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |

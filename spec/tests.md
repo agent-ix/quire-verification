@@ -9,9 +9,9 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, and VP03 evidence-assessment slices to
-a concrete test case. The 26 implemented cases run in Rust through compiler-checked
-`ix-trace-rs` markers; TC-027 through TC-033 remain pending until their reviewed
-implementation and shared-reference dependencies are ready. The rejected
+a concrete test case. The 27 implemented cases run in Rust through compiler-checked
+`ix-trace-rs` markers; TC-027 through TC-031 and TC-033 remain pending until their
+reviewed implementation and shared-reference dependencies are ready. The rejected
 JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
@@ -34,7 +34,7 @@ JavaScript prototype is not evidence.
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
-| US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | 🚧 Planned |
+| US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | 🚧 Partial |
 
 ### Functional Requirement Coverage
 
@@ -57,7 +57,7 @@ JavaScript prototype is not evidence.
 | FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
 | FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
 | FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FS05 role amendment |
-| FR-018 | FR-018-AC-1..5 | TC-032 | 🚧 Planned |
+| FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
 
 ### Non-Functional Requirement Coverage
 
@@ -104,7 +104,7 @@ JavaScript prototype is not evidence.
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
-| TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | 🚧 Planned |
+| TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
 
 ## Option Permutation Matrix
@@ -152,6 +152,7 @@ JavaScript prototype is not evidence.
 | Combined freshness | Outside | One representable instant after earliest expiry | TC-032 | Stale |
 | Maximum age | Min | 0 seconds | TC-032 | Fresh only at production instant |
 | Maximum age | Max | 9007199254740991 seconds | TC-032 | Accept or refuse only on checked timestamp overflow |
+| Maximum age | Under min | -1 second | TC-032 | Refuse before classification |
 | Maximum age | Outside | 9007199254740992 seconds | TC-032 | Refuse before classification |
 | JCS numeric domain | Boundary | Finite JSON number | TC-016 | Canonicalize |
 | JCS numeric domain | Outside | NaN or Infinity | TC-017 | Reject |
@@ -254,8 +255,8 @@ JavaScript prototype is not evidence.
 
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 16 | 15 | 0 | 1 | 94% |
+| Unit | 16 | 16 | 0 | 0 | 100% |
 | Integration | 5 | 3 | 0 | 2 | 60% |
 | Property | 10 | 6 | 0 | 4 | 60% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 33 | 26 | 0 | 7 | 79% |
+| Overall | 33 | 27 | 0 | 6 | 82% |
