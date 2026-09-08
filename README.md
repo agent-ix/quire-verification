@@ -62,7 +62,10 @@ results, and simultaneous independent failures.
 
 Every acceptance test imports the pinned `ix-trace-rs` macro and uses a bare,
 compiler-checked `#[trace(...)]` marker. `quire coverage --scope . --json`
-reconciles those markers with the QUOIN Test Matrix.
+reconciles those markers with the QUOIN Test Matrix. Include
+`.ix/modules/quire-verification` in Quire's module search path when running that
+command; its declared `source_exclude` keeps the byte-identical vendored
+third-party macro source outside this repository's first-party test census.
 
 ## Boundaries
 

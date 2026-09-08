@@ -14,16 +14,18 @@ complete E04's ecosystem-wide review.
 | Plan/result fixtures and local portfolio report | Newly authored synthetic/local data; no real users, traces, credentials, standards tables, or production configuration | `AGPL-3.0-or-later` | Public conformance-vector terms remain an E01/E04 decision. |
 | Native artifact references | Synthetic URI/digest references only; target artifacts are not copied | No inbound artifact included | Each real producer artifact keeps its own terms and retention policy. |
 | Registry Rust dependencies | Runtime, schema, serialization, cryptography, generation, and test crates exactly locked in `Cargo.lock` | SPDX licenses accepted by `deny.toml`; checked by `cargo deny check` | Preserve required notices and re-run the dependency gate on every lock update. |
-| `ix-trace-rs` | Agent-IX test trace macros pinned to Git revision `2ce4ebf47f726b9d76388220545cd0abda8a5cfb` | `AGPL-3.0-or-later` | Requalify any pin update. |
+| `vendor/ix-trace-rs` | Byte-identical Agent-IX test trace macro crate source from Git revision `2ce4ebf47f726b9d76388220545cd0abda8a5cfb`; hashes and import scope are recorded in `vendor/ix-trace-rs/UPSTREAM.md` | `AGPL-3.0-or-later`; upstream license retained beside the source | Requalify any snapshot update; changes belong upstream rather than in a local fork. |
 | Quoin TypeScript runtime and `ts-node` | External, pinned integration producer used only for IT-001; it is outside this crate and communicates through JSON | Upstream project's own terms | Keep this toolchain outside the Rust production and qualified execution path. |
 | CI action | `actions/checkout@11d5960a326750d5838078e36cf38b85af677262` | MIT; revision pinned | Preserve the upstream notice in any redistributed action bundle and requalify pin updates. |
 | GNU AGPL license text | Free Software Foundation verbatim license document | Verbatim AGPLv3 text in `LICENSE` | Preserve unmodified text. |
 
-`Cargo.lock` is the dependency source of truth. `cargo deny check` validates
+`Cargo.lock` and the trace snapshot's `UPSTREAM.md` are the dependency source
+of truth. `cargo deny check` validates
 advisories, licenses, duplicate-version policy, and allowed sources. The
-implementation does not import or redistribute standards tables, third-party
-tool code, Quoin implementation source, private traces, templates, generated
-runtimes, or external corpora.
+implementation does not import or redistribute standards tables, Quoin
+implementation source, private traces, templates, generated runtimes, or
+external corpora. The only redistributed tool code is the recorded, test-only
+`ix-trace-rs` Rust snapshot needed for credential-independent CI compilation.
 
 ## Executable disposition
 

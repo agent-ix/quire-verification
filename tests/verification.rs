@@ -23,6 +23,7 @@ use quire_verification::fixtures::{
 };
 use quire_verification::planner::build_verification_plan;
 use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
 
 type ScopeMutation = (&'static str, fn(&mut Value));
 
@@ -626,7 +627,7 @@ fn tc_021_baseline_checker_accepts_the_pinned_quoin_contract() {
 }
 
 #[trace("TC-022", "NFR-004-AC-1", "NFR-004-AC-2")]
-#[trace("NFR-004-AC-3", "StR-001-VC-1")]
+#[trace("NFR-004-AC-3", "NFR-004-AC-4", "StR-001-VC-1")]
 #[test]
 fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -651,7 +652,23 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     assert!(!root.join("package.json").exists());
     assert!(!root.join("package-lock.json").exists());
     assert!(include_str!("../src/lib.rs").contains("#![forbid(unsafe_code)]"));
-    assert!(include_str!("../Cargo.toml").contains("ix-trace-rs"));
+    let manifest = include_str!("../Cargo.toml");
+    assert!(manifest.contains("path = \"vendor/ix-trace-rs\""));
+    assert!(manifest.contains("version = \"=0.1.0\""));
+    assert!(!include_str!("../Cargo.lock").contains("git+https://github.com/agent-ix/ix-trace-rs"));
+    let upstream = include_str!("../vendor/ix-trace-rs/UPSTREAM.md");
+    assert!(upstream.contains("2ce4ebf47f726b9d76388220545cd0abda8a5cfb"));
+    assert!(
+        include_str!("../.ix/modules/quire-verification/manifest.yaml")
+            .contains("source_exclude:\n    - \"vendor/**\"")
+    );
+    assert_eq!(
+        format!(
+            "{:x}",
+            Sha256::digest(include_bytes!("../vendor/ix-trace-rs/src/lib.rs"))
+        ),
+        "d7be2c00ed45ef0ad9bda683ef6a5b9397cca32483e89a7ac1fb745eb841d1c4"
+    );
     let workflow = include_str!("../.github/workflows/ci.yml");
     for gate in [
         "cargo fmt --check",
