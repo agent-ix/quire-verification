@@ -64,7 +64,8 @@ No duplicate evidence store, hidden normative dependency, or unqualified backend
 - [Private formalization board](https://github.com/orgs/agent-ix/projects/20)
 
 Read [the interface decision](docs/interface-decision.md), [compatibility map](docs/quoin-compatibility.md),
-the [evaluation report](docs/evaluation-report.md), and [artifact rights inventory](docs/artifact-rights.md)
-before extending the slice. Read [license decision](LICENSE-DECISION.md) before adding code or
+the [evaluation report](docs/evaluation-report.md), [retained local portfolio](evidence/local-catalog-portfolio.json),
+and [artifact rights inventory](docs/artifact-rights.md) before extending the
+slice. Read [license decision](LICENSE-DECISION.md) before adding code or
 normative artifacts. Publication requires a fresh review; do not flip private
 history public.

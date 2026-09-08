@@ -1,8 +1,9 @@
 # E02 bounded compatibility evaluation
 
-Date: 2026-09-07 PDT / 2026-09-08 UTC. Scope: private fixture planning and
-result assessment only. No represented external verification tool, production
-system, or fault injection ran.
+Date: 2026-09-07 PDT / 2026-09-08 UTC. Scope: private fixture planning, result
+assessment, and bounded local catalog-adapter checks. No represented external
+verification tool, parser, production system, fault injection, or human review
+ran.
 
 ## Agreed fixture scope and controls
 
@@ -41,22 +42,31 @@ evidence, untriggered recovery, missing observations, and a logical violation.
 - Execution, logical outcome, activation, participation, assumptions, adequacy,
   freshness, provenance, and native artifact references remain independently
   inspectable. No sufficiency decision or aggregate score is emitted.
+- The retained local portfolio at source revision
+  `60ebba49b6e32a15e5a2a1b296b2e59a1eaa45ce` executed two complementary
+  methods over the adapter: unit-style parity compared every preserved field
+  across 33 definitions, and a metamorphic check compared the output after
+  reversed and rotated input orders. Both local obligations are supported. Its
+  required manual inspection is blocked on a verification owner and is recorded
+  as `not-run`/incomplete rather than accepted.
 
 ## Measured effort
 
 The one-time implementation window was measured from the E02 claim at
-`2026-09-08T00:41:35Z` through the semantic-review measurement at
-`2026-09-08T01:25:32Z`: 43 minutes 57 seconds. It includes
+`2026-09-08T00:41:35Z` through the retained local portfolio at
+`2026-09-08T01:37:05Z`: 55 minutes 30 seconds. It includes
 contract/adapter/planner/result code, fixture
-construction, documentation, failure correction, and tests after the claim. It
-excludes earlier source reading and future owner review.
+construction, the bounded executable portfolio, documentation, failure
+correction, and tests after the claim. It excludes earlier source reading and
+future owner review.
 
 Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Six-file dependency-free test suite | 0.20 s | 64,488 KiB |
+| Seven-file dependency-free test suite | 0.20 s | 64,528 KiB |
 | Plan/result fixture rendering | 0.03 s | 48,384 KiB |
+| Bounded local portfolio | 0.04 s | 56,008 KiB |
 | Exact-source Quoin parity check | 1.49 s | 292,132 KiB |
 
 These are local workflow measurements, not delivery estimates or efficacy/ROI
@@ -68,12 +78,13 @@ TypeScript development tooling, which dominates its memory use.
 Agent B disposition: promote the E02 compatibility boundary for owner/shared-
 interface review. It produces useful gaps without changing catalog or evidence
 ownership. Defer VP01 acceptance pending E01 and artifact-publication review;
-defer VP02/VP03 acceptance pending FS02/FS05; defer VP04 execution acceptance
-pending those predecessors, an engineering owner, agreed thresholds, and actual
-native method runs. External/domain reviewer disposition is pending and is not
-invented here.
+defer VP02/VP03 acceptance pending FS02/FS05; defer VP04 acceptance pending
+those predecessors, an engineering owner, agreed thresholds, a domain-relevant
+producer portfolio, and the recorded human inspection. External/domain reviewer
+disposition is pending and is not invented here.
 
-Fixture success establishes only the represented adapter/planner/intake cases.
-It does not qualify property, fuzz, metamorphic, monitoring, fault, or inspection
-tools; establish independence between their oracles; certify the parser; or
+Fixture and local portfolio success establish only the represented
+adapter/planner/intake cases and the two named adapter properties. They do not
+qualify methods outside that local subject, establish independence between
+domain oracles, certify the parser, complete the required inspection, or
 authorize production execution.
