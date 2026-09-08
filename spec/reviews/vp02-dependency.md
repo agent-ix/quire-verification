@@ -3,7 +3,7 @@ id: SR-033
 title: "Dependency review of the VP02 native-planning specification"
 type: SpecReview
 analysis: dependency
-scope: "quire-verification@cb08208; FR-013..FR-016, IT-002"
+scope: "quire-verification@611f33f; FR-013..FR-016, IT-002"
 review_set: all
 ---
 # Dependency Review of the VP02 Native-Planning Specification

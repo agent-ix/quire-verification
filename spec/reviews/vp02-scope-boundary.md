@@ -3,7 +3,7 @@ id: SR-036
 title: "Scope-boundary review of the VP02 native-planning specification"
 type: SpecReview
 analysis: scope-boundary
-scope: "quire-verification@cb08208; VP02 ownership and external seams"
+scope: "quire-verification@611f33f; VP02 ownership and external seams"
 review_set: all
 ---
 # Scope-Boundary Review of the VP02 Native-Planning Specification

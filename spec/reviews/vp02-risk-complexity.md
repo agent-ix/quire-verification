@@ -3,7 +3,7 @@ id: SR-035
 title: "Risk and complexity review of the VP02 native-planning specification"
 type: SpecReview
 analysis: risk-complexity
-scope: "quire-verification@cb08208; FR-013..FR-016"
+scope: "quire-verification@611f33f; FR-013..FR-016"
 review_set: all
 ---
 # Risk and Complexity Review of the VP02 Native-Planning Specification

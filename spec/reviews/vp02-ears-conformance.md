@@ -3,14 +3,14 @@ id: SR-037
 title: "EARS conformance review of the VP02 native-planning specification"
 type: SpecReview
 analysis: ears-conformance
-scope: "quire-verification@cb08208; spec/**/*.md"
+scope: "quire-verification@611f33f; spec/**/*.md"
 review_set: all
 ---
 # EARS Conformance Review of the VP02 Native-Planning Specification
 
 ## Summary
 
-Quire 0.31.0 reports 86 of 86 documents grammar-clean with zero EARS grammar
+Quire 0.31.0 reports 94 of 94 documents grammar-clean with zero EARS grammar
 finding after the FR-013 event statement was placed in one complete sentence.
 
 ## Findings

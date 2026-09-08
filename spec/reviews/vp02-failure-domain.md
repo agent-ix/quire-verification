@@ -3,7 +3,7 @@ id: SR-031
 title: "Failure-domain review of the VP02 native-planning specification"
 type: SpecReview
 analysis: failure-domain
-scope: "quire-verification@cb08208; FR-013..FR-016 and TC-026..TC-031"
+scope: "quire-verification@611f33f; FR-013..FR-016 and TC-026..TC-031"
 review_set: all
 ---
 # Failure-Domain Review of the VP02 Native-Planning Specification

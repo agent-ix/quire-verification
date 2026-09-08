@@ -3,7 +3,7 @@ id: SR-030
 title: "Base review of the VP02 native-planning specification"
 type: SpecReview
 analysis: base
-scope: "quire-verification@cb08208; FR-013..FR-016, IT-002, TC-026..TC-031 and amended traceability"
+scope: "quire-verification@611f33f; FR-013..FR-016, IT-002, TC-026..TC-031 and amended traceability"
 review_set: all
 ---
 # Base Review of the VP02 Native-Planning Specification
@@ -21,7 +21,8 @@ and the six Test Matrix rules. Quire reports 86 of 86 documents grammar-clean.
 | FND-001 | medium | Resolved during review: runtime budget exhaustion was removed from planner behavior; planning now treats only an absent capability-declared allocation as a prerequisite, leaving exhaustion to VP03 result intake. | FR-013-AC-2, TC-026, TC-030 |
 | FND-002 | medium | Resolved during review: strict-reader refusal codes and the FR-016 → FR-015 → FR-014 dependency chain are explicit. | FR-014, FR-015, FR-016 |
 | FND-003 | high | Open external contract gap: specification PR #8 at `609790e` cannot encode B's JCS canonical domain or exact trace, fault-model, and review-procedure roles. FR-016, FR-015, FR-014, IT-002, and their tests remain blocked. | FR-016-AC-5, TC-029, TC-031 |
-| FND-004 | low | Coverage is honestly 87/111 because 18 new criteria and six new Test Cases have no Rust evidence before implementation. | FR-013..FR-016, TC-026..TC-031 |
+| FND-004 | low | Coverage is honestly 87/112 because 19 new criteria and six new Test Cases have no Rust evidence before implementation. | FR-013..FR-016, TC-026..TC-031 |
+| FND-005 | medium | Resolved after implementation inspection: plan-level setup work now carries its exact prerequisite and sorted `requiredBy` list instead of inventing one property/technique owner. | FR-013-AC-1, FR-013-AC-4, TC-026 |
 
 ## Checklist Result
 
