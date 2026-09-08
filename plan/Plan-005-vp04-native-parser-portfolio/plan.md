@@ -21,7 +21,7 @@ relationships:
 
 ### Non-Functional Requirements
 
-- [ ] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, and protocol.
+- [x] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, and protocol.
 
 ## Dependency Graph
 
@@ -57,7 +57,7 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ### Native process boundary
 
-- [ ] **TC-038** (`NFR-006-AC-1..7`): exercise descriptor-pinned direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; root-relative no-symlink admission; pathname substitution; dedicated process groups; descendant cleanup; and direct-child reaping.
+- [x] **TC-038** (`NFR-006-AC-1..7`): exercise descriptor-pinned direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; root-relative no-symlink admission; pathname substitution; dedicated process groups; descendant cleanup; and direct-child reaping.
 
 ### Portfolio execution
 
@@ -77,9 +77,9 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ## Remaining Work
 
-### Track P: Process primitive (ready)
+### Track P: Process primitive (complete)
 
-- **P1 = Task-020** Bounded native process executor — Hard; exit: every descriptor-admitted process group terminates with bounded output and a typed result, the direct child is reaped, and no live group member remains.
+- **P1 = Task-020** Bounded native process executor — Complete at `be1d45b`; SR-059 records the passing exact Rust review at `ac2af2c`.
 
 ### Track A: Critical Path (serial, dependency-gated)
 
@@ -102,7 +102,7 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | in_progress |
+| Task-020 | P | NFR-006 | TC-038 | done |
 | Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
 | Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
 | Task-023 | A | FR-021 | TC-037 | blocked |
@@ -110,8 +110,8 @@ external owner disposition ---------------------------------------------------->
 
 ## Coordination Rules
 
-Task-020 may proceed against controlled Rust child fixtures. Tasks 021 through
-024 remain blocked until their explicit predecessors and external candidate/role
+Task-020 is complete against controlled Rust child fixtures. Tasks 021 through
+024 remain blocked until their remaining predecessors and external candidate/role
 gates clear. B does not edit Agent A's parser or shared schema, Agent C's reusable
 Engineering Assurance implementation, Quoin, or Filament. Changes to behavior
 return through QUOIN `/specify` and the owner-selected all-lens `/spec-review`
