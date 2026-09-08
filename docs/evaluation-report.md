@@ -55,7 +55,7 @@ an adapted field corruption, and an adapter exception.
   resolves methods by `techniqueId`, and injected violations or execution
   errors are retained as violated or failed `TechniqueResult` records.
 - The retained local portfolio at source revision
-  `05f0722e94ae06aebfbc30bfc6a00c332775c0ae` executed two complementary
+  `f6b5587fa5e4f39dab6ee632f729906489e4fb2b` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
@@ -66,7 +66,7 @@ an adapted field corruption, and an adapter exception.
 
 The one-time implementation and rewrite window was measured from the E02 claim
 at `2026-09-08T00:41:35Z` through the retained Rust local portfolio at
-`2026-09-08T05:57:44Z`: 5 hours 16 minutes 9 seconds. It includes the QUOIN
+`2026-09-08T06:11:18Z`: 5 hours 29 minutes 43 seconds. It includes the QUOIN
 specification/review/plan cycle, the rejected prototype, full Rust replacement,
 fixture and portfolio work, documentation, failure correction, Rust review, and
 tests. It excludes earlier source reading and future owner disposition.
@@ -75,10 +75,10 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Complete Rust test suite (25 tests) | 1.33 s | 379,692 KiB |
-| Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,420 KiB |
-| Release plan/result fixture rendering | 0.01 s | 9,580 KiB |
-| Release bounded local portfolio | 0.01 s | 10,064 KiB |
+| Complete Rust test suite (25 tests) | 0.55 s | 165,828 KiB |
+| Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
+| Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
+| Release bounded local portfolio | 0.01 s | 9,940 KiB |
 | Exact-source Quoin parity plus release Rust checker | 1.50 s | 295,468 KiB |
 
 These are local workflow measurements, not delivery estimates or efficacy/ROI

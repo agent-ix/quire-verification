@@ -60,6 +60,10 @@ missing prerequisites, stale evidence, untriggered behavior, missing
 observations, exact plan/task/run/producer/adapter mismatches, ambiguous duplicate
 results, and simultaneous independent failures.
 
+Every acceptance test imports the pinned `ix-trace-rs` macro and uses a bare,
+compiler-checked `#[trace(...)]` marker. `quire coverage --scope . --json`
+reconciles those markers with the QUOIN Test Matrix.
+
 ## Boundaries
 
 No duplicate evidence store, hidden normative dependency, or unqualified backend promise. Quoin retains its existing orchestration and catalog ownership across the versioned JSON boundary. Engineering Assurance owns its Rust-native execution and evidence implementation; this crate owns the portable contract and planning surface. Existing Quire/Quoin/Filament interfaces must be inspected before replacement or extraction. Research and private issue links must not enter a public release packet.
@@ -73,7 +77,9 @@ No duplicate evidence store, hidden normative dependency, or unqualified backend
 
 Read [the interface decision](docs/interface-decision.md), [compatibility map](docs/quoin-compatibility.md),
 the [evaluation report](docs/evaluation-report.md), [retained local portfolio](evidence/local-catalog-portfolio.json),
-and [artifact rights inventory](docs/artifact-rights.md) before extending the
+the [artifact rights inventory](docs/artifact-rights.md), the
+[Rust review](reviews/26-09-07-rust-review.md), and the
+[gap analysis](reviews/26-09-07-rust-rearchitecture.md) before extending the
 slice. Read [license decision](LICENSE-DECISION.md) before adding code or
 normative artifacts. Publication requires a fresh review; do not flip private
 history public.
