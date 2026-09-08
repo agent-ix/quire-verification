@@ -14,13 +14,14 @@ relationships:
 
 ## Scope
 
-Extend the Rust planner to coalesce missing prerequisite identities, retain each
-required task, and connect each affected task to its deterministic setup task.
+Extend the Rust planner to coalesce missing prerequisite identities into
+plan-level setup work, retain each required task, and connect each affected task
+through a sorted `requiredBy` relation.
 
 ## Subtasks
 
 - [ ] Test every missing prerequisite kind, shared duplicate need, near match, stale policy, and absent resource allocation.
-- [ ] Generate exactly one setup task per exact missing identity.
+- [ ] Generate exactly one plan-level setup task per exact missing identity without fake property or technique identity.
 - [ ] Preserve required blocked work and exact dependency identifiers.
 - [ ] Bind TC-026 and FR-013 criteria with `ix-trace-rs`.
 

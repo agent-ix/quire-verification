@@ -16,12 +16,15 @@ and one verification-task dependency.
 ## Test Procedure
 
 Build table-driven plans that remove each capability prerequisite, use a stale
-policy, and omit a capability-declared resource allocation. Include duplicate needs shared by two
-tasks and near-miss available prerequisites with the wrong kind or identifier.
+policy, and omit a capability-declared resource allocation. Include one missing
+need shared by two verification tasks and near-miss available prerequisites with
+the wrong kind or identifier.
 
 ## Expected Results
 
-Distinct missing needs produce one deterministic setup task each; all affected
-tasks depend on it; duplicates coalesce by exact identity; required work stays in
-the plan as blocked; near matches and caller claims cannot satisfy the need.
+Distinct missing needs produce one deterministic plan-level setup task each; all
+affected tasks depend on it; duplicates coalesce by exact identity; `requiredBy`
+lists the affected verification-task IDs in sorted order; no fake property or
+technique ID is attached. Required work stays blocked and near matches or caller
+claims cannot satisfy the need.
 Runtime budget exhaustion is outside this planning test and remains a result state.
