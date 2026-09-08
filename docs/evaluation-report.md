@@ -23,7 +23,8 @@ capabilities, missing fault authorization/injection/observation bindings,
 failed/exhausted execution, wrong execution scope, stale evidence, missing
 evidence, duplicate results for one exact run binding, untriggered recovery,
 missing observations, simultaneous partial/assumption/logical failures, and a
-logical violation.
+logical violation. Local portfolio controls also include shuffled source order,
+an adapted field corruption, and an adapter exception.
 
 ## Results
 
@@ -46,6 +47,13 @@ logical violation.
   inspectable. Exact plan/task/run/producer/adapter bindings are required,
   duplicate exact results are ambiguous, and every simultaneous independent
   finding is enumerated. No sufficiency decision or aggregate score is emitted.
+- The draft 2020-12 schema is executed over all four JSON fixtures and 52
+  embedded or adapted public contract instances. Runtime constants and
+  validators for the five public contracts are derived from that schema;
+  cross-task dependency graph checks remain explicit semantic validation.
+- Digests and structured identity comparisons use RFC 8785 JCS. Catalog parity
+  resolves methods by `techniqueId`, and injected violations or execution
+  errors are retained as violated or failed `TechniqueResult` records.
 - The retained local portfolio at source revision
   `46900c2f793fc7a3bcc0f6f84aa112846093b9c8` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
@@ -68,9 +76,10 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Seven-file dependency-free test suite | 0.20 s | 64,600 KiB |
-| Plan/result fixture rendering | 0.03 s | 48,896 KiB |
-| Bounded local portfolio | 0.04 s | 56,000 KiB |
+| Nine-file test suite | 0.57 s | 82,100 KiB |
+| Four-file schema validation (52 contract instances) | 0.46 s | 73,108 KiB |
+| Plan/result fixture rendering | 0.30 s | 75,944 KiB |
+| Bounded local portfolio | 0.30 s | 80,028 KiB |
 | Exact-source Quoin parity check | 1.49 s | 292,132 KiB |
 
 These are local workflow measurements, not delivery estimates or efficacy/ROI
@@ -79,13 +88,12 @@ TypeScript development tooling, which dominates its memory use.
 
 ## Disposition and limitations
 
-Agent B disposition: promote the E02 compatibility boundary for owner/shared-
-interface review. It produces useful gaps without changing catalog or evidence
-ownership. Defer VP01 acceptance pending E01 and artifact-publication review;
-defer VP02/VP03 acceptance pending FS02/FS05; defer VP04 acceptance pending
-those predecessors, an engineering owner, agreed thresholds, a domain-relevant
-producer portfolio, and the recorded human inspection. External/domain reviewer
-disposition is pending and is not invented here.
+Agent B disposition: the bounded implementation and verification work in this
+repository is complete. It produces useful gaps without changing catalog or
+evidence ownership. Broader interface promotion and publication remain tracked
+under E01, FS02, FS05, and E04; those separate decisions do not prevent this
+local portfolio from recording its own supported, violated, failed, or
+incomplete outcomes.
 
 Fixture and local portfolio success establish only the represented
 adapter/planner/intake cases and the two named adapter properties. They do not

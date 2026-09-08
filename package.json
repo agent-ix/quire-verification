@@ -10,6 +10,12 @@
   "scripts": {
     "test": "node --test",
     "fixtures": "node scripts/render-fixtures.mjs",
-    "portfolio": "node scripts/run-bounded-portfolio.mjs"
+    "portfolio": "node scripts/run-bounded-portfolio.mjs",
+    "validate:fixtures": "node scripts/validate-fixtures.mjs"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "canonicalize": "4.0.0"
   }
 }

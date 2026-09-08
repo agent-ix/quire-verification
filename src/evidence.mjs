@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {
-  exactValue,
+  jcsCanonicalize,
+  jcsEqual,
   validateInventoryProperty,
   validateTechniqueResult,
 } from "./contracts.mjs";
@@ -42,7 +43,7 @@ export function assessEvidence({ inventory, results, asOf }) {
               resultId: result.resultId,
             })),
           )
-          .sort((a, b) => compare(exactValue(a), exactValue(b))),
+          .sort((a, b) => compare(jcsCanonicalize(a), jcsCanonicalize(b))),
       };
     }
     if (exact.length > 1) {
@@ -108,7 +109,7 @@ export function scopeDifferences(property, result) {
     ],
   ];
   return pairs
-    .filter(([, expected, actual]) => exactValue(expected) !== exactValue(actual))
+    .filter(([, expected, actual]) => !jcsEqual(expected, actual))
     .map(([dimension]) => dimension);
 }
 
@@ -188,7 +189,7 @@ export function findingsFor(result) {
   ) {
     gaps.push({ kind: "logical-inconclusive", outcome: result.logical.outcome });
   }
-  return gaps.sort((a, b) => compare(exactValue(a), exactValue(b)));
+  return gaps.sort((a, b) => compare(jcsCanonicalize(a), jcsCanonicalize(b)));
 }
 
 function view(property, result, status, gaps) {

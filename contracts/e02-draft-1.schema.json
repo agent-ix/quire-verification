@@ -41,7 +41,7 @@
           "properties": {
             "kind": { "const": "state" },
             "snapshotRef": { "$ref": "#/$defs/ArtifactRef" },
-            "property": { "type": "string" }
+            "property": { "type": "string", "minLength": 1 }
           },
           "additionalProperties": true
         },
@@ -50,9 +50,9 @@
           "required": ["kind", "leftSubject", "rightSubject", "relation"],
           "properties": {
             "kind": { "const": "relational" },
-            "leftSubject": { "type": "string" },
-            "rightSubject": { "type": "string" },
-            "relation": { "type": "string" }
+            "leftSubject": { "type": "string", "minLength": 1 },
+            "rightSubject": { "type": "string", "minLength": 1 },
+            "relation": { "type": "string", "minLength": 1 }
           },
           "additionalProperties": true
         },
@@ -62,8 +62,8 @@
           "properties": {
             "kind": { "const": "trace" },
             "traceRef": { "$ref": "#/$defs/ArtifactRef" },
-            "clockProfile": { "type": "string" },
-            "completion": { "type": "string" }
+            "clockProfile": { "type": "string", "minLength": 1 },
+            "completion": { "type": "string", "minLength": 1 }
           },
           "additionalProperties": true
         },
@@ -73,8 +73,8 @@
           "properties": {
             "kind": { "const": "fault" },
             "faultModelRef": { "$ref": "#/$defs/ArtifactRef" },
-            "requestedInjectionSite": { "type": "string" },
-            "mitigationOracle": { "type": "string" }
+            "requestedInjectionSite": { "type": "string", "minLength": 1 },
+            "mitigationOracle": { "type": "string", "minLength": 1 }
           },
           "additionalProperties": true
         },
@@ -83,10 +83,10 @@
           "required": ["kind", "reviewProcedure", "requiredDisposition"],
           "properties": {
             "kind": { "const": "manual" },
-            "reviewProcedure": { "type": "string" },
+            "reviewProcedure": { "type": "string", "minLength": 1 },
             "requiredDisposition": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": { "type": "string", "minLength": 1 },
               "minItems": 1
             }
           },
@@ -170,19 +170,19 @@
           "items": { "enum": ["state", "relational", "trace", "fault", "manual"] },
           "minItems": 1
         },
-        "profiles": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "profiles": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
         "prerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
         "runner": {
           "type": "object",
           "required": ["kind", "adapterId", "adapterVersion"],
           "properties": {
-            "kind": { "type": "string" },
-            "adapterId": { "type": "string" },
-            "adapterVersion": { "type": "string" }
+            "kind": { "type": "string", "minLength": 1 },
+            "adapterId": { "type": "string", "minLength": 1 },
+            "adapterVersion": { "type": "string", "minLength": 1 }
           },
           "additionalProperties": true
         },
-        "environmentPermissions": { "type": "array", "items": { "type": "string" } },
+        "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
         "nativeArtifactInterface": { "type": "object" }
       },
       "additionalProperties": true
@@ -193,22 +193,53 @@
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-1" },
         "kind": { "const": "SelectionPolicy" },
-        "policyId": { "type": "string" },
-        "version": { "type": "string" },
+        "policyId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
         "validUntil": { "type": "string", "format": "date-time" },
         "sourceRef": { "$ref": "#/$defs/ArtifactRef" },
-        "provenance": { "type": "object" },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "standardDerived": { "type": "boolean" },
+            "standard": { "type": "string", "minLength": 1 },
+            "edition": { "type": "string", "minLength": 1 },
+            "objectives": { "type": "array", "minItems": 1 },
+            "interpretation": { "type": "string", "minLength": 1 },
+            "rightsDisposition": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "type": "object",
+                "properties": { "standardDerived": { "const": true } },
+                "required": ["standardDerived"]
+              },
+              "then": {
+                "type": "object",
+                "required": ["standard", "edition", "objectives", "interpretation", "rightsDisposition"],
+                "properties": {
+                  "standard": true,
+                  "edition": true,
+                  "objectives": true,
+                  "interpretation": true,
+                  "rightsDisposition": true
+                }
+              }
+            }
+          ],
+          "additionalProperties": true
+        },
         "rules": {
           "type": "array",
           "items": {
             "type": "object",
             "required": ["ruleId", "priority", "explanation"],
             "properties": {
-              "ruleId": { "type": "string" },
+              "ruleId": { "type": "string", "minLength": 1 },
               "priority": { "enum": ["required", "recommended", "optional"] },
-              "explanation": { "type": "string" }
+              "explanation": { "type": "string", "minLength": 1 },
+              "score": false
             },
-            "not": { "required": ["score"] },
             "additionalProperties": true
           }
         }
@@ -221,7 +252,7 @@
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-1" },
         "kind": { "const": "VerificationPlan" },
-        "planId": { "type": "string" },
+        "planId": { "type": "string", "minLength": 1 },
         "policyRef": { "type": "object" },
         "inventory": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
         "tasks": {
@@ -230,18 +261,44 @@
             "type": "object",
             "required": ["taskId", "input", "applicability", "readiness", "dependencies", "invocationAllowed"],
             "properties": {
-              "taskId": { "type": "string" },
+              "taskId": { "type": "string", "minLength": 1 },
               "input": { "$ref": "#/$defs/Input" },
               "applicability": { "enum": ["applicable", "not-applicable", "unknown"] },
               "readiness": { "enum": ["ready", "blocked", "unsupported"] },
-              "dependencies": { "type": "array", "items": { "type": "string" } },
+              "dependencies": { "type": "array", "items": { "type": "string", "minLength": 1 } },
               "invocationAllowed": { "type": "boolean" }
             },
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "invocationAllowed": { "const": true } },
+                  "required": ["invocationAllowed"]
+                },
+                "then": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": { "const": "applicable" },
+                    "readiness": { "const": "ready" }
+                  }
+                }
+              }
+            ],
             "additionalProperties": true
           }
         },
         "evidenceOwner": { "const": "Quoin" },
         "sufficiencyOwner": { "const": "authored-human-decision" }
+      },
+      "additionalProperties": true
+    },
+    "NativeArtifact": {
+      "type": "object",
+      "required": ["uri", "digest"],
+      "properties": {
+        "uri": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 }
       },
       "additionalProperties": true
     },
@@ -251,17 +308,18 @@
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-1" },
         "kind": { "const": "TechniqueResult" },
-        "resultId": { "type": "string" },
-        "planId": { "type": "string" },
-        "taskId": { "type": "string" },
+        "resultId": { "type": "string", "minLength": 1 },
+        "planId": { "type": "string", "minLength": 1 },
+        "taskId": { "type": "string", "minLength": 1 },
         "runRef": { "$ref": "#/$defs/ArtifactRef" },
-        "techniqueId": { "type": "string" },
+        "techniqueId": { "type": "string", "minLength": 1 },
         "producedAt": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time" },
         "propertyRef": { "$ref": "#/$defs/ArtifactRef" },
         "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
-        "profile": { "type": "string" },
+        "profile": { "type": "string", "minLength": 1 },
         "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
-        "dependencyClosure": { "type": "string" },
+        "dependencyClosure": { "type": "string", "minLength": 1 },
         "executionScope": { "type": "object" },
         "execution": {
           "type": "object",
@@ -293,7 +351,7 @@
             "type": "object",
             "required": ["assumptionId", "status"],
             "properties": {
-              "assumptionId": { "type": "string" },
+              "assumptionId": { "type": "string", "minLength": 1 },
               "status": { "enum": ["met", "not-met", "unknown", "not-assessed"] }
             },
             "additionalProperties": true
@@ -317,7 +375,165 @@
           },
           "additionalProperties": true
         },
-        "nativeArtifacts": { "type": "array" }
+        "nativeArtifacts": { "type": "array", "items": { "$ref": "#/$defs/NativeArtifact" } }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "execution": {
+                "type": "object",
+                "properties": { "status": { "not": { "const": "completed" } } },
+                "required": ["status"]
+              }
+            },
+            "required": ["execution"]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "logical": {
+                "type": "object",
+                "properties": {
+                  "outcome": { "not": { "enum": ["satisfied", "violated"] } }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "PortfolioFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "planRequest"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "planRequest": {
+          "type": "object",
+          "required": ["planId", "asOf", "policy", "properties", "capabilities", "selections", "availablePrerequisites", "budget"],
+          "properties": {
+            "planId": { "type": "string", "minLength": 1 },
+            "asOf": { "type": "string", "format": "date-time" },
+            "policy": { "$ref": "#/$defs/SelectionPolicy" },
+            "properties": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
+            "capabilities": { "type": "array", "items": { "$ref": "#/$defs/ToolCapability" } },
+            "selections": { "type": "array", "items": { "type": "object" } },
+            "availablePrerequisites": { "type": "array" },
+            "budget": { "type": "object" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "ResultsFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "asOf", "inventory", "results"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "inventory": { "type": "array", "items": { "$ref": "#/$defs/EvidenceObligation" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } }
+      },
+      "additionalProperties": true
+    },
+    "QuoinCatalogFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "source", "catalog"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "object",
+          "required": ["quoinRevision", "moduleRevision", "sourceRef"],
+          "properties": {
+            "quoinRevision": { "type": "string", "minLength": 1 },
+            "moduleRevision": { "type": "string", "minLength": 1 },
+            "sourceRef": { "$ref": "#/$defs/ArtifactRef" }
+          },
+          "additionalProperties": true
+        },
+        "catalog": {
+          "type": "object",
+          "required": ["methods"],
+          "properties": {
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "class", "definition", "moduleName"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "name": { "type": "string", "minLength": 1 },
+                  "class": { "type": "string", "minLength": 1 },
+                  "definition": { "type": "string", "minLength": 1 },
+                  "moduleName": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuoinAdviceFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "source", "cases", "advice"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "object",
+          "required": ["quoinRevision", "moduleRevision"],
+          "properties": {
+            "quoinRevision": { "type": "string", "minLength": 1 },
+            "moduleRevision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "statement", "archetype"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "statement": { "type": "string", "minLength": 1 },
+              "archetype": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": true
+          }
+        },
+        "advice": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["obligation", "recommended", "mismatch", "uncatalogued", "inconclusive"],
+            "properties": {
+              "obligation": { "type": "string", "minLength": 1 },
+              "mismatch": { "type": "boolean" },
+              "uncatalogued": { "type": "boolean" },
+              "inconclusive": { "type": "boolean" },
+              "recommended": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["method", "class", "evidenceKind", "reasons"],
+                  "properties": {
+                    "method": { "type": "string", "minLength": 1 },
+                    "class": { "type": "string", "minLength": 1 },
+                    "evidenceKind": { "type": "string", "minLength": 1 },
+                    "reasons": { "type": "array" }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        }
       },
       "additionalProperties": true
     }

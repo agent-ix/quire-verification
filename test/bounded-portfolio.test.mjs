@@ -5,10 +5,18 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
+  adaptQuoinCatalog,
   runBoundedPortfolio,
   validateTechniqueResult,
   validateVerificationPlan,
 } from "../src/index.mjs";
+
+const catalog = JSON.parse(
+  await readFile(
+    new URL("../fixtures/quoin-catalog-export.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 test("runs two complementary local methods and retains manual work", async () => {
   const report = await runBoundedPortfolio({
@@ -50,4 +58,58 @@ test("retained local portfolio names its executable revision and incomplete revi
     ["supported", "supported", "incomplete"],
   );
   assert.equal(report.assessment.sufficiencyDecision, "not-made");
+});
+
+test("catalog parity is keyed by techniqueId rather than fixture order", async () => {
+  const shuffled = structuredClone(catalog);
+  shuffled.catalog.methods.reverse();
+  const report = await runBoundedPortfolio({
+    sourceRevision: "test-revision",
+    producedAt: "2026-09-07T21:00:00Z",
+    catalogSnapshot: shuffled,
+  });
+  assert.equal(report.results[0].execution.status, "completed");
+  assert.equal(report.results[0].logical.outcome, "satisfied");
+});
+
+test("a parity violation is retained as evidence instead of thrown", async () => {
+  const corruptingAdapter = (snapshot) => {
+    const adapted = adaptQuoinCatalog(snapshot);
+    adapted.techniques[0].name = "corrupted name";
+    return adapted;
+  };
+  const report = await runBoundedPortfolio({
+    sourceRevision: "test-revision",
+    producedAt: "2026-09-07T21:00:00Z",
+    catalogSnapshot: catalog,
+    catalogAdapter: corruptingAdapter,
+  });
+  assert.equal(report.results[0].execution.status, "completed");
+  assert.equal(report.results[0].logical.outcome, "violated");
+  assert.equal(report.assessment.obligations[0].status, "violated");
+});
+
+test("an adapter exception is retained as a failed TechniqueResult", async () => {
+  const report = await runBoundedPortfolio({
+    sourceRevision: "test-revision",
+    producedAt: "2026-09-07T21:00:00Z",
+    catalogSnapshot: catalog,
+    catalogAdapter() {
+      throw new Error("injected adapter failure");
+    },
+  });
+  assert.deepEqual(
+    report.results.slice(0, 2).map((result) => [
+      result.execution.status,
+      result.logical.outcome,
+    ]),
+    [
+      ["failed", "not-evaluated"],
+      ["failed", "not-evaluated"],
+    ],
+  );
+  assert.deepEqual(
+    report.assessment.obligations.slice(0, 2).map(({ status }) => status),
+    ["failed", "failed"],
+  );
 });

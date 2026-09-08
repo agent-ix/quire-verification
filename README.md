@@ -17,9 +17,12 @@ Quoin catalog export without relocating it; constructs prerequisite-aware task
 plans; and assesses result scope and freshness without storing evidence or
 making sufficiency decisions.
 
-Run the complete dependency-free check with:
+Install the exact locked validator and canonicalization dependencies, then run
+the complete checks with:
 
 ```sh
+npm ci
+npm run validate:fixtures
 npm test
 npm run fixtures
 ```
@@ -31,7 +34,10 @@ its JSON report from standard output with:
 npm run portfolio -- "$(git rev-parse HEAD)" 2026-09-08T02:00:00Z
 ```
 
-That command executes catalog field parity and permutation-invariance checks.
+That command executes catalog field parity keyed by `techniqueId` and
+permutation-invariance checks. A check violation or execution failure is
+retained as its own `TechniqueResult`, so the report remains available for
+assessment.
 It also emits an `inspection` result whose execution status remains `not-run`
 until a verification owner records the required human disposition.
 

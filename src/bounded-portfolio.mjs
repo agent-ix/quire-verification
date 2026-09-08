@@ -1,29 +1,46 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { performance } from "node:perf_hooks";
 
 import { adaptQuoinCatalog } from "./catalog-adapter.mjs";
-import { CONTRACT_VERSION, exactValue } from "./contracts.mjs";
+import {
+  CONTRACT_VERSION,
+  jcsEqual,
+  jcsSha256,
+  requireString,
+  validateTechniqueResult,
+} from "./contracts.mjs";
 import { assessEvidence } from "./evidence.mjs";
 import { buildVerificationPlan } from "./planner.mjs";
 
-export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
-  const catalog = JSON.parse(
+export async function runBoundedPortfolio({
+  sourceRevision,
+  producedAt,
+  catalogSnapshot,
+  catalogAdapter = adaptQuoinCatalog,
+}) {
+  requireString(sourceRevision, "sourceRevision");
+  requireString(producedAt, "producedAt");
+  if (!Number.isFinite(Date.parse(producedAt))) {
+    throw new TypeError("producedAt must be an ISO timestamp");
+  }
+  if (typeof catalogAdapter !== "function") {
+    throw new TypeError("catalogAdapter must be a function");
+  }
+  const catalog = catalogSnapshot ?? JSON.parse(
     await readFile(
       new URL("../fixtures/quoin-catalog-export.json", import.meta.url),
       "utf8",
     ),
   );
   const profile = "quire-verification/local-catalog-portfolio-v1";
-  const sourceDigest = digest(
-    JSON.stringify({
-      sourceRevision,
-      catalogRevision: catalog.source.quoinRevision,
-      moduleRevision: catalog.source.moduleRevision,
-    }),
-  );
+  const sourceDigest = jcsSha256({
+    sourceRevision,
+    catalogRevision: catalog.source.quoinRevision,
+    moduleRevision: catalog.source.moduleRevision,
+    catalog: catalog.catalog,
+  });
   const ref = (identity, revision = sourceRevision) => ({
     authority: "github.com/agent-ix/quire-verification",
     identity,
@@ -157,63 +174,32 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
     budget: { wallClockSeconds: 10, parallelism: 1 },
   });
 
-  const unitStart = performance.now();
-  const baseline = adaptQuoinCatalog(catalog);
-  if (!baseline.qualified || baseline.techniques.length !== catalog.catalog.methods.length) {
-    throw new Error("catalog parity precondition failed");
-  }
-  for (const [index, technique] of baseline.techniques.entries()) {
-    const method = catalog.catalog.methods[index];
-    if (
-      technique.techniqueId !== method.id ||
-      technique.name !== method.name ||
-      technique.class !== method.class ||
-      technique.purpose !== method.definition ||
-      technique.evidenceKind !== method.evidenceKind ||
-      exactValue(technique.applicability) !== exactValue(method.applicability) ||
-      exactValue(technique.legacyToolingHints) !== exactValue(method.tooling) ||
-      technique.sourceModule !== method.moduleName
-    ) {
-      throw new Error(`catalog field parity failed for ${method.id}`);
-    }
-  }
-  const unitMilliseconds = performance.now() - unitStart;
-
-  const metamorphicStart = performance.now();
-  const reversed = structuredClone(catalog);
-  reversed.catalog.methods.reverse();
-  const rotated = structuredClone(catalog);
-  rotated.catalog.methods.push(rotated.catalog.methods.shift());
-  const expected = exactValue(baseline.techniques);
-  if (
-    exactValue(adaptQuoinCatalog(reversed).techniques) !== expected ||
-    exactValue(adaptQuoinCatalog(rotated).techniques) !== expected
-  ) {
-    throw new Error("catalog adaptation changed under input permutation");
-  }
-  const metamorphicMilliseconds = performance.now() - metamorphicStart;
+  const parity = observeTechnique(() => checkCatalogParity(catalog, catalogAdapter));
+  const permutation = observeTechnique(() =>
+    checkPermutationInvariance(catalog, catalogAdapter),
+  );
+  const unitMilliseconds = parity.elapsedMilliseconds;
+  const metamorphicMilliseconds = permutation.elapsedMilliseconds;
 
   const evidenceInventory = properties;
   const results = [
-    successfulResult({
+    observedResult({
       property: evidenceInventory[0],
       techniqueId: "unit-testing",
       resultId: "RESULT-LOCAL-UNIT",
       producedAt,
       sourceRevision,
       runRef,
-      milliseconds: unitMilliseconds,
-      detail: `checked ${baseline.techniques.length} method definitions`,
+      observation: parity,
     }),
-    successfulResult({
+    observedResult({
       property: evidenceInventory[1],
       techniqueId: "metamorphic-testing",
       resultId: "RESULT-LOCAL-METAMORPHIC",
       producedAt,
       sourceRevision,
       runRef,
-      milliseconds: metamorphicMilliseconds,
-      detail: "checked reversed and rotated catalog orders",
+      observation: permutation,
     }),
     incompleteManualResult({
       property: evidenceInventory[2],
@@ -222,6 +208,7 @@ export async function runBoundedPortfolio({ sourceRevision, producedAt }) {
       runRef,
     }),
   ];
+  results.forEach(validateTechniqueResult);
   return {
     schemaVersion: "quire-verification/local-portfolio-report/v1",
     claimLimit:
@@ -278,16 +265,16 @@ function selection(propertyId, techniqueId, priority) {
   };
 }
 
-function successfulResult({
+function observedResult({
   property,
   techniqueId,
   resultId,
   producedAt,
   sourceRevision,
   runRef,
-  milliseconds,
-  detail,
+  observation,
 }) {
+  const completed = observation.executionStatus === "completed";
   return resultBase({
     property,
     techniqueId,
@@ -295,12 +282,24 @@ function successfulResult({
     producedAt,
     sourceRevision,
     runRef,
-    execution: { status: "completed", detail, elapsedMilliseconds: milliseconds },
-    logical: { outcome: "satisfied" },
+    execution: {
+      status: observation.executionStatus,
+      detail: observation.detail,
+      elapsedMilliseconds: observation.elapsedMilliseconds,
+    },
+    logical: {
+      outcome: completed
+        ? observation.passed
+          ? "satisfied"
+          : "violated"
+        : "not-evaluated",
+    },
     activation: { status: "not-required" },
     participation: { status: "complete", participants: ["catalog-adapter"] },
     assumptions: [{ assumptionId: "pinned-source-fixture", status: "met" }],
-    adequacy: { status: "adequate", observations: [detail] },
+    adequacy: completed
+      ? { status: "adequate", observations: [observation.detail] }
+      : { status: "not-assessed", observations: [] },
   });
 }
 
@@ -371,6 +370,92 @@ function resultBinding({ planId, taskId, runRef }) {
   };
 }
 
-function digest(value) {
-  return `sha256:${createHash("sha256").update(value).digest("hex")}`;
+function observeTechnique(check) {
+  const started = performance.now();
+  try {
+    const observation = check();
+    return {
+      executionStatus: "completed",
+      passed: observation.passed,
+      detail: observation.detail,
+      elapsedMilliseconds: performance.now() - started,
+    };
+  } catch (error) {
+    return {
+      executionStatus: "failed",
+      passed: false,
+      detail: error instanceof Error ? error.message : String(error),
+      elapsedMilliseconds: performance.now() - started,
+    };
+  }
+}
+
+function checkCatalogParity(catalog, catalogAdapter) {
+  const adapted = catalogAdapter(catalog);
+  const methods = catalog.catalog.methods;
+  const sourceById = uniqueBy(methods, (method) => method.id, "source method");
+  const adaptedById = uniqueBy(
+    adapted.techniques,
+    (technique) => technique.techniqueId,
+    "adapted technique",
+  );
+  const failures = [];
+  if (!adapted.qualified) failures.push("adapted catalog is unqualified");
+  for (const [techniqueId, method] of sourceById) {
+    const technique = adaptedById.get(techniqueId);
+    if (!technique) {
+      failures.push(`missing adapted technique ${techniqueId}`);
+      continue;
+    }
+    const expected = {
+      techniqueId: method.id,
+      name: method.name,
+      class: method.class,
+      purpose: method.definition,
+      evidenceKind: method.evidenceKind,
+      applicability: method.applicability,
+      legacyToolingHints: method.tooling,
+      sourceModule: method.moduleName,
+    };
+    const actual = Object.fromEntries(
+      Object.keys(expected).map((field) => [field, technique[field]]),
+    );
+    if (!jcsEqual(actual, expected)) failures.push(`field mismatch for ${techniqueId}`);
+  }
+  for (const techniqueId of adaptedById.keys()) {
+    if (!sourceById.has(techniqueId)) failures.push(`unexpected adapted technique ${techniqueId}`);
+  }
+  return failures.length === 0
+    ? { passed: true, detail: `checked ${sourceById.size} method definitions by techniqueId` }
+    : { passed: false, detail: failures.join("; ") };
+}
+
+function checkPermutationInvariance(catalog, catalogAdapter) {
+  const baseline = catalogAdapter(catalog).techniques;
+  const reversed = structuredClone(catalog);
+  reversed.catalog.methods.reverse();
+  const rotated = structuredClone(catalog);
+  if (rotated.catalog.methods.length > 0) {
+    rotated.catalog.methods.push(rotated.catalog.methods.shift());
+  }
+  const passed =
+    jcsEqual(catalogAdapter(reversed).techniques, baseline) &&
+    jcsEqual(catalogAdapter(rotated).techniques, baseline);
+  return {
+    passed,
+    detail: passed
+      ? "checked reversed and rotated catalog orders"
+      : "catalog adaptation changed under input permutation",
+  };
+}
+
+function uniqueBy(values, key, label) {
+  if (!Array.isArray(values)) throw new TypeError(`${label}s must be an array`);
+  const byKey = new Map();
+  for (const value of values) {
+    const id = key(value);
+    if (byKey.has(id)) throw new Error(`duplicate ${label} ID ${id}`);
+    byKey.set(id, value);
+  }
+  return byKey;
 }

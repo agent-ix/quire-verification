@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { createHash } from "node:crypto";
-
 import {
   CONTRACT_VERSION,
-  canonicalJson,
+  jcsCanonicalize,
+  jcsSha256,
   requireRecord,
   requireString,
   validateArtifactRef,
@@ -38,9 +37,7 @@ export function adaptQuoinCatalog(snapshot) {
         : [],
       sourceModule: requireString(method.moduleName, `${techniqueId}.moduleName`),
       sourceRef: source.sourceRef,
-      definitionDigest: `sha256:${createHash("sha256")
-        .update(canonicalJson(method))
-        .digest("hex")}`,
+      definitionDigest: jcsSha256(method),
     };
     validateTechniqueDefinition(definition);
     return definition;
@@ -69,7 +66,7 @@ export function adaptQuoinCatalog(snapshot) {
       effect: "available-definitions-preserved; snapshot-unqualified",
     });
   }
-  diagnostics.sort((a, b) => compare(canonicalJson(a), canonicalJson(b)));
+  diagnostics.sort((a, b) => compare(jcsCanonicalize(a), jcsCanonicalize(b)));
 
   return {
     contractVersion: CONTRACT_VERSION,
