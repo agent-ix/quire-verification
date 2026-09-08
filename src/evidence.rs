@@ -5,7 +5,7 @@
 
 use std::collections::BTreeSet;
 
-use chrono::{DateTime, FixedOffset};
+use chrono::{DateTime, Datelike, FixedOffset, TimeDelta};
 use serde_json::{Value, json};
 
 use crate::contracts::{
@@ -326,20 +326,75 @@ fn is_stale(
     result: &Value,
     as_of: DateTime<FixedOffset>,
 ) -> Result<bool, VerificationError> {
-    if let Some(valid_until) = result.get("validUntil").and_then(Value::as_str) {
-        return Ok(as_of > parse_timestamp(valid_until, "result.validUntil")?);
-    }
-    let Some(max_age) = property
-        .pointer("/freshness/maxAgeSeconds")
-        .and_then(Value::as_i64)
-    else {
-        return Ok(false);
-    };
     let produced = parse_timestamp(
         string_field(result, "producedAt", "result")?,
         "result.producedAt",
     )?;
-    Ok(as_of.signed_duration_since(produced).num_seconds() > max_age)
+    if produced > as_of {
+        return Err(VerificationError::new(
+            VerificationErrorCode::InvalidTemporalOrder,
+            "result production time is later than assessment time",
+        )
+        .with_context("assessment_time", as_of.to_string())
+        .with_context("produced_at", produced.to_string()));
+    }
+
+    let max_age = property
+        .pointer("/freshness/maxAgeSeconds")
+        .and_then(Value::as_i64)
+        .ok_or_else(|| {
+            VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "evidence obligation has no valid maximum age",
+            )
+        })?;
+    let age = TimeDelta::try_seconds(max_age).ok_or_else(|| {
+        VerificationError::new(
+            VerificationErrorCode::InvalidTimestamp,
+            "maximum age cannot be represented as a timestamp duration",
+        )
+        .with_context("max_age_seconds", max_age.to_string())
+    })?;
+    let age_expiry = produced.checked_add_signed(age).ok_or_else(|| {
+        VerificationError::new(
+            VerificationErrorCode::InvalidTimestamp,
+            "maximum age produces an expiry outside the timestamp domain",
+        )
+        .with_context("max_age_seconds", max_age.to_string())
+        .with_context("produced_at", produced.to_string())
+    })?;
+    if !(0..=9999).contains(&age_expiry.year()) {
+        return Err(VerificationError::new(
+            VerificationErrorCode::InvalidTimestamp,
+            "maximum age produces an expiry outside the RFC 3339 year domain",
+        )
+        .with_context("expiry", age_expiry.to_string()));
+    }
+
+    let effective_expiry = if let Some(valid_until) = result.get("validUntil") {
+        let valid_until = parse_timestamp(
+            valid_until.as_str().ok_or_else(|| {
+                VerificationError::new(
+                    VerificationErrorCode::InvalidTimestamp,
+                    "result.validUntil is not a timestamp string",
+                )
+            })?,
+            "result.validUntil",
+        )?;
+        if valid_until < produced {
+            return Err(VerificationError::new(
+                VerificationErrorCode::InvalidTemporalOrder,
+                "result validity ends before result production",
+            )
+            .with_context("produced_at", produced.to_string())
+            .with_context("valid_until", valid_until.to_string()));
+        }
+        std::cmp::min(age_expiry, valid_until)
+    } else {
+        age_expiry
+    };
+
+    Ok(as_of > effective_expiry)
 }
 
 fn result_view(

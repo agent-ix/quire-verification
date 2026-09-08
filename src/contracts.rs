@@ -34,6 +34,8 @@ pub enum VerificationErrorCode {
     InvalidInput,
     /// A timestamp is not valid RFC 3339.
     InvalidTimestamp,
+    /// Timestamp ordering makes the evidence temporally impossible.
+    InvalidTemporalOrder,
     /// Input exceeded the serialized byte limit.
     JsonDocumentTooLarge,
     /// Input exceeded the JSON nesting limit.
@@ -81,6 +83,7 @@ impl VerificationErrorCode {
         match self {
             Self::InvalidInput => "invalid_input",
             Self::InvalidTimestamp => "invalid_timestamp",
+            Self::InvalidTemporalOrder => "invalid_temporal_order",
             Self::JsonDocumentTooLarge => "json_document_too_large",
             Self::JsonNestingTooDeep => "json_nesting_too_deep",
             Self::JsonArrayTooLarge => "json_array_too_large",
@@ -109,6 +112,7 @@ impl VerificationErrorCode {
         &[
             Self::InvalidInput,
             Self::InvalidTimestamp,
+            Self::InvalidTemporalOrder,
             Self::JsonDocumentTooLarge,
             Self::JsonNestingTooDeep,
             Self::JsonArrayTooLarge,

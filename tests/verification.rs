@@ -859,6 +859,205 @@ fn tc_015_retains_independent_findings_native_refs_and_ownership() {
     );
 }
 
+fn one_result_packet() -> Value {
+    let source = fixture("results.json");
+    json!({
+        "schemaVersion": source["schemaVersion"],
+        "asOf": "2026-09-01T01:00:00Z",
+        "inventory": [source["inventory"][0].clone()],
+        "results": [source["results"][0].clone()],
+    })
+}
+
+fn assessment_status(packet: &Value) -> Value {
+    assess_evidence(packet).expect("valid assessment")["obligations"][0]["status"].clone()
+}
+
+#[trace("TC-032", "FR-018-AC-1", "FR-018-AC-2")]
+#[test]
+fn tc_032_uses_the_earliest_expiry_and_instant_boundaries() {
+    let mut result_limit_first = one_result_packet();
+    result_limit_first["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    result_limit_first["results"][0]["validUntil"] = json!("2026-09-01T01:00:00Z");
+    result_limit_first["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(7200);
+    assert_eq!(assessment_status(&result_limit_first), "supported");
+    result_limit_first["asOf"] = json!("2026-09-01T01:00:00.000000001Z");
+    assert_eq!(assessment_status(&result_limit_first), "stale");
+
+    let mut obligation_limit_first = one_result_packet();
+    obligation_limit_first["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    obligation_limit_first["results"][0]["validUntil"] = json!("2026-09-01T03:00:00Z");
+    obligation_limit_first["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(3600);
+    obligation_limit_first["asOf"] = json!("2026-09-01T02:00:00+01:00");
+    assert_eq!(assessment_status(&obligation_limit_first), "supported");
+    obligation_limit_first["asOf"] = json!("2026-09-01T01:00:00.000000001Z");
+    assert_eq!(assessment_status(&obligation_limit_first), "stale");
+
+    let mut zero_age = one_result_packet();
+    zero_age["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    zero_age["results"][0]
+        .as_object_mut()
+        .expect("result object")
+        .remove("validUntil");
+    zero_age["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(0);
+    zero_age["asOf"] = json!("2026-09-01T00:00:00Z");
+    assert_eq!(assessment_status(&zero_age), "supported");
+    zero_age["asOf"] = json!("2026-09-01T00:00:00.000000001Z");
+    assert_eq!(assessment_status(&zero_age), "stale");
+}
+
+#[trace("TC-032", "FR-018-AC-3", "FR-018-AC-4")]
+#[test]
+fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
+    let mut future = one_result_packet();
+    future["results"][0]["producedAt"] = json!("2026-09-01T01:00:00.000000001Z");
+    assert_eq!(
+        assess_evidence(&future)
+            .expect_err("future evidence must fail")
+            .code(),
+        VerificationErrorCode::InvalidTemporalOrder
+    );
+
+    let mut reversed = one_result_packet();
+    reversed["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    reversed["results"][0]["validUntil"] = json!("2026-08-31T23:59:59Z");
+    assert_eq!(
+        assess_evidence(&reversed)
+            .expect_err("validity before production must fail")
+            .code(),
+        VerificationErrorCode::InvalidTemporalOrder
+    );
+
+    let mut missing_age = one_result_packet();
+    missing_age["inventory"][0]
+        .as_object_mut()
+        .expect("obligation object")
+        .remove("freshness");
+    assert_eq!(
+        assess_evidence(&missing_age)
+            .expect_err("missing maximum age must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut planning_only = fixture("portfolio.json")["planRequest"].clone();
+    planning_only["properties"][0]
+        .as_object_mut()
+        .expect("property object")
+        .remove("freshness");
+    build_verification_plan(&planning_only)
+        .expect("planning property is not yet an evidence obligation");
+
+    let mut unsafe_age = one_result_packet();
+    unsafe_age["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(9_007_199_254_740_992_u64);
+    assert_eq!(
+        assess_evidence(&unsafe_age)
+            .expect_err("unsafe integer maximum age must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut negative_age = one_result_packet();
+    negative_age["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(-1);
+    assert_eq!(
+        assess_evidence(&negative_age)
+            .expect_err("negative maximum age must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+
+    let mut safe_integer_limit = one_result_packet();
+    safe_integer_limit["results"][0]
+        .as_object_mut()
+        .expect("result object")
+        .remove("validUntil");
+    safe_integer_limit["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    safe_integer_limit["inventory"][0]["freshness"]["maxAgeSeconds"] =
+        json!(9_007_199_254_740_991_u64);
+    assert_eq!(
+        assess_evidence(&safe_integer_limit)
+            .expect_err("unrepresentable duration must fail after schema acceptance")
+            .code(),
+        VerificationErrorCode::InvalidTimestamp
+    );
+
+    let mut malformed = one_result_packet();
+    malformed["asOf"] = json!("not-a-timestamp");
+    assert_eq!(
+        assess_evidence(&malformed)
+            .expect_err("malformed assessment time must fail")
+            .code(),
+        VerificationErrorCode::InvalidTimestamp
+    );
+
+    let mut overflow = one_result_packet();
+    overflow["results"][0]["producedAt"] = json!("9999-12-31T23:59:59Z");
+    overflow["results"][0]
+        .as_object_mut()
+        .expect("result object")
+        .remove("validUntil");
+    overflow["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(1);
+    overflow["asOf"] = json!("9999-12-31T23:59:59Z");
+    assert_eq!(
+        assess_evidence(&overflow)
+            .expect_err("expiry outside RFC 3339 must fail")
+            .code(),
+        VerificationErrorCode::InvalidTimestamp
+    );
+}
+
+#[trace("TC-032", "FR-018-AC-5")]
+#[test]
+fn tc_032_stale_results_retain_every_independent_finding() {
+    let mut stale_with_findings = one_result_packet();
+    stale_with_findings["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
+    stale_with_findings["results"][0]["validUntil"] = json!("2026-09-01T01:00:00Z");
+    stale_with_findings["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(7200);
+    stale_with_findings["asOf"] = json!("2026-09-01T01:00:00.000000001Z");
+    stale_with_findings["results"][0]["logical"]["outcome"] = json!("violated");
+    stale_with_findings["results"][0]["participation"] = json!({
+        "status": "partial",
+        "participants": ["parser"],
+        "missingParticipants": ["serializer"]
+    });
+    stale_with_findings["results"][0]["assumptions"] =
+        json!([{"assumptionId": "fixture-inputs-synthetic", "status": "not-met"}]);
+    let assessment = assess_evidence(&stale_with_findings).expect("stale assessment");
+    let obligation = &assessment["obligations"][0];
+    assert_eq!(obligation["status"], "stale");
+    assert_eq!(
+        obligation["gaps"]
+            .as_array()
+            .expect("gaps")
+            .iter()
+            .map(|gap| gap["kind"].as_str().expect("gap kind"))
+            .collect::<Vec<_>>(),
+        [
+            "freshness-expired",
+            "assumption-unmet",
+            "logical-violation",
+            "partial-participation"
+        ]
+    );
+    assert_eq!(
+        obligation["nativeArtifacts"],
+        stale_with_findings["results"][0]["nativeArtifacts"]
+    );
+    for field in [
+        "execution",
+        "logical",
+        "activation",
+        "participation",
+        "assumptions",
+        "adequacy",
+        "provenance",
+        "nativeArtifacts",
+    ] {
+        assert_eq!(
+            obligation[field], stale_with_findings["results"][0][field],
+            "{field}"
+        );
+    }
+}
+
 #[trace("TC-016", "FR-008-AC-1", "FR-008-AC-2", "NFR-001-AC-1")]
 #[test]
 fn tc_016_matches_rfc_8785_canonicalization() {

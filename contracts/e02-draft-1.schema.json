@@ -124,10 +124,23 @@
         "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
         "dependencyClosure": { "type": "string", "minLength": 1 },
         "executionScope": { "type": "object" },
+        "freshness": { "$ref": "#/$defs/Freshness" },
         "resultBinding": { "$ref": "#/$defs/ResultBinding" },
         "input": { "$ref": "#/$defs/Input" }
       },
       "additionalProperties": true
+    },
+    "Freshness": {
+      "type": "object",
+      "required": ["maxAgeSeconds"],
+      "properties": {
+        "maxAgeSeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
     },
     "ResultBinding": {
       "type": "object",
@@ -148,7 +161,7 @@
         { "$ref": "#/$defs/PropertyInventoryItem" },
         {
           "type": "object",
-          "required": ["techniqueId", "resultBinding"],
+          "required": ["techniqueId", "resultBinding", "freshness"],
           "properties": {
             "techniqueId": { "type": "string", "minLength": 1 },
             "resultBinding": { "$ref": "#/$defs/ResultBinding" }
