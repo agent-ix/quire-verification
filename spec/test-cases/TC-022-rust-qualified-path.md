@@ -10,8 +10,9 @@ relationships:
 
 ## Description
 
-Verify executable repository code is Rust, unsafe code is forbidden, and every
-required Rust quality gate passes.
+Verify executable repository code is Rust, unsafe code is forbidden, every
+required Rust quality gate passes, and maintained toolchain/dependency guidance
+describes the current Rust implementation.
 
 ## Test Procedure
 
@@ -22,11 +23,16 @@ Run `quire coverage --scope . --json` and confirm acceptance-evidence tests use
 the imported bare `#[trace(...)]` attribute from `ix-trace-rs`. On a clean CI
 runner with no cross-repository credential, resolve the repository-contained
 trace crate snapshot and verify its recorded upstream revision before running
-the Rust gates.
+the Rust gates. Read `AGENTS.md` and `LICENSE-DECISION.md`; require an available
+Cargo gate and the current Rust dependency inventory, and reject claims that a
+removed npm manifest or JavaScript package remains current implementation
+evidence.
 
 ## Expected Results
 
 No JavaScript or TypeScript executable source remains, no unsafe code compiles,
 all four Rust gates exit successfully, and compiler-checked trace markers back
 every claimed matrix row. The clean runner obtains the exact reviewed trace
-macro source without private dependency authentication.
+macro source without private dependency authentication. Maintained contributor
+and license guidance names the implemented Cargo workflow and Rust dependencies
+without stale npm or JavaScript implementation claims.
