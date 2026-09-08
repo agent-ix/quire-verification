@@ -3,7 +3,7 @@ id: TC-025
 title: "Retain authored policy and reject ordinal scoring"
 type: TC
 relationships:
-  - target: "ix://agent-ix/quire-verification/FR-010"
+  - target: "ix://agent-ix/quire-verification/FR-012"
     type: "verifies"
 ---
 # TC-025: Retain authored policy and reject ordinal scoring

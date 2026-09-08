@@ -85,7 +85,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-007 | Preserve independent result findings | Implemented; verified |
 | FR-008 | Canonicalize digest and identity inputs with JCS | Implemented; verified |
 | FR-009 | Retain bounded portfolio failures as results | Implemented; verified |
-| FR-010 | Preserve qualified selection semantics | Specified; pending implementation |
+| FR-010 | Keep applicability and readiness independent | Specified; pending implementation |
+| FR-011 | Emit authored or unknown classification | Specified; pending implementation |
+| FR-012 | Preserve authored prioritization | Specified; pending implementation |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |

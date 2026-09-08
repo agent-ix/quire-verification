@@ -21,6 +21,12 @@ relationships:
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/FR-009"
     type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-010"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-011"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-012"
+    type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-001"
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-002"
@@ -53,7 +59,7 @@ exchange versioned JSON at the boundary.
 |----|----------|------------|
 | StR-001-VC-1 | All repository-owned executable source, command-line tools, and tests are Rust and pass the required Rust quality gates. | Test (TC-022) |
 | StR-001-VC-2 | Evidence with a foreign, stale, ambiguous, failed, incomplete, or otherwise adverse binding is never reported as supported. | Test (TC-012, TC-013, TC-014, TC-015) |
-| StR-001-VC-3 | The Rust implementation preserves the complete versioned contract, fixture, catalog, plan, assessment, and bounded-portfolio behavior. | Demonstration (TC-001..TC-023) |
+| StR-001-VC-3 | The Rust implementation preserves the complete versioned contract, fixture, catalog, plan, assessment, and bounded-portfolio behavior. | Demonstration (TC-001..TC-025) |
 
 ## Stakeholders
 

@@ -5,6 +5,8 @@ type: TC
 relationships:
   - target: "ix://agent-ix/quire-verification/FR-010"
     type: "verifies"
+  - target: "ix://agent-ix/quire-verification/FR-011"
+    type: "verifies"
 ---
 # TC-024: Keep applicability readiness and classification independent
 
@@ -20,6 +22,7 @@ Build plans for applicable, not-applicable, and unknown selections with a ready
 capability, then repeat an applicable selection with its capability absent.
 Include one property with an authored classification and one whose
 classification is omitted.
+Repeat validation with an explicitly empty classification.
 
 ## Expected Results
 
@@ -27,3 +30,4 @@ Each task retains the selected applicability, readiness changes only with the
 capability/prerequisite state, invocation requires both applicable and ready,
 the authored classification remains byte-for-byte unchanged, and the omitted
 classification becomes `unknown`.
+The explicitly empty classification is rejected.
