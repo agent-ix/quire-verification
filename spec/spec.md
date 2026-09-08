@@ -15,13 +15,13 @@ standards_alignment:
   - rfc-8785
 ---
 # Master Requirements Specification
-## Quire Verification Compatibility, Registry Qualification, and Native Planning
+## Quire Verification Compatibility, Native Planning, and Evidence Assessment
 
 ## 1. Purpose
 
 This specification defines the observable behavior of the private E02
-compatibility boundary, the VP01 registry/policy qualification slice, and the
-VP02 native planning contract. It
+compatibility boundary, the VP01 registry/policy qualification slice, the VP02
+native planning contract, and the VP03 evidence-assessment contract. It
 gives maintainers the reviewed requirements baseline for the code, fixtures,
 retained reports, and continuous-integration checks in this repository.
 
@@ -42,6 +42,8 @@ retained reports, and continuous-integration checks in this repository.
 - Strict consumption of an independently accepted shared FS02/FS05 reference packet.
 - A heterogeneous parser portfolio plan with property, differential, and manual work.
 - Exact evidence identity, scope, freshness, and result-state assessment.
+- Conservative combination of result and obligation freshness bounds.
+- Explicit oracle and observation dependence without aggregate scoring.
 - RFC 8785 JSON Canonicalization Scheme for digests and structured equality.
 - A bounded local catalog portfolio that retains its own failures as results.
 - Fixture validation, retained reports, and Rust repository CI checks for this slice.
@@ -52,7 +54,7 @@ retained reports, and continuous-integration checks in this repository.
 - Acceptance of E02, VP01, or VP02 before their recorded prerequisite and disposition gates close.
 - Publication of these private provisional contracts as cross-repository authority.
 - Execution of a native parser, model checker, fuzzer, fault injector, or production system.
-- A domain-subject portfolio, correlated-oracle evidence, or aggregate producer portfolio.
+- A domain-subject portfolio or aggregate producer portfolio.
 - A human acceptance disposition or an automated evidence-sufficiency decision.
 - A duplicate evidence store or migration of Quoin-owned evidence.
 - Backward compatibility for the rejected JavaScript module API, npm package, scripts, or runtime behavior outside the versioned JSON contracts and fixtures.
@@ -101,6 +103,8 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-014 | Construct exact native runner requests | Specified; pending implementation |
 | FR-015 | Preserve role-specific verification inputs | Specified; pending implementation |
 | FR-016 | Read shared references strictly | Specified; blocked on FS02/FS05 amendment |
+| FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FS05 role amendment |
+| FR-018 | Enforce every evidence freshness bound | Specified; pending implementation |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -127,13 +131,14 @@ an independent Rust consumer.
 ## 8. Lifecycle and Change Control
 
 This specification describes a private compatibility slice implemented and
-verified in Rust, the VP01 registry/policy qualification increment, and the
-specified VP02 planning increment. VP01 acceptance remains gated on E02 and a
-recorded owner/reviewer disposition. VP02 acceptance remains gated on VP01 and
-FS02. FR-016 and IT-002 cannot proceed until the shared owner resolves B's
-recorded JCS-domain and reference-role findings. Any accepted breaking draft-2
-transition must update requirements, tests, fixtures, and retained reports
-without reinterpreting draft-1 evidence.
+verified in Rust, the VP01 registry/policy qualification increment, the specified
+VP02 planning increment, and the specified VP03 evidence-assessment increment.
+VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
+VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
+E02 and FS05. FR-016, FR-017, and IT-002 cannot proceed until the shared owner
+resolves B's recorded canonical-domain and reference-role findings. Any accepted
+breaking draft-2 transition must update requirements, tests, fixtures, and
+retained reports without reinterpreting draft-1 evidence.
 
 ## 9. References
 

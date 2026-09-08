@@ -11,6 +11,10 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-008"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-017"
+    type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-018"
+    type: "traces_to"
 ---
 # US-002: Assess evidence without false attribution
 
@@ -47,5 +51,6 @@ evidence into an unsupported assurance claim.
 
 ## Traceability (Informative)
 
-The story drives exact matching, independent finding preservation, and canonical
-structured comparison.
+The story drives exact matching, independent finding preservation, canonical
+structured comparison, conservative freshness, and explicit oracle dependence
+without aggregate scoring.

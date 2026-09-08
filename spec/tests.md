@@ -8,10 +8,11 @@ type: TestMatrix
 ## Overview
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
-VP01 qualification, and VP02 native-planning slice to a concrete test case. The
-26 implemented cases run in Rust through compiler-checked `ix-trace-rs` markers;
-TC-027 through TC-031 remain pending until their reviewed implementation and shared
-reference dependency are ready. The rejected JavaScript prototype is not evidence.
+VP01 qualification, VP02 native-planning, and VP03 evidence-assessment slices to
+a concrete test case. The 26 implemented cases run in Rust through compiler-checked
+`ix-trace-rs` markers; TC-027 through TC-033 remain pending until their reviewed
+implementation and shared-reference dependencies are ready. The rejected
+JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
 
@@ -33,6 +34,7 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
+| US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | 🚧 Planned |
 
 ### Functional Requirement Coverage
 
@@ -54,6 +56,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
 | FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
 | FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
+| FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FS05 role amendment |
+| FR-018 | FR-018-AC-1..5 | TC-032 | 🚧 Planned |
 
 ### Non-Functional Requirement Coverage
 
@@ -100,6 +104,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
+| TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | 🚧 Planned |
+| TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
 
 ## Option Permutation Matrix
 
@@ -117,7 +123,6 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-014 | completed | satisfied | adequate | supported |
 | TC-014 | completed | satisfied | not activated | untriggered |
 | TC-014 | completed | unknown | inadequate | inadequate |
-| TC-014 | failed | not-evaluated | not assessed | failed |
 | TC-015 | completed | violated | partial and assumption unmet | all independent gaps retained |
 | TC-026 | required | absent allocation | missing resource | blocked task and setup dependency retained |
 | TC-027 | applicable | ready | complete qualified runner | bounded request and invocation allowed |
@@ -125,6 +130,10 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-030 | parser property | differential relation | manual review | distinct inputs and eligibility retained |
 | TC-029 | supported semantic ref | reordered unique features | exact canonical identity | accepted as the same feature set |
 | TC-029 | supported semantic ref | duplicate feature | exact canonical identity | refused before planning |
+| TC-032 | result expiry earlier | obligation expiry later | exact boundary | fresh at boundary; stale after |
+| TC-032 | result expiry later | obligation expiry earlier | exact boundary | fresh at boundary; stale after |
+| TC-033 | distinct techniques | shared observation | declared independent | correlated finding; no independence claim |
+| TC-033 | distinct techniques | distinct observations | unknown relation | unknown dependence; no aggregate score |
 
 ## Constraint Boundary Tests
 
@@ -139,6 +148,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Result identity uniqueness | Above max | 2 equal result IDs | TC-013 | Reject |
 | Freshness | At limit | Age equal to maximum | TC-014 | Fresh |
 | Freshness | Above limit | Age greater than maximum | TC-014 | Stale |
+| Combined freshness | Exact | Assessment at earliest expiry | TC-032 | Fresh |
+| Combined freshness | Outside | One representable instant after earliest expiry | TC-032 | Stale |
 | JCS numeric domain | Boundary | Finite JSON number | TC-016 | Canonicalize |
 | JCS numeric domain | Outside | NaN or Infinity | TC-017 | Reject |
 | Shared byte digest | Exact | SHA-256 of supplied bytes | TC-029 | Accept selected reference |
@@ -165,6 +176,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | ERR-014 | A non-invocable task carries a runner request | TC-027 | Contract or planner refusal |
 | ERR-015 | An input omits a role or carries a cross-variant field | TC-028 | Closed-variant rejection |
 | ERR-016 | Shared reference has a duplicate key, unknown version or feature, wrong role, or mismatched digest | TC-029, TC-031 | Stable pre-planning refusal |
+| ERR-017 | Result production is in the future or validity precedes production | TC-032 | `invalid_temporal_order` refusal |
+| ERR-018 | Oracle dependence is absent, unknown, shared, or derived | TC-033 | Retain exact dependence finding; make no independence claim |
 
 ## State Transition Coverage
 
@@ -174,6 +187,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Plan readiness | missing prerequisites → blocked | TC-010 | setup tasks emitted |
 | Plan readiness | missing capability → unsupported | TC-010 | unsupported gap emitted |
 | Evidence freshness | within age → beyond age | TC-014 | fresh status becomes stale |
+| Combined freshness | at earliest expiry → after earliest expiry | TC-032 | fresh status becomes stale |
+| Oracle dependence | independent → shared or derived | TC-033 | correlation finding appears without aggregate score |
 | Portfolio execution | check returns false | TC-019 | completed plus violated |
 | Portfolio execution | check throws | TC-019 | failed plus not-evaluated |
 | Human review | no disposition | TC-020 | not-run and incomplete |
@@ -196,6 +211,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | EC-010 | A field from one input variant appears on another | FR-015 | TC-028 | Reader can guess a false unary interpretation |
 | EC-011 | JCS semantic digest is placed in an exact byte-digest field | FR-016 | TC-029 | Unrelated identity domains can be treated as equal |
 | EC-012 | Required feature set is reordered or duplicated | FR-016 | TC-029 | Equivalent sets can fail or duplicate requirements can pass |
+| EC-013 | Result and obligation expiry disagree | FR-018 | TC-032 | A later bound can silently extend stale evidence |
+| EC-014 | Different methods reuse one observation or derived oracle | FR-017 | TC-033 | Correlated outputs can be presented as independent confirmation |
 
 ## Integration Test Matrix
 
@@ -231,8 +248,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 16 | 16 | 0 | 0 | 100% |
+| Unit | 16 | 15 | 0 | 1 | 94% |
 | Integration | 5 | 3 | 0 | 2 | 60% |
-| Property | 8 | 4 | 0 | 4 | 50% |
+| Property | 10 | 6 | 0 | 4 | 60% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 31 | 25 | 0 | 6 | 81% |
+| Overall | 33 | 26 | 0 | 7 | 79% |
