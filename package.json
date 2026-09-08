@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "node --test",
-    "fixtures": "node scripts/render-fixtures.mjs"
+    "fixtures": "node scripts/render-fixtures.mjs",
+    "portfolio": "node scripts/run-bounded-portfolio.mjs"
   }
 }

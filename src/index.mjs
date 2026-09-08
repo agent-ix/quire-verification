@@ -4,3 +4,4 @@ export * from "./contracts.mjs";
 export * from "./catalog-adapter.mjs";
 export * from "./planner.mjs";
 export * from "./evidence.mjs";
+export * from "./bounded-portfolio.mjs";

@@ -24,6 +24,17 @@ npm test
 npm run fixtures
 ```
 
+Run the bounded local portfolio against an exact checkout revision and retain
+its JSON report from standard output with:
+
+```sh
+npm run portfolio -- "$(git rev-parse HEAD)" 2026-09-08T02:00:00Z
+```
+
+That command executes catalog field parity and permutation-invariance checks.
+It also emits an `inspection` result whose execution status remains `not-run`
+until a verification owner records the required human disposition.
+
 After independently checking out the pinned Quoin and module revisions, recheck
 the captured catalog (the Quoin checkout must have its locked development
 dependencies installed):
