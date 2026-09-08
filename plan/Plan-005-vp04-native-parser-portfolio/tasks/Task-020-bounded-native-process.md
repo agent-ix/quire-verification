@@ -2,7 +2,7 @@
 id: Task-020
 title: "Bounded native process executor"
 type: Task
-status: done
+status: in_progress
 track: P
 priority: P0
 relationships:
@@ -16,17 +16,18 @@ relationships:
 Add the Linux Rust child-process boundary for descriptor-admitted executables,
 direct arguments, fresh working directories, declared environments, dedicated
 process groups, finite deadlines, concurrent bounded output capture, typed
-process/protocol failures, group termination, and direct-child reaping.
+process/protocol failures, observed group termination, and direct-child reaping.
 
 ## Subtasks
 
 - [x] Write TC-038 first with controlled Rust child fixtures for every exact and adverse process boundary.
 - [x] Pin the root-relative executable with Linux `openat2` beneath/no-magiclink/no-symlink resolution and launch only its retained descriptor-backed path.
 - [x] Launch a dedicated process group without a shell or inherited environment and drain both streams concurrently.
-- [x] Enforce the accepted deadline and per-stream byte caps, then terminate the group, reap the direct child, and prove no live group member remains on every exceeded bound.
-- [x] Prove pathname replacement cannot substitute admitted bytes and a descendant retaining both pipes cannot escape the deadline.
-- [x] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, and malformed protocol.
-- [x] Bind TC-038 and every NFR-006 criterion through compiler-checked `ix-trace-rs` markers.
+- [ ] Enforce the accepted deadline and per-stream byte caps, then signal the group, reap the direct child, and observe group disappearance within the separate cleanup budget.
+- [ ] Prove pathname replacement cannot substitute admitted bytes and descendants with retained or closed pipes cannot escape the deadline or the containment observation boundary.
+- [ ] Prepare concurrent test candidates as isolated immutable links to the completed Cargo-built fixture, leaving no writable executable handle.
+- [ ] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, malformed protocol, and failed containment observation while retaining the original trigger.
+- [ ] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 
@@ -36,4 +37,5 @@ process/protocol failures, group termination, and direct-child reaping.
 
 - This task can use controlled children before selecting the exact parser candidate.
 - No shell, network service, production invocation, or cross-platform claim is in scope.
+- Reopened after hosted CI run `34277066256` observed `ETXTBSY` fixture launch and a live descendant after the executor returned; reviewed amendment SR-071 through SR-078 governs remediation.
 - Unblocks Task-021.
