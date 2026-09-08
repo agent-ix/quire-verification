@@ -46,7 +46,7 @@ joining its runtime.
 | Non-Rust executable source files under `src/`, `tests/`, and repository CLI targets | 0 | 0 | Inspection (TC-022) |
 | Unsafe Rust blocks | 0 | 0 | Test (TC-022) |
 | Rust quality gates passing | 4 of 4 | 4 of 4 | Test (TC-022) |
-| Rust test trace markers compiled through `ix-trace-rs` | Every test that verifies a matrix row | 100% | Coverage inspection (TC-022) |
+| Rust test trace markers compiled through `ix-trace-rs` and bound by Quire | Every test and every named TC/AC argument that verifies a matrix row | 100% | Coverage inspection (TC-022) |
 | Clean-CI resolution of the reviewed `ix-trace-rs` source | Exact recorded upstream revision, with no cross-repository credential | 1 of 1 clean CI runs | Test (TC-022) |
 | False current toolchain or dependency claims in maintained repository guidance | 0 | 0 | Test (TC-022) |
 
@@ -69,7 +69,7 @@ packages remain current.
 |----|----------|--------------|
 | NFR-004-AC-1 | Governed executable paths contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, and dependency policy checks all exit successfully. | Test (TC-022) |
-| NFR-004-AC-3 | Every Rust test used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker naming its TC and verified acceptance criteria. | Inspection (TC-022) |
+| NFR-004-AC-3 | Every Rust test used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
 | NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from a repository-contained snapshot with recorded upstream revision and no cross-repository credential. | Test (TC-022) |
 | NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` plus `docs/artifact-rights.md` as the current dependency and rights records without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
 

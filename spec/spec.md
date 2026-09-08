@@ -123,9 +123,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
-| NFR-004 | Rust implementation for the qualified path | Implemented; verified |
+| NFR-004 | Rust implementation for the qualified path | Implemented; trace-binding remediation open |
 | NFR-005 | Bounded JSON ingestion | Implemented; verified |
-| NFR-006 | Bound native process execution | Implemented; verified |
+| NFR-006 | Bound native process execution | Implemented; trace-binding remediation open |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 | IT-002 | Independent shared-reference consumer qualification | Specified; blocked on FS02/FS05 amendment |
 | IT-003 | Native parser portfolio execution | Specified; blocked on VP02/VP03 |

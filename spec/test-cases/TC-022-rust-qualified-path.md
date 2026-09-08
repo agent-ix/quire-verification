@@ -20,7 +20,10 @@ Inspect governed paths for JavaScript or TypeScript executable files, then run
 `cargo fmt --check`, `cargo clippy --workspace --all-targets --all-features --
 -D warnings`, `cargo test --workspace --all-features`, and `cargo deny check`.
 Run `quire coverage --scope . --json` and confirm acceptance-evidence tests use
-the imported bare `#[trace(...)]` attribute from `ix-trace-rs`. On a clean CI
+the imported bare `#[trace(...)]` attribute from `ix-trace-rs`, and confirm each
+TC/AC argument in those attributes is discovered and bound. A marker that
+compiles but hides one or more continuation-line arguments from the configured
+Quire Rust trace reader fails this check. On a clean CI
 runner with no cross-repository credential, resolve the repository-contained
 trace crate snapshot and verify its recorded upstream revision before running
 the Rust gates. Read `AGENTS.md` and `LICENSE-DECISION.md`; require an available
@@ -32,7 +35,7 @@ JavaScript package remains current implementation evidence.
 
 No JavaScript or TypeScript executable source remains, no unsafe code compiles,
 all four Rust gates exit successfully, and compiler-checked trace markers back
-every claimed matrix row. The clean runner obtains the exact reviewed trace
+every claimed matrix row and each named acceptance criterion. The clean runner obtains the exact reviewed trace
 macro source without private dependency authentication. Maintained contributor
 and license guidance names the implemented Cargo workflow and Rust dependencies
 through their authoritative inventory and rights records, without stale npm or
