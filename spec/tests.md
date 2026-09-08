@@ -72,7 +72,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
 | NFR-004 | Rust source, quality gates, and maintained toolchain/dependency guidance | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
-| NFR-006 | Native process containment tests | TC-038 | 🚧 Review reopened |
+| NFR-006 | Native process containment tests | TC-038 | ✅ Complete |
 
 ## Test Case Summary
 
@@ -115,7 +115,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
-| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | 🚧 Review reopened |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 
 ## Option Permutation Matrix
 

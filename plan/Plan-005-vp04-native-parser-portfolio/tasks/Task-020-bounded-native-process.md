@@ -2,7 +2,7 @@
 id: Task-020
 title: "Bounded native process executor"
 type: Task
-status: in_progress
+status: done
 track: P
 priority: P0
 relationships:
@@ -23,11 +23,11 @@ process/protocol failures, observed group termination, and direct-child reaping.
 - [x] Write TC-038 first with controlled Rust child fixtures for every exact and adverse process boundary.
 - [x] Pin the root-relative executable with Linux `openat2` beneath/no-magiclink/no-symlink resolution and launch only its retained descriptor-backed path.
 - [x] Launch a dedicated process group without a shell or inherited environment and drain both streams concurrently.
-- [ ] Enforce the accepted deadline and per-stream byte caps, then signal the group, reap the direct child, and observe group disappearance within the separate cleanup budget.
-- [ ] Prove pathname replacement cannot substitute admitted bytes and descendants with retained or closed pipes cannot escape the deadline or the containment observation boundary.
-- [ ] Prepare concurrent test candidates as isolated immutable links to the completed Cargo-built fixture, leaving no writable executable handle.
-- [ ] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, malformed protocol, and failed containment observation while retaining the original trigger.
-- [ ] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers.
+- [x] Enforce the accepted deadline and per-stream byte caps, then signal the group, reap the direct child, and observe group disappearance within the separate cleanup budget.
+- [x] Prove pathname replacement cannot substitute admitted bytes and descendants with retained or closed pipes cannot escape the deadline or the containment observation boundary.
+- [x] Prepare concurrent test candidates as isolated immutable links to the completed Cargo-built fixture, leaving no writable executable handle.
+- [x] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, malformed protocol, and failed containment observation while retaining the original trigger.
+- [x] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 

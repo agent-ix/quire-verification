@@ -21,7 +21,7 @@ relationships:
 
 ### Non-Functional Requirements
 
-- [ ] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, protocol, and observed containment.
+- [x] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, protocol, and observed containment.
 
 ## Dependency Graph
 
@@ -77,9 +77,9 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ## Remaining Work
 
-### Track P: Process primitive (reopened)
+### Track P: Process primitive (complete)
 
-- **P1 = Task-020** Bounded native process executor — Reopened after hosted CI run `34277066256`; SR-071 through SR-078 review the observed-containment amendment at specification revision `743afca`.
+- **P1 = Task-020** Bounded native process executor — Complete at remediation implementation `8d0aa4c`; exact Rust review SR-079 passes at `6762a33` after SR-071 through SR-078 reviewed the observed-containment amendment.
 
 ### Track A: Critical Path (serial, dependency-gated)
 
@@ -102,7 +102,7 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | in_progress |
+| Task-020 | P | NFR-006 | TC-038 | done |
 | Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
 | Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
 | Task-023 | A | FR-021 | TC-037 | blocked |
@@ -110,10 +110,10 @@ external owner disposition ---------------------------------------------------->
 
 ## Coordination Rules
 
-Task-020 is reopened against controlled Rust child fixtures after hosted evidence
-contradicted its termination claim. Tasks 021 through 024 remain blocked until
-Task-020 and their other predecessors and external candidate/role gates clear. B
-does not edit Agent A's parser or shared schema, Agent C's reusable Engineering
-Assurance implementation, Quoin, or Filament. Changes to behavior return through
-QUOIN `/specify` and the owner-selected all-lens `/spec-review` before
-implementation. Every acceptance test uses compiled `ix-trace-rs` markers.
+Task-020 is complete against controlled Rust child fixtures after remediating the
+hosted containment failures. Tasks 021 through 024 remain blocked until their
+other predecessors and external candidate/role gates clear. B does not edit
+Agent A's parser or shared schema, Agent C's reusable Engineering Assurance
+implementation, Quoin, or Filament. Changes to behavior return through QUOIN
+`/specify` and the owner-selected all-lens `/spec-review` before implementation.
+Every acceptance test uses compiled `ix-trace-rs` markers.
