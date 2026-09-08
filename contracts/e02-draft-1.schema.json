@@ -259,16 +259,59 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["taskId", "input", "applicability", "readiness", "dependencies", "invocationAllowed"],
+            "required": ["taskId", "kind", "propertyId", "techniqueId", "input", "applicability", "readiness", "priority", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
             "properties": {
               "taskId": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["verification", "manual-prerequisite"] },
+              "propertyId": { "type": "string", "minLength": 1 },
+              "techniqueId": { "type": "string", "minLength": 1 },
               "input": { "$ref": "#/$defs/Input" },
               "applicability": { "enum": ["applicable", "not-applicable", "unknown"] },
               "readiness": { "enum": ["ready", "blocked", "unsupported"] },
+              "priority": { "enum": ["required", "recommended", "optional"] },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["rule", "value"],
+                  "properties": {
+                    "rule": { "type": "string", "minLength": 1 },
+                    "value": { "type": "string", "minLength": 1 }
+                  },
+                  "additionalProperties": true
+                }
+              },
               "dependencies": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+              "missingPrerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
+              "gaps": { "type": "array", "items": { "type": "object" } },
+              "runnerRequest": {
+                "type": ["object", "null"],
+                "properties": {
+                  "kind": { "type": "string", "minLength": 1 },
+                  "adapterId": { "type": "string", "minLength": 1 },
+                  "adapterVersion": { "type": "string", "minLength": 1 },
+                  "capabilityId": { "type": "string", "minLength": 1 },
+                  "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                  "budget": { "type": ["object", "null"] },
+                  "nativeArtifactInterface": { "type": "object" }
+                },
+                "additionalProperties": true
+              },
               "invocationAllowed": { "type": "boolean" }
             },
             "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "kind": { "const": "verification" } },
+                  "required": ["kind"]
+                },
+                "then": {
+                  "type": "object",
+                  "required": ["reasons", "gaps"],
+                  "properties": { "reasons": true, "gaps": true }
+                }
+              },
               {
                 "if": {
                   "type": "object",
@@ -284,7 +327,7 @@
                 }
               }
             ],
-            "additionalProperties": true
+            "additionalProperties": false
           }
         },
         "evidenceOwner": { "const": "Quoin" },

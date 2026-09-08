@@ -17,6 +17,7 @@ import {
   validateContract,
   validateTechniqueResult,
   validateToolCapability,
+  validateVerificationPlan,
 } from "../src/index.mjs";
 
 const portfolio = JSON.parse(
@@ -109,4 +110,21 @@ test("schema prevents a verdict when execution did not complete", () => {
   const result = structuredClone(results.results[0]);
   result.execution.status = "failed";
   assert.throws(() => validateTechniqueResult(result), /logical|must NOT be valid/);
+});
+
+test("schema closes and validates the complete planner task shape", () => {
+  const plan = buildVerificationPlan(portfolio.planRequest);
+  for (const field of ["kind", "priority", "missingPrerequisites", "runnerRequest"]) {
+    const invalid = structuredClone(plan);
+    delete invalid.tasks[0][field];
+    assert.throws(() => validateVerificationPlan(invalid), new RegExp(field));
+  }
+
+  const unknown = structuredClone(plan);
+  unknown.tasks[0].renamedPriority = unknown.tasks[0].priority;
+  assert.throws(() => validateVerificationPlan(unknown), /additional properties/);
+
+  const wrongType = structuredClone(plan);
+  wrongType.tasks[0].missingPrerequisites = "none";
+  assert.throws(() => validateVerificationPlan(wrongType), /missingPrerequisites/);
 });
