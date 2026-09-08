@@ -40,13 +40,16 @@ joining its runtime.
 | Unsafe Rust blocks | 0 | 0 | Test (TC-022) |
 | Rust quality gates passing | 4 of 4 | 4 of 4 | Test (TC-022) |
 | Rust test trace markers compiled through `ix-trace-rs` | Every test that verifies a matrix row | 100% | Coverage inspection (TC-022) |
+| Clean-CI resolution of the reviewed `ix-trace-rs` source | Exact recorded upstream revision, with no cross-repository credential | 1 of 1 clean CI runs | Test (TC-022) |
 
 ## Verification
 
 The repository gate rejects non-Rust executable source in the governed paths,
 forbids unsafe code at the crate root, formats the crate, compiles every target
 with Clippy warnings denied, runs the complete test suite, and checks dependency
-licenses and advisories with `cargo deny`.
+licenses and advisories with `cargo deny`. The repository records and supplies
+the exact reviewed `ix-trace-rs` source needed by those tests so a clean CI
+runner does not depend on an unrecorded cross-repository credential.
 
 ## Acceptance Criteria
 
@@ -55,6 +58,7 @@ licenses and advisories with `cargo deny`.
 | NFR-004-AC-1 | Governed executable paths contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, and dependency policy checks all exit successfully. | Test (TC-022) |
 | NFR-004-AC-3 | Every Rust test used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker naming its TC and verified acceptance criteria. | Inspection (TC-022) |
+| NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from a repository-contained snapshot with recorded upstream revision and no cross-repository credential. | Test (TC-022) |
 
 ## Dependencies
 

@@ -19,11 +19,14 @@ Inspect governed paths for JavaScript or TypeScript executable files, then run
 `cargo fmt --check`, `cargo clippy --workspace --all-targets --all-features --
 -D warnings`, `cargo test --workspace --all-features`, and `cargo deny check`.
 Run `quire coverage --scope . --json` and confirm acceptance-evidence tests use
-the imported bare `#[trace(...)]` attribute from `ix-trace-rs`.
+the imported bare `#[trace(...)]` attribute from `ix-trace-rs`. On a clean CI
+runner with no cross-repository credential, resolve the repository-contained
+trace crate snapshot and verify its recorded upstream revision before running
+the Rust gates.
 
 ## Expected Results
 
 No JavaScript or TypeScript executable source remains, no unsafe code compiles,
 all four Rust gates exit successfully, and compiler-checked trace markers back
-every claimed matrix row. This procedure remains pending until the Rust
-migration is implemented.
+every claimed matrix row. The clean runner obtains the exact reviewed trace
+macro source without private dependency authentication.
