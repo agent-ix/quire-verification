@@ -294,6 +294,9 @@ export function validateInventoryProperty(value, { requireResultBinding = false 
   } else if (requireResultBinding) {
     throw new TypeError("inventory property.resultBinding must be an object");
   }
+  if (requireResultBinding) {
+    requireString(property.techniqueId, "inventory property.techniqueId");
+  }
   validateInput(property.input, "inventory property.input");
   return property;
 }

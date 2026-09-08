@@ -143,6 +143,19 @@
       },
       "additionalProperties": false
     },
+    "EvidenceObligation": {
+      "allOf": [
+        { "$ref": "#/$defs/PropertyInventoryItem" },
+        {
+          "type": "object",
+          "required": ["techniqueId", "resultBinding"],
+          "properties": {
+            "techniqueId": { "type": "string", "minLength": 1 },
+            "resultBinding": { "$ref": "#/$defs/ResultBinding" }
+          }
+        }
+      ]
+    },
     "ToolCapability": {
       "type": "object",
       "required": ["contractVersion", "kind", "capabilityId", "techniqueId", "qualification", "inputKinds", "profiles", "prerequisites", "runner", "environmentPermissions", "nativeArtifactInterface"],

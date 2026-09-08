@@ -80,6 +80,11 @@ adapter identities and versions. Tool name and method ID alone never match an
 obligation. More than one result for the same exact binding is ambiguous and is
 refused rather than resolved by timestamp or input order.
 
+`PropertyInventoryItem` is the pre-run property shape used by a plan.
+`EvidenceObligation` adds the selected `techniqueId` and required
+`resultBinding` for intake assessment; this prevents a plan property with
+several selected methods from pretending it already identifies one result.
+
 A matching result can still be stale, failed, incomplete, partially
 participating, assumption-invalid, unsupported, untriggered,
 observation-inadequate, violated, or supported. The single `status` field is a

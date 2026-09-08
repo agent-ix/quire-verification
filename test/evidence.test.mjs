@@ -159,6 +159,16 @@ test("rejects duplicate result identities", () => {
   assert.throws(() => assessEvidence(input), /duplicate result id/);
 });
 
+test("requires a task-level result binding on assessed obligations", () => {
+  const input = structuredClone(fixture);
+  delete input.inventory[0].resultBinding;
+  assert.throws(() => assessEvidence(input), /resultBinding/);
+
+  const missingTechnique = structuredClone(fixture);
+  delete missingTechnique.inventory[0].techniqueId;
+  assert.throws(() => assessEvidence(missingTechnique), /techniqueId/);
+});
+
 test("enumerates simultaneous independent result failures", () => {
   const input = structuredClone(fixture);
   input.inventory = [

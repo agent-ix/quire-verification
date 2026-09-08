@@ -58,4 +58,8 @@ test("result intake exposes exact plan, task, run, producer, and adapter binding
       "adapterVersion",
     ),
   );
+  assert.deepEqual(schema.$defs.EvidenceObligation.allOf[1].required, [
+    "techniqueId",
+    "resultBinding",
+  ]);
 });
