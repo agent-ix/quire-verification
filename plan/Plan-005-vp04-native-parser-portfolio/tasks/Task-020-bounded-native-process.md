@@ -2,7 +2,7 @@
 id: Task-020
 title: "Bounded native process executor"
 type: Task
-status: in_progress
+status: done
 track: P
 priority: P0
 relationships:
@@ -27,7 +27,7 @@ process/protocol failures, observed group termination, and direct-child reaping.
 - [x] Prove pathname replacement cannot substitute admitted bytes and descendants with retained or closed pipes cannot escape the deadline or the containment observation boundary.
 - [x] Prepare concurrent test candidates as isolated immutable links to the completed Cargo-built fixture, leaving no writable executable handle.
 - [x] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, malformed protocol, and failed containment observation while retaining the original trigger.
-- [ ] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers whose arguments are all discovered by Quire coverage.
+- [x] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers whose arguments are all discovered by Quire coverage.
 
 ## Deliverables
 
@@ -41,4 +41,6 @@ process/protocol failures, observed group termination, and direct-child reaping.
 - Reopened again after current coverage proved the multiline marker compiled but
   left NFR-006-AC-2 and NFR-006-AC-3 unbound; reviewed amendment SR-081 through
   SR-088 governs this trace-only remediation.
+- Restored after implementation `760bbbd`, 109/159 coverage with all eight
+  NFR-006 criteria backed, and exact Rust review SR-089.
 - Unblocks Task-021.

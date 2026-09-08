@@ -2,7 +2,7 @@
 id: Task-007
 title: "Qualified-path gate"
 type: Task
-status: in_progress
+status: done
 track: Gate
 priority: P0
 relationships:
@@ -28,7 +28,7 @@ exact requested Rust review and gap analysis, and reconcile plan and matrix stat
 
 - [x] Confirm `.mjs`, npm manifests, and JavaScript dependencies were removed by the rewrite.
 - [x] Run format, Clippy with denied warnings, all tests, cargo deny, fixture validation, and Quire validation.
-- [ ] Compile `ix-trace-rs` markers and reconcile every marker argument through `quire coverage --scope . --json` against the test matrix.
+- [x] Compile `ix-trace-rs` markers and reconcile every marker argument through `quire coverage --scope . --json` against the test matrix.
 - [x] Run `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve findings.
 - [x] Prepare completed task and matrix state for the independent Quoin `/gap-analysis` gate.
 - [x] Update all task and test-matrix statuses from actual evidence.
@@ -44,3 +44,5 @@ exact requested Rust review and gap analysis, and reconcile plan and matrix stat
 - Reopened after the full-plan coverage audit showed that one multiline compiled
   marker left NFR-006-AC-2 and NFR-006-AC-3 unbound in Quire. Reviewed amendment
   SR-081 through SR-088 governs the remediation.
+- Restored after implementation `760bbbd` and exact Rust review SR-089 proved
+  all 41 first-party candidates and every NFR-006 acceptance criterion bound.
