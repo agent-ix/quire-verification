@@ -12,6 +12,7 @@ pub mod catalog;
 pub mod contracts;
 pub mod evidence;
 pub mod fixtures;
+pub mod native_process;
 pub mod planner;
 
 mod value;

@@ -9,9 +9,9 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
-bounded-parser-portfolio slices to a concrete test case. The 27 implemented cases
+bounded-parser-portfolio slices to a concrete test case. The 28 implemented cases
 run in Rust through compiler-checked `ix-trace-rs` markers; TC-027 through TC-031
-and TC-033 through TC-038 remain pending until their reviewed implementation and
+and TC-033 through TC-037 remain pending until their reviewed implementation and
 dependencies are ready. The rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
@@ -72,7 +72,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
 | NFR-004 | Rust source and quality gates | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
-| NFR-006 | Native process containment tests | TC-038 | 🚧 Planned |
+| NFR-006 | Native process containment tests | TC-038 | ✅ Complete |
 
 ## Test Case Summary
 
@@ -115,7 +115,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
-| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-7 | 🚧 Planned |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-7 | ✅ Complete |
 
 ## Option Permutation Matrix
 

@@ -74,6 +74,26 @@ pub enum VerificationErrorCode {
     UnhandledFixture,
     /// External catalog output differs from the pinned baseline.
     CatalogParityMismatch,
+    /// A native execution request has no finite admitted deadline.
+    InvalidExecutionDeadline,
+    /// A native executable is not an exact regular file inside its selected root.
+    InvalidExecutablePath,
+    /// A native child remained live at its admitted deadline.
+    ExecutionTimeout,
+    /// A native child emitted the first byte beyond an admitted stream limit.
+    OutputLimitExceeded,
+    /// A native child terminated because of a signal.
+    ProcessSignaled,
+    /// A native child returned an unexpected nonzero exit status.
+    UnexpectedExitStatus,
+    /// A native child stream was not valid UTF-8.
+    InvalidProcessOutput,
+    /// A completed native child emitted a malformed method response.
+    MalformedMethodResponse,
+    /// The selected Linux descriptor or process-group profile is unavailable.
+    UnsupportedExecutionProfile,
+    /// A native descendant remained after its direct child completed.
+    UnexpectedProcessDescendant,
 }
 
 impl VerificationErrorCode {
@@ -103,6 +123,16 @@ impl VerificationErrorCode {
             Self::IoFailure => "io_failure",
             Self::UnhandledFixture => "unhandled_fixture",
             Self::CatalogParityMismatch => "catalog_parity_mismatch",
+            Self::InvalidExecutionDeadline => "invalid_execution_deadline",
+            Self::InvalidExecutablePath => "invalid_executable_path",
+            Self::ExecutionTimeout => "execution_timeout",
+            Self::OutputLimitExceeded => "output_limit_exceeded",
+            Self::ProcessSignaled => "process_signaled",
+            Self::UnexpectedExitStatus => "unexpected_exit_status",
+            Self::InvalidProcessOutput => "invalid_process_output",
+            Self::MalformedMethodResponse => "malformed_method_response",
+            Self::UnsupportedExecutionProfile => "unsupported_execution_profile",
+            Self::UnexpectedProcessDescendant => "unexpected_process_descendant",
         }
     }
 
@@ -132,6 +162,16 @@ impl VerificationErrorCode {
             Self::IoFailure,
             Self::UnhandledFixture,
             Self::CatalogParityMismatch,
+            Self::InvalidExecutionDeadline,
+            Self::InvalidExecutablePath,
+            Self::ExecutionTimeout,
+            Self::OutputLimitExceeded,
+            Self::ProcessSignaled,
+            Self::UnexpectedExitStatus,
+            Self::InvalidProcessOutput,
+            Self::MalformedMethodResponse,
+            Self::UnsupportedExecutionProfile,
+            Self::UnexpectedProcessDescendant,
         ]
     }
 

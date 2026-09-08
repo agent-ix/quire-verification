@@ -57,7 +57,7 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ### Native process boundary
 
-- [ ] **TC-038** (`NFR-006-AC-1..6`): exercise direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; executable-root and symbolic-link refusal; and child reaping.
+- [ ] **TC-038** (`NFR-006-AC-1..7`): exercise descriptor-pinned direct argv and environment isolation; deadline admission and expiry; exact 16 MiB stream limits and first excess byte; concurrent drains; signals, statuses, UTF-8, protocol failures; root-relative no-symlink admission; pathname substitution; dedicated process groups; descendant cleanup; and direct-child reaping.
 
 ### Portfolio execution
 
@@ -79,7 +79,7 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ### Track P: Process primitive (ready)
 
-- **P1 = Task-020** Bounded native process executor — Hard; exit: every admitted child terminates with bounded output and a typed result, and every adverse child is reaped.
+- **P1 = Task-020** Bounded native process executor — Hard; exit: every descriptor-admitted process group terminates with bounded output and a typed result, the direct child is reaped, and no live group member remains.
 
 ### Track A: Critical Path (serial, dependency-gated)
 
@@ -102,7 +102,7 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | not_started |
+| Task-020 | P | NFR-006 | TC-038 | in_progress |
 | Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
 | Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
 | Task-023 | A | FR-021 | TC-037 | blocked |

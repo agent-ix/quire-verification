@@ -2,7 +2,7 @@
 id: Task-020
 title: "Bounded native process executor"
 type: Task
-status: not_started
+status: in_progress
 track: P
 priority: P0
 relationships:
@@ -13,22 +13,24 @@ relationships:
 
 ## Scope
 
-Add the Linux Rust child-process boundary for exact executables, direct arguments,
-fresh working directories, declared environments, finite deadlines, concurrent
-bounded output capture, typed process/protocol failures, termination, and reaping.
+Add the Linux Rust child-process boundary for descriptor-admitted executables,
+direct arguments, fresh working directories, declared environments, dedicated
+process groups, finite deadlines, concurrent bounded output capture, typed
+process/protocol failures, group termination, and direct-child reaping.
 
 ## Subtasks
 
 - [ ] Write TC-038 first with controlled Rust child fixtures for every exact and adverse process boundary.
-- [ ] Validate executable-root, regular-file, and no-symbolic-link constraints before launch.
-- [ ] Launch without a shell or inherited environment and drain both streams concurrently.
-- [ ] Enforce the accepted deadline and per-stream byte caps, then terminate and reap on every exceeded bound.
+- [ ] Pin the root-relative executable with Linux `openat2` beneath/no-magiclink/no-symlink resolution and launch only its retained descriptor-backed path.
+- [ ] Launch a dedicated process group without a shell or inherited environment and drain both streams concurrently.
+- [ ] Enforce the accepted deadline and per-stream byte caps, then terminate the group, reap the direct child, and prove no live group member remains on every exceeded bound.
+- [ ] Prove pathname replacement cannot substitute admitted bytes and a descendant retaining both pipes cannot escape the deadline.
 - [ ] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, and malformed protocol.
 - [ ] Bind TC-038 and every NFR-006 criterion through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 
-- Rust process adapter, controlled child fixture binary, TC-038 tests, and trace bindings.
+- Rust descriptor/process-group adapter, controlled child fixture binary, TC-038 tests, and trace bindings.
 
 ## Notes
 
