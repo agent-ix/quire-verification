@@ -401,13 +401,7 @@ fn terminate_group_reap_and_join(
         let _ = running.stderr_reader.join();
         return Err(capture_error(failure, running.pid, cleanup.reaped, true));
     }
-    Err(containment_failure(
-        &failure,
-        running.pid,
-        cleanup.reaped,
-        cleanup.observation_error,
-        cleanup.signal_error,
-    ))
+    Err(containment_failure(&failure, running.pid, cleanup))
 }
 
 fn signal_process_group(group: Pid) -> Result<(), Errno> {
@@ -422,6 +416,8 @@ struct CleanupStatus {
     reaped: bool,
     group_terminated: bool,
     signal_error: Option<String>,
+    fallback_error: Option<String>,
+    reap_error: Option<String>,
     observation_error: Option<Errno>,
 }
 
@@ -429,7 +425,9 @@ fn cleanup_process_group(child: &mut Child, group: Pid) -> CleanupStatus {
     let cleanup_deadline = Instant::now()
         .checked_add(PROCESS_GROUP_CLEANUP_BUDGET)
         .unwrap_or_else(Instant::now);
-    let signal_error = signal_process_group(group).err();
+    let signal_error = signal_process_group(group)
+        .err()
+        .map(|error| error.to_string());
     let fallback_error = signal_error
         .as_ref()
         .and_then(|_| child.kill().err())
@@ -446,30 +444,13 @@ fn cleanup_process_group(child: &mut Child, group: Pid) -> CleanupStatus {
         && fallback_error.is_none()
         && reap_error.is_none()
         && observation_error.is_none();
-    let mut signal_context = signal_error.map(|error| error.to_string());
-    if let Some(error) = fallback_error {
-        append_context(&mut signal_context, "fallback direct-child kill", &error);
-    }
-    if let Some(error) = &reap_error {
-        append_context(&mut signal_context, "direct-child reap", error);
-    }
     CleanupStatus {
         reaped: reap_error.is_none(),
         group_terminated,
-        signal_error: signal_context,
+        signal_error,
+        fallback_error,
+        reap_error,
         observation_error,
-    }
-}
-
-fn append_context(context: &mut Option<String>, action: &str, error: &str) {
-    match context {
-        Some(context) => {
-            context.push_str("; ");
-            context.push_str(action);
-            context.push_str(": ");
-            context.push_str(error);
-        }
-        None => *context = Some(format!("{action}: {error}")),
     }
 }
 
@@ -561,9 +542,7 @@ fn capture_error(
 fn containment_failure(
     trigger: &CaptureFailure,
     pid: u32,
-    reaped: bool,
-    observation_error: Option<Errno>,
-    signal_error: Option<String>,
+    cleanup: CleanupStatus,
 ) -> VerificationError {
     let trigger_code = capture_failure_code(trigger);
     let mut error = VerificationError::new(
@@ -573,12 +552,18 @@ fn containment_failure(
     .with_context("trigger", trigger_code.as_str())
     .with_context("pid", pid.to_string())
     .with_context("process_group", pid.to_string())
-    .with_context("reaped", reaped.to_string())
+    .with_context("reaped", cleanup.reaped.to_string())
     .with_context("process_group_terminated", "false");
-    if let Some(error_value) = signal_error {
+    if let Some(error_value) = cleanup.signal_error {
         error = error.with_context("group_signal_error", error_value);
     }
-    if let Some(error_value) = observation_error {
+    if let Some(error_value) = cleanup.fallback_error {
+        error = error.with_context("fallback_termination_error", error_value);
+    }
+    if let Some(error_value) = cleanup.reap_error {
+        error = error.with_context("reap_error", error_value);
+    }
+    if let Some(error_value) = cleanup.observation_error {
         error = error.with_context("group_observation_error", error_value.to_string());
     }
     error
@@ -707,13 +692,7 @@ fn reap_after_setup_failure(child: &mut Child, pid: u32, message: &str) -> Verif
             .with_context("reaped", cleanup.reaped.to_string())
             .with_context("process_group_terminated", "true")
     } else {
-        containment_failure(
-            &CaptureFailure::Monitor(message.to_owned()),
-            pid,
-            cleanup.reaped,
-            cleanup.observation_error,
-            cleanup.signal_error,
-        )
+        containment_failure(&CaptureFailure::Monitor(message.to_owned()), pid, cleanup)
     }
 }
 
@@ -765,8 +744,18 @@ mod tests {
     fn tc_038_containment_observation_timeout_preserves_the_trigger() {
         let wait_error = wait_for_process_group_exit_with(Duration::ZERO, || Ok(true))
             .expect_err("persisting group must exhaust cleanup budget");
-        let error =
-            containment_failure(&CaptureFailure::Timeout, 41, false, Some(wait_error), None);
+        let error = containment_failure(
+            &CaptureFailure::Timeout,
+            41,
+            CleanupStatus {
+                reaped: false,
+                group_terminated: false,
+                signal_error: None,
+                fallback_error: None,
+                reap_error: None,
+                observation_error: Some(wait_error),
+            },
+        );
         assert_eq!(
             error.code(),
             VerificationErrorCode::ProcessContainmentFailure
