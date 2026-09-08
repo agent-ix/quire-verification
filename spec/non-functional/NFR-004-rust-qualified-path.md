@@ -20,9 +20,11 @@ relationships:
 The compatibility slice SHALL implement production logic, command-line tools, and automated tests in Rust because the component is eligible for the qualified production verification path.
 
 When maintained repository guidance describes the implemented toolchain or
-dependency inventory, that guidance SHALL name the current Rust commands and
-dependencies without presenting removed JavaScript manifests or packages as
-current implementation evidence.
+dependency inventory, that guidance SHALL name the current Rust commands,
+identify `Cargo.toml` and `Cargo.lock` as the authoritative package inventory,
+and identify `docs/artifact-rights.md` as its rights classification without
+presenting removed JavaScript manifests or packages as current implementation
+evidence.
 
 ## Scope
 
@@ -57,8 +59,9 @@ licenses and advisories with `cargo deny`. The repository records and supplies
 the exact reviewed `ix-trace-rs` source needed by those tests so a clean CI
 runner does not depend on an unrecorded cross-repository credential.
 TC-022 also reads the maintained contributor guidance and license decision,
-requires the current Cargo gate and dependency inventory, and rejects stale
-claims that removed npm manifests or JavaScript packages remain current.
+requires the current Cargo gate and authoritative Rust inventory/rights
+pointers, and rejects stale claims that removed npm manifests or JavaScript
+packages remain current.
 
 ## Acceptance Criteria
 
@@ -68,7 +71,7 @@ claims that removed npm manifests or JavaScript packages remain current.
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, and dependency policy checks all exit successfully. | Test (TC-022) |
 | NFR-004-AC-3 | Every Rust test used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker naming its TC and verified acceptance criteria. | Inspection (TC-022) |
 | NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from a repository-contained snapshot with recorded upstream revision and no cross-repository credential. | Test (TC-022) |
-| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` names the current Rust dependency inventory without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
+| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` plus `docs/artifact-rights.md` as the current dependency and rights records without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
 
 ## Dependencies
 

@@ -24,9 +24,9 @@ the imported bare `#[trace(...)]` attribute from `ix-trace-rs`. On a clean CI
 runner with no cross-repository credential, resolve the repository-contained
 trace crate snapshot and verify its recorded upstream revision before running
 the Rust gates. Read `AGENTS.md` and `LICENSE-DECISION.md`; require an available
-Cargo gate and the current Rust dependency inventory, and reject claims that a
-removed npm manifest or JavaScript package remains current implementation
-evidence.
+Cargo gate and pointers to `Cargo.toml`, `Cargo.lock`, and
+`docs/artifact-rights.md`, and reject claims that a removed npm manifest or
+JavaScript package remains current implementation evidence.
 
 ## Expected Results
 
@@ -35,4 +35,5 @@ all four Rust gates exit successfully, and compiler-checked trace markers back
 every claimed matrix row. The clean runner obtains the exact reviewed trace
 macro source without private dependency authentication. Maintained contributor
 and license guidance names the implemented Cargo workflow and Rust dependencies
-without stale npm or JavaScript implementation claims.
+through their authoritative inventory and rights records, without stale npm or
+JavaScript implementation claims.
