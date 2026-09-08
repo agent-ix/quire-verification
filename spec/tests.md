@@ -119,7 +119,7 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-014 | completed | unknown | inadequate | inadequate |
 | TC-014 | failed | not-evaluated | not assessed | failed |
 | TC-015 | completed | violated | partial and assumption unmet | all independent gaps retained |
-| TC-026 | required | exhausted budget | missing resource | blocked task and setup dependency retained |
+| TC-026 | required | absent allocation | missing resource | blocked task and setup dependency retained |
 | TC-027 | applicable | ready | complete qualified runner | bounded request and invocation allowed |
 | TC-027 | applicable | blocked | incomplete fault authorization | null runner request and invocation refused |
 | TC-030 | parser property | differential relation | manual review | distinct inputs and eligibility retained |
@@ -177,7 +177,7 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Portfolio execution | check returns false | TC-019 | completed plus violated |
 | Portfolio execution | check throws | TC-019 | failed plus not-evaluated |
 | Human review | no disposition | TC-020 | not-run and incomplete |
-| Required task | budget available → exhausted | TC-026 | ready task becomes blocked and remains visible |
+| Required task | allocation present → absent | TC-026 | ready task becomes blocked and remains visible |
 | Native runner | ready → prerequisite missing | TC-027 | runner request becomes null |
 
 ## Edge Cases

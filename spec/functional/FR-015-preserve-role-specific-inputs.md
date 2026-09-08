@@ -7,6 +7,8 @@ relationships:
     type: implements
   - target: "ix://agent-ix/quire-verification/FR-005"
     type: depends_on
+  - target: "ix://agent-ix/quire-verification/FR-016"
+    type: depends_on
 ---
 # FR-015: Preserve Role-Specific Verification Inputs
 

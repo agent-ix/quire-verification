@@ -30,6 +30,7 @@ before using the reference in planning or result identity comparison.
 ## Outputs
 
 - A validated role-specific reference or a stable refusal that does not enter planning or result selection.
+- Stable refusal codes: `unsupported_contract_version`, `unsupported_reference_version`, `unknown_required_feature`, `invalid_wire`, `identity_mismatch`, `identity_content_conflict`, `malformed_source_map`, `unsupported_canonicalization`, and `ambiguous_equivalence`.
 
 ## Acceptance Criteria
 
@@ -37,7 +38,7 @@ before using the reference in planning or result identity comparison.
 |----|----------|--------------|
 | FR-016-AC-1 | A byte reference is accepted only when its version, kind, authority, identity, structured revision, exact byte digest, and wire identity/version are supported and match locally supplied bytes. | Test (TC-029) |
 | FR-016-AC-2 | A semantic reference is accepted only when its byte artifact, language, semantic-profile definition digest, duplicate-free required-feature set, and selected canonical identity are supported and internally consistent. | Test (TC-029) |
-| FR-016-AC-3 | Duplicate member names, unknown versions or required features, wrong role kinds, digest mismatch, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse before planning or result matching. | Test (TC-029) |
+| FR-016-AC-3 | Duplicate member names, unknown versions or required features, wrong role kinds, digest mismatch, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse with the corresponding stable code before planning or result matching. | Test (TC-029) |
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
 | FR-016-AC-5 | The shared schema represents B's named JCS canonical-identity domain and exact trace, fault-model, and review-procedure roles without placing semantic digests in byte-digest fields. | Test (TC-029, TC-031) |
 | FR-016-AC-6 | A breaking draft-1 to draft-2 transition does not reinterpret or rewrite retained draft-1 evidence, and no fallback reader treats an unknown draft as current. | Test (TC-029) |

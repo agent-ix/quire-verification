@@ -22,7 +22,7 @@ manual-review work without pretending they share one unary input or readiness.
 Build a pinned parser plan with a state/property task requiring a generator and
 harness, a relational/differential task requiring two native parser bindings,
 and a manual artifact review requiring an assigned reviewer. Run ready, missing
-prerequisite, unsupported capability, and exhausted budget variants.
+prerequisite, unsupported capability, and absent resource-allocation variants.
 
 ## Expected Results
 

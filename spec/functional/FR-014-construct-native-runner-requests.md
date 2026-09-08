@@ -1,6 +1,6 @@
 ---
 id: FR-014
-title: "Construct bounded native runner requests"
+title: "Construct exact native runner requests"
 type: FR
 relationships:
   - target: "ix://agent-ix/quire-verification/US-001"
@@ -9,13 +9,15 @@ relationships:
     type: depends_on
   - target: "ix://agent-ix/quire-verification/FR-013"
     type: depends_on
+  - target: "ix://agent-ix/quire-verification/FR-015"
+    type: depends_on
 ---
-# FR-014: Construct Bounded Native Runner Requests
+# FR-014: Construct Exact Native Runner Requests
 
 ## Description
 
 When a selected verification task is applicable and ready, the planner SHALL
-emit a bounded native runner request that identifies the qualified capability,
+emit an exact native runner request that identifies the qualified capability,
 adapter, permissions, resource budget, and native artifact interface needed for
 that invocation.
 
@@ -38,4 +40,4 @@ that invocation.
 
 ## Dependencies
 
-- Extends [FR-005](./FR-005-build-verification-plans.md) after the prerequisite DAG in [FR-013](./FR-013-emit-actionable-prerequisite-dag.md) is known.
+- Extends [FR-005](./FR-005-build-verification-plans.md) after the prerequisite DAG in [FR-013](./FR-013-emit-actionable-prerequisite-dag.md) and the role-specific inputs in [FR-015](./FR-015-preserve-role-specific-inputs.md) are known.

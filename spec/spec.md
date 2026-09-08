@@ -98,7 +98,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-011 | Emit authored or unknown classification | Implemented; verified |
 | FR-012 | Preserve authored prioritization | Implemented; verified |
 | FR-013 | Emit an actionable prerequisite DAG | Specified; pending implementation |
-| FR-014 | Construct bounded native runner requests | Specified; pending implementation |
+| FR-014 | Construct exact native runner requests | Specified; pending implementation |
 | FR-015 | Preserve role-specific verification inputs | Specified; pending implementation |
 | FR-016 | Read shared references strictly | Specified; blocked on FS02/FS05 amendment |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
