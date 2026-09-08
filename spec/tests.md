@@ -7,10 +7,11 @@ type: TestMatrix
 
 ## Overview
 
-This matrix maps every normative acceptance criterion in the bounded E02
-compatibility slice to a concrete test case. Its overall status is complete:
-all 23 cases run in Rust and bind through compiler-checked `ix-trace-rs`
-markers. The rejected JavaScript prototype is not accepted as evidence.
+This matrix maps every normative acceptance criterion in the E02 compatibility
+and VP01 qualification slice to a concrete test case. The 23 merged cases run in
+Rust and bind through compiler-checked `ix-trace-rs` markers. TC-024 and TC-025
+are specified for the VP01 increment and remain pending implementation. The
+rejected JavaScript prototype is not accepted as evidence.
 
 ## Test Matrix Rules
 
@@ -30,6 +31,7 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | US-001 | Ready task; unsafe fault task | TC-001..TC-004, TC-009..TC-011 | ✅ Complete |
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
+| US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | 🚧 Pending |
 
 ### Functional Requirement Coverage
 
@@ -44,6 +46,7 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | FR-007 | FR-007-AC-1..5 | TC-014, TC-015 | ✅ Complete |
 | FR-008 | FR-008-AC-1..4 | TC-016, TC-017 | ✅ Complete |
 | FR-009 | FR-009-AC-1..6 | TC-018, TC-019, TC-020 | ✅ Complete |
+| FR-010 | FR-010-AC-1..5 | TC-010, TC-024, TC-025 | 🚧 Pending |
 
 ### Non-Functional Requirement Coverage
 
@@ -82,6 +85,8 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
 | TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-4 | ✅ Passed |
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
+| TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1..FR-010-AC-2 | 🚧 Pending |
+| TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-010-AC-3..FR-010-AC-4 | 🚧 Pending |
 
 ## Option Permutation Matrix
 
@@ -93,6 +98,9 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | TC-010 | applicable | unsupported | absent capability | unsupported gap retained |
 | TC-010 | applicable | blocked | stale policy | freshness prerequisite retained |
 | TC-010 | applicable | blocked | fault inputs incomplete | three safety prerequisites retained |
+| TC-024 | not-applicable | ready | qualified capability | readiness remains ready; invocation refused |
+| TC-024 | unknown | ready | qualified capability | readiness remains ready; invocation refused |
+| TC-024 | applicable | unsupported | absent capability | applicability remains applicable; invocation refused |
 | TC-014 | completed | satisfied | adequate | supported |
 | TC-014 | completed | satisfied | not activated | untriggered |
 | TC-014 | completed | unknown | inadequate | inadequate |
@@ -129,6 +137,7 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | ERR-008 | Input is outside the JSON/JCS domain | TC-017 | Canonicalization error |
 | ERR-009 | Portfolio comparison finds field drift | TC-019 | Violated result returned |
 | ERR-010 | Portfolio adapter throws | TC-019 | Failed result returned |
+| ERR-011 | Selection-policy rule contains an ordinal score | TC-025 | Contract rejection |
 
 ## State Transition Coverage
 
@@ -152,6 +161,7 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 | EC-004 | Array order differs while object meaning is otherwise valid | FR-008 | TC-016 | Canonical comparison can collapse ordered data |
 | EC-005 | Malformed, over-deep, or out-of-domain JSON reaches canonicalization | FR-008 | TC-017, TC-023 | Hashing can fail opaquely or become input-dependent |
 | EC-006 | Policy freshness prerequisite is listed as available | FR-005 | TC-010 | A caller can waive an expired policy locally |
+| EC-007 | Property classification is omitted | FR-010 | TC-024 | Absence can be mistaken for an authored low-risk class |
 
 ## Integration Test Matrix
 
@@ -181,10 +191,10 @@ markers. The rejected JavaScript prototype is not accepted as evidence.
 
 ## Test Execution Summary
 
-| Category | Total | Passed | Failed | Blocked | Coverage |
+| Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 14 | 14 | 0 | 0 | 100% |
+| Unit | 16 | 14 | 0 | 2 | 87.5% |
 | Integration | 3 | 3 | 0 | 0 | 100% |
 | Property | 4 | 4 | 0 | 0 | 100% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 23 | 23 | 0 | 0 | 100% |
+| Overall | 25 | 23 | 0 | 2 | 92% |

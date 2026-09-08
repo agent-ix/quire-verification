@@ -11,6 +11,8 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-005"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-010"
+    type: "traces_to"
 ---
 # US-001: Plan portable verification work
 
@@ -48,4 +50,4 @@ unsafe invocation path and conceal missing work.
 ## Traceability (Informative)
 
 The story drives the public contract validation, schema-derived runtime, and
-prerequisite-aware planning requirements.
+prerequisite-aware planning and qualified selection requirements.

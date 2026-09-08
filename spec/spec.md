@@ -15,14 +15,14 @@ standards_alignment:
   - rfc-8785
 ---
 # Master Requirements Specification
-## Quire Verification Bounded Compatibility Slice
+## Quire Verification Compatibility and VP01 Registry Qualification
 
 ## 1. Purpose
 
-This specification defines the observable behavior of the private bounded E02
-verification compatibility slice. It gives maintainers the reviewed and
-implemented requirements baseline for the code, fixtures, retained reports,
-and continuous-integration checks present in this repository.
+This specification defines the observable behavior of the private E02
+compatibility boundary and the VP01 registry/policy qualification slice. It
+gives maintainers the reviewed requirements baseline for the code, fixtures,
+retained reports, and continuous-integration checks in this repository.
 
 ## 2. Scope
 
@@ -32,7 +32,9 @@ and continuous-integration checks present in this repository.
   `SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`.
 - Runtime validation derived from one JSON Schema packet.
 - Adaptation of pinned Quoin method-catalog and advice exports.
+- Qualification of registry and policy snapshots against the pinned Quoin baseline.
 - Prerequisite-aware verification planning across five input shapes.
+- Explicit authored-or-unknown classification and explainable authored priority.
 - Exact evidence identity, scope, freshness, and result-state assessment.
 - RFC 8785 JSON Canonicalization Scheme for digests and structured equality.
 - A bounded local catalog portfolio that retains its own failures as results.
@@ -41,6 +43,7 @@ and continuous-integration checks present in this repository.
 ### 2.2 Out of Scope
 
 - Acceptance or replacement of the shared FS02/FS05 identity and version model.
+- Acceptance of E02 or VP01 before their recorded prerequisite and disposition gates close.
 - Publication of these private provisional contracts as cross-repository authority.
 - Execution of a native parser, model checker, fuzzer, fault injector, or production system.
 - A domain-subject portfolio, correlated-oracle evidence, or aggregate producer portfolio.
@@ -82,6 +85,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-007 | Preserve independent result findings | Implemented; verified |
 | FR-008 | Canonicalize digest and identity inputs with JCS | Implemented; verified |
 | FR-009 | Retain bounded portfolio failures as results | Implemented; verified |
+| FR-010 | Preserve qualified selection semantics | Specified; pending implementation |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -105,12 +109,11 @@ catalog from a pinned checkout and compares it with the retained export.
 ## 8. Lifecycle and Change Control
 
 This specification describes a private compatibility slice implemented and
-verified in Rust. This lifecycle correction was made after the Rust rewrite was
-merged; it records the already reviewed and verified state and introduces no new
-behavioral requirement. A future FS02/FS05 decision may require a reviewed
-migration of the provisional artifact reference seam. Such a migration must
-update requirements, tests, fixtures, and retained reports before implementation
-claims change.
+verified in Rust plus a VP01 qualification increment awaiting implementation.
+VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
+A future FS02/FS05 decision may require a reviewed migration of the provisional
+artifact reference seam. Such a migration must update requirements, tests,
+fixtures, and retained reports before implementation claims change.
 
 ## 9. References
 
