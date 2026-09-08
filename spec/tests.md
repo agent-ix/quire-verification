@@ -7,10 +7,11 @@ type: TestMatrix
 
 ## Overview
 
-This matrix maps every normative acceptance criterion in the E02 compatibility
-and VP01 qualification slice to a concrete test case. All 25 cases run in Rust
-and bind through compiler-checked `ix-trace-rs` markers. The rejected JavaScript
-prototype is not accepted as evidence.
+This matrix maps every normative acceptance criterion in the E02 compatibility,
+VP01 qualification, and VP02 native-planning slice to a concrete test case. The
+25 implemented cases run in Rust through compiler-checked `ix-trace-rs` markers;
+TC-026 through TC-031 remain pending until the reviewed implementation and shared
+reference dependency are ready. The rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
 
@@ -31,6 +32,7 @@ prototype is not accepted as evidence.
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
+| US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
 
 ### Functional Requirement Coverage
 
@@ -48,6 +50,10 @@ prototype is not accepted as evidence.
 | FR-010 | FR-010-AC-1..2 | TC-010, TC-024 | ✅ Complete |
 | FR-011 | FR-011-AC-1..2 | TC-024 | ✅ Complete |
 | FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
+| FR-013 | FR-013-AC-1..3 | TC-026, TC-030 | 🚧 Planned |
+| FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
+| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
+| FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
 
 ### Non-Functional Requirement Coverage
 
@@ -88,6 +94,12 @@ prototype is not accepted as evidence.
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 | TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
 | TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
+| TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-3 | 🚧 Planned |
+| TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
+| TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-015-AC-1..FR-015-AC-4 | 🚧 Planned |
+| TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
+| TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
+| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
 
 ## Option Permutation Matrix
 
@@ -107,6 +119,12 @@ prototype is not accepted as evidence.
 | TC-014 | completed | unknown | inadequate | inadequate |
 | TC-014 | failed | not-evaluated | not assessed | failed |
 | TC-015 | completed | violated | partial and assumption unmet | all independent gaps retained |
+| TC-026 | required | exhausted budget | missing resource | blocked task and setup dependency retained |
+| TC-027 | applicable | ready | complete qualified runner | bounded request and invocation allowed |
+| TC-027 | applicable | blocked | incomplete fault authorization | null runner request and invocation refused |
+| TC-030 | parser property | differential relation | manual review | distinct inputs and eligibility retained |
+| TC-029 | supported semantic ref | reordered unique features | exact canonical identity | accepted as the same feature set |
+| TC-029 | supported semantic ref | duplicate feature | exact canonical identity | refused before planning |
 
 ## Constraint Boundary Tests
 
@@ -123,6 +141,9 @@ prototype is not accepted as evidence.
 | Freshness | Above limit | Age greater than maximum | TC-014 | Stale |
 | JCS numeric domain | Boundary | Finite JSON number | TC-016 | Canonicalize |
 | JCS numeric domain | Outside | NaN or Infinity | TC-017 | Reject |
+| Shared byte digest | Exact | SHA-256 of supplied bytes | TC-029 | Accept selected reference |
+| Shared byte digest | Mismatch | One changed byte | TC-029 | Refuse before planning |
+| Required feature set | Duplicate | Same decoded feature twice | TC-029 | Refuse before comparison |
 
 ## Error Paths
 
@@ -140,6 +161,10 @@ prototype is not accepted as evidence.
 | ERR-010 | Portfolio adapter throws | TC-019 | Failed result returned |
 | ERR-011 | Selection-policy rule contains an ordinal score | TC-025 | Contract rejection |
 | ERR-012 | Property classification is an empty string | TC-024 | Contract rejection |
+| ERR-013 | Required work lacks a prerequisite or budget | TC-026 | Blocked task and actionable setup dependency |
+| ERR-014 | A non-invocable task carries a runner request | TC-027 | Contract or planner refusal |
+| ERR-015 | An input omits a role or carries a cross-variant field | TC-028 | Closed-variant rejection |
+| ERR-016 | Shared reference has a duplicate key, unknown version or feature, wrong role, or mismatched digest | TC-029, TC-031 | Stable pre-planning refusal |
 
 ## State Transition Coverage
 
@@ -152,6 +177,8 @@ prototype is not accepted as evidence.
 | Portfolio execution | check returns false | TC-019 | completed plus violated |
 | Portfolio execution | check throws | TC-019 | failed plus not-evaluated |
 | Human review | no disposition | TC-020 | not-run and incomplete |
+| Required task | budget available → exhausted | TC-026 | ready task becomes blocked and remains visible |
+| Native runner | ready → prerequisite missing | TC-027 | runner request becomes null |
 
 ## Edge Cases
 
@@ -164,6 +191,11 @@ prototype is not accepted as evidence.
 | EC-005 | Malformed, over-deep, or out-of-domain JSON reaches canonicalization | FR-008 | TC-017, TC-023 | Hashing can fail opaquely or become input-dependent |
 | EC-006 | Policy freshness prerequisite is listed as available | FR-005 | TC-010 | A caller can waive an expired policy locally |
 | EC-007 | Property classification is omitted | FR-011 | TC-024 | Absence can be mistaken for an authored low-risk class |
+| EC-008 | Two tasks require the same missing prerequisite | FR-013 | TC-026 | Duplicate setup work or inconsistent dependency IDs |
+| EC-009 | Descriptive tooling text names an unavailable executable | FR-014 | TC-027 | Catalog prose can be mistaken for installed capability |
+| EC-010 | A field from one input variant appears on another | FR-015 | TC-028 | Reader can guess a false unary interpretation |
+| EC-011 | JCS semantic digest is placed in an exact byte-digest field | FR-016 | TC-029 | Unrelated identity domains can be treated as equal |
+| EC-012 | Required feature set is reordered or duplicated | FR-016 | TC-029 | Equivalent sets can fail or duplicate requirements can pass |
 
 ## Integration Test Matrix
 
@@ -172,6 +204,7 @@ prototype is not accepted as evidence.
 | Integration ID | Purpose | Target Project | Type | Test Cases | Status |
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
+| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ⛔ Blocked |
 
 ### Integration Test Details
 
@@ -180,6 +213,9 @@ prototype is not accepted as evidence.
 | TC-021 | IT-001 | Pinned exact-source happy path | Real module root and pinned revisions | 33 methods, 0 duplicates, 0 unreadable roots | P0 |
 | TC-021 | IT-001 | Producer or fixture drift | Any missing, extra, or changed method field | Nonzero comparison exit | P0 |
 | TC-021 | IT-001 | Unreadable or conflicting module | Real loader diagnostic | Nonzero comparison exit | P0 |
+| TC-031 | IT-002 | Exact supported shared references | Pinned schema, artifacts, and positive vectors | Every B-used role accepted | P0 |
+| TC-031 | IT-002 | One-axis reference mutations | Pinned adverse vectors and B mutations | Stable refusal before planning | P0 |
+| TC-031 | IT-002 | Unmapped JCS or trace/fault/manual role | Consumer role composition | No permissive fallback; integration fails | P0 |
 
 ## Resolved Coverage Gaps
 
@@ -196,7 +232,7 @@ prototype is not accepted as evidence.
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
 | Unit | 16 | 16 | 0 | 0 | 100% |
-| Integration | 3 | 3 | 0 | 0 | 100% |
-| Property | 4 | 4 | 0 | 0 | 100% |
+| Integration | 5 | 3 | 0 | 2 | 60% |
+| Property | 8 | 4 | 0 | 4 | 50% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 25 | 25 | 0 | 0 | 100% |
+| Overall | 31 | 25 | 0 | 6 | 81% |
