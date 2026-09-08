@@ -30,7 +30,7 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 
 ## Subtasks
 
-- [ ] Record the exact parser revision, qualification evidence, dependency closure, CLI commands, Linux profile, and fixture rights.
+- [x] Record the exact parser revision, qualification evidence, dependency closure, CLI commands, Linux profile, and fixture rights.
 - [ ] Execute IT-003-SC-01 through IT-003-SC-09 and retain the complete report.
 - [ ] Obtain one external owner disposition bound to the sealed automated core.
 - [ ] Run formatting, strict Clippy, all Rust tests, dependency policy, fixture validation, integrations, and trace reconciliation.
@@ -44,4 +44,7 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 ## Notes
 
 - Blocked until Task-023 and all of its transitive gates are complete.
+- The bounded LC01 syntax candidate and fixture entrance criterion is retained in
+  `evidence/vp04-parser-candidate.md`; it does not clear the shared wire or
+  predecessor gates.
 - A successful result establishes only the declared parser-fixture portfolio behavior.
