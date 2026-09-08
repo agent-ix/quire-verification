@@ -37,10 +37,10 @@ without converting multiple contributions into a global assurance score.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-017-AC-1 | A completed result with logical outcome `satisfied` or `violated` carries at least one oracle contribution identifying an exact oracle reference, exact observation reference, and relation `independent`, `shared`, `derived`, or `unknown`; a non-evaluated result may carry no contribution. | Test (TC-033) |
+| FR-017-AC-1 | A completed result with logical outcome `satisfied` or `violated` carries at least one oracle contribution identifying a unique nonempty contribution ID, an exact oracle reference, an exact observation reference, and relation `independent`, `shared`, `derived`, or `unknown`; a non-evaluated result may carry no contribution. | Test (TC-033) |
 | FR-017-AC-2 | Distinct technique or result identifiers do not establish independence; contributions sharing an oracle, observation, or declared dependence group emit one `correlated-oracle` finding with sorted result and contribution identifiers. | Test (TC-033) |
-| FR-017-AC-3 | An absent or `unknown` dependence relationship emits `oracle-dependence-unknown` and makes no independence claim. | Test (TC-033) |
-| FR-017-AC-4 | A `derived` contribution retains its declared source contribution and cannot be counted as an independent confirmation of that source. | Test (TC-033) |
+| FR-017-AC-3 | Relation `unknown` emits `oracle-dependence-unknown` and makes no independence claim; an evaluated contribution with an absent relation or duplicate contribution ID is rejected before assessment. | Test (TC-033) |
+| FR-017-AC-4 | A `derived` contribution identifies its exact source contribution and cannot be reported as an independent confirmation of that source. | Test (TC-033) |
 | FR-017-AC-5 | The assessment preserves each obligation and contribution separately, emits no numeric method score or aggregate assurance level, identifies Quoin as evidence owner, and records sufficiency as `not-made`. | Test (TC-033) |
 
 ## Constraints
@@ -48,6 +48,8 @@ without converting multiple contributions into a global assurance score.
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-017-CON-1 | The assessor SHALL use the exact independently reviewed FS05 reference roles selected for oracle and observation artifacts. | Compatibility | Test (TC-033) |
+| FR-017-CON-2 | The assessor SHALL label independence only as the declared relationship supported by the supplied exact references. | Claim boundary | Inspection (TC-033) |
+| FR-017-CON-3 | The assessor SHALL NOT claim undisclosed causal independence. | Claim boundary | Inspection (TC-033) |
 
 ## Dependencies
 

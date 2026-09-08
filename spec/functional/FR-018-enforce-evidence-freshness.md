@@ -36,9 +36,9 @@ expiry as the effective limit.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-018-AC-1 | The effective expiry is the earlier of result `validUntil` and result `producedAt` plus obligation `maxAgeSeconds`; the result is stale only when assessment time is later than that expiry. | Test (TC-032) |
-| FR-018-AC-2 | Assessment exactly at the effective expiry remains fresh, and one representable instant after the expiry is stale. | Test (TC-032) |
+| FR-018-AC-2 | Assessment exactly at the effective expiry remains fresh, and one nanosecond after the expiry is stale; equivalent RFC 3339 offsets yield the same classification. | Test (TC-032) |
 | FR-018-AC-3 | A result with `producedAt` later than assessment time or `validUntil` earlier than `producedAt` is refused with stable code `invalid_temporal_order`. | Test (TC-032) |
-| FR-018-AC-4 | An invalid timestamp or a maximum age outside the contract's non-negative bounded integer domain is refused before result classification. | Test (TC-032) |
+| FR-018-AC-4 | An invalid timestamp, a missing obligation maximum age, a maximum age outside `0..=9007199254740991` seconds, or checked expiry arithmetic outside the RFC 3339 timestamp domain is refused before result classification. | Test (TC-032) |
 | FR-018-AC-5 | A stale classification takes precedence over the compatibility summary while preserving every applicable execution, logical, activation, participation, assumption, adequacy, provenance, and native-artifact field and finding. | Test (TC-032) |
 
 ## Dependencies

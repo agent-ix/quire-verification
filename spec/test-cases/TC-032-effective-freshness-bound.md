@@ -17,11 +17,12 @@ invalid temporal ordering.
 ## Test Procedure
 
 Create exact-matched obligations and results in which each bound is earlier in
-turn. Assess immediately before, exactly at, and one representable instant after
-the effective expiry. Repeat with a future production time, validity before
-production, malformed timestamps, and maximum ages at and outside the contract
-boundary. Add simultaneous logical, participation, and assumption findings to
-the stale case.
+turn. Assess immediately before, exactly at, and one nanosecond after the
+effective expiry, including equivalent instants written with different RFC 3339
+offsets. Repeat with a future production time, validity before production,
+malformed timestamps, a missing maximum age, maximum ages at and outside the JSON
+safe-integer boundary, and checked expiry overflow. Add simultaneous logical,
+participation, and assumption findings to the stale case.
 
 ## Expected Results
 

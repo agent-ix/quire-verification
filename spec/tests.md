@@ -150,6 +150,9 @@ JavaScript prototype is not evidence.
 | Freshness | Above limit | Age greater than maximum | TC-014 | Stale |
 | Combined freshness | Exact | Assessment at earliest expiry | TC-032 | Fresh |
 | Combined freshness | Outside | One representable instant after earliest expiry | TC-032 | Stale |
+| Maximum age | Min | 0 seconds | TC-032 | Fresh only at production instant |
+| Maximum age | Max | 9007199254740991 seconds | TC-032 | Accept or refuse only on checked timestamp overflow |
+| Maximum age | Outside | 9007199254740992 seconds | TC-032 | Refuse before classification |
 | JCS numeric domain | Boundary | Finite JSON number | TC-016 | Canonicalize |
 | JCS numeric domain | Outside | NaN or Infinity | TC-017 | Reject |
 | Shared byte digest | Exact | SHA-256 of supplied bytes | TC-029 | Accept selected reference |
@@ -177,7 +180,8 @@ JavaScript prototype is not evidence.
 | ERR-015 | An input omits a role or carries a cross-variant field | TC-028 | Closed-variant rejection |
 | ERR-016 | Shared reference has a duplicate key, unknown version or feature, wrong role, or mismatched digest | TC-029, TC-031 | Stable pre-planning refusal |
 | ERR-017 | Result production is in the future or validity precedes production | TC-032 | `invalid_temporal_order` refusal |
-| ERR-018 | Oracle dependence is absent, unknown, shared, or derived | TC-033 | Retain exact dependence finding; make no independence claim |
+| ERR-018 | Oracle dependence is unknown, shared, or derived | TC-033 | Retain exact dependence finding; make no independence claim |
+| ERR-019 | Oracle contribution ID is duplicated or required relation is absent | TC-033 | Contract refusal before assessment |
 
 ## State Transition Coverage
 
@@ -213,6 +217,8 @@ JavaScript prototype is not evidence.
 | EC-012 | Required feature set is reordered or duplicated | FR-016 | TC-029 | Equivalent sets can fail or duplicate requirements can pass |
 | EC-013 | Result and obligation expiry disagree | FR-018 | TC-032 | A later bound can silently extend stale evidence |
 | EC-014 | Different methods reuse one observation or derived oracle | FR-017 | TC-033 | Correlated outputs can be presented as independent confirmation |
+| EC-015 | Equivalent timestamps use different RFC 3339 offsets | FR-018 | TC-032 | Text comparison can disagree about one instant |
+| EC-016 | Maximum age addition exceeds the timestamp domain | FR-018 | TC-032 | Arithmetic can wrap, panic, or extend evidence validity |
 
 ## Integration Test Matrix
 

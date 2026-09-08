@@ -17,13 +17,15 @@ dependence without being averaged or presented as independent by identifier alon
 
 Assess a bounded inventory containing results with independent oracle and
 observation references, a shared observation, a shared dependence group, a
-derived contribution, an unknown relationship, and a non-evaluated result with
-no contribution. Permute result and contribution order, mutate one reference
-dimension at a time, and inspect the complete assessment envelope.
+derived contribution with an exact source contribution, an unknown relationship,
+and a non-evaluated result with no contribution. Repeat with a missing relation
+and duplicate contribution ID. Permute result and contribution order, mutate one
+reference dimension at a time, and inspect the complete assessment envelope.
 
 ## Expected Results
 
 Shared and derived evidence emits deterministic correlation findings, unknown
-dependence remains unknown, exact-reference mutations do not join, non-evaluated
-evidence may omit contributions, and the output contains neither a numeric score
-nor an aggregate assurance or sufficiency decision.
+dependence remains unknown, malformed contribution identity or relation refuses,
+exact-reference mutations do not join, non-evaluated evidence may omit
+contributions, and the output contains neither a numeric score nor an aggregate
+assurance or sufficiency decision.
