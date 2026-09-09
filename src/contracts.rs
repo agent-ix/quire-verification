@@ -3,7 +3,7 @@
 
 //! Schema-owned public contracts, RFC 8785 canonicalization, and bounded JSON ingestion.
 //!
-//! Governing requirements: FR-001, FR-002, FR-008, NFR-002, and NFR-005.
+//! Governing requirements: FR-001, FR-002, FR-008, FR-022, NFR-002, and NFR-005.
 
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex, OnceLock};

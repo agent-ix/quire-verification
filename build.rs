@@ -145,6 +145,26 @@ fn strip_non_constructive_keywords(value: &mut Value) {
             fields.remove("if");
             fields.remove("then");
             fields.remove("else");
+            let contains_only_assertions = fields
+                .get("allOf")
+                .and_then(Value::as_array)
+                .is_some_and(|entries| {
+                    !entries.is_empty()
+                        && entries.iter().all(|entry| {
+                            entry.as_object().is_some_and(|assertion| {
+                                assertion.contains_key("contains")
+                                    && assertion.keys().all(|keyword| {
+                                        matches!(
+                                            keyword.as_str(),
+                                            "contains" | "minContains" | "maxContains"
+                                        )
+                                    })
+                            })
+                        })
+                });
+            if contains_only_assertions {
+                fields.remove("allOf");
+            }
             for child in fields.values_mut() {
                 strip_non_constructive_keywords(child);
             }

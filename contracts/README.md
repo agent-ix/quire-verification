@@ -10,6 +10,18 @@ task IDs, unknown dependency references, and dependency cycles, which require
 cross-record graph checks. This is a private versioned schema, not a published
 normative schema or an accepted replacement for FS02/FS05 identities.
 
+The same schema owns the internal `QualificationProfile` definition used by the
+Rust production-qualification planner. It is not a sixth public E02 root contract.
+The definition closes candidate, dependency, caller, command, population,
+semantic-guarantee, environment, resource-budget, evidence, exclusion, and
+producer-interface dimensions. Every selected producer role carries either one
+exact accepted shared-reference envelope or one typed unavailable state with an
+owner and reason. Rust code requires every embedded artifact envelope to match an
+exact `ValidatedSharedReference` from the strict shared-reference reader, derives the
+profile representation from this definition, computes its identity with RFC 8785 JCS,
+and returns all unavailable interfaces as blocked prerequisites without copying
+producer-owned schemas.
+
 `PropertyInventoryItem.classification` is optional on planner input so an
 unclassified property can be represented. When present it must be non-empty;
 the planner emits `unknown` when it was omitted.

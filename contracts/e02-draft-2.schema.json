@@ -21,6 +21,30 @@
       },
       "additionalProperties": false
     },
+    "ExecutableProjectionReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "executable-projection" } }, "required": ["kind"] } } }
+      ]
+    },
+    "InvocationReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "invocation" } }, "required": ["kind"] } } }
+      ]
+    },
+    "EnvironmentReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "environment" } }, "required": ["kind"] } } }
+      ]
+    },
+    "DependencyClosureReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "dependency-closure" } }, "required": ["kind"] } } }
+      ]
+    },
     "SnapshotReference": {
       "allOf": [
         { "$ref": "#/$defs/SharedArtifactEnvelope" },
@@ -711,6 +735,214 @@
         "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } }
       },
       "additionalProperties": true
+    },
+    "QualificationCommand": {
+      "type": "object",
+      "required": ["commandId", "executableRef", "arguments", "workingDirectoryRef", "inputBinding", "expectedExitCodes", "responseKind"],
+      "properties": {
+        "commandId": { "type": "string", "minLength": 1 },
+        "executableRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+        "arguments": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "workingDirectoryRef": { "$ref": "#/$defs/EnvironmentReference" },
+        "inputBinding": { "type": "string", "minLength": 1 },
+        "expectedExitCodes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 }
+        },
+        "responseKind": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationInputPopulation": {
+      "type": "object",
+      "required": ["populationId", "description", "requiredClasses", "selectionRationale"],
+      "properties": {
+        "populationId": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "requiredClasses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "selectionRationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationGuarantee": {
+      "type": "object",
+      "required": ["guaranteeId", "stage", "claim"],
+      "properties": {
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "stage": {
+          "enum": [
+            "syntax",
+            "import-resolution",
+            "model-binding",
+            "type-checking",
+            "evaluation",
+            "backend-projection",
+            "production-integration"
+          ]
+        },
+        "claim": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationResourceBudget": {
+      "type": "object",
+      "required": ["budgetId", "phase", "maximumWallClockNanoseconds", "maximumParallelism", "maximumStdoutBytes", "maximumStderrBytes"],
+      "properties": {
+        "budgetId": { "type": "string", "minLength": 1 },
+        "phase": { "type": "string", "minLength": 1 },
+        "maximumWallClockNanoseconds": { "type": "integer", "minimum": 1, "maximum": 10000000000 },
+        "maximumParallelism": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "maximumStdoutBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "maximumStderrBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationEvidenceRequirement": {
+      "type": "object",
+      "required": ["obligationId", "guaranteeId", "techniqueId", "stoppingRule", "required"],
+      "properties": {
+        "obligationId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "techniqueId": { "type": "string", "minLength": 1 },
+        "stoppingRule": { "type": "string", "minLength": 1 },
+        "required": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "QualificationInterface": {
+      "type": "object",
+      "required": ["interfaceId", "role", "owner", "status", "interfaceRef", "reason"],
+      "properties": {
+        "interfaceId": { "type": "string", "minLength": 1 },
+        "role": {
+          "enum": [
+            "portable-contracts",
+            "shared-references",
+            "parser-compiler",
+            "production-caller",
+            "engineering-assurance",
+            "quoin-evidence"
+          ]
+        },
+        "owner": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["accepted", "missing", "provisional", "unsupported"] },
+        "interfaceRef": {
+          "oneOf": [
+            { "$ref": "#/$defs/SharedArtifactEnvelope" },
+            { "type": "null" }
+          ]
+        },
+        "reason": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "accepted" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "interfaceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+              "reason": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "interfaceRef": { "type": "null" },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "QualificationProfile": {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "schemaVersion",
+        "kind",
+        "profileId",
+        "profileRevision",
+        "candidateRef",
+        "dependencyClosureRef",
+        "productionCallerRef",
+        "commands",
+        "inputPopulation",
+        "semanticGuarantees",
+        "environmentRef",
+        "resourceBudgets",
+        "evidenceRequirements",
+        "exclusions",
+        "interfaces"
+      ],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-profile/v1" },
+        "kind": { "const": "QualificationProfile" },
+        "profileId": { "type": "string", "minLength": 1 },
+        "profileRevision": { "type": "string", "minLength": 1 },
+        "candidateRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+        "dependencyClosureRef": { "$ref": "#/$defs/DependencyClosureReference" },
+        "productionCallerRef": { "$ref": "#/$defs/InvocationReference" },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationCommand" }
+        },
+        "inputPopulation": { "$ref": "#/$defs/QualificationInputPopulation" },
+        "semanticGuarantees": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationGuarantee" }
+        },
+        "environmentRef": { "$ref": "#/$defs/EnvironmentReference" },
+        "resourceBudgets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationResourceBudget" }
+        },
+        "evidenceRequirements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationEvidenceRequirement" }
+        },
+        "exclusions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "interfaces": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationInterface" },
+          "allOf": [
+            { "contains": { "properties": { "role": { "const": "portable-contracts" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "role": { "const": "shared-references" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "role": { "const": "parser-compiler" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "role": { "const": "production-caller" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "role": { "const": "engineering-assurance" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "role": { "const": "quoin-evidence" } }, "required": ["role"] }, "minContains": 1, "maxContains": 1 }
+          ]
+        }
+      },
+      "additionalProperties": false
     },
     "Vp04NativeCommand": {
       "type": "object",

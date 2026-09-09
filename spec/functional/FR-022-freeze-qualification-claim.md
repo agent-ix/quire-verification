@@ -39,7 +39,7 @@ evidence, and explicit exclusions.
 - The planner SHALL treat syntax, import resolution, model binding, type checking,
   evaluation, backend projection, and production integration as distinct claim
   dimensions.
-- A profile revision SHALL change when any identity-bearing claim dimension changes.
+- The JCS profile identity SHALL change when any identity-bearing claim dimension changes.
 
 ## Constraints
 
