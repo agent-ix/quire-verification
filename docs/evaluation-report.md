@@ -64,7 +64,7 @@ an adapted field corruption, and an adapter exception.
   validates exact membership and derived lineage, then reports correlation or
   unknown dependence among uniquely selected results without assigning a score.
 - The retained local portfolio at source revision
-  `86ebb0b8aedde235af90cb0d80ec16244584b135` executed two complementary
+  `32d2680e8eca3c128dd531763b8cdba47cf61f8f` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
@@ -75,7 +75,7 @@ an adapted field corruption, and an adapter exception.
 
 The one-time implementation and rewrite window was measured from the E02 claim
 at `2026-09-08T00:41:35Z` through the retained Rust local portfolio at
-`2026-09-08T06:11:18Z`: 5 hours 29 minutes 43 seconds. It includes the QUOIN
+`2026-09-09T06:46:56Z`: 30 hours 5 minutes 21 seconds elapsed. It includes the QUOIN
 specification/review/plan cycle, the rejected prototype, full Rust replacement,
 fixture and portfolio work, documentation, failure correction, Rust review, and
 tests. It excludes earlier source reading and future owner disposition.
@@ -84,7 +84,7 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Complete Rust test suite (44 first-party tests) | 1.17 s | 217,320 KiB |
+| Complete Rust test suite (48 first-party tests) | 1.17 s | 217,320 KiB |
 | Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
 | Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
 | Release bounded local portfolio | 0.01 s | 9,940 KiB |
