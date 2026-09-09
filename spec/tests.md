@@ -1,6 +1,6 @@
 ---
 id: TM-001
-title: "Bounded compatibility slice test matrix"
+title: "Bounded verification and production qualification test matrix"
 type: TestMatrix
 ---
 # Test Matrix
@@ -8,11 +8,13 @@ type: TestMatrix
 ## Overview
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
-VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
-bounded-parser-portfolio slices to a concrete test case. All 38 cases run in Rust
-through compiler-checked `ix-trace-rs` markers. The IT-003 automated core is
-retained separately from the still-pending external disposition. The rejected
-JavaScript prototype is not evidence.
+VP01 qualification, VP02 native-planning, VP03 evidence-assessment, VP04
+bounded-parser-portfolio, and proposed production-qualification slices to a
+concrete test case. The implemented TC-001 through TC-038 evidence runs in Rust
+through compiler-checked `ix-trace-rs` markers. TC-039 through TC-045 define the
+next test-first qualification scope and remain unimplemented. The IT-003 automated
+core is retained separately from the still-pending external disposition. The
+rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
 
@@ -25,6 +27,12 @@ JavaScript prototype is not evidence.
 
 ## Requirements Traceability
 
+### Stakeholder Requirement Coverage
+
+| Stakeholder Req | Trace to US/FR | Test/Validation | Coverage Status |
+|-----------------|----------------|-----------------|-----------------|
+| StR-002 | US-004, FR-022..FR-027, NFR-007..NFR-008 | StR-002-VC-1..3 via TC-039..TC-045 and IT-004 | 🚧 Planned |
+
 ### User Story Coverage
 
 | User Story | Acceptance Criteria | Test Cases | Coverage Status |
@@ -36,6 +44,7 @@ JavaScript prototype is not evidence.
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
 | US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
+| US-004 | One exact production qualification profile | TC-039..TC-045, IT-004 | 🚧 Planned |
 
 ### Functional Requirement Coverage
 
@@ -62,6 +71,12 @@ JavaScript prototype is not evidence.
 | FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ✅ Implemented; automated core retained |
 | FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
+| FR-022 | FR-022-AC-1..4 | TC-039, IT-004 | 🚧 Planned |
+| FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | 🚧 Planned |
+| FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | 🚧 Planned |
+| FR-025 | FR-025-AC-1..5 | TC-042, IT-004 | 🚧 Planned |
+| FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
+| FR-027 | FR-027-AC-1..5 | TC-045, IT-004 | 🚧 Planned |
 
 ### Non-Functional Requirement Coverage
 
@@ -73,6 +88,19 @@ JavaScript prototype is not evidence.
 | NFR-004 | Rust source, quality gates, and maintained toolchain/dependency guidance | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
 | NFR-006 | Native process containment tests | TC-038 | ✅ Complete |
+| NFR-007 | Owner-threshold performance measurement | TC-044, IT-004 | 🚧 Planned |
+| NFR-008 | Independent artifact and result reproduction | TC-044, TC-045, IT-004 | 🚧 Planned |
+
+### Qualification Constraint Coverage
+
+| Constraint | Test Cases | Coverage Status |
+|------------|------------|-----------------|
+| FR-022-CON-1..2 | TC-039 | 🚧 Planned |
+| FR-023-CON-1 | TC-040 | 🚧 Planned |
+| FR-024-CON-1..2 | TC-041 | 🚧 Planned |
+| FR-025-CON-1..2 | TC-042 | 🚧 Planned |
+| FR-026-CON-1..2 | TC-043 | 🚧 Planned |
+| FR-027-CON-1..2 | TC-045 | 🚧 Planned |
 
 ## Test Case Summary
 
@@ -116,6 +144,13 @@ JavaScript prototype is not evidence.
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ✅ Passed |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
+| TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | 🚧 Planned |
+| TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | 🚧 Planned |
+| TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Planned |
+| TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004-AC-1..NFR-004-AC-3, NFR-006-AC-1..NFR-006-AC-8 | 🚧 Planned |
+| TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
+| TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
+| TC-045 | Seal and bind the qualification disposition | Integration | P0 | FR-027-AC-1..FR-027-AC-5, NFR-008-AC-3 | 🚧 Planned |
 
 ## Option Permutation Matrix
 
@@ -156,6 +191,13 @@ JavaScript prototype is not evidence.
 | TC-037 | exact report | no disposition | otherwise complete execution | incomplete until human disposition |
 | TC-037 | exact sealed core | one foreign disposition | otherwise complete execution | stable refusal; no disposition adopted |
 | TC-038 | exact executable | shell-like argument characters | separate argument vector | child observes unchanged single argument |
+| TC-039 | complete profile | one unaccepted producer revision | all other dimensions exact | blocked prerequisite; no local substitute |
+| TC-040 | required corpus class | zero retained inputs | explicit population denominator | unresolved class remains visible |
+| TC-041 | candidate and oracle agree | shared implementation ancestry | declared independent | dependence mismatch blocks acceptance |
+| TC-042 | fuzz budget starts | stopping rule not reached | no counterexample observed | incomplete rather than passed |
+| TC-043 | exact candidate | test-only caller | real handoff omitted | production-chain qualification refused |
+| TC-044 | passing aggregate | one phase above threshold | complete raw observations | phase violation remains visible |
+| TC-045 | exact core | one claim-expanding disposition | valid reviewer identity | disposition refused; core unchanged |
 
 ## Constraint Boundary Tests
 
@@ -208,6 +250,15 @@ JavaScript prototype is not evidence.
 | Captured standard error | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
 | Admitted executable identity | Exact | Pathname replaced after descriptor admission | TC-038 | Execute the admitted descriptor; replacement cannot substitute bytes |
 | Native process group | Outside | Direct child exits while one descendant holds both pipes | TC-038 | Terminate group, reap direct child, and return no live member |
+| Qualification profile dimensions | Exact | Every required dimension present | TC-039 | Emit one immutable profile |
+| Qualification profile dimensions | Under minimum | One required dimension absent | TC-039 | Refuse profile emission |
+| Required corpus-class coverage | Exact | At least one qualified input or one explicit gap per class | TC-040 | Preserve complete denominator |
+| Required oracle coverage | Under minimum | No oracle and no explicit no-oracle gap | TC-041 | Refuse evidence plan |
+| Mutation discrimination | Exact | One named guard removal per critical claim | TC-042 | Named traced test fails for intended reason |
+| Local Cargo concurrency | Max | 2 jobs | TC-044 | Accept bounded run |
+| Local Cargo concurrency | Outside | More than 2 jobs | TC-044 | Refuse qualification run |
+| Qualification dispositions | Exact | 1 bound value | TC-045 | Finalize accept, revise, or reject |
+| Qualification dispositions | Above max | 2 values | TC-045 | Refuse ambiguity |
 
 ## Error Paths
 
@@ -241,6 +292,14 @@ JavaScript prototype is not evidence.
 | ERR-026 | Measurement observation identity, phase/repetition cardinality, or order is invalid | TC-036 | `invalid_measurement_series` refusal |
 | ERR-027 | A derived source is absent, self-referential, or cyclic | TC-033 | `invalid_oracle_lineage` refusal before assessment |
 | ERR-028 | An oracle/observation envelope lacks an exact role-matched strict-reader output | TC-033 | Existing shared-reference refusal before result matching |
+| ERR-029 | Qualification profile omits or opens a required claim dimension | TC-039 | Refuse profile emission |
+| ERR-030 | Corpus bytes, lineage, rights, class, or selection rationale is absent or contradictory | TC-040 | Refuse corpus qualification or retain explicit class gap |
+| ERR-031 | Required oracle is absent, correlated as independent, changed, or disagrees | TC-041 | Retain no-oracle/dependence/disagreement gap |
+| ERR-032 | Generative budget is incomplete or a mutant survives | TC-042 | Retain incomplete or violated obligation with artifacts |
+| ERR-033 | Production chain uses a test substitute or an unaccepted external revision | TC-043 | Refuse qualification at the named owner seam |
+| ERR-034 | Performance threshold is missing or exceeded | TC-044 | Keep performance gate incomplete or violated |
+| ERR-035 | Reproduction cannot resolve exact bytes or explain a difference | TC-044 | Keep affected evidence unresolved |
+| ERR-036 | Qualification disposition is missing, foreign, duplicated, stale, or claim-expanding | TC-045 | Incomplete or stable refusal; core unchanged |
 
 ## State Transition Coverage
 
@@ -264,6 +323,10 @@ JavaScript prototype is not evidence.
 | VP04 disposition | absent → one exact owner value | TC-037 | report becomes disposition-complete without changing automated results |
 | VP04 disposition | one exact owner value → foreign or duplicate | TC-037 | finalization refuses without changing the sealed core |
 | Native process | running → time/output limit | TC-038 | child is terminated and reaped; result becomes failed |
+| Qualification profile | draft dimensions → frozen identity | TC-039 | evidence collection may begin only for exact profile |
+| Oracle status | independent agreement → disagreement or shared ancestry | TC-041 | affected claim becomes unresolved |
+| Production chain | all exact seams → one changed or missing seam | TC-043 | chain becomes blocked or failed at named boundary |
+| Qualification report | incomplete core → one exact disposition | TC-045 | final decision binds the same bounded claim |
 
 ## Edge Cases
 
@@ -301,6 +364,12 @@ JavaScript prototype is not evidence.
 | EC-025 | Candidate pathname changes after validation but before execution | NFR-006 | TC-038 | Different executable bytes can replace the reviewed candidate |
 | EC-026 | A direct child exits while a descendant retains the output pipes | NFR-006 | TC-038 | The runner can block beyond its deadline or leave a live orphan |
 | EC-027 | A multiline `#[trace(...)]` compiles while the configured Quire reader sees only its first line | NFR-004 | TC-022 | Claimed acceptance criteria remain unbacked despite a green Rust test |
+| EC-033 | A large convenient corpus omits a declared production class | FR-023 | TC-040 | Sample count can masquerade as population coverage |
+| EC-034 | Candidate and oracle share the same parser or generator | FR-024 | TC-041 | Correlated agreement can masquerade as independent confirmation |
+| EC-035 | An unfinished fuzz run finds no counterexample | FR-025 | TC-042 | Budget exhaustion can be reported as a pass |
+| EC-036 | A test adapter bypasses the real production caller or assurance handoff | FR-026 | TC-043 | Component success can masquerade as production-chain qualification |
+| EC-037 | A favorable aggregate hides one hot-path phase over budget | NFR-007 | TC-044 | Production latency breach can disappear in the summary |
+| EC-038 | A report is tampered and internally resealed while retained source bytes change | NFR-008 | TC-045 | Self-consistency can masquerade as source-bound integrity |
 
 ## Integration Test Matrix
 
@@ -311,6 +380,7 @@ JavaScript prototype is not evidence.
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | 🚧 Automated core retained; external disposition pending |
+| IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
 
 ### Integration Test Details
 
@@ -328,6 +398,13 @@ JavaScript prototype is not evidence.
 | TC-036 | IT-003 | Five prescribed measured repetitions | Raw monotonic phase observations | Setup separated; summaries recompute exactly | P0 |
 | TC-037 | IT-003 | Exact report and review procedure | Verification-owner disposition | One bound value and bounded claims | P0 |
 | TC-038 | IT-003 | Controlled time, output, argument, environment, path, status, and protocol cases | Native process adapter | Bounded typed results and no orphan process | P0 |
+| TC-039 | IT-004 | Complete and one-axis-mutated qualification profiles | Owner-authored exact boundary | One immutable profile or explicit refusal/prerequisite | P0 |
+| TC-040 | IT-004 | Representative, boundary, malformed, generated, and mutated corpus | Exact bytes, classes, provenance, rights, and lineage | Complete denominator or explicit gaps | P0 |
+| TC-041 | IT-004 | Independent, shared, derived, absent, and disagreeing oracles | Exact bounded oracle executions | Correct dependence and disagreement findings | P0 |
+| TC-042 | IT-004 | Example, property, fuzz, metamorphic, differential, and mutation techniques | Exact seeds, budgets, guards, and stopping rules | Discriminating results and replayable counterexamples | P0 |
+| TC-043 | IT-004 | Real chain and one-seam substitutions | Exact caller, candidate, result, and assurance interfaces | Exact handoff or named blocked/failed seam | P0 |
+| TC-044 | IT-004 | Performance and independent reproduction | Raw observations, thresholds, and retained identities | Per-phase decision and reproducible evidence | P0 |
+| TC-045 | IT-004 | Complete, incomplete, tampered, and disposition variants | Sealed core and external owner decision | Bounded final report or stable refusal | P0 |
 
 ## Resolved Coverage Gaps
 
@@ -343,9 +420,9 @@ JavaScript prototype is not evidence.
 
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 16 | 16 | 0 | 0 | 100% |
-| Integration | 8 | 3 | 0 | 5 | 38% |
-| Property | 11 | 6 | 0 | 5 | 55% |
+| Unit | 17 | 17 | 0 | 0 | 100% |
+| Integration | 11 | 8 | 0 | 3 | 73% |
+| Property | 13 | 10 | 0 | 3 | 77% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Benchmark | 1 | 0 | 0 | 1 | 0% |
-| Overall | 38 | 27 | 0 | 11 | 71% |
+| Benchmark | 2 | 1 | 0 | 1 | 50% |
+| Overall | 45 | 38 | 0 | 7 | 84% |
