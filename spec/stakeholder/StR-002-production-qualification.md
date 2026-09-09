@@ -5,7 +5,19 @@ type: StR
 relationships:
   - target: "ix://agent-ix/quire-verification/FR-022"
     type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-023"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-024"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-025"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-026"
+    type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/FR-027"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/NFR-007"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/NFR-008"
     type: "satisfied_by"
 ---
 # StR-002: Verification owners need bounded production qualification
@@ -55,8 +67,8 @@ only, and local qualification uses bounded concurrency on the shared workstation
 ## Dependencies
 
 The need depends on an owner-selected production boundary and reviewed exact
-producer contracts. It is satisfied by [FR-022](../functional/FR-022-freeze-qualification-claim.md)
-and [FR-027](../functional/FR-027-bind-qualification-disposition.md).
+producer contracts. FR-022 through FR-027 define its functional path; NFR-007 and
+NFR-008 constrain the performance evidence and reproducibility required for disposition.
 
 ## Priority and Risk (Informative)
 

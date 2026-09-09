@@ -1,6 +1,6 @@
 ---
 id: FR-025
-title: "Run discriminating qualification techniques"
+title: "Produce discriminating qualification results"
 type: FR
 relationships:
   - target: "ix://agent-ix/quire-verification/US-004"
@@ -12,14 +12,14 @@ relationships:
   - target: "ix://agent-ix/quire-verification/FR-019"
     type: "depends_on"
 ---
-# FR-025: Run discriminating qualification techniques
+# FR-025: Produce Discriminating Qualification Results
 
 ## Description
 
 For each evidence obligation in a frozen qualification profile, the qualification
-runner SHALL execute the selected example, property, fuzz, metamorphic, mutation,
-and differential techniques over their declared corpus partitions and retain every
-success, violation, failure, timeout, unsupported state, and minimized counterexample.
+runner SHALL produce one exact `TechniqueResult` by executing its selected example,
+property, fuzz, metamorphic, mutation, or differential technique over the declared
+corpus partition.
 
 ## Inputs
 

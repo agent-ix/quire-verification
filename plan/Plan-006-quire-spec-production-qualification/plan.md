@@ -54,6 +54,10 @@ named prerequisite inside that task; it never authorizes this repository to copy
 producer's schema or implementation. Agents A, C, D, and contract-agent-c retain their
 existing ownership.
 
+Merging this planning artifact does not unblock issue 13 execution. Plan-006 is tracked
+as active planning, while Task-025 and all dependent implementation remain gated on the
+owner-authored profile dimensions, phase thresholds, and accepted exact producer inputs.
+
 ### Shared dependencies
 
 The existing schema-derived Rust contracts, RFC 8785 JCS implementation, strict
@@ -101,8 +105,7 @@ inventories after the profile is fixed. On the current shared desktop, execution
 intentionally serialized while four other agent lanes are active:
 
 ```text
-Task-025 -> Task-026 -> Task-027 -> Task-028 -> Task-029 -> Task-030
-                                                        -> Task-031 -> Task-032 -> Task-033 -> Task-034
+Task-025 -> Task-026 -> Task-027 -> Task-028 -> Task-029 -> Task-030 -> Task-031 -> Task-032 -> Task-033 -> Task-034
 ```
 
 Parallelism may be reconsidered after those lanes finish, but no task may share a
@@ -115,11 +118,11 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 | Task-025 | A | FR-022 | TC-039 | not_started |
 | Task-026 | A | FR-023 | TC-040 | not_started |
 | Task-027 | A | FR-024 | TC-041 | not_started |
-| Task-028 | A | FR-025 | TC-042 | not_started |
-| Task-029 | A | FR-025 | TC-042 | not_started |
+| Task-028 | A | FR-025 enablement | Task-029 completion gate | not_started |
+| Task-029 | A | FR-025 completion | TC-042 | not_started |
 | Task-030 | A | FR-026 | TC-043 | not_started |
-| Task-031 | A | NFR-007 | TC-044 | not_started |
-| Task-032 | A | NFR-008 | TC-044 | not_started |
+| Task-031 | A | NFR-007 evidence | Task-032 completion gate | not_started |
+| Task-032 | A | NFR-008 and TC-044 completion | TC-044 | not_started |
 | Task-033 | A | FR-027 | TC-045 | not_started |
 | Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | IT-004, TC-039..TC-045 | not_started |
 

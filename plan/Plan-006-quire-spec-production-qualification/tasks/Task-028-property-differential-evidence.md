@@ -9,7 +9,6 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/Task-026", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/Task-027", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/FR-025", type: references }
-  - { target: "ix://agent-ix/quire-verification/TC-042", type: verifies }
 ---
 # Task-028: Build Property and Differential Qualification Evidence
 
@@ -27,9 +26,10 @@ differential obligations over the qualified corpus and classified oracles.
 
 ## Deliverables
 
-- Rust generators, relation runners, replay artifacts, and the property/differential portion of TC-042.
+- Rust generators, relation runners, replay artifacts, and the property/differential evidence consumed by Task-029's complete TC-042 gate.
 
 ## Notes
 
 - Execute locally with at most two Cargo jobs; do not start another high-load lane concurrently.
+- This task enables FR-025; Task-029 is the single completion owner for FR-025 and TC-042.
 - Unblocks Task-029.

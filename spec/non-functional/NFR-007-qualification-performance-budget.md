@@ -21,6 +21,9 @@ The measurement covers only the exact caller, candidate, corpus population,
 environment, cache policy, concurrency, and phase boundaries in the frozen profile.
 Build and download time, cold setup, steady-state execution, and cleanup remain
 separate measures.
+This is a parameterized performance requirement: its numerical phase thresholds are
+profile inputs supplied by the owner. No repository-wide latency ceiling applies, and a
+profile without every required phase threshold remains incomplete under NFR-007-AC-1.
 
 ## Rationale
 

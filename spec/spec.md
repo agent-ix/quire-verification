@@ -118,9 +118,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 
 | ID | Title | Status |
 |----|-------|--------|
-| US-001 | Plan portable verification work | Implemented for bounded groundwork |
-| US-002 | Assess evidence without false attribution | Implemented for bounded groundwork |
-| US-003 | Detect compatibility regressions locally | Implemented for bounded groundwork |
+| US-001 | Plan portable verification work | Groundwork implemented; VP04 disposition pending |
+| US-002 | Assess evidence without false attribution | Groundwork implemented; VP04 disposition pending |
+| US-003 | Detect compatibility regressions locally | Groundwork implemented; VP04 disposition pending |
 | US-004 | Qualify one quire-spec production profile | Proposed |
 | FR-001 | Validate the five public contracts | Implemented; verified |
 | FR-002 | Derive runtime contract behavior from the schema | Implemented; verified |
@@ -146,7 +146,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-022 | Freeze an exact qualification claim | Proposed |
 | FR-023 | Retain an identified qualification corpus | Proposed |
 | FR-024 | Bind independent qualification oracles | Proposed |
-| FR-025 | Run discriminating qualification techniques | Proposed |
+| FR-025 | Produce discriminating qualification results | Proposed |
 | FR-026 | Execute the declared production chain | Proposed |
 | FR-027 | Bind the production qualification disposition | Proposed |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |

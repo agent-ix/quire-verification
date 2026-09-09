@@ -31,5 +31,6 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
 ## Notes
 
 - The verification owner supplies the claim dimensions and thresholds; implementation does not invent them.
+- The verification owner is the action owner for recording those selected values in issue 15; no implementation task may infer them from VP04 or a schema ceiling.
 - Stop this task as `blocked` if any selected producer revision is unavailable or unaccepted.
 - Unblocks Task-026.

@@ -31,7 +31,7 @@ rejected JavaScript prototype is not evidence.
 
 | Stakeholder Req | Trace to US/FR | Test/Validation | Coverage Status |
 |-----------------|----------------|-----------------|-----------------|
-| StR-002 | US-004, FR-022..FR-027 | StR-002-VC-1..3 via TC-039..TC-045 and IT-004 | 🚧 Planned |
+| StR-002 | US-004, FR-022..FR-027, NFR-007..NFR-008 | StR-002-VC-1..3 via TC-039..TC-045 and IT-004 | 🚧 Planned |
 
 ### User Story Coverage
 
@@ -147,7 +147,7 @@ rejected JavaScript prototype is not evidence.
 | TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | 🚧 Planned |
 | TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | 🚧 Planned |
 | TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Planned |
-| TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004, NFR-006 | 🚧 Planned |
+| TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004-AC-1..NFR-004-AC-3, NFR-006-AC-1..NFR-006-AC-8 | 🚧 Planned |
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
 | TC-045 | Seal and bind the qualification disposition | Integration | P0 | FR-027-AC-1..FR-027-AC-5, NFR-008-AC-3 | 🚧 Planned |

@@ -21,6 +21,7 @@ profile, corpus, oracle, environment, seed, command, observation, and result ide
 
 ## Subtasks
 
+- [ ] Write the TC-044 reproduction, exact-byte, and explained-difference cases first, then reconcile Task-031's benchmark cases into the complete TC-044 gate.
 - [ ] Resolve every required identity to retained or authorized retrievable bytes and verify its digest.
 - [ ] Rebuild the exact candidate and replay deterministic cases and minimized counterexamples.
 - [ ] Repeat MP-002 without sharing mutable build or evidence state with the original run.
@@ -28,9 +29,10 @@ profile, corpus, oracle, environment, seed, command, observation, and result ide
 
 ## Deliverables
 
-- Independent reproduction procedure, byte-resolution record, replay results, difference report, and TC-044 reproduction evidence.
+- Independent reproduction procedure, byte-resolution record, replay results, difference report, and the complete TC-044 measurement and reproduction gate.
 
 ## Notes
 
 - Schedule this task after other active agent builds finish if shared-machine noise would invalidate the profile.
+- This task is the single completion owner for TC-044 after Task-031.
 - Unblocks Task-033.

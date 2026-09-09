@@ -8,7 +8,6 @@ priority: P0
 relationships:
   - { target: "ix://agent-ix/quire-verification/Task-030", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/NFR-007", type: references }
-  - { target: "ix://agent-ix/quire-verification/TC-044", type: verifies }
 ---
 # Task-031: Measure the Production Performance Budget
 
@@ -31,4 +30,5 @@ cleanup observations and evaluating each owner threshold independently.
 ## Notes
 
 - The VP04 baseline supplies no production threshold; only profile-owner values decide this gate.
+- This task produces the NFR-007 benchmark evidence; Task-032 is the single completion owner for the combined TC-044 measurement and reproduction gate.
 - Unblocks Task-032.
