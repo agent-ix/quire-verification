@@ -27,7 +27,7 @@ relationships:
 - [ ] **FR-022**: Freeze the exact candidate, caller, commands, population, guarantees, environment, budgets, evidence, exclusions, and producer revisions.
 - [ ] **FR-023**: Retain a rights-cleared corpus with exact bytes, population classes, provenance, and reproducible lineage.
 - [ ] **FR-024**: Bind exact independent, shared, derived, absent, and disagreeing oracle contributions.
-- [ ] **FR-025**: Run bounded example, property, fuzz, metamorphic, mutation, and differential techniques without erasing adverse results.
+- [ ] **FR-025**: Produce one exact discriminating TechniqueResult for each selected evidence obligation and technique.
 - [ ] **FR-026**: Execute the real production caller, candidate, portable result, and assurance handoff at accepted revisions.
 - [ ] **FR-027**: Seal one reproducible evidence core and bind exactly one external owner disposition.
 
@@ -113,18 +113,18 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 
 ## Task File Mapping
 
-| Task | Track | Owns (references) | Verified by (verifies) | Status |
-|------|-------|-------------------|------------------------|--------|
+| Task | Track | Owns (references) | Test relationship | Status |
+|------|-------|-------------------|-------------------|--------|
 | Task-025 | A | FR-022 | TC-039 | blocked |
 | Task-026 | A | FR-023 | TC-040 | not_started |
 | Task-027 | A | FR-024 | TC-041 | not_started |
-| Task-028 | A | FR-025 enablement | Task-029 completion gate | not_started |
+| Task-028 | A | FR-025 enablement | references TC-042 | not_started |
 | Task-029 | A | FR-025 completion | TC-042 | not_started |
 | Task-030 | A | FR-026 | TC-043 | not_started |
-| Task-031 | A | NFR-007 evidence | Task-032 completion gate | not_started |
-| Task-032 | A | NFR-008 and TC-044 completion | TC-044 | not_started |
+| Task-031 | A | NFR-007 evidence | references TC-044 | not_started |
+| Task-032 | A | NFR-008 | verifies TC-044 | not_started |
 | Task-033 | A | FR-027 | TC-045 | not_started |
-| Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | IT-004, TC-039..TC-045 | not_started |
+| Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | verifies IT-004 and TC-039..TC-045 | not_started |
 
 ## Coordination Rules
 

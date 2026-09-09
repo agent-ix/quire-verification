@@ -20,10 +20,16 @@ reproducible generator or mutation lineage.
 
 ## Subtasks
 
-- [ ] Write TC-040 properties for complete classes, empty classes, digest drift, duplicate identities, missing rights, and broken lineage.
+- [ ] Write TC-040 properties first for profile/population drift, complete and empty
+  classes, digest and replay drift, duplicate identities, missing retention rights,
+  unknown classes, and missing, self-referential, or cyclic lineage.
 - [ ] Define the closed corpus manifest in the authoritative schema and derive Rust types.
 - [ ] Inventory representative, boundary, malformed, generated, and mutated inputs without importing artifacts whose rights do not permit retention.
+- [ ] Require strict-reader proofs for retained bytes and exact replay evidence for every
+  generated or mutated input.
 - [ ] Preserve an explicit gap for every unpopulated required class.
+- [ ] Extend TC-039/TC-040 to prove commands and catalog techniques do not augment the
+  frozen profile's nonempty authored guarantee set.
 
 ## Deliverables
 

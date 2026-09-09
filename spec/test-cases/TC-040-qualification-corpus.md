@@ -18,13 +18,16 @@ generation or mutation lineage.
 
 Validate representative real, boundary, malformed, generated, and mutated inputs.
 Remove each class, byte artifact, provenance field, rights decision, selection reason,
-generator seed, and parent relation independently. Change bytes under a retained
-digest, duplicate an identity, and attempt to label a derived case independent.
+generator seed, invocation, replay-run reference, replay output, and parent relation independently. Change
+the profile identity, population identity, required-class set, retained bytes, replay
+bytes, and artifact kind one axis at a time. Duplicate an identity; add an unknown
+class; create missing, self, and cyclic mutation parents; deny retention; and attempt to
+label a derived case independent.
 
 ## Expected Results
 
 Only the complete corpus qualifies. Empty required classes remain gaps. Missing or
 changed bytes, duplicate identities, unclassified lineage, missing rights, and
-unexplained exclusions refuse qualification; generated and mutated cases replay and
-retain their derived status.
-
+unexplained exclusions refuse qualification. Generated and mutated cases replay to the
+exact retained bytes and retain their derived status. An unpopulated or unauthorized
+required class produces one owned gap and no qualified-complete outcome.
