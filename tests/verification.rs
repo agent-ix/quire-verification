@@ -2491,7 +2491,9 @@ fn tc_021_baseline_checker_accepts_the_pinned_quoin_contract() {
 }
 
 #[trace("TC-022", "NFR-004-AC-1", "NFR-004-AC-2")]
-#[trace("NFR-004-AC-3", "NFR-004-AC-4", "NFR-004-AC-5", "StR-001-VC-1")]
+#[trace("NFR-004-AC-3", "NFR-004-AC-4", "NFR-004-AC-5")]
+#[trace("NFR-004-AC-6")]
+#[trace("StR-001-VC-1")]
 #[test]
 fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -2526,6 +2528,12 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
         include_str!("../.ix/modules/quire-verification/manifest.yaml")
             .contains("source_exclude:\n    - \"vendor/**\"")
     );
+    let rust_requirement = include_str!("../spec/non-functional/NFR-004-rust-qualified-path.md");
+    assert!(rust_requirement.contains("first-party traceability population"));
+    assert!(rust_requirement.contains("Vendored dependency sources under `vendor/`"));
+    let trace_test = include_str!("../spec/test-cases/TC-022-rust-qualified-path.md");
+    assert!(trace_test.contains("repository-owned Rust under `src/` and `tests/`"));
+    assert!(trace_test.contains("governed by that dependency's matrix"));
     assert_eq!(
         format!(
             "{:x}",

@@ -948,7 +948,7 @@ fn vp04_collects_and_retains_automated_core() {
 #[ignore = "VP04 disposition-finalization lane; requires retained core and external disposition"]
 fn vp04_binds_external_disposition_to_retained_core() {
     let executable = std::env::var_os("VP04_PARSER").map_or_else(
-        || PathBuf::from("/tmp/quire-spec-language-agent-b-target/release/quire-spec"),
+        || root().join(".vp04-build/release/quire-spec"),
         PathBuf::from,
     );
     let assets = load_assets(&executable);

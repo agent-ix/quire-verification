@@ -504,3 +504,179 @@ fn unsupported(message: impl Into<String>) -> VerificationError {
 fn invalid_core(message: impl Into<String>) -> VerificationError {
     VerificationError::new(VerificationErrorCode::SchemaViolation, message.into())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::measurement::validate_measurement_series;
+    use crate::shared_reference::{
+        ArtifactExpectation, ReferenceExpectation, ReferenceSupport, SharedReferenceReader,
+    };
+    use ix_trace_rs::trace;
+    use std::collections::{BTreeMap, BTreeSet};
+
+    const CORE_DIGEST: &str =
+        "sha256-jcs:db03d0c81141e06135fa68c84125253ed28b0e92e961abb5b0c44c8a7abd56f2";
+    const CANDIDATE_DIGEST: &str =
+        "sha256:c6bd75613f85dfd38aaf37169aed0a3d7409466d4b2f34dcc5397896c46579e5";
+
+    fn validate_artifact(reference: &Value, bytes: &[u8]) -> ValidatedSharedReference {
+        let value = &reference["value"];
+        let wire_identity = value["wire"]["identity"]
+            .as_str()
+            .expect("wire identity")
+            .to_owned();
+        let wire_version = value["wire"]["version"]
+            .as_str()
+            .expect("wire version")
+            .to_owned();
+        let support = ReferenceSupport {
+            wire_versions: BTreeMap::from([(
+                wire_identity.clone(),
+                BTreeSet::from([wire_version.clone()]),
+            )]),
+            ..ReferenceSupport::default()
+        };
+        SharedReferenceReader::new(support)
+            .read(
+                &serde_json::to_vec(reference).expect("reference JSON"),
+                &ReferenceExpectation::Artifact(ArtifactExpectation {
+                    ref_version: value["refVersion"].as_str().expect("refVersion").into(),
+                    kind: value["kind"].as_str().expect("kind").into(),
+                    authority: value["authority"].as_str().expect("authority").into(),
+                    identity: value["identity"].as_str().expect("identity").into(),
+                    revision_namespace: value["revision"]["namespace"]
+                        .as_str()
+                        .expect("revision namespace")
+                        .into(),
+                    revision_value: value["revision"]["value"]
+                        .as_str()
+                        .expect("revision value")
+                        .into(),
+                    digest: value["digest"].as_str().expect("digest").into(),
+                    wire_identity,
+                    wire_version,
+                    bytes: Some(bytes.to_vec()),
+                }),
+            )
+            .expect("exact retained artifact reference")
+    }
+
+    fn contribution_reference<'a>(core: &'a Value, field: &str, identity: &str) -> &'a Value {
+        core["results"]
+            .as_array()
+            .expect("results")
+            .iter()
+            .flat_map(|result| {
+                result["oracleContributions"]
+                    .as_array()
+                    .expect("oracle contributions")
+            })
+            .map(|contribution| &contribution[field])
+            .find(|reference| {
+                reference.pointer("/value/identity").and_then(Value::as_str) == Some(identity)
+            })
+            .expect("retained contribution reference")
+    }
+
+    #[trace("TC-037", "FR-021-AC-1", "FR-021-AC-2", "FR-021-AC-5")]
+    #[test]
+    fn tc_037_ratchets_the_committed_vp04_core_and_recomputes_its_assessment() {
+        let retained = parse_strict_bounded_json(include_bytes!(
+            "../evidence/vp04-parser-portfolio-core.json"
+        ))
+        .expect("strict committed VP04 report");
+        validate_schema_definition("Vp04PortfolioReport", &retained)
+            .expect("committed report schema");
+        assert_eq!(retained["status"], "incomplete");
+        assert!(retained["disposition"].is_null());
+        let core = &retained["core"];
+        validate_schema_definition("Vp04AutomatedReportCore", core).expect("committed core schema");
+        let digest = jcs_sha256(core).expect("committed core JCS digest");
+        assert_eq!(digest, CORE_DIGEST);
+        assert_eq!(retained["coreDigest"], CORE_DIGEST);
+
+        for (field, bytes) in [
+            (
+                "subjectRef",
+                include_bytes!("../fixtures/vp04/parent.native").as_slice(),
+            ),
+            (
+                "mutationRef",
+                include_bytes!("../fixtures/vp04/parent-invalid.native").as_slice(),
+            ),
+            (
+                "dependencyClosureRef",
+                include_bytes!("../fixtures/vp04/quire-spec-Cargo.lock").as_slice(),
+            ),
+            (
+                "environmentRef",
+                b"linux-x86_64;kernel=6.18.33.2-microsoft-standard-WSL2;rustc=1.94.1".as_slice(),
+            ),
+        ] {
+            validate_artifact(&core[field], bytes);
+        }
+        assert_eq!(core["candidateRef"]["value"]["digest"], CANDIDATE_DIGEST);
+        assert_eq!(
+            core["candidateRef"]["value"]["revision"]["value"],
+            "2be73504edff1224d6396da15edca3775905d37b"
+        );
+
+        let procedure = core["plan"]["inventory"]
+            .as_array()
+            .expect("inventory")
+            .iter()
+            .find(|property| property["propertyId"] == "VP04-DISPOSITION")
+            .expect("manual property")
+            .pointer("/input/reviewProcedureRef")
+            .expect("review procedure");
+        let validated_procedure = validate_artifact(
+            procedure,
+            include_bytes!("../evidence/vp04-review-procedure.md"),
+        );
+        validate_selected_reference(procedure, &validated_procedure, "review-procedure")
+            .expect("selected review procedure binding");
+
+        let validated_contributions = [
+            (
+                "oracleRef",
+                "oracle:quire-spec-parser-protocol",
+                b"quire-spec exact parse, format, and syntax-refusal protocol".as_slice(),
+            ),
+            (
+                "observationRef",
+                "observation:vp04-direct",
+                b"valid source parsed with exact identity, digest, and counts".as_slice(),
+            ),
+            (
+                "observationRef",
+                "observation:vp04-roundtrip",
+                b"first and second formatted byte strings are equal".as_slice(),
+            ),
+            (
+                "observationRef",
+                "observation:vp04-adverse",
+                b"declared syntax mutation produced the exact located refusal".as_slice(),
+            ),
+        ]
+        .into_iter()
+        .map(|(field, identity, bytes)| {
+            validate_artifact(contribution_reference(core, field, identity), bytes)
+        })
+        .collect::<Vec<_>>();
+
+        validate_measurement_bindings(core).expect("measurement reference bindings");
+        validate_reproduction_bindings(core).expect("reproduction identity bindings");
+        validate_core_bindings(core, procedure).expect("plan, task, result, and run bindings");
+        validate_core_assessment(core, &validated_contributions)
+            .expect("assessment recomputes from retained evidence");
+        validate_measurement_series(
+            &core["measurements"],
+            CANDIDATE_DIGEST,
+            core["environmentRef"]["value"]["digest"]
+                .as_str()
+                .expect("environment digest"),
+        )
+        .expect("measurement series recomputes");
+    }
+}

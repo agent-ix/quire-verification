@@ -131,6 +131,9 @@ fn tc_038_pins_the_admitted_descriptor_and_refuses_path_escape() {
     let link = candidate.root.path().join("linked-candidate");
     symlink(&candidate.executable, &link).expect("candidate symlink");
     adverse.push(link);
+    let relative_link = candidate.root.path().join("relative-linked-candidate");
+    symlink("native-process-fixture", &relative_link).expect("relative candidate symlink");
+    adverse.push(relative_link);
 
     for executable in adverse {
         let error = NativeProcessExecutor::admit(candidate.root.path(), &executable)
@@ -152,6 +155,33 @@ fn tc_038_pins_the_admitted_descriptor_and_refuses_path_escape() {
         .expect_err("linked root must refuse");
     assert_eq!(
         root_error.code(),
+        VerificationErrorCode::InvalidExecutablePath
+    );
+    let root_parent = candidate
+        .root
+        .path()
+        .parent()
+        .expect("candidate root parent");
+    let relative_root_parent = tempfile::Builder::new()
+        .prefix("quire-verification-linked-root-")
+        .tempdir_in(root_parent)
+        .expect("relative linked-root parent");
+    let relative_root_link = relative_root_parent.path().join("linked-root");
+    let relative_root_target = PathBuf::from("..").join(
+        candidate
+            .root
+            .path()
+            .file_name()
+            .expect("candidate root name"),
+    );
+    symlink(&relative_root_target, &relative_root_link).expect("relative root symlink");
+    let relative_root_error = NativeProcessExecutor::admit(
+        &relative_root_link,
+        &relative_root_link.join("native-process-fixture"),
+    )
+    .expect_err("relative linked root must refuse");
+    assert_eq!(
+        relative_root_error.code(),
         VerificationErrorCode::InvalidExecutablePath
     );
 

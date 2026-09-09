@@ -26,7 +26,10 @@ Validate the closed internal report shape, seal the automated core, and inspect
 the report before disposition, with each admitted disposition value, with two
 dispositions, and with a disposition copied from another report. Inspect the
 measurement context, exclusions, uncertainty, alternative explanations,
-evidence owner, sufficiency field, and claim-limit text.
+evidence owner, sufficiency field, and claim-limit text. In a non-ignored local
+test, read the committed VP04 automated-core artifact, recompute its RFC 8785 JCS
+digest, revalidate its closed report/core shape and exact reference bindings, and
+recompute its assessment from its retained inventory and results.
 
 ## Expected Results
 
@@ -36,4 +39,7 @@ bound `accept`, `revise`, or `reject` value is representable; duplicate or forei
 dispositions refuse. Quoin remains evidence and sufficiency owner, sufficiency
 remains not-made, supplied reviewer provenance is not called authenticated, and
 the report makes no model, evaluator, production, ROI, delivery, throughput,
-scale, certification, or general-effectiveness claim.
+scale, certification, or general-effectiveness claim. The committed core's
+recorded digest equals the recomputed digest, its bindings validate, and its
+retained assessment equals the independently recomputed assessment; artifact or
+report-logic drift fails the default local test suite.

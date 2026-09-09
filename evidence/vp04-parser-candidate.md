@@ -94,3 +94,18 @@ The earlier hosted syntax run on checkpoint `8b739de` passed. The merged PR
 intentionally retained manual-dispatch-only CI and used the accepted final local
 review candidate, so this evidence distinguishes the reproduced exact merged
 revision from that earlier hosted checkpoint.
+
+## Disposition finalizer input
+
+The ignored disposition-finalization lane reads `VP04_PARSER` when supplied and
+otherwise uses `.vp04-build/release/quire-spec` under this repository. The
+`.vp04-build/` directory is ignored. Populate it from the selected upstream
+revision with an absolute target directory, for example:
+
+```text
+cargo build --locked --release --no-default-features --target-dir /absolute/path/to/quire-verification/.vp04-build
+```
+
+The lane rechecks that the selected executable has SHA-256 digest
+`c6bd75613f85dfd38aaf37169aed0a3d7409466d4b2f34dcc5397896c46579e5`;
+another binary at either the default path or `VP04_PARSER` refuses admission.

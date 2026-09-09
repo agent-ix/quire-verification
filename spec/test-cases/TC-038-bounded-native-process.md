@@ -20,7 +20,10 @@ descendant or logical claim.
 Run the Linux executor concurrently against immutable hard links to one completed
 Cargo-built controlled Rust child, with each case using its own execution root.
 Exercise exact and adverse root-relative executable paths, then replace the
-admitted pathname before one invocation. Exercise arguments, environments, fresh
+admitted pathname before one invocation. Exercise executable and root symlinks
+whose targets are both absolute and relative within the admitted root so
+`RESOLVE_NO_SYMLINKS` is tested independently of `RESOLVE_BENEATH`. Exercise
+arguments, environments, fresh
 working directories, positive declared deadlines through the 10-second cap,
 separate and simultaneous 16-MiB stream boundaries, exit statuses, signals,
 UTF-8, and method responses. Have direct children leave descendants with retained
