@@ -26,7 +26,9 @@ label a derived case independent.
 
 ## Expected Results
 
-Only the complete corpus qualifies. Empty required classes remain gaps. Missing or
+Only the complete corpus qualifies. Empty required classes remain gaps. A reference-only
+or unauthorized candidate remains referenced in its owned gap, contributes no retained
+bytes, and does not cover its class. Missing or
 changed bytes, duplicate identities, unclassified lineage, missing rights, and
 unexplained exclusions refuse qualification. Generated and mutated cases replay to the
 exact retained bytes and retain their derived status. An unpopulated or unauthorized

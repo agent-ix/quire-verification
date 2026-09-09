@@ -40,8 +40,10 @@ rationale.
   its locally supplied bytes.
 - The builder SHALL reject a missing byte artifact, digest mismatch, duplicate
   identity, unclassified input, absent rights disposition, or unexplained exclusion.
-- An included artifact's rights disposition SHALL explicitly authorize local retention;
-  a reference-only or unauthorized artifact remains an owned class gap.
+- An included artifact's rights disposition SHALL explicitly authorize local retention.
+  A reference-only or unauthorized candidate SHALL appear only as an owned class gap
+  carrying its artifact reference and rights decision; the builder SHALL retain none of
+  its bytes and SHALL NOT count it as class coverage.
 - Generated inputs SHALL name an exact generator reference, seed, invocation, and
   strict-reader-proved `run-artifact` whose retained output equals their retained bytes.
 - Mutated inputs SHALL name an existing parent entry, seed, transformation, and replay

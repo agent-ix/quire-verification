@@ -22,6 +22,7 @@ pub struct QualificationCorpusGap {
     class_id: Box<str>,
     owner: Box<str>,
     reason: Box<str>,
+    disposition: Option<Box<str>>,
 }
 
 impl QualificationCorpusGap {
@@ -41,6 +42,12 @@ impl QualificationCorpusGap {
     #[must_use]
     pub const fn reason(&self) -> &str {
         &self.reason
+    }
+
+    /// Returns why a referenced candidate was not retained, when one was named.
+    #[must_use]
+    pub fn disposition(&self) -> Option<&str> {
+        self.disposition.as_deref()
     }
 }
 
@@ -348,10 +355,30 @@ fn validate_gaps(
     gap_values
         .into_values()
         .map(|gap| {
+            let disposition = match (&gap["candidateRef"], &gap["rights"]) {
+                (Value::Null, Value::Null) => None,
+                (Value::Object(_), Value::Object(_)) => {
+                    let value = string(&gap["rights"], "disposition")?;
+                    if !matches!(value, "reference-only" | "unauthorized") {
+                        return Err(invalid(
+                            "unretained candidate has a retention-authorizing disposition",
+                            value,
+                        ));
+                    }
+                    Some(Box::from(value))
+                }
+                _ => {
+                    return Err(invalid(
+                        "gap candidate reference and rights decision must appear together",
+                        string(gap, "classId")?,
+                    ));
+                }
+            };
             Ok(QualificationCorpusGap {
                 class_id: Box::from(string(gap, "classId")?),
                 owner: Box::from(string(gap, "owner")?),
                 reason: Box::from(string(gap, "reason")?),
+                disposition,
             })
         })
         .collect()

@@ -1001,7 +1001,7 @@
       "required": ["owner", "disposition", "basis"],
       "properties": {
         "owner": { "type": "string", "minLength": 1 },
-        "disposition": { "enum": ["retained-private", "redistributable"] },
+        "disposition": { "enum": ["retained-private", "redistributable", "reference-only", "unauthorized"] },
         "basis": { "type": "string", "minLength": 1 }
       },
       "additionalProperties": false
@@ -1060,6 +1060,14 @@
       },
       "allOf": [
         {
+          "properties": {
+            "rights": {
+              "properties": { "disposition": { "enum": ["retained-private", "redistributable"] } },
+              "required": ["disposition"]
+            }
+          }
+        },
+        {
           "if": { "properties": { "origin": { "enum": ["repository", "conformance"] } }, "required": ["origin"] },
           "then": { "properties": { "lineage": { "type": "null" } } }
         },
@@ -1076,12 +1084,40 @@
     },
     "QualificationCorpusGap": {
       "type": "object",
-      "required": ["classId", "owner", "reason"],
+      "required": ["classId", "owner", "reason", "candidateRef", "rights"],
       "properties": {
         "classId": { "type": "string", "minLength": 1 },
         "owner": { "type": "string", "minLength": 1 },
-        "reason": { "type": "string", "minLength": 1 }
+        "reason": { "type": "string", "minLength": 1 },
+        "candidateRef": {
+          "oneOf": [
+            { "$ref": "#/$defs/SourceReference" },
+            { "type": "null" }
+          ]
+        },
+        "rights": {
+          "oneOf": [
+            { "$ref": "#/$defs/QualificationCorpusRights" },
+            { "type": "null" }
+          ]
+        }
       },
+      "allOf": [
+        {
+          "if": { "properties": { "candidateRef": { "type": "null" } }, "required": ["candidateRef"] },
+          "then": { "properties": { "rights": { "type": "null" } } },
+          "else": {
+            "properties": {
+              "rights": {
+                "allOf": [
+                  { "$ref": "#/$defs/QualificationCorpusRights" },
+                  { "properties": { "disposition": { "enum": ["reference-only", "unauthorized"] } }, "required": ["disposition"] }
+                ]
+              }
+            }
+          }
+        }
+      ],
       "additionalProperties": false
     },
     "QualificationCorpusExclusion": {

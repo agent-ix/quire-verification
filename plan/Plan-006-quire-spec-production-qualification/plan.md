@@ -98,6 +98,10 @@ seeds, budgets, commands, stopping rules, and raw artifacts.
 
 - **Gate = Task-034** Qualification review — Hard; pass: IT-004, exact Rust review, QUOIN gap analysis, and the external disposition leave no unresolved in-scope blocker.
 
+Until the upstream TestMatrix status-header contract and coverage reader agree, every
+task that changes a test status or adds a test case manually recounts the Test Execution
+Summary by category and overall before review.
+
 ## Parallel Execution Summary
 
 The logical graph contains opportunities to prepare corpus candidates and oracle

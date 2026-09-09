@@ -353,6 +353,27 @@ fn remove_field(value: &mut Value, pointer: &str) {
         .expect("field to remove");
 }
 
+fn reseal_replay(manifest: &mut Value, bytes: &mut BTreeMap<String, Vec<u8>>, entry_index: usize) {
+    let entry = manifest["entries"][entry_index].clone();
+    let entry_id = entry["entryId"].as_str().expect("entry id");
+    let input_identity = entry["artifactRef"]["value"]["identity"]
+        .as_str()
+        .expect("input identity");
+    let replay_identity = entry["lineage"]["replayRunRef"]["value"]["identity"]
+        .as_str()
+        .expect("replay identity");
+    let output = bytes[input_identity].clone();
+    let mut lineage_claim = entry["lineage"].clone();
+    lineage_claim
+        .as_object_mut()
+        .expect("lineage object")
+        .remove("replayRunRef");
+    let run = replay_run(entry_id, &lineage_claim, &output);
+    bytes.insert(replay_identity.to_owned(), run.clone());
+    manifest["entries"][entry_index]["lineage"]["replayRunRef"]["value"]["digest"] =
+        json!(digest(&run));
+}
+
 #[trace("TC-040", "FR-023-AC-1", "FR-023-AC-4")]
 #[test]
 fn tc_040_qualifies_exact_authorized_bytes_and_replayed_lineage() {
@@ -393,7 +414,9 @@ fn tc_040_retains_exact_owned_gaps_in_the_population_denominator() {
     manifest["gaps"] = json!([{
         "classId": "boundary",
         "owner": "corpus-owner",
-        "reason": "No authorized boundary artifact is retained"
+        "reason": "No authorized boundary artifact is retained",
+        "candidateRef": null,
+        "rights": null
     }]);
     let proof = proofs(&manifest, &bytes);
     let gaps = match qualify_corpus_manifest(manifest, &profile, &proof).expect("corpus decision") {
@@ -403,6 +426,67 @@ fn tc_040_retains_exact_owned_gaps_in_the_population_denominator() {
     assert_eq!(gaps.len(), 1);
     assert_eq!(gaps[0].class_id(), "boundary");
     assert_eq!(gaps[0].owner(), "corpus-owner");
+    assert_eq!(gaps[0].disposition(), None);
+}
+
+#[trace("TC-040", "FR-023-AC-1", "FR-023-AC-2", "FR-023-AC-3")]
+#[test]
+fn tc_040_keeps_unretained_rights_candidates_as_owned_gaps_without_bytes() {
+    let profile = frozen_profile();
+    for disposition in ["reference-only", "unauthorized"] {
+        let (mut manifest, bytes) = corpus();
+        let candidate = manifest["entries"][2]["artifactRef"].clone();
+        manifest["entries"]
+            .as_array_mut()
+            .expect("entries")
+            .remove(2);
+        manifest["gaps"] = json!([{
+            "classId": "boundary",
+            "owner": "corpus-owner",
+            "reason": "The candidate may be referenced but its bytes may not be retained",
+            "candidateRef": candidate,
+            "rights": {
+                "owner": "corpus-owner",
+                "disposition": disposition,
+                "basis": "The artifact owner did not authorize local byte retention"
+            }
+        }]);
+        let proof = proofs(&manifest, &bytes);
+        let (corpus, gaps) = match qualify_corpus_manifest(manifest, &profile, &proof)
+            .expect("rights-limited corpus decision")
+        {
+            QualificationCorpusOutcome::Complete(_) => {
+                panic!("rights-limited candidate counted as retained")
+            }
+            QualificationCorpusOutcome::Incomplete { corpus, gaps } => (corpus, gaps),
+        };
+        assert_eq!(corpus.retained_bytes("generated"), None);
+        let frozen = serde_json::to_value(corpus.manifest()).expect("frozen manifest");
+        assert_eq!(frozen["gaps"][0]["candidateRef"], candidate);
+        assert_eq!(gaps[0].class_id(), "boundary");
+        assert_eq!(gaps[0].disposition(), Some(disposition));
+    }
+
+    let (mut manifest, bytes) = corpus();
+    let candidate = manifest["entries"][2]["artifactRef"].clone();
+    manifest["entries"]
+        .as_array_mut()
+        .expect("entries")
+        .remove(2);
+    manifest["gaps"] = json!([{
+        "classId": "boundary",
+        "owner": "corpus-owner",
+        "reason": "Invalid retention-authorizing gap",
+        "candidateRef": candidate,
+        "rights": {
+            "owner": "corpus-owner",
+            "disposition": "retained-private",
+            "basis": "Retention was authorized"
+        }
+    }]);
+    assert!(
+        qualify_corpus_manifest(manifest.clone(), &profile, &proofs(&manifest, &bytes)).is_err()
+    );
 }
 
 #[trace("TC-040", "FR-023-AC-3")]
@@ -546,25 +630,49 @@ fn tc_040_refuses_missing_dimensions_silent_class_loss_and_derived_relabeling() 
 #[test]
 fn tc_040_refuses_broken_parent_graphs_and_replay_output_drift() {
     let profile = frozen_profile();
+
+    let (mut valid_chain, mut bytes) = corpus();
+    valid_chain["entries"][3]["lineage"]["parentEntryId"] = json!("generated");
+    reseal_replay(&mut valid_chain, &mut bytes, 3);
+    assert!(matches!(
+        qualify_corpus_manifest(valid_chain.clone(), &profile, &proofs(&valid_chain, &bytes)),
+        Ok(QualificationCorpusOutcome::Complete(_))
+    ));
+
     for parent in ["mutation", "missing"] {
-        let (mut manifest, bytes) = corpus();
+        let (mut manifest, mut bytes) = corpus();
         manifest["entries"][3]["lineage"]["parentEntryId"] = json!(parent);
+        reseal_replay(&mut manifest, &mut bytes, 3);
+        let error = qualify_corpus_manifest(manifest.clone(), &profile, &proofs(&manifest, &bytes))
+            .expect_err("invalid parent graph");
         assert!(
-            qualify_corpus_manifest(manifest.clone(), &profile, &proofs(&manifest, &bytes))
-                .is_err()
+            error.to_string().contains("mutation parent"),
+            "parent {parent} was refused before the graph gate: {error}"
         );
     }
 
-    let (mut cyclic, bytes) = corpus();
-    cyclic["entries"][0]["origin"] = json!("mutation");
-    cyclic["entries"][0]["lineage"] = json!({
+    let (mut cyclic, mut bytes) = corpus();
+    let real_claim = json!({
         "kind": "mutation",
         "parentEntryId": "mutation",
         "seed": "seed-cycle",
-        "transformation": "cycle",
-        "replayRunRef": cyclic["entries"][3]["lineage"]["replayRunRef"].clone()
+        "transformation": "cycle"
     });
-    assert!(qualify_corpus_manifest(cyclic.clone(), &profile, &proofs(&cyclic, &bytes)).is_err());
+    let real_run = replay_run("real", &real_claim, &bytes["input:real"]);
+    let mut real_lineage = real_claim;
+    real_lineage.as_object_mut().expect("real lineage").insert(
+        "replayRunRef".to_owned(),
+        artifact("run-artifact", "run:real", &real_run),
+    );
+    bytes.insert("run:real".to_owned(), real_run);
+    cyclic["entries"][0]["origin"] = json!("mutation");
+    cyclic["entries"][0]["lineage"] = real_lineage;
+    let error = qualify_corpus_manifest(cyclic.clone(), &profile, &proofs(&cyclic, &bytes))
+        .expect_err("cyclic parent graph");
+    assert!(
+        error.to_string().contains("cycle"),
+        "cycle was refused before the graph gate: {error}"
+    );
 
     let (mut manifest, mut bytes) = corpus();
     let mut wrong_run: Value =

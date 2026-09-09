@@ -30,6 +30,9 @@ qualification inputs. It is not a public E02 root contract. Rust binds its exact
 population and class denominator to a frozen `QualificationProfile`, accepts input,
 generator, and replay bytes only through strict-reader proofs, checks mutation ancestry
 and replay output digests, and preserves each missing class as one owner-assigned gap.
+When rights permit only a reference or prohibit retention, the gap retains the candidate
+reference and rights decision while the Rust corpus retains no candidate bytes and grants
+no class coverage.
 
 `PropertyInventoryItem.classification` is optional on planner input so an
 unclassified property can be represented. When present it must be non-empty;

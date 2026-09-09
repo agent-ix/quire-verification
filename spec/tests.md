@@ -424,7 +424,7 @@ rejected JavaScript prototype is not evidence.
 |----------|-------|--------|--------|---------|----------|
 | Unit | 17 | 17 | 0 | 0 | 100% |
 | Integration | 11 | 8 | 0 | 3 | 73% |
-| Property | 13 | 11 | 0 | 2 | 85% |
+| Property | 13 | 12 | 0 | 1 | 92% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 45 | 39 | 0 | 6 | 87% |
+| Overall | 45 | 40 | 0 | 5 | 89% |

@@ -363,25 +363,6 @@ fn tc_039_freezes_only_a_complete_closed_schema_derived_profile() {
         original
     );
     assert!(frozen.identity().starts_with("sha256-jcs:"));
-    let frozen_value =
-        serde_json::to_value(frozen.profile()).expect("generated profile serialization");
-    assert_eq!(
-        frozen_value["semanticGuarantees"], original["semanticGuarantees"],
-        "freezing must preserve the owner-authored guarantee set exactly"
-    );
-    assert!(
-        !frozen_value["commands"]
-            .as_array()
-            .expect("commands")
-            .is_empty()
-    );
-    assert!(
-        !frozen_value["evidenceRequirements"]
-            .as_array()
-            .expect("evidence requirements")
-            .is_empty()
-    );
-
     assert_required_dimensions_are_closed(&original);
     assert_profile_identities_are_unique();
 

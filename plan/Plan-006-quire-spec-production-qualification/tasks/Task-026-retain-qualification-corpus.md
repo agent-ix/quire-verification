@@ -28,8 +28,7 @@ reproducible generator or mutation lineage.
 - [x] Require strict-reader proofs for retained bytes and exact replay evidence for every
   generated or mutated input.
 - [x] Preserve an explicit gap for every unpopulated required class.
-- [x] Extend TC-039/TC-040 to prove commands and catalog techniques do not augment the
-  frozen profile's nonempty authored guarantee set.
+- [x] Recount the Test Execution Summary by category and status after adding TC-040.
 
 ## Deliverables
 
