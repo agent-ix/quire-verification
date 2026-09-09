@@ -7,6 +7,13 @@ description: "Chronological log of changes to the Plan-003 bundle."
 
 ## History
 
+* **2026-09-09** — Task-014 specification accepted after QUOIN `/specify` and
+  owner-selected `/spec-review all`. Candidate `c683b5b` resolves native/manual
+  invocation semantics and defines closed requests, exact budget precedence,
+  capability ceilings, absent/over-limit behavior, and TC-027/TC-030 coverage;
+  workflow `4a60dcc5-e3fc-4d46-b3f9-7806027dfd19` records approval and SR-120
+  through SR-127 are retained at `adaff03`.
+
 * **2026-09-08** — Task-013 completed at exact Rust review SR-118 (`70f9d6b`)
   and QUOIN gap analysis SR-119 (`a72d1dc`). The draft-2 schema, generated Rust
   types, strict-reader opacity, keyed JCS membership, five closed role variants,

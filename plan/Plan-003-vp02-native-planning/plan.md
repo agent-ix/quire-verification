@@ -98,14 +98,14 @@ FS02/FS05@8ab058be -> Task-012 -> Task-013 ------+-> Task-014 -> Task-015
 | Task-011 | A | FR-013 | TC-026 | done |
 | Task-012 | A | FR-016 | TC-029, TC-031 | done |
 | Task-013 | A | FR-002, FR-015, NFR-002 | TC-028, TC-030 | done |
-| Task-014 | A | FR-014 | TC-027, TC-030 | active |
+| Task-014 | A | FR-005, FR-013, FR-014, FR-015, NFR-006 | TC-027, TC-030 | active |
 | Task-015 | Gate | NFR-004, NFR-005 | TC-022, TC-023 | blocked |
 
 ## Coordination Rules
 
 Task-012 consumed exact merged specification revision `8ab058be` after the
-QUOIN-reviewed adoption at `9fb29ff` and passed exact Rust review SR-100. Task-013
-is active; Tasks 014 and 015 remain blocked on their declared predecessors. B
+QUOIN-reviewed adoption at `9fb29ff` and passed exact Rust review SR-100. Task-014
+is active; Task-015 remains blocked on its declared predecessors. B
 does not edit A's schema, C's Engineering Assurance implementation, Quoin, or
 Filament. New behavior that changes these requirements returns to `/specify` and
 `/spec-review` before implementation.
@@ -115,3 +115,8 @@ Task-013 implements the QUOIN-reviewed draft-2 amendment at `c791101`
 analysis SR-119. Its schema references the exact retained shared packet without
 copying that packet's artifact-reference field definitions. Task-014 is active;
 Task-015 remains blocked.
+
+Task-014 implements the QUOIN-authored runner boundary at `c683b5b`, accepted
+through composite review workflow `4a60dcc5-e3fc-4d46-b3f9-7806027dfd19` and
+SR-120 through SR-127 at `adaff03`. It owns the closed request, budget precedence,
+capability ceilings, manual refusal, and TC-027/TC-030 integration behavior.
