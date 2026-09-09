@@ -21,6 +21,30 @@ relationships:
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/FR-009"
     type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-010"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-011"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-012"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-013"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-014"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-015"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-016"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-017"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-018"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-019"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-020"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-021"
+    type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-001"
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-002"
@@ -30,6 +54,8 @@ relationships:
   - target: "ix://agent-ix/quire-verification/NFR-004"
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-005"
+    type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/NFR-006"
     type: "satisfied_by"
 ---
 # StR-001: Qualified verification path uses a Rust core
@@ -52,8 +78,8 @@ exchange versioned JSON at the boundary.
 | ID | Criteria | Validation |
 |----|----------|------------|
 | StR-001-VC-1 | All repository-owned executable source, command-line tools, and tests are Rust and pass the required Rust quality gates. | Test (TC-022) |
-| StR-001-VC-2 | Evidence with a foreign, stale, ambiguous, failed, incomplete, or otherwise adverse binding is never reported as supported. | Test (TC-012, TC-013, TC-014, TC-015) |
-| StR-001-VC-3 | The Rust implementation preserves the complete versioned contract, fixture, catalog, plan, assessment, and bounded-portfolio behavior. | Demonstration (TC-001..TC-023) |
+| StR-001-VC-2 | Evidence with a foreign, stale, ambiguous, failed, incomplete, or otherwise adverse binding is never reported as supported. | Test (TC-012, TC-013, TC-014, TC-015, TC-035, TC-037) |
+| StR-001-VC-3 | The Rust implementation preserves the complete versioned contract, fixture, catalog, plan, assessment, and bounded-portfolio behavior. | Demonstration (TC-001..TC-038) |
 
 ## Stakeholders
 
@@ -64,7 +90,8 @@ and future production consumers are affected stakeholders at the JSON boundary.
 
 The prior JavaScript implementation was a rejected prototype and supplied
 behavioral discovery input only. FS02 and FS05 identity decisions remain
-provisional and may require a later reviewed migration.
+provisional; B's consumer adoption is conditional on the recorded JCS-domain
+and role-kind amendments.
 
 ## Stakeholder Constraints (Contextual)
 

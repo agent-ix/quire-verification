@@ -15,11 +15,11 @@ revisions, source path, and applicable AGPL terms are recorded with the fixture
 and in `docs/artifact-rights.md`. Native result artifacts remain references and
 are not copied into this repository.
 
-The implementation uses Ajv and ajv-formats under MIT terms and canonicalize
-under Apache-2.0 terms, with their transitive dependency set recorded in
-`package-lock.json` and `docs/artifact-rights.md`. Those terms are compatible
-with this private AGPL implementation; redistributed bundles must preserve the
-applicable upstream notices.
+`Cargo.toml` and `Cargo.lock` are the authoritative Rust dependency inventory.
+Dependency licenses, copied/generated artifact provenance, and applicable
+source revisions are classified in `docs/artifact-rights.md`. The dependency
+policy gate is `cargo deny check`; redistributed bundles must preserve the
+applicable upstream notices recorded by the release-specific inventory.
 
 This decision does not select the eventual license for normative language prose,
 public schemas, or conformance vectors. Those remain gated by E01/E04 and a
