@@ -10,6 +10,13 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/TM-001", type: references }
 ---
 
+## Supersession
+
+Independent review at `ff82a7b` invalidated this artifact's conclusion that Task-026
+had no local test gap: the claimed ancestry mutations stopped at replay identity. SR-176
+supersedes the Task-026 portion after remediation at `7f9afac`; the whole-plan FAIL
+verdict and later-task gaps remain valid.
+
 ## Summary
 
 This audit checked Plan-006 completion, Quire trace reconciliation, and reverse

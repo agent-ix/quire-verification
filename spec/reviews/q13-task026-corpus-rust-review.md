@@ -10,6 +10,13 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/TC-040", type: references }
 ---
 
+## Supersession
+
+Independent review at `ff82a7b` proved that the three ancestry mutations described
+below were refused by replay-identity validation before reaching the parent graph. This
+artifact therefore does not establish ancestry coverage. SR-175 supersedes that claim
+with re-sealed graph mutations reviewed at `7f9afac`.
+
 ## Summary
 
 The required `/home/peter/dev/agent-skills/rust-review/SKILL.md` review checked
