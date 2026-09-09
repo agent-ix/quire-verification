@@ -20,9 +20,9 @@ aggregation.
 
 ## Subtasks
 
-- [ ] Detect shared oracle, observation, and declared dependence identities across exact results.
+- [ ] Detect shared oracle, observation, and declared dependence identities across uniquely selected results.
 - [ ] Retain derived source pairs and unknown relationships as explicit findings.
-- [ ] Prove result and contribution input order cannot change the assessment.
+- [ ] Prove obligation, result, contribution, and validated-reference input order cannot change the assessment.
 - [ ] Preserve Quoin evidence ownership and `not-made` sufficiency.
 
 ## Deliverables
@@ -31,4 +31,5 @@ aggregation.
 
 ## Notes
 
-- This task consumes Task-017's schema-derived types and does not persist evidence.
+- This task consumes Task-017's schema-derived types, traverses graphs iteratively,
+  and does not persist evidence.

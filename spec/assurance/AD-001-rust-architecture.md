@@ -72,10 +72,13 @@ typed envelope with stable codes.
     by the one strict reader. TechniqueResult owns only closed oracle-
     contribution lineage over exact FS05 oracle/observation roles. The assessor
     validates all contributions before matching, builds a deterministic graph
-    only over exact-matched results, retains correlation/unknown findings, and
-    emits no evidence persistence, numeric score, assurance aggregation, or
-    human sufficiency decision. Engineering Assurance and Quoin remain external
-    owners across the versioned JSON contract.
+    only over uniquely selected results, and traverses lineage and correlation
+    components iteratively within the existing input bounds. Closed structured
+    member pairs prevent identifier-concatenation ambiguity. The assessor
+    retains correlation/unknown findings and emits no evidence persistence,
+    numeric score, assurance aggregation, or human sufficiency decision.
+    Engineering Assurance and Quoin remain external owners across the versioned
+    JSON contract.
 
 The rejected alternative was retaining the JavaScript prototype. A TypeScript
 port was also rejected because the component is eligible for the qualified path.

@@ -148,6 +148,8 @@ not evidence.
 | TC-033 | distinct techniques | distinct observations | unknown relation | unknown dependence; no aggregate score |
 | TC-033 | transitive oracle edge | observation edge | three contributions | one connected correlation finding with sorted members and bases |
 | TC-033 | valid derived source | source outside exact matches | derived relation | source-not-assessed finding; no independence claim |
+| TC-033 | two exact candidates | one obligation | ambiguous selection | neither candidate enters the dependence graph |
+| TC-033 | one selected result | two exact obligations | same contribution member | member retained once in top-level findings |
 | TC-034 | valid source | direct parse | exact native candidate | completed and satisfied |
 | TC-034 | seeded syntax mutation | expected located refusal | exact native candidate | completed and violated |
 | TC-034 | valid source | unreadable native response | exact native candidate | failed and not-evaluated |
@@ -185,6 +187,8 @@ not evidence.
 | Contribution identity | Exact | 1 occurrence within a result | TC-033 | Accept |
 | Contribution identity | Duplicate | 2 equal IDs within a result | TC-033 | `duplicate_oracle_contribution_id` refusal |
 | Derived lineage | Cycle | Two contributions derive from each other | TC-033 | `invalid_oracle_lineage` refusal |
+| Selected graph membership | Above max | 2 exact candidates for one obligation | TC-033 | Ambiguous candidates excluded from the graph |
+| Selected member identity | Duplicate path | 1 result selected by 2 obligations | TC-033 | One structured `(resultId, contributionId)` member |
 | Measurement repetitions | Exact | 5 repetitions | TC-036 | Retain every phase observation |
 | Measurement repetitions | Under prescribed | 4 repetitions | TC-036 | Report remains incomplete |
 | Measurement series | Exact | 1 setup plus 5 repetitions of 3 automated phases | TC-036 | 16 unique ordered observations |
@@ -283,6 +287,8 @@ not evidence.
 | EC-028 | Correlation edges connect transitively across different bases | FR-017 | TC-033 | One dependence component can be split into false independent confirmations |
 | EC-029 | Derived contribution lineage is self-referential or cyclic | FR-017 | TC-033 | Circular evidence can be presented as corroboration |
 | EC-030 | Contribution or result input order changes | FR-017 | TC-033 | Equivalent evidence can produce a different assessment identity |
+| EC-031 | An ambiguous exact candidate shares an oracle with a selected result | FR-017 | TC-033 | Unselected evidence can alter top-level dependence findings |
+| EC-032 | One exact result satisfies two inventoried obligations | FR-017 | TC-033 | One contribution can be double-counted as two dependence members |
 | EC-015 | Equivalent timestamps use different RFC 3339 offsets | FR-018 | TC-032 | Text comparison can disagree about one instant |
 | EC-016 | Maximum age addition exceeds the timestamp domain | FR-018 | TC-032 | Arithmetic can wrap, panic, or extend evidence validity |
 | EC-017 | An expected parser refusal is represented as process failure | FR-019 | TC-034 | A found syntax defect can be erased as infrastructure noise |
