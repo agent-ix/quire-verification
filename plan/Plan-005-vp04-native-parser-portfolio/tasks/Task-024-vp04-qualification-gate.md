@@ -33,8 +33,8 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 - [x] Record the exact parser revision, qualification evidence, dependency closure, CLI commands, Linux profile, and fixture rights.
 - [ ] Execute IT-003-SC-01 through IT-003-SC-09 and retain the complete report; SC-01 through SC-08 are retained in the sealed automated core and SC-09 awaits the external disposition.
 - [ ] Obtain one external owner disposition bound to the sealed automated core.
-- [ ] Run formatting, strict Clippy, all Rust tests, dependency policy, fixture validation, integrations, and trace reconciliation.
-- [ ] Apply `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve every in-scope finding.
+- [x] Run formatting, strict Clippy, all Rust tests, dependency policy, fixture validation, integrations, and trace reconciliation.
+- [x] Apply `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve every in-scope finding.
 - [ ] Run QUOIN `/gap-analysis` and resolve every in-scope gap before changing this task and Plan-005 to done.
 
 ## Deliverables
