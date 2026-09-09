@@ -2,7 +2,7 @@
 id: Task-021
 title: "Native parser portfolio execution"
 type: Task
-status: blocked
+status: done
 track: A
 priority: P0
 relationships:
@@ -23,11 +23,11 @@ and keep blocked, stale, correlated, manual, and infrastructure states distinct.
 
 ## Subtasks
 
-- [ ] Extend the authoritative schema-derived contract for the reviewed portfolio records without adding a public contract.
-- [ ] Write TC-034 and TC-035 before implementation, using controlled failures and the exact native parser protocol.
-- [ ] Execute baseline and adverse automated tasks and retain exact native artifacts and observations.
-- [ ] Preserve missing-prerequisite, freshness, correlation, and manual-task boundaries without fabricated results or aggregate scoring.
-- [ ] Bind every FR-019 criterion through compiler-checked `ix-trace-rs` markers.
+- [x] Extend the authoritative schema-derived contract for the reviewed portfolio records without adding a public contract.
+- [x] Write TC-034 and TC-035 before implementation, using controlled failures and the exact native parser protocol.
+- [x] Execute baseline and adverse automated tasks and retain exact native artifacts and observations.
+- [x] Preserve missing-prerequisite, freshness, correlation, and manual-task boundaries without fabricated results or aggregate scoring.
+- [x] Bind every FR-019 criterion through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 
@@ -35,6 +35,6 @@ and keep blocked, stale, correlated, manual, and infrastructure states distinct.
 
 ## Notes
 
-- Plan-003, Plan-004, the shared wire, and the exact qualified parser/fixture
-  entrance criteria are complete; only Task-020's expected-status extension remains.
+- Plan-003, Plan-004, the shared wire, the exact qualified parser/fixture
+  entrance criteria, and Task-020's expected-status extension are complete.
 - Unblocks Task-022 and Task-023.

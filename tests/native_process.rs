@@ -48,6 +48,7 @@ impl Candidate {
             arguments: arguments.iter().map(ToString::to_string).collect(),
             environment: BTreeMap::from([("DECLARED".to_owned(), "exact".to_owned())]),
             deadline_seconds: Some(MAX_NATIVE_DEADLINE_SECONDS),
+            expected_exit_code: Some(0),
         }
     }
 }
@@ -295,6 +296,34 @@ fn tc_038_accepts_exact_stream_limits_and_reaps_on_the_first_excess_byte() {
 fn tc_038_returns_distinct_status_signal_encoding_and_protocol_failures() {
     let candidate = Candidate::new();
     let executor = candidate.executor();
+
+    for expected in [0, 1, 255] {
+        let expected_text = expected.to_string();
+        let mut request = Candidate::request(&["exit", &expected_text]);
+        request.expected_exit_code = Some(expected);
+        let output = executor
+            .execute(&request)
+            .expect("declared status returns complete output");
+        assert_eq!(output.exit_code, expected);
+        assert!(output.stdout.is_empty());
+        assert!(output.stderr.is_empty());
+    }
+
+    let marker = candidate.root.path().join("invalid-status-marker");
+    for expected in [None, Some(-1), Some(256)] {
+        let mut request =
+            Candidate::request(&["write-marker", marker.to_str().expect("marker path")]);
+        request.expected_exit_code = expected;
+        let error = executor
+            .execute(&request)
+            .expect_err("invalid status declaration must refuse");
+        assert_eq!(
+            error.code(),
+            VerificationErrorCode::InvalidExpectedExitStatus
+        );
+        assert!(!marker.exists(), "invalid declaration launched a child");
+    }
+
     let status = executor
         .execute(&Candidate::request(&["exit", "7"]))
         .expect_err("unexpected status");
@@ -306,6 +335,10 @@ fn tc_038_returns_distinct_status_signal_encoding_and_protocol_failures() {
     assert_eq!(
         status.context().get("status").map(String::as_str),
         Some("7")
+    );
+    assert_eq!(
+        status.context().get("expected_status").map(String::as_str),
+        Some("0")
     );
 
     let signal = executor

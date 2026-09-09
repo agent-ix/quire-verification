@@ -2,7 +2,7 @@
 id: Task-023
 title: "Report-core and disposition binding"
 type: Task
-status: blocked
+status: done
 track: A
 priority: P0
 relationships:
@@ -22,12 +22,12 @@ review disposition without circular identity or automated sufficiency.
 
 ## Subtasks
 
-- [ ] Write TC-037 first for schema derivation, complete core identity, JCS digest, disposition values, absence, and every stable refusal.
-- [ ] Generate the internal report shape beside the five public contracts from the one authoritative schema document.
-- [ ] Validate the complete core before computing its JCS digest with disposition bytes excluded.
-- [ ] Verify exact disposition bytes, role, core digest, procedure, reviewer, time, identity, and value.
-- [ ] Preserve Quoin ownership, `not-made` sufficiency, automated results, measurements, and claim limits.
-- [ ] Bind every FR-021 criterion through compiler-checked `ix-trace-rs` markers.
+- [x] Write TC-037 first for schema derivation, complete core identity, JCS digest, disposition values, absence, and every stable refusal.
+- [x] Generate the internal report shape beside the five public contracts from the one authoritative schema document.
+- [x] Validate the complete core before computing its JCS digest with disposition bytes excluded.
+- [x] Verify exact disposition bytes, role, core digest, procedure, reviewer, time, identity, and value.
+- [x] Preserve Quoin ownership, `not-made` sufficiency, automated results, measurements, and claim limits.
+- [x] Bind every FR-021 criterion through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 
@@ -35,5 +35,6 @@ review disposition without circular identity or automated sufficiency.
 
 ## Notes
 
-- Blocked on Tasks 012, 021, and 022 and on the independently accepted JCS and review-disposition shared vocabulary.
+- Tasks 012, 021, and 022 and the independently accepted JCS and
+  review-disposition shared vocabulary supply the completed prerequisites.
 - Unblocks Task-024.

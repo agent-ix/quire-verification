@@ -23,6 +23,11 @@ name = "native_process"
 path = "tests/native_process.rs"
 required-features = ["native-process-test-fixture"]
 
+[[test]]
+name = "parser_portfolio"
+path = "tests/parser_portfolio.rs"
+required-features = ["native-process-test-fixture"]
+
 [lib]
 name = "quire_verification"
 path = "src/lib.rs"

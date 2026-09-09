@@ -9,11 +9,10 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
-bounded-parser-portfolio slices to a concrete test case. The 34 implemented cases
-run in Rust through compiler-checked `ix-trace-rs` markers; TC-034 through TC-037
-remain pending until their reviewed
-implementation and dependencies are ready. The rejected JavaScript prototype is
-not evidence.
+bounded-parser-portfolio slices to a concrete test case. All 38 cases run in Rust
+through compiler-checked `ix-trace-rs` markers. The IT-003 automated core is
+retained separately from the still-pending external disposition. The rejected
+JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
 
@@ -36,11 +35,11 @@ not evidence.
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
-| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | ⛔ Blocked on VP02/VP03 |
+| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
 
 ### Functional Requirement Coverage
 
-| Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
+| Functional Req | Acceptance Criteria | Test Cases | Status |
 |----------------|---------------------|------------|-----------------|
 | FR-001 | FR-001-AC-1..5 | TC-001, TC-002 | ✅ Complete |
 | FR-002 | FR-002-AC-1..4 | TC-003, TC-004, TC-028 | ✅ Complete |
@@ -60,9 +59,9 @@ not evidence.
 | FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
 | FR-017 | FR-017-AC-1..7 | TC-033 | ✅ Complete |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
-| FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ⛔ Blocked on VP02/VP03 |
-| FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
-| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ⛔ Blocked on FR-016 and FR-019/FR-020 |
+| FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ✅ Implemented; automated core retained |
+| FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
+| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
 
 ### Non-Functional Requirement Coverage
 
@@ -112,10 +111,10 @@ not evidence.
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-7 | ✅ Passed |
-| TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ⛔ Blocked |
-| TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
-| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
-| TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ⛔ Blocked |
+| TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ✅ Passed |
+| TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ✅ Passed |
+| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ✅ Passed |
+| TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 
 ## Option Permutation Matrix
@@ -311,7 +310,7 @@ not evidence.
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
-| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ⛔ Blocked |
+| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | 🚧 Automated core retained; external disposition pending |
 
 ### Integration Test Details
 

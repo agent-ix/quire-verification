@@ -19,6 +19,7 @@ use rustix::fs::{CWD, FileType, Mode, OFlags, ResolveFlags, fstat, openat2};
 use rustix::io::Errno;
 use rustix::process::{Pid, Signal, kill_process_group, test_kill_process_group};
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 
 use crate::contracts::{VerificationError, VerificationErrorCode, validate_resource_envelope};
 
@@ -30,6 +31,7 @@ pub const MAX_NATIVE_DEADLINE_SECONDS: f64 = 10.0;
 const MONITOR_INTERVAL: Duration = Duration::from_millis(1);
 const PROCESS_GROUP_CLEANUP_BUDGET: Duration = Duration::from_secs(1);
 const PROC_DESCRIPTOR_ROOT: &str = "/proc/self/fd";
+const MAX_NATIVE_EXECUTABLE_BYTES: usize = 128 * 1024 * 1024;
 
 /// Exact per-invocation inputs for one admitted native executable.
 #[derive(Clone, Debug)]
@@ -40,11 +42,15 @@ pub struct NativeProcessRequest {
     pub environment: BTreeMap<String, String>,
     /// Positive finite wall-clock budget no greater than ten seconds.
     pub deadline_seconds: Option<f64>,
+    /// Exact numeric exit code admitted for this invocation.
+    pub expected_exit_code: Option<i32>,
 }
 
 /// UTF-8 output from one successfully completed native child.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct NativeProcessOutput {
+    /// Exact numeric exit code observed from the direct child.
+    pub exit_code: i32,
     /// Complete standard output through the admitted limit.
     pub stdout: String,
     /// Complete standard error through the admitted limit.
@@ -56,6 +62,7 @@ pub struct NativeProcessOutput {
 pub struct NativeProcessExecutor {
     root: OwnedFd,
     executable: OwnedFd,
+    executable_digest: String,
 }
 
 impl NativeProcessExecutor {
@@ -94,7 +101,7 @@ impl NativeProcessExecutor {
         let executable_descriptor = openat2(
             &root_descriptor,
             relative,
-            OFlags::PATH | OFlags::CLOEXEC,
+            OFlags::RDONLY | OFlags::CLOEXEC,
             Mode::empty(),
             ResolveFlags::BENEATH | ResolveFlags::NO_MAGICLINKS | ResolveFlags::NO_SYMLINKS,
         )
@@ -107,16 +114,24 @@ impl NativeProcessExecutor {
                 "candidate is not a regular file",
             ));
         }
+        let executable_digest = digest_executable(&executable_descriptor, executable)?;
         Ok(Self {
             root: root_descriptor,
             executable: executable_descriptor,
+            executable_digest,
         })
+    }
+
+    /// Returns the SHA-256 identity of the descriptor-admitted executable bytes.
+    #[must_use]
+    pub fn executable_digest(&self) -> &str {
+        &self.executable_digest
     }
 
     /// Executes one request through the retained descriptor in a fresh directory.
     ///
     /// # Errors
-    /// Returns a stable typed error before launch for an invalid deadline, or
+    /// Returns a stable typed error before launch for an invalid deadline or exit status, or
     /// after group termination and direct-child reaping for deadline, stream,
     /// signal, status, descendant, pipe, spawn, and UTF-8 failures.
     pub fn execute(
@@ -124,6 +139,7 @@ impl NativeProcessExecutor {
         request: &NativeProcessRequest,
     ) -> Result<NativeProcessOutput, VerificationError> {
         let deadline = validate_deadline(request.deadline_seconds)?;
+        let expected_exit_code = validate_expected_exit_code(request.expected_exit_code)?;
         let root_path = descriptor_path(&self.root);
         let run_directory = tempfile::Builder::new()
             .prefix(".quire-verification-run-")
@@ -178,8 +194,33 @@ impl NativeProcessExecutor {
                 stderr_reader,
             },
             deadline,
+            expected_exit_code,
         )
     }
+}
+
+fn digest_executable(descriptor: &OwnedFd, path: &Path) -> Result<String, VerificationError> {
+    let mut digest = Sha256::new();
+    let mut total = 0_usize;
+    let mut buffer = vec![0_u8; 64 * 1024].into_boxed_slice();
+    loop {
+        let read = rustix::io::read(descriptor, &mut buffer[..])
+            .map_err(|error| invalid_executable(path, format!("read candidate bytes: {error}")))?;
+        if read == 0 {
+            break;
+        }
+        total = total
+            .checked_add(read)
+            .ok_or_else(|| invalid_executable(path, "candidate size overflow"))?;
+        if total > MAX_NATIVE_EXECUTABLE_BYTES {
+            return Err(invalid_executable(
+                path,
+                "candidate exceeds the 128 MiB admission limit",
+            ));
+        }
+        digest.update(&buffer[..read]);
+    }
+    Ok(format!("sha256:{:x}", digest.finalize()))
 }
 
 /// Parses a successful stdout stream as one bounded JSON method response.
@@ -222,10 +263,19 @@ enum CaptureEvent {
 #[derive(Clone, Debug)]
 enum CaptureFailure {
     Timeout,
-    Limit { stream: Stream, bytes: usize },
-    Read { stream: Stream, message: String },
+    Limit {
+        stream: Stream,
+        bytes: usize,
+    },
+    Read {
+        stream: Stream,
+        message: String,
+    },
     Monitor(String),
-    Exit(ExitStatus),
+    Exit {
+        status: ExitStatus,
+        expected_status: i32,
+    },
     UnexpectedDescendant,
 }
 
@@ -243,9 +293,11 @@ struct RunningProcess {
 fn monitor_child(
     mut running: RunningProcess,
     deadline: Duration,
+    expected_exit_code: i32,
 ) -> Result<NativeProcessOutput, VerificationError> {
     let started = Instant::now();
     let mut child_exited = false;
+    let mut observed_exit_code = None;
     let mut stdout_done = false;
     let mut stderr_done = false;
     loop {
@@ -256,9 +308,18 @@ fn monitor_child(
         }
         if !child_exited {
             match running.child.try_wait() {
-                Ok(Some(status)) if status.success() => child_exited = true,
+                Ok(Some(status)) if status.code() == Some(expected_exit_code) => {
+                    child_exited = true;
+                    observed_exit_code = Some(expected_exit_code);
+                }
                 Ok(Some(status)) => {
-                    return terminate_group_reap_and_join(running, CaptureFailure::Exit(status));
+                    return terminate_group_reap_and_join(
+                        running,
+                        CaptureFailure::Exit {
+                            status,
+                            expected_status: expected_exit_code,
+                        },
+                    );
                 }
                 Ok(None) => {}
                 Err(error) => {
@@ -314,7 +375,17 @@ fn monitor_child(
     let stderr = join_reader(running.stderr_reader, Stream::Stderr, running.pid);
     let stdout = decode_stream(stdout?, Stream::Stdout, running.pid)?;
     let stderr = decode_stream(stderr?, Stream::Stderr, running.pid)?;
-    Ok(NativeProcessOutput { stdout, stderr })
+    let exit_code = observed_exit_code.ok_or_else(|| {
+        VerificationError::new(
+            VerificationErrorCode::IoFailure,
+            "native child completed without an observed exit status",
+        )
+    })?;
+    Ok(NativeProcessOutput {
+        exit_code,
+        stdout,
+        stderr,
+    })
 }
 
 fn apply_event(
@@ -526,7 +597,10 @@ fn capture_error(
             VerificationErrorCode::IoFailure,
             format!("monitor native process group: {message}"),
         ),
-        CaptureFailure::Exit(status) => exit_error(status),
+        CaptureFailure::Exit {
+            status,
+            expected_status,
+        } => exit_error(status, expected_status),
         CaptureFailure::UnexpectedDescendant => VerificationError::new(
             VerificationErrorCode::UnexpectedProcessDescendant,
             "native process group remained after its direct child completed",
@@ -576,15 +650,15 @@ fn capture_failure_code(failure: &CaptureFailure) -> VerificationErrorCode {
         CaptureFailure::Read { .. } | CaptureFailure::Monitor(_) => {
             VerificationErrorCode::IoFailure
         }
-        CaptureFailure::Exit(status) if status.signal().is_some() => {
+        CaptureFailure::Exit { status, .. } if status.signal().is_some() => {
             VerificationErrorCode::ProcessSignaled
         }
-        CaptureFailure::Exit(_) => VerificationErrorCode::UnexpectedExitStatus,
+        CaptureFailure::Exit { .. } => VerificationErrorCode::UnexpectedExitStatus,
         CaptureFailure::UnexpectedDescendant => VerificationErrorCode::UnexpectedProcessDescendant,
     }
 }
 
-fn exit_error(status: ExitStatus) -> VerificationError {
+fn exit_error(status: ExitStatus, expected_status: i32) -> VerificationError {
     if let Some(signal) = status.signal() {
         VerificationError::new(
             VerificationErrorCode::ProcessSignaled,
@@ -602,7 +676,26 @@ fn exit_error(status: ExitStatus) -> VerificationError {
                 .code()
                 .map_or_else(|| "unknown".to_owned(), |code| code.to_string()),
         )
+        .with_context("expected_status", expected_status.to_string())
     }
+}
+
+fn validate_expected_exit_code(value: Option<i32>) -> Result<i32, VerificationError> {
+    let Some(value) = value else {
+        return Err(invalid_expected_exit_status("missing"));
+    };
+    if !(0..=255).contains(&value) {
+        return Err(invalid_expected_exit_status(value.to_string()));
+    }
+    Ok(value)
+}
+
+fn invalid_expected_exit_status(value: impl Into<String>) -> VerificationError {
+    VerificationError::new(
+        VerificationErrorCode::InvalidExpectedExitStatus,
+        "native expected exit status must be one integer in [0, 255]",
+    )
+    .with_context("expected_status", value.into())
 }
 
 fn validate_deadline(seconds: Option<f64>) -> Result<Duration, VerificationError> {

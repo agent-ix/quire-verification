@@ -15,13 +15,13 @@ relationships:
 
 ### Functional Requirements
 
-- [ ] **FR-019**: Execute two complementary bounded native parser techniques and retain separate manual work.
-- [ ] **FR-020**: Preserve reproducible setup and incremental effort observations without broad performance claims.
-- [ ] **FR-021**: Seal an immutable automated report core before binding one exact external human disposition.
+- [x] **FR-019**: Execute two complementary bounded native parser techniques and retain separate manual work.
+- [x] **FR-020**: Preserve reproducible setup and incremental effort observations without broad performance claims.
+- [x] **FR-021**: Seal an immutable automated report core before binding one exact external human disposition.
 
 ### Non-Functional Requirements
 
-- [ ] **NFR-006**: Preserve the qualified containment boundary while admitting one exact expected exit status per invocation.
+- [x] **NFR-006**: Preserve the qualified containment boundary while admitting one exact expected exit status per invocation.
 
 ## Dependency Graph
 
@@ -63,19 +63,19 @@ payload to an external disposition.
 
 ### Portfolio execution
 
-- [ ] **TC-034** (`FR-019-AC-1..2`): run valid direct and roundtrip techniques, a completed metamorphic mismatch, the declared syntax diagnostic, and unexpected process/protocol failures.
-- [ ] **TC-035** (`FR-019-AC-3..6`): remove native prerequisites, cross the earliest freshness boundary, reuse or obscure observation relationships, and reject manual work at the native runner.
+- [x] **TC-034** (`FR-019-AC-1..2`): run valid direct and roundtrip techniques, a completed metamorphic mismatch, the declared syntax diagnostic, and unexpected process/protocol failures.
+- [x] **TC-035** (`FR-019-AC-3..6`): remove native prerequisites, cross the earliest freshness boundary, reuse or obscure observation relationships, and reject manual work at the native runner.
 
 ### Effort observations
 
-- [ ] **TC-036** (`FR-020-AC-1..5, FR-020-AC-8..9`): validate the exact 16-slot series, phase and repetition identities, integer domain, retained invalid observations, lower-median summaries, and deterministic recomputation.
-- [ ] **TC-037** (`FR-020-AC-6..7`, `FR-021-AC-1..5`): validate measurement interpretation and claim limits, the internal schema-derived report, non-circular core digest, absent and exact disposition states, stable refusals, and Quoin ownership.
+- [x] **TC-036** (`FR-020-AC-1..5, FR-020-AC-8..9`): validate the exact 16-slot series, phase and repetition identities, integer domain, retained invalid observations, lower-median summaries, and deterministic recomputation.
+- [x] **TC-037** (`FR-020-AC-6..7`, `FR-021-AC-1..5`): validate measurement interpretation and claim limits, the internal schema-derived report, non-circular core digest, absent and exact disposition states, stable refusals, and Quoin ownership.
 
 ### Integration and qualification
 
 - [ ] **IT-003-SC-01..09**: execute the exact qualified Rust parser from portable plan through bounded results, assessment, measurements, sealed report core, and external owner disposition.
-- [ ] **TC-022**: retain the Rust-only qualified path and compile every acceptance binding through `ix-trace-rs`.
-- [ ] **TC-023**: retain bounded JSON ingestion for every new public entry point.
+- [x] **TC-022**: retain the Rust-only qualified path and compile every acceptance binding through `ix-trace-rs`.
+- [x] **TC-023**: retain bounded JSON ingestion for every new public entry point.
 
 ## Remaining Work
 
@@ -104,11 +104,11 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | in_progress |
-| Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
-| Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
-| Task-023 | A | FR-021 | TC-037 | blocked |
-| Task-024 | Gate | FR-019, FR-020, FR-021, NFR-006 | IT-003, TC-022, TC-023, TC-034..TC-038 | blocked |
+| Task-020 | P | NFR-006 | TC-038 | done |
+| Task-021 | A | FR-019 | TC-034, TC-035 | done |
+| Task-022 | A | FR-020 | TC-036, TC-037 | done |
+| Task-023 | A | FR-021 | TC-037 | done |
+| Task-024 | Gate | FR-019, FR-020, FR-021, NFR-006 | IT-003, TC-022, TC-023, TC-034..TC-038 | in_progress |
 
 ## Coordination Rules
 

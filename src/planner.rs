@@ -575,7 +575,9 @@ fn setup_task_id(kind: &str, id: &str) -> String {
     composite_task_id("setup", kind, id)
 }
 
-pub(crate) fn verification_task_id(property_id: &str, technique_id: &str) -> String {
+/// Returns the deterministic verification task ID for a selected property and technique.
+#[must_use]
+pub fn verification_task_id(property_id: &str, technique_id: &str) -> String {
     composite_task_id("verify", property_id, technique_id)
 }
 

@@ -98,6 +98,8 @@ pub enum VerificationErrorCode {
     CatalogParityMismatch,
     /// A native execution request has no finite admitted deadline.
     InvalidExecutionDeadline,
+    /// A native execution request has no single admitted numeric exit status.
+    InvalidExpectedExitStatus,
     /// A native executable is not an exact regular file inside its selected root.
     InvalidExecutablePath,
     /// A native child remained live at its admitted deadline.
@@ -112,6 +114,16 @@ pub enum VerificationErrorCode {
     InvalidProcessOutput,
     /// A completed native child emitted a malformed method response.
     MalformedMethodResponse,
+    /// A VP04 measurement series violates its fixed identity, order, or summary contract.
+    InvalidMeasurementSeries,
+    /// More than one human disposition was supplied for one report core.
+    DuplicateDisposition,
+    /// A disposition names another core, procedure, or reviewer.
+    ForeignDisposition,
+    /// A disposition or its exact shared-reference role is unsupported.
+    UnsupportedDisposition,
+    /// A report-core or disposition byte digest is invalid.
+    InvalidReportDigest,
     /// The selected Linux descriptor or process-group profile is unavailable.
     UnsupportedExecutionProfile,
     /// A native descendant remained after its direct child completed.
@@ -159,6 +171,7 @@ impl VerificationErrorCode {
             Self::UnhandledFixture => "unhandled_fixture",
             Self::CatalogParityMismatch => "catalog_parity_mismatch",
             Self::InvalidExecutionDeadline => "invalid_execution_deadline",
+            Self::InvalidExpectedExitStatus => "invalid_expected_exit_status",
             Self::InvalidExecutablePath => "invalid_executable_path",
             Self::ExecutionTimeout => "execution_timeout",
             Self::OutputLimitExceeded => "output_limit_exceeded",
@@ -166,6 +179,11 @@ impl VerificationErrorCode {
             Self::UnexpectedExitStatus => "unexpected_exit_status",
             Self::InvalidProcessOutput => "invalid_process_output",
             Self::MalformedMethodResponse => "malformed_method_response",
+            Self::InvalidMeasurementSeries => "invalid_measurement_series",
+            Self::DuplicateDisposition => "duplicate_disposition",
+            Self::ForeignDisposition => "foreign_disposition",
+            Self::UnsupportedDisposition => "unsupported_disposition",
+            Self::InvalidReportDigest => "invalid_report_digest",
             Self::UnsupportedExecutionProfile => "unsupported_execution_profile",
             Self::UnexpectedProcessDescendant => "unexpected_process_descendant",
             Self::ProcessContainmentFailure => "process_containment_failure",
@@ -210,6 +228,7 @@ impl VerificationErrorCode {
             Self::UnhandledFixture,
             Self::CatalogParityMismatch,
             Self::InvalidExecutionDeadline,
+            Self::InvalidExpectedExitStatus,
             Self::InvalidExecutablePath,
             Self::ExecutionTimeout,
             Self::OutputLimitExceeded,
@@ -217,6 +236,11 @@ impl VerificationErrorCode {
             Self::UnexpectedExitStatus,
             Self::InvalidProcessOutput,
             Self::MalformedMethodResponse,
+            Self::InvalidMeasurementSeries,
+            Self::DuplicateDisposition,
+            Self::ForeignDisposition,
+            Self::UnsupportedDisposition,
+            Self::InvalidReportDigest,
             Self::UnsupportedExecutionProfile,
             Self::UnexpectedProcessDescendant,
             Self::ProcessContainmentFailure,

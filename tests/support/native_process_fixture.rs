@@ -14,11 +14,14 @@ use std::thread;
 use std::time::Duration;
 
 use serde_json::json;
+use sha2::{Digest, Sha256};
 
 fn main() {
     let mut arguments = env::args().skip(1);
     let mode = arguments.next().expect("fixture mode");
     match mode.as_str() {
+        "parse" => parser_parse(arguments),
+        "format" => parser_format(arguments),
         "inspect" => {
             let payload = json!({
                 "arguments": arguments.collect::<Vec<_>>(),
@@ -73,6 +76,69 @@ fn main() {
         "valid-json" => print!("{{\"status\":\"ok\"}}"),
         other => panic!("unknown fixture mode {other}"),
     }
+}
+
+fn parser_parse(mut arguments: impl Iterator<Item = String>) {
+    let identity = arguments.next().expect("source identity");
+    let revision = arguments.next().expect("source revision");
+    let path = arguments.next().expect("source path");
+    let bytes = fs::read(&path).expect("read parser fixture");
+    if revision == "fixture:process-failure" {
+        process::exit(7);
+    }
+    if bytes
+        .windows(b"invarianx".len())
+        .any(|part| part == b"invarianx")
+    {
+        eprintln!(
+            "{}",
+            json!({
+                "status": "refused",
+                "phase": "parse",
+                "code": "invalid_syntax",
+                "source": {"identity": identity, "revision": revision},
+                "path": path,
+                "span": {
+                    "start": {"byte": 249, "line": 6, "column": 1},
+                    "end": {"byte": 258, "line": 6, "column": 10}
+                },
+                "message": "expected a clause keyword"
+            })
+        );
+        process::exit(1);
+    }
+    let digest = if revision == "fixture:protocol-mismatch" {
+        format!("sha256:{}", "f".repeat(64))
+    } else {
+        format!("sha256:{:x}", Sha256::digest(&bytes))
+    };
+    println!(
+        "{}",
+        json!({
+            "status": "parsed",
+            "source": {
+                "identity": identity,
+                "revision": revision,
+                "digest": digest
+            },
+            "path": path,
+            "imports": 1,
+            "clauses": 4
+        })
+    );
+}
+
+fn parser_format(mut arguments: impl Iterator<Item = String>) {
+    let _identity = arguments.next().expect("source identity");
+    let revision = arguments.next().expect("source revision");
+    let path = arguments.next().expect("source path");
+    let mut bytes = fs::read(path).expect("read formatter fixture");
+    if revision == "fixture:formatted-mismatch" {
+        bytes.extend_from_slice(b"\n// controlled second-format difference\n");
+    }
+    io::stdout()
+        .write_all(&bytes)
+        .expect("write formatted bytes");
 }
 
 // The missing wait is the adverse condition under test: the direct fixture

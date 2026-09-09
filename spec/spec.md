@@ -117,9 +117,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-016 | Read shared references strictly | Implemented; verified |
 | FR-017 | Retain oracle dependence without aggregation | Implemented; verified |
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
-| FR-019 | Execute a bounded native parser portfolio | Specified; blocked on VP02/VP03 |
-| FR-020 | Record reproducible portfolio effort | Specified; blocked on FR-019 |
-| FR-021 | Bind the portfolio report and human disposition | Specified; blocked on FR-016 and FR-019/FR-020 |
+| FR-019 | Execute a bounded native parser portfolio | Implemented; automated evidence verified |
+| FR-020 | Record reproducible portfolio effort | Implemented; automated evidence verified |
+| FR-021 | Bind the portfolio report and human disposition | Implemented; external disposition pending |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -128,7 +128,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-006 | Bound native process execution | Implemented; verified |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 | IT-002 | Independent shared-reference consumer qualification | Implemented; verified |
-| IT-003 | Native parser portfolio execution | Specified; blocked on VP02/VP03 |
+| IT-003 | Native parser portfolio execution | In progress; automated core sealed, external disposition pending |
 
 ## 6. Identification and Traceability
 

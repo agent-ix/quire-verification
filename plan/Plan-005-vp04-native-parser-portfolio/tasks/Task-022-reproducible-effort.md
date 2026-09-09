@@ -2,7 +2,7 @@
 id: Task-022
 title: "Reproducible effort observations"
 type: Task
-status: blocked
+status: done
 track: A
 priority: P0
 relationships:
@@ -21,11 +21,11 @@ context, uncertainty, and bounded interpretation.
 
 ## Subtasks
 
-- [ ] Write TC-036 first for all series-shape, identity, range, validity, order, and lower-median boundaries.
-- [ ] Derive the closed measurement shape from the authoritative E02 schema document.
-- [ ] Preserve raw observations in order and recompute summaries from valid samples only.
-- [ ] Add the TC-037 interpretation and claim-limit assertions owned by FR-020.
-- [ ] Bind every FR-020 criterion through compiler-checked `ix-trace-rs` markers.
+- [x] Write TC-036 first for all series-shape, identity, range, validity, order, and lower-median boundaries.
+- [x] Derive the closed measurement shape from the authoritative E02 schema document.
+- [x] Preserve raw observations in order and recompute summaries from valid samples only.
+- [x] Add the TC-037 interpretation and claim-limit assertions owned by FR-020.
+- [x] Bind every FR-020 criterion through compiler-checked `ix-trace-rs` markers.
 
 ## Deliverables
 
@@ -33,6 +33,6 @@ context, uncertainty, and bounded interpretation.
 
 ## Notes
 
-- Blocked until Task-021 fixes the measured phases and exact identities.
+- Task-021 fixes the measured phases and exact identities consumed here.
 - This task consumes Agent C's reusable MeasurementPlan artifact and does not create a competing assurance framework.
 - Unblocks Task-023.

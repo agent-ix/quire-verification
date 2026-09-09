@@ -712,6 +712,266 @@
       },
       "additionalProperties": true
     },
+    "Vp04NativeCommand": {
+      "type": "object",
+      "required": ["commandId", "arguments", "expectedExitCode", "responseKind"],
+      "properties": {
+        "commandId": { "type": "string", "minLength": 1 },
+        "arguments": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "expectedExitCode": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "responseKind": { "enum": ["parsed-json", "formatted-source", "diagnostic-json"] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04NativeRun": {
+      "type": "object",
+      "required": ["runId", "commandId", "status", "observedExitCode", "stdoutArtifact", "stderrArtifact", "errorCode"],
+      "properties": {
+        "runId": { "type": "string", "minLength": 1 },
+        "commandId": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["completed", "failed"] },
+        "observedExitCode": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 255 }, { "type": "null" }] },
+        "stdoutArtifact": { "oneOf": [{ "$ref": "#/$defs/NativeArtifact" }, { "type": "null" }] },
+        "stderrArtifact": { "oneOf": [{ "$ref": "#/$defs/NativeArtifact" }, { "type": "null" }] },
+        "errorCode": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "completed" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "observedExitCode": { "type": "integer", "minimum": 0, "maximum": 255 },
+              "errorCode": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "failed" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "observedExitCode": { "type": "null" },
+              "stdoutArtifact": { "type": "null" },
+              "stderrArtifact": { "type": "null" },
+              "errorCode": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "Vp04ParserDiagnosticResponse": {
+      "type": "object",
+      "required": ["status", "phase", "code", "source", "path", "span", "message"],
+      "properties": {
+        "status": { "const": "refused" },
+        "phase": { "const": "parse" },
+        "code": { "const": "invalid_syntax" },
+        "source": {
+          "type": "object",
+          "required": ["identity", "revision"],
+          "properties": {
+            "identity": { "type": "string", "minLength": 1 },
+            "revision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "path": { "type": "string", "minLength": 1 },
+        "span": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "object",
+              "required": ["byte", "line", "column"],
+              "properties": {
+                "byte": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+                "line": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+                "column": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+              },
+              "additionalProperties": false
+            },
+            "end": {
+              "type": "object",
+              "required": ["byte", "line", "column"],
+              "properties": {
+                "byte": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+                "line": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+                "column": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "message": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "Vp04ParserPortfolioExecution": {
+      "type": "object",
+      "required": ["schemaVersion", "executionId", "plan", "commands", "nativeRuns", "results", "assessment", "evidenceOwner", "sufficiencyDecision"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-execution/v1" },
+        "executionId": { "type": "string", "minLength": 1 },
+        "plan": { "$ref": "#/$defs/VerificationPlan" },
+        "commands": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeCommand" } },
+        "nativeRuns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeRun" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } },
+        "assessment": { "type": "object" },
+        "evidenceOwner": { "const": "Quoin" },
+        "sufficiencyDecision": { "const": "not-made" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementObservation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["observationId", "phase", "repetition", "status", "elapsedNanoseconds"],
+          "properties": {
+            "observationId": { "type": "string", "minLength": 1 },
+            "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+            "repetition": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "status": { "const": "valid" },
+            "elapsedNanoseconds": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["observationId", "phase", "repetition", "status", "reason"],
+          "properties": {
+            "observationId": { "type": "string", "minLength": 1 },
+            "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+            "repetition": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "status": { "const": "invalid" },
+            "reason": { "type": "string", "minLength": 1 },
+            "rejectedElapsed": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Vp04PhaseSummary": {
+      "type": "object",
+      "required": ["phase", "validSampleCount", "minimumNanoseconds", "medianNanoseconds", "maximumNanoseconds"],
+      "properties": {
+        "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+        "validSampleCount": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "minimumNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] },
+        "medianNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] },
+        "maximumNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementContext": {
+      "type": "object",
+      "required": ["population", "exclusions", "clock", "commandOrder", "cacheTreatment", "environmentalDifferences", "uncertainty", "alternativeExplanations"],
+      "properties": {
+        "population": { "type": "string", "minLength": 1 },
+        "exclusions": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "clock": { "const": "monotonic-process-local" },
+        "commandOrder": { "const": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+        "cacheTreatment": { "type": "string", "minLength": 1 },
+        "environmentalDifferences": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "uncertainty": { "type": "string", "minLength": 1 },
+        "alternativeExplanations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementSeries": {
+      "type": "object",
+      "required": ["schemaVersion", "candidateIdentity", "environmentIdentity", "observations", "summaries", "context"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-measurements/v1" },
+        "candidateIdentity": { "type": "string", "minLength": 1 },
+        "environmentIdentity": { "type": "string", "minLength": 1 },
+        "observations": { "type": "array", "minItems": 16, "maxItems": 16, "items": { "$ref": "#/$defs/Vp04MeasurementObservation" } },
+        "summaries": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/Vp04PhaseSummary" } },
+        "context": { "$ref": "#/$defs/Vp04MeasurementContext" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04AutomatedReportCore": {
+      "type": "object",
+      "required": ["schemaVersion", "reportId", "candidateRef", "subjectRef", "mutationRef", "dependencyClosureRef", "environmentRef", "commands", "plan", "taskIds", "nativeRuns", "results", "assessment", "assessedAt", "measurements", "interpretation", "claimLimits", "producers", "adapters", "evidenceOwner", "sufficiencyDecision"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-report-core/v1" },
+        "reportId": { "type": "string", "minLength": 1 },
+        "candidateRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "mutationRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "dependencyClosureRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "environmentRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "commands": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeCommand" } },
+        "plan": { "$ref": "#/$defs/VerificationPlan" },
+        "taskIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "nativeRuns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeRun" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } },
+        "assessment": { "type": "object" },
+        "assessedAt": { "type": "string", "format": "date-time" },
+        "measurements": { "$ref": "#/$defs/Vp04MeasurementSeries" },
+        "interpretation": { "const": "These observations describe only the selected quire-spec revision and exact fixture pair." },
+        "claimLimits": {
+          "const": [
+            "The run establishes only the declared parser syntax responses and format stability for these fixtures.",
+            "Quoin retains ownership of evidence interpretation and sufficiency."
+          ]
+        },
+        "producers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "adapters": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "evidenceOwner": { "const": "Quoin" },
+        "sufficiencyDecision": { "const": "not-made" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04ReviewDisposition": {
+      "type": "object",
+      "required": ["schemaVersion", "dispositionId", "coreDigest", "reviewer", "procedureRef", "observedAt", "value"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-disposition/v1" },
+        "dispositionId": { "type": "string", "minLength": 1 },
+        "coreDigest": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "procedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "value": { "enum": ["accept", "revise", "reject"] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04PortfolioReport": {
+      "type": "object",
+      "required": ["schemaVersion", "core", "coreDigest", "dispositionRef", "disposition", "status"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-report/v1" },
+        "core": { "$ref": "#/$defs/Vp04AutomatedReportCore" },
+        "coreDigest": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "dispositionRef": { "oneOf": [{ "$ref": "#/$defs/SharedArtifactEnvelope" }, { "type": "null" }] },
+        "disposition": { "oneOf": [{ "$ref": "#/$defs/Vp04ReviewDisposition" }, { "type": "null" }] },
+        "status": { "enum": ["incomplete", "final"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "incomplete" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "dispositionRef": { "type": "null" },
+              "disposition": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "final" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "dispositionRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+              "disposition": { "$ref": "#/$defs/Vp04ReviewDisposition" }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
     "QuoinCatalogFixture": {
       "type": "object",
       "required": ["schemaVersion", "source", "catalog"],
