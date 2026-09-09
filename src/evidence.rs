@@ -15,7 +15,21 @@ use crate::contracts::{
 use crate::shared_reference::ValidatedSharedReference;
 use crate::value::{arrays_field, field, string_field};
 
-type ContributionId = (String, String);
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+struct ContributionId {
+    result_id: String,
+    contribution_id: String,
+}
+
+impl ContributionId {
+    fn new(result_id: &str, contribution_id: &str) -> Self {
+        Self {
+            result_id: result_id.to_owned(),
+            contribution_id: contribution_id.to_owned(),
+        }
+    }
+}
+
 type DependenceGraph = BTreeMap<ContributionId, Vec<(ContributionId, &'static str)>>;
 
 #[derive(Debug)]
@@ -30,7 +44,8 @@ struct ContributionRecord<'a> {
 /// Assesses result compatibility for every inventory obligation.
 ///
 /// # Errors
-/// Returns a schema, timestamp, duplicate-identifier, or canonicalization error.
+/// Returns a schema, timestamp, duplicate-identifier, strict-reference,
+/// invalid-lineage, or canonicalization error.
 pub fn assess_evidence(
     packet: &Value,
     validated_references: &[ValidatedSharedReference],
@@ -164,7 +179,7 @@ fn validate_contributions<'a>(
         for contribution in arrays_field(result, "oracleContributions", "result")? {
             let contribution_id =
                 string_field(contribution, "contributionId", "oracle contribution")?;
-            let key = (result_id.to_owned(), contribution_id.to_owned());
+            let key = ContributionId::new(result_id, contribution_id);
             if records.contains_key(&key) {
                 return Err(VerificationError::new(
                     VerificationErrorCode::DuplicateOracleContributionId,
@@ -190,9 +205,9 @@ fn validate_contributions<'a>(
             let derived_from = contribution
                 .get("derivedFrom")
                 .map(|source| {
-                    Ok((
-                        string_field(source, "resultId", "derived source")?.to_owned(),
-                        string_field(source, "contributionId", "derived source")?.to_owned(),
+                    Ok(ContributionId::new(
+                        string_field(source, "resultId", "derived source")?,
+                        string_field(source, "contributionId", "derived source")?,
                     ))
                 })
                 .transpose()?;
@@ -252,8 +267,8 @@ fn validate_lineage(
                 VerificationErrorCode::InvalidOracleLineage,
                 "derived oracle contribution has an absent or self source",
             )
-            .with_context("result_id", id.0.clone())
-            .with_context("contribution_id", id.1.clone()));
+            .with_context("result_id", id.result_id.clone())
+            .with_context("contribution_id", id.contribution_id.clone()));
         }
     }
 
@@ -274,8 +289,8 @@ fn validate_lineage(
                     VerificationErrorCode::InvalidOracleLineage,
                     "derived oracle contribution graph contains a cycle",
                 )
-                .with_context("result_id", current.0)
-                .with_context("contribution_id", current.1));
+                .with_context("result_id", current.result_id)
+                .with_context("contribution_id", current.contribution_id));
             }
             traversed.push(current.clone());
             let Some(next) = derived.get(&current) else {
@@ -294,7 +309,7 @@ fn dependence_findings(
 ) -> Result<Vec<Value>, VerificationError> {
     let selected = records
         .iter()
-        .filter(|(id, _)| selected_results.contains(&id.0))
+        .filter(|(id, _)| selected_results.contains(&id.result_id))
         .collect::<BTreeMap<_, _>>();
     let (mut adjacency, by_group) = build_base_dependence_graph(&selected);
     let mut findings = BTreeMap::<Vec<u8>, Value>::new();
@@ -459,7 +474,7 @@ fn unknown_finding(id: &ContributionId, reason: &str) -> Value {
 }
 
 fn member_value(id: &ContributionId) -> Value {
-    json!({"resultId": id.0, "contributionId": id.1})
+    json!({"resultId": id.result_id, "contributionId": id.contribution_id})
 }
 
 fn insert_finding(
