@@ -14,8 +14,8 @@ relationships:
 
 ## Description
 
-Verify the five verification input variants retain their own required roles and
-reject missing, foreign, or unexpected fields.
+Verify the five property-input variants retain their own required roles on
+verification tasks and reject missing, foreign, or unexpected fields.
 
 ## Test Procedure
 

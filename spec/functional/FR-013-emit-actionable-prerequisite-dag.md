@@ -29,7 +29,7 @@ When required verification inputs or capabilities are unavailable, the planner S
 | FR-013-AC-1 | Each distinct missing required prerequisite emits exactly one plan-level setup task, and each affected verification task depends on its setup-task identifier. | Test (TC-026) |
 | FR-013-AC-2 | Required verification work remains present and non-invocable when a capability-declared resource allocation is absent. | Test (TC-026) |
 | FR-013-AC-3 | A prerequisite is satisfied only by an exact kind-and-identifier match; caller input cannot mark an expired selection policy current. | Test (TC-026) |
-| FR-013-AC-4 | A setup task carries its exact prerequisite and a sorted nonempty `requiredBy` list of verification-task identifiers; it does not invent a property or technique identity for plan-level work. | Test (TC-026) |
+| FR-013-AC-4 | A setup task carries its exact prerequisite and a sorted nonempty `requiredBy` list of verification-task identifiers; it carries no property input and does not invent a property or technique identity for plan-level work. | Test (TC-026) |
 | FR-013-AC-5 | Every composite setup-task and verification-task identifier injectively encodes its component values, including values containing the identifier delimiter. | Test (TC-026) |
 
 ## Dependencies
