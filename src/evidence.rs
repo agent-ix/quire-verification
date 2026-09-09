@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Agent-IX
 
-//! Exact-scope evidence matching without sufficiency decisions (FR-006, FR-007).
+//! Exact-scope evidence matching without sufficiency decisions (FR-006, FR-007, FR-017).
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use chrono::{DateTime, Datelike, FixedOffset, TimeDelta};
 use serde_json::{Value, json};
@@ -12,13 +12,29 @@ use crate::contracts::{
     VerificationError, VerificationErrorCode, jcs_canonicalize, jcs_equal,
     validate_schema_definition,
 };
+use crate::shared_reference::ValidatedSharedReference;
 use crate::value::{arrays_field, field, string_field};
+
+type ContributionId = (String, String);
+type DependenceGraph = BTreeMap<ContributionId, Vec<(ContributionId, &'static str)>>;
+
+#[derive(Debug)]
+struct ContributionRecord<'a> {
+    oracle_key: Vec<u8>,
+    observation_key: Vec<u8>,
+    relation: &'a str,
+    dependence_group: Option<&'a str>,
+    derived_from: Option<ContributionId>,
+}
 
 /// Assesses result compatibility for every inventory obligation.
 ///
 /// # Errors
 /// Returns a schema, timestamp, duplicate-identifier, or canonicalization error.
-pub fn assess_evidence(packet: &Value) -> Result<Value, VerificationError> {
+pub fn assess_evidence(
+    packet: &Value,
+    validated_references: &[ValidatedSharedReference],
+) -> Result<Value, VerificationError> {
     let inventory = arrays_field(packet, "inventory", "evidence packet")?;
     let results = arrays_field(packet, "results", "evidence packet")?;
     let as_of_text = string_field(packet, "asOf", "evidence packet")?;
@@ -35,86 +51,423 @@ pub fn assess_evidence(packet: &Value) -> Result<Value, VerificationError> {
             .with_context("result_id", result_id));
         }
     }
+    let contributions = validate_contributions(results, validated_references)?;
 
     let mut obligations = Vec::with_capacity(inventory.len());
+    let mut selected_results = BTreeSet::new();
     for property in inventory {
-        validate_schema_definition("EvidenceObligation", property)?;
-        let property_identity = artifact_identity(field(property, "propertyRef", "property")?)?;
-        let candidates = results
-            .iter()
-            .filter(|result| {
-                result
-                    .pointer("/propertyRef/value/identity")
-                    .and_then(Value::as_str)
-                    == Some(property_identity)
-            })
-            .collect::<Vec<_>>();
-        let mut exact = Vec::new();
-        for result in &candidates {
-            if scope_differences(property, result)?.is_empty() {
-                exact.push(*result);
-            }
+        let (obligation, selected_result) = assess_obligation(property, results, as_of)?;
+        if let Some(result_id) = selected_result {
+            selected_results.insert(result_id);
         }
-        exact.sort_by(|left, right| {
-            left.get("resultId")
-                .and_then(Value::as_str)
-                .cmp(&right.get("resultId").and_then(Value::as_str))
-        });
-        if exact.is_empty() {
-            let mut gaps = Vec::new();
-            for result in candidates {
-                for dimension in scope_differences(property, result)? {
-                    gaps.push(json!({"kind": "scope-mismatch", "dimension": dimension, "resultId": string_field(result, "resultId", "result")?}));
-                }
-            }
-            sort_canonical(&mut gaps)?;
-            obligations.push(json!({
-                "propertyId": string_field(property, "propertyId", "property")?,
-                "status": "missing",
-                "resultId": null,
-                "gaps": gaps,
-            }));
-            continue;
-        }
-        if exact.len() > 1 {
-            let ids = exact
-                .iter()
-                .map(|result| {
-                    string_field(result, "resultId", "result")
-                        .map(|id| Value::String(id.to_owned()))
-                })
-                .collect::<Result<Vec<_>, _>>()?;
-            obligations.push(json!({
-                "propertyId": string_field(property, "propertyId", "property")?,
-                "status": "ambiguous",
-                "resultId": null,
-                "candidateResultIds": ids,
-                "gaps": [{"kind": "ambiguous-results", "resultIds": ids}],
-            }));
-            continue;
-        }
-        let result = exact.into_iter().next().ok_or_else(|| {
-            VerificationError::new(
-                VerificationErrorCode::InvalidInput,
-                "exact result set unexpectedly became empty",
-            )
-        })?;
-        let mut findings = findings_for(result)?;
-        if is_stale(property, result, as_of)? {
-            findings.insert(0, json!({"kind": "freshness-expired"}));
-            obligations.push(result_view(property, result, "stale", &findings)?);
-        } else {
-            obligations.push(result_view(property, result, classify(result)?, &findings)?);
-        }
+        obligations.push(obligation);
     }
+    sort_canonical(&mut obligations)?;
+    let oracle_dependence_findings = dependence_findings(&contributions, &selected_results)?;
     Ok(json!({
         "asOf": as_of_text,
         "denominator": inventory.len(),
         "obligations": obligations,
+        "oracleDependenceFindings": oracle_dependence_findings,
         "evidenceOwner": "Quoin",
         "sufficiencyDecision": "not-made",
         "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding",
     }))
+}
+
+fn assess_obligation(
+    property: &Value,
+    results: &[Value],
+    as_of: DateTime<FixedOffset>,
+) -> Result<(Value, Option<String>), VerificationError> {
+    validate_schema_definition("EvidenceObligation", property)?;
+    let property_identity = artifact_identity(field(property, "propertyRef", "property")?)?;
+    let candidates = results
+        .iter()
+        .filter(|result| {
+            result
+                .pointer("/propertyRef/value/identity")
+                .and_then(Value::as_str)
+                == Some(property_identity)
+        })
+        .collect::<Vec<_>>();
+    let mut exact = Vec::new();
+    for result in &candidates {
+        if scope_differences(property, result)?.is_empty() {
+            exact.push(*result);
+        }
+    }
+    exact.sort_by(|left, right| {
+        left.get("resultId")
+            .and_then(Value::as_str)
+            .cmp(&right.get("resultId").and_then(Value::as_str))
+    });
+    if exact.is_empty() {
+        let mut gaps = Vec::new();
+        for result in candidates {
+            for dimension in scope_differences(property, result)? {
+                gaps.push(json!({"kind": "scope-mismatch", "dimension": dimension, "resultId": string_field(result, "resultId", "result")?}));
+            }
+        }
+        sort_canonical(&mut gaps)?;
+        return Ok((
+            json!({
+                "propertyId": string_field(property, "propertyId", "property")?,
+                "status": "missing", "resultId": null, "gaps": gaps,
+            }),
+            None,
+        ));
+    }
+    if exact.len() > 1 {
+        let ids = exact
+            .iter()
+            .map(|result| {
+                string_field(result, "resultId", "result").map(|id| Value::String(id.to_owned()))
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        return Ok((
+            json!({
+                "propertyId": string_field(property, "propertyId", "property")?,
+                "status": "ambiguous", "resultId": null,
+                "candidateResultIds": ids,
+                "gaps": [{"kind": "ambiguous-results", "resultIds": ids}],
+            }),
+            None,
+        ));
+    }
+    let result = exact[0];
+    let result_id = string_field(result, "resultId", "result")?.to_owned();
+    let mut findings = findings_for(result)?;
+    let status = if is_stale(property, result, as_of)? {
+        findings.insert(0, json!({"kind": "freshness-expired"}));
+        "stale"
+    } else {
+        classify(result)?
+    };
+    Ok((
+        result_view(property, result, status, &findings)?,
+        Some(result_id),
+    ))
+}
+
+fn validate_contributions<'a>(
+    results: &'a [Value],
+    validated_references: &[ValidatedSharedReference],
+) -> Result<BTreeMap<ContributionId, ContributionRecord<'a>>, VerificationError> {
+    let reference_index = validated_references
+        .iter()
+        .filter_map(ValidatedSharedReference::reference_key)
+        .collect::<BTreeMap<_, _>>();
+    let mut records = BTreeMap::new();
+    for result in results {
+        let result_id = string_field(result, "resultId", "result")?;
+        for contribution in arrays_field(result, "oracleContributions", "result")? {
+            let contribution_id =
+                string_field(contribution, "contributionId", "oracle contribution")?;
+            let key = (result_id.to_owned(), contribution_id.to_owned());
+            if records.contains_key(&key) {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::DuplicateOracleContributionId,
+                    "duplicate oracle contribution identifier within a result",
+                )
+                .with_context("result_id", result_id)
+                .with_context("contribution_id", contribution_id));
+            }
+            let oracle_key = validate_contribution_reference(
+                field(contribution, "oracleRef", "oracle contribution")?,
+                "oracle",
+                &reference_index,
+            )?;
+            let observation_key = validate_contribution_reference(
+                field(contribution, "observationRef", "oracle contribution")?,
+                "observation",
+                &reference_index,
+            )?;
+            let relation = string_field(contribution, "relation", "oracle contribution")?;
+            let dependence_group = contribution
+                .get("dependenceGroupId")
+                .and_then(Value::as_str);
+            let derived_from = contribution
+                .get("derivedFrom")
+                .map(|source| {
+                    Ok((
+                        string_field(source, "resultId", "derived source")?.to_owned(),
+                        string_field(source, "contributionId", "derived source")?.to_owned(),
+                    ))
+                })
+                .transpose()?;
+            records.insert(
+                key,
+                ContributionRecord {
+                    oracle_key,
+                    observation_key,
+                    relation,
+                    dependence_group,
+                    derived_from,
+                },
+            );
+        }
+    }
+    validate_lineage(&records)?;
+    Ok(records)
+}
+
+fn validate_contribution_reference(
+    reference: &Value,
+    expected_role: &str,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<Vec<u8>, VerificationError> {
+    let canonical = jcs_canonicalize(reference)?;
+    match validated_references.get(canonical.as_slice()) {
+        Some(role) if *role == expected_role => Ok(canonical),
+        Some(role) => Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "validated shared reference has the wrong contribution role",
+        )
+        .with_context("expected_role", expected_role)
+        .with_context("actual_role", *role)),
+        None => Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "contribution reference has no exact strict-reader output",
+        )
+        .with_context("expected_role", expected_role)),
+    }
+}
+
+fn validate_lineage(
+    records: &BTreeMap<ContributionId, ContributionRecord<'_>>,
+) -> Result<(), VerificationError> {
+    let derived = records
+        .iter()
+        .filter_map(|(id, record)| {
+            record
+                .derived_from
+                .as_ref()
+                .map(|source| (id.clone(), source.clone()))
+        })
+        .collect::<BTreeMap<_, _>>();
+    for (id, source) in &derived {
+        if id == source || !records.contains_key(source) {
+            return Err(VerificationError::new(
+                VerificationErrorCode::InvalidOracleLineage,
+                "derived oracle contribution has an absent or self source",
+            )
+            .with_context("result_id", id.0.clone())
+            .with_context("contribution_id", id.1.clone()));
+        }
+    }
+
+    let mut complete = BTreeSet::new();
+    for start in derived.keys() {
+        if complete.contains(start) {
+            continue;
+        }
+        let mut path = BTreeSet::new();
+        let mut traversed = Vec::new();
+        let mut current = start.clone();
+        loop {
+            if complete.contains(&current) {
+                break;
+            }
+            if !path.insert(current.clone()) {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::InvalidOracleLineage,
+                    "derived oracle contribution graph contains a cycle",
+                )
+                .with_context("result_id", current.0)
+                .with_context("contribution_id", current.1));
+            }
+            traversed.push(current.clone());
+            let Some(next) = derived.get(&current) else {
+                break;
+            };
+            current.clone_from(next);
+        }
+        complete.extend(traversed);
+    }
+    Ok(())
+}
+
+fn dependence_findings(
+    records: &BTreeMap<ContributionId, ContributionRecord<'_>>,
+    selected_results: &BTreeSet<String>,
+) -> Result<Vec<Value>, VerificationError> {
+    let selected = records
+        .iter()
+        .filter(|(id, _)| selected_results.contains(&id.0))
+        .collect::<BTreeMap<_, _>>();
+    let (mut adjacency, by_group) = build_base_dependence_graph(&selected);
+    let mut findings = BTreeMap::<Vec<u8>, Value>::new();
+    add_declared_findings(&selected, &by_group, &mut adjacency, &mut findings)?;
+    add_component_findings(&adjacency, &mut findings)?;
+    let mut values = findings.into_values().collect::<Vec<_>>();
+    sort_canonical(&mut values)?;
+    Ok(values)
+}
+
+fn build_base_dependence_graph(
+    selected: &BTreeMap<&ContributionId, &ContributionRecord<'_>>,
+) -> (DependenceGraph, BTreeMap<String, Vec<ContributionId>>) {
+    let mut adjacency = selected
+        .keys()
+        .map(|id| ((*id).clone(), Vec::<(ContributionId, &'static str)>::new()))
+        .collect::<BTreeMap<_, _>>();
+    let mut by_oracle = BTreeMap::<Vec<u8>, Vec<ContributionId>>::new();
+    let mut by_observation = BTreeMap::<Vec<u8>, Vec<ContributionId>>::new();
+    let mut by_group = BTreeMap::<String, Vec<ContributionId>>::new();
+    for (id, record) in selected {
+        by_oracle
+            .entry(record.oracle_key.clone())
+            .or_default()
+            .push((*id).clone());
+        by_observation
+            .entry(record.observation_key.clone())
+            .or_default()
+            .push((*id).clone());
+        if let Some(group) = record.dependence_group {
+            by_group
+                .entry(group.to_owned())
+                .or_default()
+                .push((*id).clone());
+        }
+    }
+    connect_groups(by_oracle.values(), "oracle", &mut adjacency);
+    connect_groups(by_observation.values(), "observation", &mut adjacency);
+    connect_groups(by_group.values(), "declared-group", &mut adjacency);
+    (adjacency, by_group)
+}
+
+fn add_declared_findings(
+    selected: &BTreeMap<&ContributionId, &ContributionRecord<'_>>,
+    by_group: &BTreeMap<String, Vec<ContributionId>>,
+    adjacency: &mut DependenceGraph,
+    findings: &mut BTreeMap<Vec<u8>, Value>,
+) -> Result<(), VerificationError> {
+    for (id, record) in selected {
+        match record.relation {
+            "unknown" => insert_finding(findings, unknown_finding(id, "declared-unknown"))?,
+            "shared" => {
+                let group = record.dependence_group.ok_or_else(|| {
+                    VerificationError::new(
+                        VerificationErrorCode::SchemaViolation,
+                        "shared contribution has no dependence group",
+                    )
+                })?;
+                if by_group
+                    .get(group)
+                    .is_some_and(|members| members.len() == 1)
+                {
+                    insert_finding(findings, unknown_finding(id, "shared-group-unresolved"))?;
+                }
+            }
+            "derived" => {
+                let source = record.derived_from.as_ref().ok_or_else(|| {
+                    VerificationError::new(
+                        VerificationErrorCode::SchemaViolation,
+                        "derived contribution has no source",
+                    )
+                })?;
+                if adjacency.contains_key(source) {
+                    add_edge(id, source, "derived", adjacency);
+                } else {
+                    insert_finding(findings, unknown_finding(id, "source-not-assessed"))?;
+                }
+            }
+            "independent" => {}
+            _ => {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::SchemaViolation,
+                    "unknown oracle contribution relation",
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
+fn add_component_findings(
+    adjacency: &DependenceGraph,
+    findings: &mut BTreeMap<Vec<u8>, Value>,
+) -> Result<(), VerificationError> {
+    let mut visited = BTreeSet::new();
+    for start in adjacency.keys() {
+        if !visited.insert(start.clone()) {
+            continue;
+        }
+        let mut stack = vec![start.clone()];
+        let mut members = BTreeSet::new();
+        let mut bases = BTreeSet::new();
+        while let Some(current) = stack.pop() {
+            members.insert(current.clone());
+            if let Some(edges) = adjacency.get(&current) {
+                for (next, basis) in edges {
+                    bases.insert(*basis);
+                    if visited.insert(next.clone()) {
+                        stack.push(next.clone());
+                    }
+                }
+            }
+        }
+        if members.len() >= 2 {
+            let finding = json!({
+                "kind": "correlated-oracle",
+                "members": members.into_iter().map(|id| member_value(&id)).collect::<Vec<_>>(),
+                "bases": bases.into_iter().collect::<Vec<_>>(),
+            });
+            insert_finding(findings, finding)?;
+        }
+    }
+    Ok(())
+}
+
+fn connect_groups<'a, I>(groups: I, basis: &'static str, adjacency: &mut DependenceGraph)
+where
+    I: Iterator<Item = &'a Vec<ContributionId>>,
+{
+    for members in groups {
+        if let Some(first) = members.first() {
+            for member in &members[1..] {
+                add_edge(first, member, basis, adjacency);
+            }
+        }
+    }
+}
+
+fn add_edge(
+    left: &ContributionId,
+    right: &ContributionId,
+    basis: &'static str,
+    adjacency: &mut DependenceGraph,
+) {
+    if left == right {
+        return;
+    }
+    if let Some(edges) = adjacency.get_mut(left) {
+        edges.push((right.clone(), basis));
+    }
+    if let Some(edges) = adjacency.get_mut(right) {
+        edges.push((left.clone(), basis));
+    }
+}
+
+fn unknown_finding(id: &ContributionId, reason: &str) -> Value {
+    json!({
+        "kind": "oracle-dependence-unknown",
+        "member": member_value(id),
+        "reason": reason,
+    })
+}
+
+fn member_value(id: &ContributionId) -> Value {
+    json!({"resultId": id.0, "contributionId": id.1})
+}
+
+fn insert_finding(
+    findings: &mut BTreeMap<Vec<u8>, Value>,
+    finding: Value,
+) -> Result<(), VerificationError> {
+    findings.insert(jcs_canonicalize(&finding)?, finding);
+    Ok(())
 }
 
 fn artifact_identity(reference: &Value) -> Result<&str, VerificationError> {
@@ -407,6 +760,12 @@ fn result_view(
     status: &str,
     gaps: &[Value],
 ) -> Result<Value, VerificationError> {
+    let mut oracle_contributions = arrays_field(result, "oracleContributions", "result")?.to_vec();
+    oracle_contributions.sort_by(|left, right| {
+        left.get("contributionId")
+            .and_then(Value::as_str)
+            .cmp(&right.get("contributionId").and_then(Value::as_str))
+    });
     Ok(json!({
         "propertyId": string_field(property, "propertyId", "property")?,
         "status": status,
@@ -420,6 +779,7 @@ fn result_view(
         "adequacy": field(result, "adequacy", "result")?,
         "provenance": field(result, "provenance", "result")?,
         "nativeArtifacts": field(result, "nativeArtifacts", "result")?,
+        "oracleContributions": oracle_contributions,
         "gaps": gaps,
     }))
 }

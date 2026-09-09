@@ -26,7 +26,10 @@ decoder.
 The planner accepts reference-bearing property inputs only when the caller also
 supplies the matching opaque value returned by the strict shared-reference
 reader. Matching uses exact RFC 8785 JCS bytes and the artifact's selected role.
-E02 draft-1 has no compatibility or migration path.
+Evidence assessment applies that same rule to every result oracle and
+observation reference. Evaluated results retain at least one closed oracle
+contribution with an explicit dependence relation; non-evaluated results retain
+none. E02 draft-1 has no compatibility or migration path.
 
 `shared-reference-snapshot.sha256` covers both schemas and all fourteen selected
 amendment fixtures. `shared-reference-UPSTREAM.md` records their exact private

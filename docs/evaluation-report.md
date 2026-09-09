@@ -59,6 +59,10 @@ an adapted field corruption, and an adapter exception.
 - Digests and structured identity comparisons use RFC 8785 JCS. Catalog parity
   resolves methods by `techniqueId`, and injected violations or execution
   errors are retained as violated or failed `TechniqueResult` records.
+- Every evaluated result retains a closed oracle contribution whose oracle and
+  observation references pass the strict shared-reference reader. Assessment
+  validates exact membership and derived lineage, then reports correlation or
+  unknown dependence among uniquely selected results without assigning a score.
 - The retained local portfolio at source revision
   `86ebb0b8aedde235af90cb0d80ec16244584b135` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
@@ -99,7 +103,8 @@ request is complete and produces useful gaps without changing catalog or
 evidence ownership. This is not completion of parent E02 or its VP01–VP04
 track. VP01 still needs its acceptance dependencies and reviewed migration;
 VP02 implementation is complete but its acceptance remains gated on VP01; VP03
-still lacks correlated-oracle evidence; and VP04 still needs
+now retains and reports correlated-oracle evidence but still needs its external
+acceptance dependencies; and VP04 still needs
 a reviewed native parser or aggregate producer portfolio, a seeded domain
 defect, agreed thresholds, and the recorded reviewer disposition. E01, FS02,
 FS05, and E04 remain open.

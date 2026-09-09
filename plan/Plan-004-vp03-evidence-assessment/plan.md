@@ -13,7 +13,7 @@ relationships:
 
 ### Functional Requirements
 
-- [ ] **FR-017**: Retain oracle dependence without aggregation.
+- [x] **FR-017**: Retain oracle dependence without aggregation.
 - [x] **FR-018**: Enforce every evidence freshness bound.
 
 ## Dependency Graph
@@ -50,7 +50,7 @@ traversal.
 
 ### Oracle dependence
 
-- [ ] **TC-033**: Retain independent, shared, derived, and unknown oracle relationships under permutation and exact-reference mutation.
+- [x] **TC-033**: Retain independent, shared, derived, and unknown oracle relationships under permutation and exact-reference mutation.
 
 ### Qualified-path gates
 
@@ -78,9 +78,9 @@ Plan-003/Task-012 + FS05 -> Task-017 -> Task-018 -------------+-> Task-019
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
 | Task-016 | A | FR-018 | TC-032 | done |
-| Task-017 | A | FR-017 | TC-033 | in_progress |
-| Task-018 | A | FR-017 | TC-033 | blocked |
-| Task-019 | Gate | FR-017, FR-018 | TC-032, TC-033 | blocked |
+| Task-017 | A | FR-017 | TC-033 | done |
+| Task-018 | A | FR-017 | TC-033 | done |
+| Task-019 | Gate | FR-017, FR-018 | TC-032, TC-033 | in_progress |
 
 ## Coordination Rules
 

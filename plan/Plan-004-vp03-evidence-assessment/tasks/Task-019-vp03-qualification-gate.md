@@ -2,7 +2,7 @@
 id: Task-019
 title: "VP03 qualification gate"
 type: Task
-status: blocked
+status: in_progress
 track: Gate
 priority: P0
 relationships:
@@ -22,8 +22,8 @@ independent QUOIN gap analysis and the required human disposition.
 
 ## Subtasks
 
-- [ ] Run formatting, Clippy, tests, dependency policy, fixtures, and integrations.
-- [ ] Reconcile every new `ix-trace-rs` binding.
+- [x] Run formatting, Clippy, tests, dependency policy, fixtures, and integrations.
+- [x] Reconcile every new `ix-trace-rs` binding.
 - [ ] Complete exact Rust review and resolve findings.
 - [ ] Obtain the required reviewer disposition and run QUOIN gap analysis.
 
@@ -33,4 +33,5 @@ independent QUOIN gap analysis and the required human disposition.
 
 ## Notes
 
-- Blocked until Tasks 016 and 018 are done.
+- Tasks 016 through 018 are complete. Exact Rust review and QUOIN gap analysis
+  remain before this gate can close.

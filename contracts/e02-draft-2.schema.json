@@ -45,6 +45,46 @@
         { "properties": { "value": { "properties": { "kind": { "const": "oracle" } }, "required": ["kind"] } } }
       ]
     },
+    "ObservationReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "observation" } }, "required": ["kind"] } } }
+      ]
+    },
+    "OracleContributionRef": {
+      "type": "object",
+      "required": ["resultId", "contributionId"],
+      "properties": {
+        "resultId": { "type": "string", "minLength": 1 },
+        "contributionId": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "OracleContribution": {
+      "type": "object",
+      "required": ["contributionId", "oracleRef", "observationRef", "relation"],
+      "properties": {
+        "contributionId": { "type": "string", "minLength": 1 },
+        "oracleRef": { "$ref": "#/$defs/OracleReference" },
+        "observationRef": { "$ref": "#/$defs/ObservationReference" },
+        "relation": { "enum": ["independent", "shared", "derived", "unknown"] },
+        "dependenceGroupId": { "type": "string", "minLength": 1 },
+        "derivedFrom": { "$ref": "#/$defs/OracleContributionRef" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "relation": { "const": "shared" } }, "required": ["relation"] },
+          "then": { "required": ["dependenceGroupId"], "not": { "required": ["derivedFrom"] } },
+          "else": { "not": { "required": ["dependenceGroupId"] } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "derived" } }, "required": ["relation"] },
+          "then": { "required": ["derivedFrom"], "not": { "required": ["dependenceGroupId"] } },
+          "else": { "not": { "required": ["derivedFrom"] } }
+        }
+      ],
+      "additionalProperties": false
+    },
     "ReviewProcedureReference": {
       "allOf": [
         { "$ref": "#/$defs/SharedArtifactEnvelope" },
@@ -519,7 +559,7 @@
     },
     "TechniqueResult": {
       "type": "object",
-      "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "runRef", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts"],
+      "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "runRef", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts", "oracleContributions"],
       "properties": {
         "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "TechniqueResult" },
@@ -590,7 +630,8 @@
           },
           "additionalProperties": true
         },
-        "nativeArtifacts": { "type": "array", "items": { "$ref": "#/$defs/NativeArtifact" } }
+        "nativeArtifacts": { "type": "array", "items": { "$ref": "#/$defs/NativeArtifact" } },
+        "oracleContributions": { "type": "array", "items": { "$ref": "#/$defs/OracleContribution" } }
       },
       "allOf": [
         {
@@ -615,6 +656,22 @@
                 }
               }
             }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "logical": {
+                "type": "object",
+                "properties": { "outcome": { "enum": ["satisfied", "violated"] } },
+                "required": ["outcome"]
+              }
+            },
+            "required": ["logical"]
+          },
+          "then": {
+            "properties": { "oracleContributions": { "minItems": 1 } }
           }
         }
       ],

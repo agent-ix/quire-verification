@@ -2,7 +2,7 @@
 id: Task-017
 title: "Oracle contribution contract"
 type: Task
-status: in_progress
+status: done
 track: A
 priority: P0
 relationships:
@@ -19,9 +19,9 @@ contributions using the exact independently accepted FS05 roles.
 
 ## Subtasks
 
-- [ ] Consume the reviewed oracle and observation artifact kinds through Task-012's opaque strict-reader outputs.
-- [ ] Define closed unique contribution identity, required relation, and exact structured derived-source pairs in the authoritative schema.
-- [ ] Reject missing, duplicate, wrong-role, conflicting, or unsupported contribution data.
+- [x] Consume the reviewed oracle and observation artifact kinds through Task-012's opaque strict-reader outputs.
+- [x] Define closed unique contribution identity, required relation, and exact structured derived-source pairs in the authoritative schema.
+- [x] Reject missing, duplicate, wrong-role, conflicting, or unsupported contribution data.
 
 ## Deliverables
 

@@ -66,6 +66,10 @@ pub enum VerificationErrorCode {
     AmbiguousCapability,
     /// Evidence repeats a result identifier.
     DuplicateResultId,
+    /// A result repeats an oracle contribution identifier.
+    DuplicateOracleContributionId,
+    /// Derived oracle contribution lineage is absent, self-referential, or cyclic.
+    InvalidOracleLineage,
     /// A structured request uses an unsupported contract version.
     UnsupportedContractVersion,
     /// A shared-reference envelope, artifact reference, or selected profile version is unsupported.
@@ -139,6 +143,8 @@ impl VerificationErrorCode {
             Self::UnknownProperty => "unknown_property",
             Self::AmbiguousCapability => "ambiguous_capability",
             Self::DuplicateResultId => "duplicate_result_id",
+            Self::DuplicateOracleContributionId => "duplicate_oracle_contribution_id",
+            Self::InvalidOracleLineage => "invalid_oracle_lineage",
             Self::UnsupportedContractVersion => "unsupported_contract_version",
             Self::UnsupportedReferenceVersion => "unsupported_reference_version",
             Self::UnknownRequiredFeature => "unknown_required_feature",
@@ -188,6 +194,8 @@ impl VerificationErrorCode {
             Self::UnknownProperty,
             Self::AmbiguousCapability,
             Self::DuplicateResultId,
+            Self::DuplicateOracleContributionId,
+            Self::InvalidOracleLineage,
             Self::UnsupportedContractVersion,
             Self::UnsupportedReferenceVersion,
             Self::UnknownRequiredFeature,

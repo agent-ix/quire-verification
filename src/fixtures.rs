@@ -92,12 +92,37 @@ pub fn render_fixture_packet(
 ) -> Result<Value, VerificationError> {
     let plan_request = field(portfolio, "planRequest", "portfolio fixture")?;
     let references = validate_fixture_planning_references(plan_request)?;
+    let evidence_references = validate_fixture_result_references(results)?;
     Ok(json!({
         "schemaVersion": "quire-verification/e02-evidence-packet/v1",
         "claimLimit": "Fixture planning and intake only; no represented external verification or fault tool executed.",
         "plan": build_verification_plan(plan_request, &references)?,
-        "assessment": assess_evidence(results)?,
+        "assessment": assess_evidence(results, &evidence_references)?,
     }))
+}
+
+/// Validates every oracle and observation envelope embedded in a results fixture.
+///
+/// Fixture artifact bytes are their declared identity bytes, matching the other
+/// synthetic fixture references in this module.
+///
+/// # Errors
+/// Returns a strict shared-reference refusal for any unsupported or mismatched envelope.
+pub fn validate_fixture_result_references(
+    results: &Value,
+) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
+    let mut envelopes = Vec::new();
+    for result in arrays_field(results, "results", "results fixture")? {
+        for contribution in arrays_field(result, "oracleContributions", "result")? {
+            envelopes.push(field(contribution, "oracleRef", "oracle contribution")?);
+            envelopes.push(field(
+                contribution,
+                "observationRef",
+                "oracle contribution",
+            )?);
+        }
+    }
+    validate_fixture_envelopes(&envelopes)
 }
 
 /// Compares real Quoin catalog output with the retained fixture by technique identifier.

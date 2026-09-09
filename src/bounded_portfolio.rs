@@ -78,8 +78,10 @@ where
     for result in &results {
         validate_schema_definition("TechniqueResult", result)?;
     }
+    let evidence_references = validate_portfolio_result_references(&results)?;
     let assessment = assess_evidence(
         &json!({"inventory": properties, "results": results, "asOf": produced_at}),
+        &evidence_references,
     )?;
     Ok(json!({
         "schemaVersion": "quire-verification/local-portfolio-report/v1",
@@ -242,14 +244,7 @@ fn build_portfolio_plan(
 fn validate_portfolio_planning_references(
     request: &Value,
 ) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
-    let mut support = ReferenceSupport::default();
-    support
-        .wire_versions
-        .entry(PROFILE.to_owned())
-        .or_default()
-        .insert("1".to_owned());
-    let mut reader = SharedReferenceReader::new(support);
-    let mut validated = Vec::new();
+    let mut envelopes = Vec::new();
     for property in arrays_field(request, "properties", "portfolio request")? {
         let input = field(property, "input", "portfolio property")?;
         let fields: &[&str] = match string_field(input, "kind", "portfolio property input")? {
@@ -264,27 +259,60 @@ fn validate_portfolio_planning_references(
             }
         };
         for field_name in fields {
-            let envelope = field(input, field_name, "portfolio property input")?;
-            let value = field(envelope, "value", "portfolio artifact envelope")?;
-            let identity = string_field(value, "identity", "portfolio artifact")?.to_owned();
-            let revision = field(value, "revision", "portfolio artifact")?;
-            let expectation = ArtifactExpectation {
-                ref_version: "ix.artifact-ref/3-draft".to_owned(),
-                kind: string_field(value, "kind", "portfolio artifact")?.to_owned(),
-                authority: "github.com/agent-ix/quire-verification".to_owned(),
-                identity: identity.clone(),
-                revision_namespace: "quire-verification".to_owned(),
-                revision_value: string_field(revision, "value", "portfolio revision")?.to_owned(),
-                digest: format!("sha256:{:x}", Sha256::digest(identity.as_bytes())),
-                wire_identity: PROFILE.to_owned(),
-                wire_version: "1".to_owned(),
-                bytes: Some(identity.into_bytes()),
-            };
-            let bytes = serde_json::to_vec(envelope).map_err(|error| {
-                VerificationError::new(VerificationErrorCode::InvalidJson, error.to_string())
-            })?;
-            validated.push(reader.read(&bytes, &ReferenceExpectation::Artifact(expectation))?);
+            envelopes.push(field(input, field_name, "portfolio property input")?);
         }
+    }
+    validate_portfolio_artifact_envelopes(&envelopes)
+}
+
+fn validate_portfolio_result_references(
+    results: &[Value],
+) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
+    let mut envelopes = Vec::new();
+    for result in results {
+        for contribution in arrays_field(result, "oracleContributions", "portfolio result")? {
+            envelopes.push(field(contribution, "oracleRef", "oracle contribution")?);
+            envelopes.push(field(
+                contribution,
+                "observationRef",
+                "oracle contribution",
+            )?);
+        }
+    }
+    validate_portfolio_artifact_envelopes(&envelopes)
+}
+
+fn validate_portfolio_artifact_envelopes(
+    envelopes: &[&Value],
+) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
+    let mut support = ReferenceSupport::default();
+    support
+        .wire_versions
+        .entry(PROFILE.to_owned())
+        .or_default()
+        .insert("1".to_owned());
+    let mut reader = SharedReferenceReader::new(support);
+    let mut validated = Vec::new();
+    for envelope in envelopes {
+        let value = field(envelope, "value", "portfolio artifact envelope")?;
+        let identity = string_field(value, "identity", "portfolio artifact")?.to_owned();
+        let revision = field(value, "revision", "portfolio artifact")?;
+        let expectation = ArtifactExpectation {
+            ref_version: "ix.artifact-ref/3-draft".to_owned(),
+            kind: string_field(value, "kind", "portfolio artifact")?.to_owned(),
+            authority: "github.com/agent-ix/quire-verification".to_owned(),
+            identity: identity.clone(),
+            revision_namespace: "quire-verification".to_owned(),
+            revision_value: string_field(revision, "value", "portfolio revision")?.to_owned(),
+            digest: format!("sha256:{:x}", Sha256::digest(identity.as_bytes())),
+            wire_identity: PROFILE.to_owned(),
+            wire_version: "1".to_owned(),
+            bytes: Some(identity.into_bytes()),
+        };
+        let bytes = serde_json::to_vec(envelope).map_err(|error| {
+            VerificationError::new(VerificationErrorCode::InvalidJson, error.to_string())
+        })?;
+        validated.push(reader.read(&bytes, &ReferenceExpectation::Artifact(expectation))?);
     }
     Ok(validated)
 }
@@ -554,6 +582,23 @@ fn result_base(
         ));
     };
     target.extend(extra);
+    let outcome = target
+        .get("logical")
+        .and_then(|logical| logical.get("outcome"))
+        .and_then(Value::as_str);
+    let oracle_contributions = if matches!(outcome, Some("satisfied" | "violated")) {
+        let oracle_identity = format!("oracle:{result_id}");
+        let observation_identity = format!("observation:{result_id}");
+        json!([{
+            "contributionId": "primary",
+            "oracleRef": artifact_ref("oracle", &oracle_identity, revision),
+            "observationRef": artifact_ref("observation", &observation_identity, revision),
+            "relation": "independent",
+        }])
+    } else {
+        json!([])
+    };
+    target.insert("oracleContributions".to_owned(), oracle_contributions);
     Ok(result)
 }
 

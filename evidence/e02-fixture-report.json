@@ -6,6 +6,105 @@
     "obligations": [
       {
         "activation": {
+          "receipt": null,
+          "status": "not-activated"
+        },
+        "adequacy": {
+          "observations": [
+            "healthy-control-only"
+          ],
+          "status": "adequate"
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "met"
+          }
+        ],
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
+        },
+        "freshness": "fresh",
+        "gaps": [
+          {
+            "kind": "required-activation-absent"
+          }
+        ],
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTUNTRIGGERED",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-UNTRIGGERED.json"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "parser"
+          ],
+          "status": "present"
+        },
+        "propertyId": "OBL-FAULT",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-2",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-UNTRIGGERED",
+        "status": "untriggered"
+      },
+      {
+        "activation": {
           "status": "activated"
         },
         "adequacy": {
@@ -36,6 +135,50 @@
             "uri": "fixture://native/RESULT-SUPPORTED.json"
           }
         ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
+          }
+        ],
         "participation": {
           "participants": [
             "fixture-subject"
@@ -56,11 +199,13 @@
       },
       {
         "activation": {
-          "status": "unknown"
+          "status": "activated"
         },
         "adequacy": {
-          "observations": [],
-          "status": "not-assessed"
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
         },
         "assumptions": [
           {
@@ -69,31 +214,68 @@
           }
         ],
         "execution": {
-          "detail": "fixture producer exited unsuccessfully",
-          "status": "failed"
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
         },
         "freshness": "fresh",
         "gaps": [
           {
-            "detail": "fixture producer exited unsuccessfully",
-            "kind": "failed"
-          },
-          {
-            "kind": "activation-unknown"
-          },
-          {
-            "kind": "observation-inadequate",
-            "missing": []
+            "kind": "logical-violation"
           }
         ],
         "logical": {
-          "outcome": "not-evaluated"
+          "outcome": "violated",
+          "witness": "fixture://witness/state-violation"
         },
         "nativeArtifacts": [
           {
-            "digest": "sha256:RESULTFAILED0000",
+            "digest": "sha256:RESULTVIOLATED00",
             "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-FAILED.json"
+            "uri": "fixture://native/RESULT-VIOLATED.json"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
           }
         ],
         "participation": {
@@ -102,7 +284,7 @@
           ],
           "status": "complete"
         },
-        "propertyId": "OBL-STATE-FUZZ",
+        "propertyId": "OBL-VIOLATED",
         "provenance": {
           "adapter": "fixture-replay",
           "adapterVersion": "1",
@@ -111,8 +293,368 @@
           "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
-        "resultId": "RESULT-FAILED",
-        "status": "failed"
+        "resultId": "RESULT-VIOLATED",
+        "status": "violated"
+      },
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "met"
+          }
+        ],
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
+        },
+        "freshness": "fresh",
+        "gaps": [
+          {
+            "kind": "partial-participation",
+            "missing": [
+              "serializer"
+            ],
+            "status": "partial"
+          }
+        ],
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTPARTIAL000",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-PARTIAL.json"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
+          }
+        ],
+        "participation": {
+          "missingParticipants": [
+            "serializer"
+          ],
+          "participants": [
+            "parser"
+          ],
+          "status": "partial"
+        },
+        "propertyId": "OBL-PARTIAL",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-2",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-PARTIAL",
+        "status": "partial"
+      },
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "not-met"
+          }
+        ],
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
+        },
+        "freshness": "fresh",
+        "gaps": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "kind": "assumption-unmet"
+          }
+        ],
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTASSUMPTIONUNMET",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-ASSUMPTION",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-2",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-ASSUMPTION-UNMET",
+        "status": "assumption-unmet"
+      },
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "observations": [],
+          "status": "unknown"
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "met"
+          }
+        ],
+        "execution": {
+          "detail": "fixture budget exhausted",
+          "status": "exhausted"
+        },
+        "freshness": "fresh",
+        "gaps": [
+          {
+            "detail": "fixture budget exhausted",
+            "kind": "incomplete"
+          },
+          {
+            "kind": "observation-inadequate",
+            "missing": []
+          }
+        ],
+        "logical": {
+          "outcome": "unknown"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTINCOMPLETE",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-INCOMPLETE.json"
+          }
+        ],
+        "oracleContributions": [],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-INCOMPLETE",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-2",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-INCOMPLETE",
+        "status": "incomplete"
+      },
+      {
+        "activation": {
+          "status": "not-required"
+        },
+        "adequacy": {
+          "observations": [
+            "fixture-output"
+          ],
+          "status": "adequate"
+        },
+        "assumptions": [
+          {
+            "assumptionId": "fixture-inputs-synthetic",
+            "status": "met"
+          }
+        ],
+        "execution": {
+          "detail": "fixture replay only; no external tool execution claimed",
+          "status": "completed"
+        },
+        "freshness": "stale",
+        "gaps": [
+          {
+            "kind": "freshness-expired"
+          }
+        ],
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:RESULTSTALE00000",
+            "mediaType": "application/json",
+            "uri": "fixture://native/RESULT-STALE.json"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "primary",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+                "identity": "observation:results-fixture",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "fixture.agent-ix.local",
+                "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+                "identity": "oracle:results-fixture",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "synthetic-r1"
+                },
+                "wire": {
+                  "identity": "quire-verification.synthetic",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "independent"
+          }
+        ],
+        "participation": {
+          "participants": [
+            "fixture-subject"
+          ],
+          "status": "complete"
+        },
+        "propertyId": "OBL-MANUAL",
+        "provenance": {
+          "adapter": "fixture-replay",
+          "adapterVersion": "1",
+          "executionMode": "fixture-replay",
+          "producer": "quire-verification-fixture",
+          "producerVersion": "e02-draft-2",
+          "sourceRevision": "parser-r1"
+        },
+        "resultId": "RESULT-STALE",
+        "status": "stale"
       },
       {
         "activation": {
@@ -153,6 +695,7 @@
             "uri": "fixture://native/RESULT-UNSUPPORTED.json"
           }
         ],
+        "oracleContributions": [],
         "participation": {
           "participants": [],
           "status": "not-started"
@@ -223,6 +766,7 @@
             "uri": "fixture://native/RESULT-INADQUATE.json"
           }
         ],
+        "oracleContributions": [],
         "participation": {
           "participants": [
             "parser"
@@ -243,14 +787,11 @@
       },
       {
         "activation": {
-          "receipt": null,
-          "status": "not-activated"
+          "status": "unknown"
         },
         "adequacy": {
-          "observations": [
-            "healthy-control-only"
-          ],
-          "status": "adequate"
+          "observations": [],
+          "status": "not-assessed"
         },
         "assumptions": [
           {
@@ -259,86 +800,41 @@
           }
         ],
         "execution": {
-          "detail": "fixture replay only; no external tool execution claimed",
-          "status": "completed"
+          "detail": "fixture producer exited unsuccessfully",
+          "status": "failed"
         },
         "freshness": "fresh",
         "gaps": [
           {
-            "kind": "required-activation-absent"
+            "detail": "fixture producer exited unsuccessfully",
+            "kind": "failed"
+          },
+          {
+            "kind": "activation-unknown"
+          },
+          {
+            "kind": "observation-inadequate",
+            "missing": []
           }
         ],
         "logical": {
-          "outcome": "satisfied"
+          "outcome": "not-evaluated"
         },
         "nativeArtifacts": [
           {
-            "digest": "sha256:RESULTUNTRIGGERED",
+            "digest": "sha256:RESULTFAILED0000",
             "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-UNTRIGGERED.json"
+            "uri": "fixture://native/RESULT-FAILED.json"
           }
         ],
-        "participation": {
-          "participants": [
-            "parser"
-          ],
-          "status": "present"
-        },
-        "propertyId": "OBL-FAULT",
-        "provenance": {
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "executionMode": "fixture-replay",
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-2",
-          "sourceRevision": "parser-r1"
-        },
-        "resultId": "RESULT-UNTRIGGERED",
-        "status": "untriggered"
-      },
-      {
-        "activation": {
-          "status": "not-required"
-        },
-        "adequacy": {
-          "observations": [
-            "fixture-output"
-          ],
-          "status": "adequate"
-        },
-        "assumptions": [
-          {
-            "assumptionId": "fixture-inputs-synthetic",
-            "status": "met"
-          }
-        ],
-        "execution": {
-          "detail": "fixture replay only; no external tool execution claimed",
-          "status": "completed"
-        },
-        "freshness": "stale",
-        "gaps": [
-          {
-            "kind": "freshness-expired"
-          }
-        ],
-        "logical": {
-          "outcome": "satisfied"
-        },
-        "nativeArtifacts": [
-          {
-            "digest": "sha256:RESULTSTALE00000",
-            "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-STALE.json"
-          }
-        ],
+        "oracleContributions": [],
         "participation": {
           "participants": [
             "fixture-subject"
           ],
           "status": "complete"
         },
-        "propertyId": "OBL-MANUAL",
+        "propertyId": "OBL-STATE-FUZZ",
         "provenance": {
           "adapter": "fixture-replay",
           "adapterVersion": "1",
@@ -347,8 +843,8 @@
           "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
-        "resultId": "RESULT-STALE",
-        "status": "stale"
+        "resultId": "RESULT-FAILED",
+        "status": "failed"
       },
       {
         "gaps": [],
@@ -367,234 +863,41 @@
         "propertyId": "OBL-SCOPE",
         "resultId": null,
         "status": "missing"
-      },
+      }
+    ],
+    "oracleDependenceFindings": [
       {
-        "activation": {
-          "status": "activated"
-        },
-        "adequacy": {
-          "observations": [],
-          "status": "unknown"
-        },
-        "assumptions": [
-          {
-            "assumptionId": "fixture-inputs-synthetic",
-            "status": "met"
-          }
+        "bases": [
+          "observation",
+          "oracle"
         ],
-        "execution": {
-          "detail": "fixture budget exhausted",
-          "status": "exhausted"
-        },
-        "freshness": "fresh",
-        "gaps": [
+        "kind": "correlated-oracle",
+        "members": [
           {
-            "detail": "fixture budget exhausted",
-            "kind": "incomplete"
+            "contributionId": "primary",
+            "resultId": "RESULT-ASSUMPTION-UNMET"
           },
           {
-            "kind": "observation-inadequate",
-            "missing": []
-          }
-        ],
-        "logical": {
-          "outcome": "unknown"
-        },
-        "nativeArtifacts": [
+            "contributionId": "primary",
+            "resultId": "RESULT-PARTIAL"
+          },
           {
-            "digest": "sha256:RESULTINCOMPLETE",
-            "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-INCOMPLETE.json"
-          }
-        ],
-        "participation": {
-          "participants": [
-            "fixture-subject"
-          ],
-          "status": "complete"
-        },
-        "propertyId": "OBL-INCOMPLETE",
-        "provenance": {
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "executionMode": "fixture-replay",
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-2",
-          "sourceRevision": "parser-r1"
-        },
-        "resultId": "RESULT-INCOMPLETE",
-        "status": "incomplete"
-      },
-      {
-        "activation": {
-          "status": "activated"
-        },
-        "adequacy": {
-          "observations": [
-            "fixture-output"
-          ],
-          "status": "adequate"
-        },
-        "assumptions": [
+            "contributionId": "primary",
+            "resultId": "RESULT-STALE"
+          },
           {
-            "assumptionId": "fixture-inputs-synthetic",
-            "status": "met"
-          }
-        ],
-        "execution": {
-          "detail": "fixture replay only; no external tool execution claimed",
-          "status": "completed"
-        },
-        "freshness": "fresh",
-        "gaps": [
+            "contributionId": "primary",
+            "resultId": "RESULT-SUPPORTED"
+          },
           {
-            "kind": "logical-violation"
-          }
-        ],
-        "logical": {
-          "outcome": "violated",
-          "witness": "fixture://witness/state-violation"
-        },
-        "nativeArtifacts": [
+            "contributionId": "primary",
+            "resultId": "RESULT-UNTRIGGERED"
+          },
           {
-            "digest": "sha256:RESULTVIOLATED00",
-            "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-VIOLATED.json"
+            "contributionId": "primary",
+            "resultId": "RESULT-VIOLATED"
           }
-        ],
-        "participation": {
-          "participants": [
-            "fixture-subject"
-          ],
-          "status": "complete"
-        },
-        "propertyId": "OBL-VIOLATED",
-        "provenance": {
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "executionMode": "fixture-replay",
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-2",
-          "sourceRevision": "parser-r1"
-        },
-        "resultId": "RESULT-VIOLATED",
-        "status": "violated"
-      },
-      {
-        "activation": {
-          "status": "activated"
-        },
-        "adequacy": {
-          "observations": [
-            "fixture-output"
-          ],
-          "status": "adequate"
-        },
-        "assumptions": [
-          {
-            "assumptionId": "fixture-inputs-synthetic",
-            "status": "met"
-          }
-        ],
-        "execution": {
-          "detail": "fixture replay only; no external tool execution claimed",
-          "status": "completed"
-        },
-        "freshness": "fresh",
-        "gaps": [
-          {
-            "kind": "partial-participation",
-            "missing": [
-              "serializer"
-            ],
-            "status": "partial"
-          }
-        ],
-        "logical": {
-          "outcome": "satisfied"
-        },
-        "nativeArtifacts": [
-          {
-            "digest": "sha256:RESULTPARTIAL000",
-            "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-PARTIAL.json"
-          }
-        ],
-        "participation": {
-          "missingParticipants": [
-            "serializer"
-          ],
-          "participants": [
-            "parser"
-          ],
-          "status": "partial"
-        },
-        "propertyId": "OBL-PARTIAL",
-        "provenance": {
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "executionMode": "fixture-replay",
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-2",
-          "sourceRevision": "parser-r1"
-        },
-        "resultId": "RESULT-PARTIAL",
-        "status": "partial"
-      },
-      {
-        "activation": {
-          "status": "activated"
-        },
-        "adequacy": {
-          "observations": [
-            "fixture-output"
-          ],
-          "status": "adequate"
-        },
-        "assumptions": [
-          {
-            "assumptionId": "fixture-inputs-synthetic",
-            "status": "not-met"
-          }
-        ],
-        "execution": {
-          "detail": "fixture replay only; no external tool execution claimed",
-          "status": "completed"
-        },
-        "freshness": "fresh",
-        "gaps": [
-          {
-            "assumptionId": "fixture-inputs-synthetic",
-            "kind": "assumption-unmet"
-          }
-        ],
-        "logical": {
-          "outcome": "satisfied"
-        },
-        "nativeArtifacts": [
-          {
-            "digest": "sha256:RESULTASSUMPTIONUNMET",
-            "mediaType": "application/json",
-            "uri": "fixture://native/RESULT-ASSUMPTION-UNMET.json"
-          }
-        ],
-        "participation": {
-          "participants": [
-            "fixture-subject"
-          ],
-          "status": "complete"
-        },
-        "propertyId": "OBL-ASSUMPTION",
-        "provenance": {
-          "adapter": "fixture-replay",
-          "adapterVersion": "1",
-          "executionMode": "fixture-replay",
-          "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-2",
-          "sourceRevision": "parser-r1"
-        },
-        "resultId": "RESULT-ASSUMPTION-UNMET",
-        "status": "assumption-unmet"
+        ]
       }
     ],
     "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding",

@@ -20,6 +20,7 @@ use quire_verification::contracts::{
 use quire_verification::evidence::{assess_evidence, findings_for, scope_differences};
 use quire_verification::fixtures::{
     check_quoin_baseline, render_fixture_packet, validate_all_fixtures,
+    validate_fixture_result_references,
 };
 use quire_verification::planner::build_verification_plan as build_plan_from_validated;
 use quire_verification::shared_reference::{
@@ -128,6 +129,11 @@ fn validated_fixture_references(
             )
         })
         .collect()
+}
+
+fn assess_fixture_evidence(packet: &Value) -> Result<Value, VerificationError> {
+    let references = validate_fixture_result_references(packet)?;
+    assess_evidence(packet, &references)
 }
 
 fn find_by<'a>(values: &'a [Value], key: &str, expected: &str) -> &'a Value {
@@ -1578,12 +1584,12 @@ fn tc_013_refuses_ambiguous_and_duplicate_results() {
     second["resultId"] = json!("RESULT-SUPPORTED-SECOND");
     packet["results"] = json!([packet["results"][0].clone(), second]);
     assert_eq!(
-        assess_evidence(&packet).expect("ambiguous assessment")["obligations"][0]["status"],
+        assess_fixture_evidence(&packet).expect("ambiguous assessment")["obligations"][0]["status"],
         "ambiguous"
     );
     packet["results"][1]["resultId"] = packet["results"][0]["resultId"].clone();
     assert_eq!(
-        assess_evidence(&packet)
+        assess_fixture_evidence(&packet)
             .expect_err("duplicate result id must fail")
             .code(),
         VerificationErrorCode::DuplicateResultId
@@ -1595,7 +1601,7 @@ fn tc_013_refuses_ambiguous_and_duplicate_results() {
 #[test]
 fn tc_014_distinguishes_freshness_and_every_result_state() {
     let packet = fixture("results.json");
-    let report = assess_evidence(&packet).expect("assessment");
+    let report = assess_fixture_evidence(&packet).expect("assessment");
     for (property, expected) in packet["expectedStatuses"]
         .as_object()
         .expect("expected statuses")
@@ -1623,7 +1629,7 @@ fn tc_015_retains_independent_findings_native_refs_and_ownership() {
     packet["results"][0]["participation"] = json!({"status": "partial", "participants": ["parser"], "missingParticipants": ["serializer"]});
     packet["results"][0]["assumptions"] =
         json!([{"assumptionId": "fixture-inputs-synthetic", "status": "not-met"}]);
-    let report = assess_evidence(&packet).expect("assessment");
+    let report = assess_fixture_evidence(&packet).expect("assessment");
     assert_eq!(
         report["denominator"],
         packet["inventory"].as_array().expect("inventory").len()
@@ -1676,7 +1682,7 @@ fn one_result_packet() -> Value {
 }
 
 fn assessment_status(packet: &Value) -> Value {
-    assess_evidence(packet).expect("valid assessment")["obligations"][0]["status"].clone()
+    assess_fixture_evidence(packet).expect("valid assessment")["obligations"][0]["status"].clone()
 }
 
 #[trace("TC-032", "FR-018-AC-1", "FR-018-AC-2")]
@@ -1718,7 +1724,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     let mut future = one_result_packet();
     future["results"][0]["producedAt"] = json!("2026-09-01T01:00:00.000000001Z");
     assert_eq!(
-        assess_evidence(&future)
+        assess_fixture_evidence(&future)
             .expect_err("future evidence must fail")
             .code(),
         VerificationErrorCode::InvalidTemporalOrder
@@ -1728,7 +1734,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     reversed["results"][0]["producedAt"] = json!("2026-09-01T00:00:00Z");
     reversed["results"][0]["validUntil"] = json!("2026-08-31T23:59:59Z");
     assert_eq!(
-        assess_evidence(&reversed)
+        assess_fixture_evidence(&reversed)
             .expect_err("validity before production must fail")
             .code(),
         VerificationErrorCode::InvalidTemporalOrder
@@ -1740,7 +1746,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
         .expect("obligation object")
         .remove("freshness");
     assert_eq!(
-        assess_evidence(&missing_age)
+        assess_fixture_evidence(&missing_age)
             .expect_err("missing maximum age must fail")
             .code(),
         VerificationErrorCode::SchemaViolation
@@ -1756,7 +1762,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     let mut unsafe_age = one_result_packet();
     unsafe_age["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(9_007_199_254_740_992_u64);
     assert_eq!(
-        assess_evidence(&unsafe_age)
+        assess_fixture_evidence(&unsafe_age)
             .expect_err("unsafe integer maximum age must fail")
             .code(),
         VerificationErrorCode::SchemaViolation
@@ -1764,7 +1770,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     let mut negative_age = one_result_packet();
     negative_age["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(-1);
     assert_eq!(
-        assess_evidence(&negative_age)
+        assess_fixture_evidence(&negative_age)
             .expect_err("negative maximum age must fail")
             .code(),
         VerificationErrorCode::SchemaViolation
@@ -1779,7 +1785,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     safe_integer_limit["inventory"][0]["freshness"]["maxAgeSeconds"] =
         json!(9_007_199_254_740_991_u64);
     assert_eq!(
-        assess_evidence(&safe_integer_limit)
+        assess_fixture_evidence(&safe_integer_limit)
             .expect_err("unrepresentable duration must fail after schema acceptance")
             .code(),
         VerificationErrorCode::InvalidTimestamp
@@ -1788,7 +1794,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     let mut malformed = one_result_packet();
     malformed["asOf"] = json!("not-a-timestamp");
     assert_eq!(
-        assess_evidence(&malformed)
+        assess_fixture_evidence(&malformed)
             .expect_err("malformed assessment time must fail")
             .code(),
         VerificationErrorCode::InvalidTimestamp
@@ -1803,7 +1809,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
     overflow["inventory"][0]["freshness"]["maxAgeSeconds"] = json!(1);
     overflow["asOf"] = json!("9999-12-31T23:59:59Z");
     assert_eq!(
-        assess_evidence(&overflow)
+        assess_fixture_evidence(&overflow)
             .expect_err("expiry outside RFC 3339 must fail")
             .code(),
         VerificationErrorCode::InvalidTimestamp
@@ -1826,7 +1832,7 @@ fn tc_032_stale_results_retain_every_independent_finding() {
     });
     stale_with_findings["results"][0]["assumptions"] =
         json!([{"assumptionId": "fixture-inputs-synthetic", "status": "not-met"}]);
-    let assessment = assess_evidence(&stale_with_findings).expect("stale assessment");
+    let assessment = assess_fixture_evidence(&stale_with_findings).expect("stale assessment");
     let obligation = &assessment["obligations"][0];
     assert_eq!(obligation["status"], "stale");
     assert_eq!(
@@ -1862,6 +1868,371 @@ fn tc_032_stale_results_retain_every_independent_finding() {
             "{field}"
         );
     }
+}
+
+#[trace("TC-033", "FR-017-AC-1")]
+#[test]
+fn tc_033_enforces_the_closed_contribution_contract() {
+    let source = fixture("results.json");
+    let evaluated = source["results"][0].clone();
+    validate_contract(evaluated.clone()).expect("evaluated contribution must validate");
+    validate_contract(source["results"][1].clone())
+        .expect("non-evaluated result may carry an empty contribution array");
+
+    let mut no_array = evaluated.clone();
+    no_array
+        .as_object_mut()
+        .expect("result object")
+        .remove("oracleContributions");
+    assert!(validate_contract(no_array).is_err());
+
+    let mut empty = evaluated.clone();
+    empty["oracleContributions"] = json!([]);
+    assert!(validate_contract(empty).is_err());
+
+    for field_name in ["contributionId", "oracleRef", "observationRef", "relation"] {
+        let mut missing = evaluated.clone();
+        missing["oracleContributions"][0]
+            .as_object_mut()
+            .expect("contribution object")
+            .remove(field_name);
+        assert!(validate_contract(missing).is_err(), "{field_name}");
+    }
+
+    let mut shared = evaluated.clone();
+    shared["oracleContributions"][0]["relation"] = json!("shared");
+    assert!(validate_contract(shared.clone()).is_err());
+    shared["oracleContributions"][0]["dependenceGroupId"] = json!("GROUP-1");
+    validate_contract(shared).expect("closed shared contribution");
+
+    let mut derived = evaluated.clone();
+    derived["oracleContributions"][0]["relation"] = json!("derived");
+    assert!(validate_contract(derived.clone()).is_err());
+    derived["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "RESULT-SOURCE", "contributionId": "source"});
+    validate_contract(derived.clone()).expect("closed derived contribution");
+    derived["oracleContributions"][0]["derivedFrom"]["extra"] = json!(true);
+    assert!(validate_contract(derived).is_err());
+
+    for relation in ["independent", "unknown"] {
+        let mut conditional = evaluated.clone();
+        conditional["oracleContributions"][0]["relation"] = json!(relation);
+        conditional["oracleContributions"][0]["dependenceGroupId"] = json!("GROUP-1");
+        assert!(validate_contract(conditional).is_err(), "{relation}");
+    }
+
+    let mut extra = evaluated.clone();
+    extra["oracleContributions"][0]["extra"] = json!(true);
+    assert!(validate_contract(extra).is_err());
+    let mut wrong_type = evaluated;
+    wrong_type["oracleContributions"][0]["contributionId"] = json!(1);
+    assert!(validate_contract(wrong_type).is_err());
+}
+
+#[trace("TC-033", "FR-017-AC-2")]
+#[test]
+fn tc_033_requires_exact_strict_reader_outputs() {
+    let mut packet = one_result_packet();
+    packet["asOf"] = json!("2026-09-08T00:00:00Z");
+    let references = validate_fixture_result_references(&packet).expect("strict references");
+    let baseline = assess_evidence(&packet, &references).expect("baseline assessment");
+    assert_eq!(
+        assess_evidence(&packet, &[])
+            .expect_err("missing validation output must fail")
+            .code(),
+        VerificationErrorCode::IdentityMismatch
+    );
+
+    let mut duplicated = references.clone();
+    duplicated.push(references[0].clone());
+    assert_eq!(
+        assess_evidence(&packet, &duplicated).expect("duplicates are idempotent"),
+        baseline
+    );
+
+    let mutations: [ScopeMutation; 6] = [
+        ("authority", |v| v["authority"] = json!("other")),
+        ("identity", |v| v["identity"] = json!("other")),
+        ("revision", |v| v["revision"]["value"] = json!("other")),
+        ("digest", |v| {
+            v["digest"] = json!(format!("sha256:{}", "0".repeat(64)));
+        }),
+        ("wire identity", |v| v["wire"]["identity"] = json!("other")),
+        ("wire version", |v| v["wire"]["version"] = json!("other")),
+    ];
+    for (dimension, mutate) in mutations {
+        let mut changed = packet.clone();
+        mutate(&mut changed["results"][0]["oracleContributions"][0]["oracleRef"]["value"]);
+        assert_eq!(
+            assess_evidence(&changed, &references)
+                .expect_err("changed reference must fail")
+                .code(),
+            VerificationErrorCode::IdentityMismatch,
+            "{dimension}"
+        );
+    }
+
+    let mut wrong_role = packet.clone();
+    wrong_role["results"][0]["oracleContributions"][0]["oracleRef"] =
+        wrong_role["results"][0]["oracleContributions"][0]["observationRef"].clone();
+    assert_eq!(
+        assess_evidence(&wrong_role, &references)
+            .expect_err("wrong role must fail")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+}
+
+#[trace("TC-033", "FR-017-AC-3")]
+#[test]
+fn tc_033_rejects_duplicate_and_invalid_lineage() {
+    let base = one_result_packet();
+    let primary = base["results"][0]["oracleContributions"][0].clone();
+
+    let mut duplicate = base.clone();
+    duplicate["results"][0]["oracleContributions"] = json!([primary.clone(), primary.clone()]);
+    let references = validate_fixture_result_references(&duplicate).expect("strict references");
+    assert_eq!(
+        assess_evidence(&duplicate, &references)
+            .expect_err("duplicate contribution id must fail")
+            .code(),
+        VerificationErrorCode::DuplicateOracleContributionId
+    );
+
+    let mut absent = base.clone();
+    absent["results"][0]["oracleContributions"][0]["relation"] = json!("derived");
+    absent["results"][0]["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "ABSENT", "contributionId": "source"});
+    let references = validate_fixture_result_references(&absent).expect("strict references");
+    assert_eq!(
+        assess_evidence(&absent, &references)
+            .expect_err("absent source must fail")
+            .code(),
+        VerificationErrorCode::InvalidOracleLineage
+    );
+
+    let mut self_reference = base.clone();
+    self_reference["results"][0]["oracleContributions"][0]["relation"] = json!("derived");
+    self_reference["results"][0]["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "RESULT-SUPPORTED", "contributionId": "primary"});
+    let references =
+        validate_fixture_result_references(&self_reference).expect("strict references");
+    assert_eq!(
+        assess_evidence(&self_reference, &references)
+            .expect_err("self source must fail")
+            .code(),
+        VerificationErrorCode::InvalidOracleLineage
+    );
+
+    let mut cycle = base;
+    let mut first = primary.clone();
+    first["contributionId"] = json!("first");
+    first["relation"] = json!("derived");
+    first["derivedFrom"] = json!({"resultId": "RESULT-SUPPORTED", "contributionId": "second"});
+    let mut second = primary;
+    second["contributionId"] = json!("second");
+    second["relation"] = json!("derived");
+    second["derivedFrom"] = json!({"resultId": "RESULT-SUPPORTED", "contributionId": "first"});
+    cycle["results"][0]["oracleContributions"] = json!([first, second]);
+    let references = validate_fixture_result_references(&cycle).expect("strict references");
+    assert_eq!(
+        assess_evidence(&cycle, &references)
+            .expect_err("cycle must fail")
+            .code(),
+        VerificationErrorCode::InvalidOracleLineage
+    );
+}
+
+fn configured_dependence_packet() -> Value {
+    let mut packet = fixture("results.json");
+    let results = packet["results"].as_array_mut().expect("results");
+    find_by_mut(results, "resultId", "RESULT-UNTRIGGERED")["oracleContributions"][0]["relation"] =
+        json!("shared");
+    find_by_mut(results, "resultId", "RESULT-UNTRIGGERED")["oracleContributions"][0]["dependenceGroupId"] =
+        json!("singleton");
+    find_by_mut(results, "resultId", "RESULT-PARTIAL")["oracleContributions"][0]["relation"] =
+        json!("shared");
+    find_by_mut(results, "resultId", "RESULT-PARTIAL")["oracleContributions"][0]["dependenceGroupId"] =
+        json!("paired");
+    find_by_mut(results, "resultId", "RESULT-ASSUMPTION-UNMET")["oracleContributions"][0]["relation"] =
+        json!("shared");
+    find_by_mut(results, "resultId", "RESULT-ASSUMPTION-UNMET")["oracleContributions"][0]["dependenceGroupId"] =
+        json!("paired");
+    find_by_mut(results, "resultId", "RESULT-STALE")["oracleContributions"][0]["relation"] =
+        json!("derived");
+    find_by_mut(results, "resultId", "RESULT-STALE")["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "RESULT-SUPPORTED", "contributionId": "primary"});
+    find_by_mut(results, "resultId", "RESULT-VIOLATED")["oracleContributions"][0]["relation"] =
+        json!("derived");
+    find_by_mut(results, "resultId", "RESULT-VIOLATED")["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "RESULT-SCOPE-MISMATCH", "contributionId": "primary"});
+    find_by_mut(results, "resultId", "RESULT-SUPPORTED")["oracleContributions"][0]["relation"] =
+        json!("unknown");
+    let mut secondary =
+        find_by_mut(results, "resultId", "RESULT-PARTIAL")["oracleContributions"][0].clone();
+    secondary["contributionId"] = json!("secondary");
+    secondary["relation"] = json!("independent");
+    secondary
+        .as_object_mut()
+        .expect("secondary contribution")
+        .remove("dependenceGroupId");
+    find_by_mut(results, "resultId", "RESULT-PARTIAL")["oracleContributions"]
+        .as_array_mut()
+        .expect("contributions")
+        .insert(0, secondary);
+    packet
+}
+
+fn assert_dependence_findings(report: &Value) {
+    let findings = report["oracleDependenceFindings"]
+        .as_array()
+        .expect("finding array");
+    let correlated = findings
+        .iter()
+        .find(|finding| finding["kind"] == "correlated-oracle")
+        .expect("correlation finding");
+    assert_eq!(
+        correlated["bases"],
+        json!(["declared-group", "derived", "observation", "oracle"])
+    );
+    let reasons = findings
+        .iter()
+        .filter_map(|finding| finding.get("reason").and_then(Value::as_str))
+        .collect::<BTreeSet<_>>();
+    assert_eq!(
+        reasons,
+        BTreeSet::from([
+            "declared-unknown",
+            "shared-group-unresolved",
+            "source-not-assessed"
+        ])
+    );
+    for finding in findings {
+        let keys = finding
+            .as_object()
+            .expect("finding object")
+            .keys()
+            .map(String::as_str)
+            .collect::<BTreeSet<_>>();
+        if finding["kind"] == "correlated-oracle" {
+            assert_eq!(keys, BTreeSet::from(["bases", "kind", "members"]));
+            for member in finding["members"].as_array().expect("members") {
+                assert_eq!(
+                    member
+                        .as_object()
+                        .expect("member")
+                        .keys()
+                        .map(String::as_str)
+                        .collect::<BTreeSet<_>>(),
+                    BTreeSet::from(["contributionId", "resultId"])
+                );
+            }
+        } else {
+            assert_eq!(keys, BTreeSet::from(["kind", "member", "reason"]));
+        }
+    }
+    let canonical_findings = findings
+        .iter()
+        .map(|finding| jcs_canonicalize(finding).expect("canonical finding"))
+        .collect::<Vec<_>>();
+    assert!(canonical_findings.windows(2).all(|pair| pair[0] <= pair[1]));
+}
+
+fn assert_retained_contributions_and_claims(report: &Value) {
+    let partial = find_by(
+        report["obligations"].as_array().expect("obligations"),
+        "resultId",
+        "RESULT-PARTIAL",
+    );
+    assert_eq!(
+        partial["oracleContributions"]
+            .as_array()
+            .expect("retained contributions")
+            .iter()
+            .map(|value| value["contributionId"].as_str().expect("contribution id"))
+            .collect::<Vec<_>>(),
+        ["primary", "secondary"]
+    );
+    assert_eq!(report["evidenceOwner"], "Quoin");
+    assert_eq!(report["sufficiencyDecision"], "not-made");
+    let serialized = serde_json::to_string(&report).expect("assessment JSON");
+    assert!(!serialized.contains("\"score\""));
+    assert!(!serialized.contains("assuranceLevel"));
+}
+
+fn assert_dependence_permutation_invariance(packet: &Value, report: &Value) {
+    let mut permuted = packet.clone();
+    permuted["inventory"]
+        .as_array_mut()
+        .expect("inventory")
+        .reverse();
+    permuted["results"]
+        .as_array_mut()
+        .expect("results")
+        .reverse();
+    for result in permuted["results"].as_array_mut().expect("results") {
+        result["oracleContributions"]
+            .as_array_mut()
+            .expect("contributions")
+            .reverse();
+    }
+    let mut permuted_references =
+        validate_fixture_result_references(&permuted).expect("strict references");
+    permuted_references.reverse();
+    assert_eq!(
+        jcs_canonicalize(&report).expect("baseline JCS"),
+        jcs_canonicalize(
+            &assess_evidence(&permuted, &permuted_references).expect("permuted assessment")
+        )
+        .expect("permuted JCS")
+    );
+}
+
+fn assert_dependence_selection_boundaries() {
+    let mut ambiguous = one_result_packet();
+    ambiguous["asOf"] = json!("2026-09-08T00:00:00Z");
+    let mut second = ambiguous["results"][0].clone();
+    second["resultId"] = json!("RESULT-AMBIGUOUS");
+    ambiguous["results"]
+        .as_array_mut()
+        .expect("results")
+        .push(second);
+    let references = validate_fixture_result_references(&ambiguous).expect("strict references");
+    let ambiguous_report = assess_evidence(&ambiguous, &references).expect("ambiguous assessment");
+    assert_eq!(ambiguous_report["obligations"][0]["status"], "ambiguous");
+    assert_eq!(ambiguous_report["oracleDependenceFindings"], json!([]));
+
+    let mut reused = one_result_packet();
+    reused["asOf"] = json!("2026-09-08T00:00:00Z");
+    let mut second_obligation = reused["inventory"][0].clone();
+    second_obligation["propertyId"] = json!("OBL-REUSED");
+    reused["inventory"]
+        .as_array_mut()
+        .expect("inventory")
+        .push(second_obligation);
+    let references = validate_fixture_result_references(&reused).expect("strict references");
+    let reused_report = assess_evidence(&reused, &references).expect("reused result assessment");
+    assert_eq!(
+        reused_report["obligations"]
+            .as_array()
+            .expect("obligations")
+            .len(),
+        2
+    );
+    assert_eq!(reused_report["oracleDependenceFindings"], json!([]));
+}
+
+#[trace("TC-033", "FR-017-AC-4", "FR-017-AC-5")]
+#[trace("FR-017-AC-6", "FR-017-AC-7")]
+#[test]
+fn tc_033_retains_dependence_deterministically_without_aggregation() {
+    let packet = configured_dependence_packet();
+    let references = validate_fixture_result_references(&packet).expect("strict references");
+    let report = assess_evidence(&packet, &references).expect("dependence assessment");
+    assert_dependence_findings(&report);
+    assert_retained_contributions_and_claims(&report);
+    assert_dependence_permutation_invariance(&packet, &report);
+    assert_dependence_selection_boundaries();
 }
 
 #[trace("TC-016", "FR-008-AC-1", "FR-008-AC-2", "NFR-001-AC-1")]
@@ -1919,7 +2290,13 @@ fn tc_019_returns_violated_and_failed_technique_results() {
     assert_eq!(violated["results"][0]["execution"]["status"], "completed");
     assert_eq!(violated["results"][0]["logical"]["outcome"], "violated");
     assert_eq!(
-        violated["assessment"]["obligations"][0]["status"],
+        find_by(
+            violated["assessment"]["obligations"]
+                .as_array()
+                .expect("obligations"),
+            "propertyId",
+            "LOCAL-CATALOG-PARITY",
+        )["status"],
         "violated"
     );
 
@@ -1933,7 +2310,16 @@ fn tc_019_returns_violated_and_failed_technique_results() {
         .expect("failed portfolio report");
     assert_eq!(failed["results"][0]["execution"]["status"], "failed");
     assert_eq!(failed["results"][0]["logical"]["outcome"], "not-evaluated");
-    assert_eq!(failed["assessment"]["obligations"][0]["status"], "failed");
+    assert_eq!(
+        find_by(
+            failed["assessment"]["obligations"]
+                .as_array()
+                .expect("obligations"),
+            "propertyId",
+            "LOCAL-CATALOG-PARITY",
+        )["status"],
+        "failed"
+    );
 }
 
 #[trace("TC-020", "FR-009-AC-5", "FR-009-AC-6", "NFR-003-AC-2")]
@@ -2079,7 +2465,7 @@ fn rendered_fixture_packet_is_reproducible() {
     assert_eq!(rendered["plan"], built_plan());
     assert_eq!(
         rendered["assessment"],
-        assess_evidence(&results).expect("assessment")
+        assess_fixture_evidence(&results).expect("assessment")
     );
 }
 

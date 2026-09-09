@@ -94,7 +94,7 @@ pub fn build_verification_plan(
 fn validated_reference_index(references: &[ValidatedSharedReference]) -> BTreeMap<&[u8], &str> {
     references
         .iter()
-        .filter_map(ValidatedSharedReference::planning_key)
+        .filter_map(ValidatedSharedReference::reference_key)
         .collect()
 }
 

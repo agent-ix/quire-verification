@@ -115,7 +115,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-014 | Construct exact native runner requests | Implemented; verified |
 | FR-015 | Preserve role-specific verification inputs | Implemented; verified |
 | FR-016 | Read shared references strictly | Implemented; verified |
-| FR-017 | Retain oracle dependence without aggregation | Specified; pending implementation |
+| FR-017 | Retain oracle dependence without aggregation | Implemented; verified |
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
 | FR-019 | Execute a bounded native parser portfolio | Specified; blocked on VP02/VP03 |
 | FR-020 | Record reproducible portfolio effort | Specified; blocked on FR-019 |
@@ -153,16 +153,16 @@ human disposition to a sealed automated core.
 
 This specification describes a private compatibility slice implemented and
 verified in Rust, the VP01 registry/policy qualification increment, the
-implemented VP02 planning increment, and the specified VP03 evidence-assessment
-increment.
+implemented VP02 planning increment, and the implemented VP03
+evidence-assessment increment.
 VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
 VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
 E02 and FS05. VP04 acceptance remains gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
 Merged specification revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
-resolved B's recorded canonical-domain and reference-role findings. FR-016 and
-IT-002 now use that accepted packet through the one strict reader; FR-017 and
-FR-021 remain downstream of it. The breaking draft-2 transition updated
+resolved B's recorded canonical-domain and reference-role findings. FR-016,
+FR-017, and IT-002 now use that accepted packet through the one strict reader;
+FR-021 remains downstream of it. The breaking draft-2 transition updated
 requirements, tests, fixtures, and retained reports without reinterpreting
 draft-1 evidence.
 

@@ -1675,7 +1675,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -1814,7 +1858,8 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": []
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -1965,7 +2010,8 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": []
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2109,7 +2155,8 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": []
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2252,7 +2299,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2373,7 +2464,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2514,7 +2649,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2653,7 +2832,8 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": []
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2795,7 +2975,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -2939,7 +3163,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     },
     {
       "contractVersion": "quire-verification/e02-draft-2",
@@ -3080,7 +3348,51 @@
         "adapterVersion": "1",
         "sourceRevision": "parser-r1",
         "executionMode": "fixture-replay"
-      }
+      },
+      "oracleContributions": [
+        {
+          "contributionId": "primary",
+          "oracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "oracle:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:424ca7eb238a8f8bcee16965b2264c165d41a5ff04a0700cf5f8baa827f9bc1b",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "observationRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "observation",
+              "authority": "fixture.agent-ix.local",
+              "identity": "observation:results-fixture",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:7ddca6834b0d40505aa2f3f9a757435f46a80752db2210f773ee95d9b239dfd4",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          },
+          "relation": "independent"
+        }
+      ]
     }
   ],
   "expectedStatuses": {

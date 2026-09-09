@@ -164,7 +164,7 @@ enum ValidatedReferenceWire {
 pub struct ValidatedSharedReference {
     _wire: ValidatedReferenceWire,
     canonical_envelope: Box<[u8]>,
-    planning_role: Option<Box<str>>,
+    reference_role: Option<Box<str>>,
 }
 
 impl ValidatedSharedReference {
@@ -177,7 +177,7 @@ impl ValidatedSharedReference {
                 _value: Box::new(wire),
             },
             canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
-            planning_role: None,
+            reference_role: None,
         })
     }
 
@@ -185,7 +185,7 @@ impl ValidatedSharedReference {
         value: &Value,
         wire: wire_v2::SharedArtifactAndSemanticReferenceAmendmentStructuralValidationOnly,
     ) -> Result<Self, VerificationError> {
-        let planning_role = (value.get("kind").and_then(Value::as_str) == Some("artifact"))
+        let reference_role = (value.get("kind").and_then(Value::as_str) == Some("artifact"))
             .then(|| value.pointer("/value/kind").and_then(Value::as_str))
             .flatten()
             .map(Box::<str>::from);
@@ -194,12 +194,12 @@ impl ValidatedSharedReference {
                 _value: Box::new(wire),
             },
             canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
-            planning_role,
+            reference_role,
         })
     }
 
-    pub(crate) fn planning_key(&self) -> Option<(&[u8], &str)> {
-        self.planning_role
+    pub(crate) fn reference_key(&self) -> Option<(&[u8], &str)> {
+        self.reference_role
             .as_deref()
             .map(|role| (self.canonical_envelope.as_ref(), role))
     }
