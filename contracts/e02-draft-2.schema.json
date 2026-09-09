@@ -1,0 +1,1074 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://private.agent-ix.local/quire-verification/e02-draft-2.schema.json",
+  "title": "Private E02 verification interface draft",
+  "description": "Provisional private interface; not a published normative schema.",
+  "oneOf": [
+    { "$ref": "#/$defs/TechniqueDefinition" },
+    { "$ref": "#/$defs/ToolCapability" },
+    { "$ref": "#/$defs/SelectionPolicy" },
+    { "$ref": "#/$defs/VerificationPlan" },
+    { "$ref": "#/$defs/TechniqueResult" }
+  ],
+  "$defs": {
+    "SharedArtifactEnvelope": {
+      "type": "object",
+      "required": ["wireVersion", "kind", "value"],
+      "properties": {
+        "wireVersion": { "const": "ix.shared-reference/2-draft" },
+        "kind": { "const": "artifact" },
+        "value": { "$ref": "urn:ix:shared-reference:2-draft#/$defs/ArtifactRef" }
+      },
+      "additionalProperties": false
+    },
+    "SnapshotReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "snapshot" } }, "required": ["kind"] } } }
+      ]
+    },
+    "TraceReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "trace" } }, "required": ["kind"] } } }
+      ]
+    },
+    "FaultModelReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "fault-model" } }, "required": ["kind"] } } }
+      ]
+    },
+    "OracleReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "oracle" } }, "required": ["kind"] } } }
+      ]
+    },
+    "ObservationReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "observation" } }, "required": ["kind"] } } }
+      ]
+    },
+    "OracleContributionRef": {
+      "type": "object",
+      "required": ["resultId", "contributionId"],
+      "properties": {
+        "resultId": { "type": "string", "minLength": 1 },
+        "contributionId": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "OracleContribution": {
+      "type": "object",
+      "required": ["contributionId", "oracleRef", "observationRef", "relation"],
+      "properties": {
+        "contributionId": { "type": "string", "minLength": 1 },
+        "oracleRef": { "$ref": "#/$defs/OracleReference" },
+        "observationRef": { "$ref": "#/$defs/ObservationReference" },
+        "relation": { "enum": ["independent", "shared", "derived", "unknown"] },
+        "dependenceGroupId": { "type": "string", "minLength": 1 },
+        "derivedFrom": { "$ref": "#/$defs/OracleContributionRef" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "relation": { "const": "shared" } }, "required": ["relation"] },
+          "then": { "required": ["dependenceGroupId"], "not": { "required": ["derivedFrom"] } },
+          "else": { "not": { "required": ["dependenceGroupId"] } }
+        },
+        {
+          "if": { "properties": { "relation": { "const": "derived" } }, "required": ["relation"] },
+          "then": { "required": ["derivedFrom"], "not": { "required": ["dependenceGroupId"] } },
+          "else": { "not": { "required": ["derivedFrom"] } }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "ReviewProcedureReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "review-procedure" } }, "required": ["kind"] } } }
+      ]
+    },
+    "Prerequisite": {
+      "type": "object",
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "resource-allocation" },
+              "id": { "type": "string", "pattern": "^budget:" }
+            },
+            "required": ["kind", "id"]
+          },
+          "then": {
+            "required": ["kind", "id", "required"],
+            "properties": {
+              "kind": { "const": "resource-allocation" },
+              "id": { "type": "string", "pattern": "^budget:.+" },
+              "required": { "const": true }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "ExecutionBudget": {
+      "type": "object",
+      "required": ["wallClockSeconds", "parallelism"],
+      "properties": {
+        "wallClockSeconds": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "parallelism": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+      },
+      "additionalProperties": false
+    },
+    "ResourceLimits": {
+      "type": "object",
+      "required": ["maxWallClockSeconds", "maxParallelism"],
+      "properties": {
+        "maxWallClockSeconds": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "maxParallelism": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+      },
+      "additionalProperties": false
+    },
+    "Gap": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "type": "string", "minLength": 1 } },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "budget-exceeded" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["kind", "requested", "limits"],
+            "properties": {
+              "kind": { "const": "budget-exceeded" },
+              "requested": { "$ref": "#/$defs/ExecutionBudget" },
+              "limits": { "$ref": "#/$defs/ResourceLimits" }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "Input": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "snapshotRef", "property"],
+          "properties": {
+            "kind": { "const": "state" },
+            "snapshotRef": { "$ref": "#/$defs/SnapshotReference" },
+            "property": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "leftSubject", "rightSubject", "relation"],
+          "properties": {
+            "kind": { "const": "relational" },
+            "leftSubject": { "type": "string", "minLength": 1 },
+            "rightSubject": { "type": "string", "minLength": 1 },
+            "relation": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "traceRef", "clockProfile", "completion"],
+          "properties": {
+            "kind": { "const": "trace" },
+            "traceRef": { "$ref": "#/$defs/TraceReference" },
+            "clockProfile": { "type": "string", "minLength": 1 },
+            "completion": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "faultModelRef", "requestedInjectionSite", "mitigationOracleRef"],
+          "properties": {
+            "kind": { "const": "fault" },
+            "faultModelRef": { "$ref": "#/$defs/FaultModelReference" },
+            "requestedInjectionSite": { "type": "string", "minLength": 1 },
+            "mitigationOracleRef": { "$ref": "#/$defs/OracleReference" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "reviewProcedureRef", "requiredDisposition"],
+          "properties": {
+            "kind": { "const": "manual" },
+            "reviewProcedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+            "requiredDisposition": {
+              "type": "array",
+              "items": { "enum": ["accept", "revise", "reject"] },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "TechniqueDefinition": {
+      "type": "object",
+      "required": ["contractVersion", "kind", "techniqueId", "name", "class", "purpose", "applicability", "sourceRef"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "kind": { "const": "TechniqueDefinition" },
+        "techniqueId": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "class": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 },
+        "evidenceKind": { "type": ["string", "null"] },
+        "applicability": { "type": "object" },
+        "possibleClaims": { "type": "array", "items": { "type": "string" } },
+        "legacyToolingHints": { "type": "array", "items": { "type": "string" } },
+        "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" }
+      },
+      "additionalProperties": true
+    },
+    "PropertyInventoryItem": {
+      "type": "object",
+      "required": ["propertyId", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "input"],
+      "properties": {
+        "propertyId": { "type": "string", "minLength": 1 },
+        "classification": { "type": "string", "minLength": 1 },
+        "propertyRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
+        "profile": { "type": "string", "minLength": 1 },
+        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
+        "dependencyClosure": { "type": "string", "minLength": 1 },
+        "executionScope": { "type": "object" },
+        "freshness": { "$ref": "#/$defs/Freshness" },
+        "resultBinding": { "$ref": "#/$defs/ResultBinding" },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" },
+        "input": { "$ref": "#/$defs/Input" }
+      },
+      "additionalProperties": true
+    },
+    "Freshness": {
+      "type": "object",
+      "required": ["maxAgeSeconds"],
+      "properties": {
+        "maxAgeSeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "ResultBinding": {
+      "type": "object",
+      "required": ["planId", "taskId", "runRef", "producer", "producerVersion", "adapter", "adapterVersion"],
+      "properties": {
+        "planId": { "type": "string", "minLength": 1 },
+        "taskId": { "type": "string", "minLength": 1 },
+        "runRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "producer": { "type": "string", "minLength": 1 },
+        "producerVersion": { "type": "string", "minLength": 1 },
+        "adapter": { "type": "string", "minLength": 1 },
+        "adapterVersion": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "EvidenceObligation": {
+      "allOf": [
+        { "$ref": "#/$defs/PropertyInventoryItem" },
+        {
+          "type": "object",
+          "required": ["techniqueId", "resultBinding", "freshness"],
+          "properties": {
+            "techniqueId": { "type": "string", "minLength": 1 },
+            "resultBinding": { "$ref": "#/$defs/ResultBinding" }
+          }
+        }
+      ]
+    },
+    "ToolCapability": {
+      "type": "object",
+      "required": ["contractVersion", "kind", "capabilityId", "techniqueId", "qualification", "inputKinds", "profiles", "prerequisites", "runner", "environmentPermissions", "nativeArtifactInterface"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "kind": { "const": "ToolCapability" },
+        "capabilityId": { "type": "string", "minLength": 1 },
+        "techniqueId": { "type": "string", "minLength": 1 },
+        "qualification": { "enum": ["qualified", "provisional", "unqualified"] },
+        "inputKinds": {
+          "type": "array",
+          "items": { "enum": ["state", "relational", "trace", "fault", "manual"] },
+          "minItems": 1
+        },
+        "profiles": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "prerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
+        "runner": {
+          "type": "object",
+          "required": ["kind", "adapterId", "adapterVersion"],
+          "properties": {
+            "kind": { "enum": ["native-producer", "manual"] },
+            "adapterId": { "type": "string", "minLength": 1 },
+            "adapterVersion": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "nativeArtifactInterface": { "type": "object" },
+        "resourceLimits": { "$ref": "#/$defs/ResourceLimits" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "runner": {
+                "properties": { "kind": { "const": "native-producer" } },
+                "required": ["kind"]
+              }
+            },
+            "required": ["runner"]
+          },
+          "then": { "required": ["resourceLimits"] },
+          "else": { "properties": { "resourceLimits": false } }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "SelectionPolicy": {
+      "type": "object",
+      "required": ["contractVersion", "kind", "policyId", "version", "sourceRef", "rules", "provenance"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "kind": { "const": "SelectionPolicy" },
+        "policyId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "standardDerived": { "type": "boolean" },
+            "standard": { "type": "string", "minLength": 1 },
+            "edition": { "type": "string", "minLength": 1 },
+            "objectives": { "type": "array", "minItems": 1 },
+            "interpretation": { "type": "string", "minLength": 1 },
+            "rightsDisposition": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "type": "object",
+                "properties": { "standardDerived": { "const": true } },
+                "required": ["standardDerived"]
+              },
+              "then": {
+                "type": "object",
+                "required": ["standard", "edition", "objectives", "interpretation", "rightsDisposition"],
+                "properties": {
+                  "standard": true,
+                  "edition": true,
+                  "objectives": true,
+                  "interpretation": true,
+                  "rightsDisposition": true
+                }
+              }
+            }
+          ],
+          "additionalProperties": true
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["ruleId", "priority", "explanation"],
+            "properties": {
+              "ruleId": { "type": "string", "minLength": 1 },
+              "priority": { "enum": ["required", "recommended", "optional"] },
+              "explanation": { "type": "string", "minLength": 1 },
+              "score": false
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "RunnerRequest": {
+      "type": "object",
+      "required": ["kind", "adapterId", "adapterVersion", "capabilityId", "environmentPermissions", "budget", "nativeArtifactInterface", "input"],
+      "properties": {
+        "kind": { "const": "native-producer" },
+        "adapterId": { "type": "string", "minLength": 1 },
+        "adapterVersion": { "type": "string", "minLength": 1 },
+        "capabilityId": { "type": "string", "minLength": 1 },
+        "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" },
+        "nativeArtifactInterface": { "type": "object" },
+        "input": { "$ref": "#/$defs/Input" }
+      },
+      "additionalProperties": false
+    },
+    "VerificationPlan": {
+      "type": "object",
+      "required": ["contractVersion", "kind", "planId", "policyRef", "inventory", "tasks", "evidenceOwner", "sufficiencyOwner"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "kind": { "const": "VerificationPlan" },
+        "planId": { "type": "string", "minLength": 1 },
+        "policyRef": { "type": "object" },
+        "inventory": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["taskId", "kind", "readiness", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
+            "properties": {
+              "taskId": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["verification", "manual-prerequisite"] },
+              "propertyId": { "type": "string", "minLength": 1 },
+              "techniqueId": { "type": "string", "minLength": 1 },
+              "prerequisite": { "$ref": "#/$defs/Prerequisite" },
+              "requiredBy": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "input": { "$ref": "#/$defs/Input" },
+              "applicability": { "enum": ["applicable", "not-applicable", "unknown"] },
+              "readiness": { "enum": ["ready", "blocked", "unsupported"] },
+              "priority": { "enum": ["required", "recommended", "optional"] },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["rule", "value"],
+                  "properties": {
+                    "rule": { "type": "string", "minLength": 1 },
+                    "value": { "type": "string", "minLength": 1 }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "dependencies": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+              "missingPrerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
+              "gaps": { "type": "array", "items": { "$ref": "#/$defs/Gap" } },
+              "runnerRequest": {
+                "oneOf": [
+                  { "$ref": "#/$defs/RunnerRequest" },
+                  { "type": "null" }
+                ]
+              },
+              "invocationAllowed": { "type": "boolean" }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "kind": { "const": "verification" } },
+                  "required": ["kind"]
+                },
+                "then": {
+                  "type": "object",
+                  "required": ["propertyId", "techniqueId", "input", "applicability", "priority", "reasons", "gaps"],
+                  "properties": {
+                    "propertyId": true,
+                    "techniqueId": true,
+                    "input": true,
+                    "applicability": true,
+                    "priority": true,
+                    "reasons": true,
+                    "gaps": true
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "kind": { "const": "manual-prerequisite" } },
+                  "required": ["kind"]
+                },
+                "then": {
+                  "type": "object",
+                  "required": ["prerequisite", "requiredBy"],
+                  "properties": {
+                    "propertyId": false,
+                    "techniqueId": false,
+                    "input": false,
+                    "prerequisite": true,
+                    "requiredBy": true
+                  }
+                }
+              },
+              {
+                "if": {
+                  "type": "object",
+                  "properties": { "invocationAllowed": { "const": true } },
+                  "required": ["invocationAllowed"]
+                },
+                "then": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": { "const": "applicable" },
+                    "readiness": { "const": "ready" },
+                    "runnerRequest": { "$ref": "#/$defs/RunnerRequest" }
+                  }
+                },
+                "else": {
+                  "type": "object",
+                  "properties": { "runnerRequest": { "type": "null" } }
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "budget": {
+          "oneOf": [
+            { "$ref": "#/$defs/ExecutionBudget" },
+            { "type": "null" }
+          ]
+        },
+        "evidenceOwner": { "const": "Quoin" },
+        "sufficiencyOwner": { "const": "authored-human-decision" }
+      },
+      "additionalProperties": true
+    },
+    "NativeArtifact": {
+      "type": "object",
+      "required": ["uri", "digest"],
+      "properties": {
+        "uri": { "type": "string", "minLength": 1 },
+        "digest": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "TechniqueResult": {
+      "type": "object",
+      "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "runRef", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts", "oracleContributions"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "kind": { "const": "TechniqueResult" },
+        "resultId": { "type": "string", "minLength": 1 },
+        "planId": { "type": "string", "minLength": 1 },
+        "taskId": { "type": "string", "minLength": 1 },
+        "runRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "techniqueId": { "type": "string", "minLength": 1 },
+        "producedAt": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "propertyRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
+        "profile": { "type": "string", "minLength": 1 },
+        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
+        "dependencyClosure": { "type": "string", "minLength": 1 },
+        "executionScope": { "type": "object" },
+        "execution": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["not-run", "running", "completed", "failed", "cancelled", "exhausted", "invalid-input", "unsupported"] } },
+          "additionalProperties": true
+        },
+        "logical": {
+          "type": "object",
+          "required": ["outcome"],
+          "properties": { "outcome": { "enum": ["satisfied", "violated", "unknown", "not-evaluated", "inconclusive"] } },
+          "additionalProperties": true
+        },
+        "activation": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["activated", "not-activated", "unknown", "not-required"] } },
+          "additionalProperties": true
+        },
+        "participation": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["complete", "partial", "present", "not-started", "unknown", "not-required"] } },
+          "additionalProperties": true
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["assumptionId", "status"],
+            "properties": {
+              "assumptionId": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["met", "not-met", "unknown", "not-assessed"] }
+            },
+            "additionalProperties": true
+          }
+        },
+        "adequacy": {
+          "type": "object",
+          "required": ["status"],
+          "properties": { "status": { "enum": ["adequate", "inadequate", "unknown", "not-assessed"] } },
+          "additionalProperties": true
+        },
+        "provenance": {
+          "type": "object",
+          "required": ["producer", "producerVersion", "adapter", "adapterVersion", "sourceRevision"],
+          "properties": {
+            "producer": { "type": "string", "minLength": 1 },
+            "producerVersion": { "type": "string", "minLength": 1 },
+            "adapter": { "type": "string", "minLength": 1 },
+            "adapterVersion": { "type": "string", "minLength": 1 },
+            "sourceRevision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        },
+        "nativeArtifacts": { "type": "array", "items": { "$ref": "#/$defs/NativeArtifact" } },
+        "oracleContributions": { "type": "array", "items": { "$ref": "#/$defs/OracleContribution" } }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "execution": {
+                "type": "object",
+                "properties": { "status": { "not": { "const": "completed" } } },
+                "required": ["status"]
+              }
+            },
+            "required": ["execution"]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "logical": {
+                "type": "object",
+                "properties": {
+                  "outcome": { "not": { "enum": ["satisfied", "violated"] } }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "logical": {
+                "type": "object",
+                "properties": { "outcome": { "enum": ["satisfied", "violated"] } },
+                "required": ["outcome"]
+              }
+            },
+            "required": ["logical"]
+          },
+          "then": {
+            "properties": { "oracleContributions": { "minItems": 1 } }
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "PlanRequest": {
+      "type": "object",
+      "required": ["planId", "asOf", "policy", "properties", "capabilities", "selections", "availablePrerequisites"],
+      "properties": {
+        "planId": { "type": "string", "minLength": 1 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "policy": { "$ref": "#/$defs/SelectionPolicy" },
+        "properties": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
+        "capabilities": { "type": "array", "items": { "$ref": "#/$defs/ToolCapability" } },
+        "selections": { "type": "array", "items": { "type": "object" } },
+        "availablePrerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" }
+      },
+      "additionalProperties": true
+    },
+    "PortfolioFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "planRequest"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "planRequest": { "$ref": "#/$defs/PlanRequest" }
+      },
+      "additionalProperties": true
+    },
+    "ResultsFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "asOf", "inventory", "results"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "inventory": { "type": "array", "items": { "$ref": "#/$defs/EvidenceObligation" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } }
+      },
+      "additionalProperties": true
+    },
+    "Vp04NativeCommand": {
+      "type": "object",
+      "required": ["commandId", "arguments", "expectedExitCode", "responseKind"],
+      "properties": {
+        "commandId": { "type": "string", "minLength": 1 },
+        "arguments": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "expectedExitCode": { "type": "integer", "minimum": 0, "maximum": 255 },
+        "responseKind": { "enum": ["parsed-json", "formatted-source", "diagnostic-json"] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04NativeRun": {
+      "type": "object",
+      "required": ["runId", "commandId", "status", "observedExitCode", "stdoutArtifact", "stderrArtifact", "errorCode"],
+      "properties": {
+        "runId": { "type": "string", "minLength": 1 },
+        "commandId": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["completed", "failed"] },
+        "observedExitCode": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 255 }, { "type": "null" }] },
+        "stdoutArtifact": { "oneOf": [{ "$ref": "#/$defs/NativeArtifact" }, { "type": "null" }] },
+        "stderrArtifact": { "oneOf": [{ "$ref": "#/$defs/NativeArtifact" }, { "type": "null" }] },
+        "errorCode": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "completed" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "observedExitCode": { "type": "integer", "minimum": 0, "maximum": 255 },
+              "errorCode": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "failed" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "observedExitCode": { "type": "null" },
+              "stdoutArtifact": { "type": "null" },
+              "stderrArtifact": { "type": "null" },
+              "errorCode": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "Vp04ParserDiagnosticResponse": {
+      "type": "object",
+      "required": ["status", "phase", "code", "source", "path", "span", "message"],
+      "properties": {
+        "status": { "const": "refused" },
+        "phase": { "const": "parse" },
+        "code": { "const": "invalid_syntax" },
+        "source": {
+          "type": "object",
+          "required": ["identity", "revision"],
+          "properties": {
+            "identity": { "type": "string", "minLength": 1 },
+            "revision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "path": { "type": "string", "minLength": 1 },
+        "span": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": {
+            "start": {
+              "type": "object",
+              "required": ["byte", "line", "column"],
+              "properties": {
+                "byte": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+                "line": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+                "column": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+              },
+              "additionalProperties": false
+            },
+            "end": {
+              "type": "object",
+              "required": ["byte", "line", "column"],
+              "properties": {
+                "byte": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+                "line": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+                "column": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "message": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "Vp04ParserPortfolioExecution": {
+      "type": "object",
+      "required": ["schemaVersion", "executionId", "plan", "commands", "nativeRuns", "results", "assessment", "evidenceOwner", "sufficiencyDecision"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-execution/v1" },
+        "executionId": { "type": "string", "minLength": 1 },
+        "plan": { "$ref": "#/$defs/VerificationPlan" },
+        "commands": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeCommand" } },
+        "nativeRuns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeRun" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } },
+        "assessment": { "type": "object" },
+        "evidenceOwner": { "const": "Quoin" },
+        "sufficiencyDecision": { "const": "not-made" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementObservation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["observationId", "phase", "repetition", "status", "elapsedNanoseconds"],
+          "properties": {
+            "observationId": { "type": "string", "minLength": 1 },
+            "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+            "repetition": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "status": { "const": "valid" },
+            "elapsedNanoseconds": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["observationId", "phase", "repetition", "status", "reason"],
+          "properties": {
+            "observationId": { "type": "string", "minLength": 1 },
+            "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+            "repetition": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "status": { "const": "invalid" },
+            "reason": { "type": "string", "minLength": 1 },
+            "rejectedElapsed": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Vp04PhaseSummary": {
+      "type": "object",
+      "required": ["phase", "validSampleCount", "minimumNanoseconds", "medianNanoseconds", "maximumNanoseconds"],
+      "properties": {
+        "phase": { "enum": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+        "validSampleCount": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "minimumNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] },
+        "medianNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] },
+        "maximumNanoseconds": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 9007199254740991 }, { "type": "null" }] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementContext": {
+      "type": "object",
+      "required": ["population", "exclusions", "clock", "commandOrder", "cacheTreatment", "environmentalDifferences", "uncertainty", "alternativeExplanations"],
+      "properties": {
+        "population": { "type": "string", "minLength": 1 },
+        "exclusions": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "clock": { "const": "monotonic-process-local" },
+        "commandOrder": { "const": ["setup", "direct-parse", "parse-format-reparse", "complete-run"] },
+        "cacheTreatment": { "type": "string", "minLength": 1 },
+        "environmentalDifferences": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "uncertainty": { "type": "string", "minLength": 1 },
+        "alternativeExplanations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "Vp04MeasurementSeries": {
+      "type": "object",
+      "required": ["schemaVersion", "candidateIdentity", "environmentIdentity", "observations", "summaries", "context"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-measurements/v1" },
+        "candidateIdentity": { "type": "string", "minLength": 1 },
+        "environmentIdentity": { "type": "string", "minLength": 1 },
+        "observations": { "type": "array", "minItems": 16, "maxItems": 16, "items": { "$ref": "#/$defs/Vp04MeasurementObservation" } },
+        "summaries": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/Vp04PhaseSummary" } },
+        "context": { "$ref": "#/$defs/Vp04MeasurementContext" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04AutomatedReportCore": {
+      "type": "object",
+      "required": ["schemaVersion", "reportId", "candidateRef", "subjectRef", "mutationRef", "dependencyClosureRef", "environmentRef", "commands", "plan", "taskIds", "nativeRuns", "results", "assessment", "assessedAt", "measurements", "interpretation", "claimLimits", "producers", "adapters", "evidenceOwner", "sufficiencyDecision"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-report-core/v1" },
+        "reportId": { "type": "string", "minLength": 1 },
+        "candidateRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "mutationRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "dependencyClosureRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "environmentRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "commands": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeCommand" } },
+        "plan": { "$ref": "#/$defs/VerificationPlan" },
+        "taskIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "nativeRuns": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Vp04NativeRun" } },
+        "results": { "type": "array", "items": { "$ref": "#/$defs/TechniqueResult" } },
+        "assessment": { "type": "object" },
+        "assessedAt": { "type": "string", "format": "date-time" },
+        "measurements": { "$ref": "#/$defs/Vp04MeasurementSeries" },
+        "interpretation": { "const": "These observations describe only the selected quire-spec revision and exact fixture pair." },
+        "claimLimits": {
+          "const": [
+            "The run establishes only the declared parser syntax responses and format stability for these fixtures.",
+            "Quoin retains ownership of evidence interpretation and sufficiency."
+          ]
+        },
+        "producers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "adapters": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "evidenceOwner": { "const": "Quoin" },
+        "sufficiencyDecision": { "const": "not-made" }
+      },
+      "additionalProperties": false
+    },
+    "Vp04ReviewDisposition": {
+      "type": "object",
+      "required": ["schemaVersion", "dispositionId", "coreDigest", "reviewer", "procedureRef", "observedAt", "value"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-disposition/v1" },
+        "dispositionId": { "type": "string", "minLength": 1 },
+        "coreDigest": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "procedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "value": { "enum": ["accept", "revise", "reject"] }
+      },
+      "additionalProperties": false
+    },
+    "Vp04PortfolioReport": {
+      "type": "object",
+      "required": ["schemaVersion", "core", "coreDigest", "dispositionRef", "disposition", "status"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.vp04-report/v1" },
+        "core": { "$ref": "#/$defs/Vp04AutomatedReportCore" },
+        "coreDigest": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "dispositionRef": { "oneOf": [{ "$ref": "#/$defs/SharedArtifactEnvelope" }, { "type": "null" }] },
+        "disposition": { "oneOf": [{ "$ref": "#/$defs/Vp04ReviewDisposition" }, { "type": "null" }] },
+        "status": { "enum": ["incomplete", "final"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "incomplete" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "dispositionRef": { "type": "null" },
+              "disposition": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "final" } }, "required": ["status"] },
+          "then": {
+            "properties": {
+              "dispositionRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+              "disposition": { "$ref": "#/$defs/Vp04ReviewDisposition" }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "QuoinCatalogFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "source", "catalog"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "object",
+          "required": ["quoinRevision", "moduleRevision", "sourceRef"],
+          "properties": {
+            "quoinRevision": { "type": "string", "minLength": 1 },
+            "moduleRevision": { "type": "string", "minLength": 1 },
+            "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" }
+          },
+          "additionalProperties": true
+        },
+        "catalog": {
+          "type": "object",
+          "required": ["methods"],
+          "properties": {
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "class", "definition", "moduleName"],
+                "properties": {
+                  "id": { "type": "string", "minLength": 1 },
+                  "name": { "type": "string", "minLength": 1 },
+                  "class": { "type": "string", "minLength": 1 },
+                  "definition": { "type": "string", "minLength": 1 },
+                  "moduleName": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "QuoinAdviceFixture": {
+      "type": "object",
+      "required": ["schemaVersion", "source", "cases", "advice"],
+      "properties": {
+        "schemaVersion": { "type": "string", "minLength": 1 },
+        "source": {
+          "type": "object",
+          "required": ["quoinRevision", "moduleRevision"],
+          "properties": {
+            "quoinRevision": { "type": "string", "minLength": 1 },
+            "moduleRevision": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": true
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "statement", "archetype"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "statement": { "type": "string", "minLength": 1 },
+              "archetype": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": true
+          }
+        },
+        "advice": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["obligation", "recommended", "mismatch", "uncatalogued", "inconclusive"],
+            "properties": {
+              "obligation": { "type": "string", "minLength": 1 },
+              "mismatch": { "type": "boolean" },
+              "uncatalogued": { "type": "boolean" },
+              "inconclusive": { "type": "boolean" },
+              "recommended": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["method", "class", "evidenceKind", "reasons"],
+                  "properties": {
+                    "method": { "type": "string", "minLength": 1 },
+                    "class": { "type": "string", "minLength": 1 },
+                    "evidenceKind": { "type": "string", "minLength": 1 },
+                    "reasons": { "type": "array" }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

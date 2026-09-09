@@ -15,7 +15,9 @@ relationships:
 
 ## Statement
 
-The compatibility slice SHALL maintain one authoritative definition of each public contract in `contracts/e02-draft-1.schema.json`.
+The compatibility slice SHALL maintain one authoritative definition of each
+public contract in `contracts/e02-draft-2.schema.json`, with shared-reference
+shapes resolved from the retained shared-reference schema.
 
 ## Scope
 
@@ -32,6 +34,7 @@ continue to exercise only one of them.
 | Metric | Target | Threshold | Method |
 |--------|--------|-----------|--------|
 | Independently authored public-contract definition sets | 1 | 1 | Inspection (TC-003) |
+| Independently authored copies of the shared artifact-reference field set | 0 | 0 | Test (TC-028) |
 | Discovered JSON fixtures without an explicit schema handler | 0 | 0 | Test (TC-005, TC-006) |
 
 ## Verification
@@ -46,6 +49,7 @@ handler, and CI executes fixture validation separately.
 |----|----------|--------------|
 | NFR-002-AC-1 | Runtime contract validators and exported vocabularies derive from the single versioned JSON Schema packet. | Inspection (TC-003) |
 | NFR-002-AC-2 | Every discovered direct-child JSON fixture executes a registered schema-validation handler. | Test (TC-005, TC-006) |
+| NFR-002-AC-3 | The E02 schema and generated runtime resolve shared artifact envelopes from the exact retained shared-reference schema instead of restating its fields. | Test (TC-028) |
 
 ## Dependencies
 

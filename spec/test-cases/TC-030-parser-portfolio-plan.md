@@ -19,14 +19,18 @@ manual-review work without pretending they share one unary input or readiness.
 
 ## Test Procedure
 
-Build a pinned parser plan with a state/property task requiring a generator and
-harness, a relational/differential task requiring two native parser bindings,
-and a manual artifact review requiring an assigned reviewer. Run ready, missing
-prerequisite, unsupported capability, and absent resource-allocation variants.
+Build a pinned parser plan with a state/property task carrying a validated
+`snapshot` envelope and requiring a generator and harness, a
+relational/differential task requiring two native parser bindings, and a manual
+artifact review carrying a validated `review-procedure` envelope and requiring
+an assigned reviewer. Give the native capabilities explicit resource ceilings
+and an in-limit plan budget. Run ready, missing-prerequisite,
+unsupported-capability, and absent-budget variants.
 
 ## Expected Results
 
 All three obligations remain present with distinct inputs. Only individually
-prepared native tasks are invocable; missing tools, bindings, reviewer, and
-budget become deterministic setup dependencies; manual review never receives a
-native runner request.
+prepared native tasks with a selected in-limit budget are invocable; missing
+tools, bindings, reviewer, and budget become deterministic setup dependencies.
+Manual review keeps its input and readiness but has a null runner request and is
+never native-invocable.

@@ -8,10 +8,11 @@ type: TestMatrix
 ## Overview
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
-VP01 qualification, and VP02 native-planning slice to a concrete test case. The
-26 implemented cases run in Rust through compiler-checked `ix-trace-rs` markers;
-TC-027 through TC-031 remain pending until their reviewed implementation and shared
-reference dependency are ready. The rejected JavaScript prototype is not evidence.
+VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
+bounded-parser-portfolio slices to a concrete test case. All 38 cases run in Rust
+through compiler-checked `ix-trace-rs` markers. The IT-003 automated core is
+retained separately from the still-pending external disposition. The rejected
+JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
 
@@ -32,14 +33,16 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
-| US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
+| US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
+| US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
+| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
 
 ### Functional Requirement Coverage
 
 | Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |----------------|---------------------|------------|-----------------|
 | FR-001 | FR-001-AC-1..5 | TC-001, TC-002 | ✅ Complete |
-| FR-002 | FR-002-AC-1..3 | TC-003, TC-004 | ✅ Complete |
+| FR-002 | FR-002-AC-1..4 | TC-003, TC-004, TC-028 | ✅ Complete |
 | FR-003 | FR-003-AC-1..3 | TC-005, TC-006 | ✅ Complete |
 | FR-004 | FR-004-AC-1..3 | TC-007, TC-008, TC-021 | ✅ Complete |
 | FR-005 | FR-005-AC-1..6 | TC-009, TC-010, TC-011 | ✅ Complete |
@@ -51,19 +54,25 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | FR-011 | FR-011-AC-1..2 | TC-024 | ✅ Complete |
 | FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
 | FR-013 | FR-013-AC-1..5 | TC-026, TC-030 | ✅ Complete |
-| FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
-| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
-| FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
+| FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | ✅ Complete |
+| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | ✅ Complete |
+| FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
+| FR-017 | FR-017-AC-1..7 | TC-033 | ✅ Complete |
+| FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
+| FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ✅ Implemented; automated core retained |
+| FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
+| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
 
 ### Non-Functional Requirement Coverage
 
 | Non-Functional Req | Verification Method | Evidence/Test Cases | Status |
 |--------------------|---------------------|---------------------|--------|
 | NFR-001 | Property and deterministic-order tests | TC-012, TC-013, TC-015, TC-016, TC-018 | ✅ Complete |
-| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006 | ✅ Complete |
+| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006, TC-028 | ✅ Complete |
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
-| NFR-004 | Rust source and quality gates | TC-022 | ✅ Complete |
+| NFR-004 | Rust source, quality gates, and maintained toolchain/dependency guidance | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
+| NFR-006 | Native process containment tests | TC-038 | ✅ Complete |
 
 ## Test Case Summary
 
@@ -90,22 +99,30 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-019 | Return violated and failed results | Unit | P0 | FR-009-AC-3..FR-009-AC-4 | ✅ Passed |
 | TC-020 | Retain pending human work and claim limits | Unit | P0 | FR-009-AC-5..FR-009-AC-6, NFR-003-AC-2 | ✅ Passed |
 | TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
-| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-4 | ✅ Passed |
+| TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-6 | ✅ Passed |
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 | TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
 | TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
 | TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-5 | ✅ Passed |
-| TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
-| TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-015-AC-1..FR-015-AC-4 | 🚧 Planned |
-| TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
-| TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
-| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
+| TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-005-AC-2, FR-013-AC-2, FR-014-AC-1..FR-014-AC-4 | ✅ Passed |
+| TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-002-AC-4, FR-015-AC-1..FR-015-AC-4, NFR-002-AC-3 | ✅ Passed |
+| TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ✅ Implemented |
+| TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-3, FR-015-AC-5 | ✅ Passed |
+| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |
+| TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
+| TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-7 | ✅ Passed |
+| TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ✅ Passed |
+| TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ✅ Passed |
+| TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ✅ Passed |
+| TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
+| TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 
 ## Option Permutation Matrix
 
 | Test Case | Dimension A | Dimension B | Dimension C | Expected Behavior |
 |-----------|-------------|-------------|-------------|-------------------|
-| TC-009 | applicable | ready | qualified capability | invocation allowed |
+| TC-009 | applicable | ready | qualified native capability | invocation allowed |
+| TC-009 | applicable | ready | qualified manual capability | native invocation refused |
 | TC-010 | unknown | ready | qualified capability | invocation refused; readiness unchanged |
 | TC-010 | not-applicable | ready | qualified capability | invocation refused; readiness unchanged |
 | TC-010 | applicable | unsupported | absent capability | unsupported gap retained |
@@ -117,7 +134,6 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-014 | completed | satisfied | adequate | supported |
 | TC-014 | completed | satisfied | not activated | untriggered |
 | TC-014 | completed | unknown | inadequate | inadequate |
-| TC-014 | failed | not-evaluated | not assessed | failed |
 | TC-015 | completed | violated | partial and assumption unmet | all independent gaps retained |
 | TC-026 | required | absent allocation | missing resource | blocked task and setup dependency retained |
 | TC-027 | applicable | ready | complete qualified runner | bounded request and invocation allowed |
@@ -125,6 +141,21 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-030 | parser property | differential relation | manual review | distinct inputs and eligibility retained |
 | TC-029 | supported semantic ref | reordered unique features | exact canonical identity | accepted as the same feature set |
 | TC-029 | supported semantic ref | duplicate feature | exact canonical identity | refused before planning |
+| TC-032 | result expiry earlier | obligation expiry later | exact boundary | fresh at boundary; stale after |
+| TC-032 | result expiry later | obligation expiry earlier | exact boundary | fresh at boundary; stale after |
+| TC-033 | distinct techniques | shared observation | declared independent | correlated finding; no independence claim |
+| TC-033 | distinct techniques | distinct observations | unknown relation | unknown dependence; no aggregate score |
+| TC-033 | transitive oracle edge | observation edge | three contributions | one connected correlation finding with sorted members and bases |
+| TC-033 | valid derived source | source outside exact matches | derived relation | source-not-assessed finding; no independence claim |
+| TC-033 | two exact candidates | one obligation | ambiguous selection | neither candidate enters the dependence graph |
+| TC-033 | one selected result | two exact obligations | same contribution member | member retained once in top-level findings |
+| TC-034 | valid source | direct parse | exact native candidate | completed and satisfied |
+| TC-034 | seeded syntax mutation | expected located refusal | exact native candidate | completed and violated |
+| TC-034 | valid source | unreadable native response | exact native candidate | failed and not-evaluated |
+| TC-035 | exact result | shared observation | distinct techniques | correlation retained; no independence claim |
+| TC-037 | exact report | no disposition | otherwise complete execution | incomplete until human disposition |
+| TC-037 | exact sealed core | one foreign disposition | otherwise complete execution | stable refusal; no disposition adopted |
+| TC-038 | exact executable | shell-like argument characters | separate argument vector | child observes unchanged single argument |
 
 ## Constraint Boundary Tests
 
@@ -139,11 +170,44 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Result identity uniqueness | Above max | 2 equal result IDs | TC-013 | Reject |
 | Freshness | At limit | Age equal to maximum | TC-014 | Fresh |
 | Freshness | Above limit | Age greater than maximum | TC-014 | Stale |
+| Combined freshness | Exact | Assessment at earliest expiry | TC-032 | Fresh |
+| Combined freshness | Outside | One representable instant after earliest expiry | TC-032 | Stale |
+| Maximum age | Min | 0 seconds | TC-032 | Fresh only at production instant |
+| Maximum age | Max | 9007199254740991 seconds | TC-032 | Accept or refuse only on checked timestamp overflow |
+| Maximum age | Under min | -1 second | TC-032 | Refuse before classification |
+| Maximum age | Outside | 9007199254740992 seconds | TC-032 | Refuse before classification |
 | JCS numeric domain | Boundary | Finite JSON number | TC-016 | Canonicalize |
 | JCS numeric domain | Outside | NaN or Infinity | TC-017 | Reject |
 | Shared byte digest | Exact | SHA-256 of supplied bytes | TC-029 | Accept selected reference |
 | Shared byte digest | Mismatch | One changed byte | TC-029 | Refuse before planning |
 | Required feature set | Duplicate | Same decoded feature twice | TC-029 | Refuse before comparison |
+| Oracle contributions | Min for evaluated result | 1 contribution | TC-033 | Accept after strict role validation |
+| Oracle contributions | Under min for evaluated result | 0 contributions | TC-033 | Schema refusal before assessment |
+| Contribution identity | Exact | 1 occurrence within a result | TC-033 | Accept |
+| Contribution identity | Duplicate | 2 equal IDs within a result | TC-033 | `duplicate_oracle_contribution_id` refusal |
+| Derived lineage | Cycle | Two contributions derive from each other | TC-033 | `invalid_oracle_lineage` refusal |
+| Selected graph membership | Above max | 2 exact candidates for one obligation | TC-033 | Ambiguous candidates excluded from the graph |
+| Selected member identity | Duplicate path | 1 result selected by 2 obligations | TC-033 | One structured `(resultId, contributionId)` member |
+| Measurement repetitions | Exact | 5 repetitions | TC-036 | Retain every phase observation |
+| Measurement repetitions | Under prescribed | 4 repetitions | TC-036 | Report remains incomplete |
+| Measurement series | Exact | 1 setup plus 5 repetitions of 3 automated phases | TC-036 | 16 unique ordered observations |
+| Elapsed duration | Min | 0 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
+| Elapsed duration | Under min | -1 nanosecond | TC-036 | Retain invalid reason; exclude from summary |
+| Elapsed duration | Max | 9007199254740991 integer nanoseconds | TC-036 | Retain as a valid observed boundary |
+| Elapsed duration | Outside | 9007199254740992 nanoseconds | TC-036 | Retain invalid reason; exclude from summary |
+| Elapsed duration | Wrong type | 0.5 nanoseconds | TC-036 | Retain invalid reason; exclude from summary |
+| Manual dispositions | Exact | 1 report-bound value | TC-037 | Accept, revise, or reject is representable |
+| Manual dispositions | Above max | 2 values | TC-037 | Refuse ambiguous disposition |
+| Native invocation deadline | Min | Smallest positive represented duration | TC-038 | Accept declared deadline |
+| Native invocation deadline | Max | 10 seconds | TC-038 | Accept declared deadline; terminate at that deadline |
+| Native invocation deadline | Under min | 0 seconds | TC-038 | Refuse before launch |
+| Native invocation deadline | Outside | More than 10 seconds | TC-038 | Refuse before launch |
+| Captured standard output | Exact | 16 MiB | TC-038 | Accept stream |
+| Captured standard output | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
+| Captured standard error | Exact | 16 MiB | TC-038 | Accept stream |
+| Captured standard error | Outside | 16 MiB plus one byte | TC-038 | Terminate and reap with `output_limit_exceeded` |
+| Admitted executable identity | Exact | Pathname replaced after descriptor admission | TC-038 | Execute the admitted descriptor; replacement cannot substitute bytes |
+| Native process group | Outside | Direct child exits while one descendant holds both pipes | TC-038 | Terminate group, reap direct child, and return no live member |
 
 ## Error Paths
 
@@ -165,20 +229,41 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | ERR-014 | A non-invocable task carries a runner request | TC-027 | Contract or planner refusal |
 | ERR-015 | An input omits a role or carries a cross-variant field | TC-028 | Closed-variant rejection |
 | ERR-016 | Shared reference has a duplicate key, unknown version or feature, wrong role, or mismatched digest | TC-029, TC-031 | Stable pre-planning refusal |
+| ERR-017 | Result production is in the future or validity precedes production | TC-032 | `invalid_temporal_order` refusal |
+| ERR-018 | Oracle dependence is unknown, shared, or derived | TC-033 | Retain exact dependence finding; make no independence claim |
+| ERR-019 | Oracle contribution ID is duplicated or a required/conditional field is absent | TC-033 | Schema or `duplicate_oracle_contribution_id` refusal before assessment |
+| ERR-020 | Native parser process or result protocol fails unexpectedly | TC-034 | Failed execution plus not-evaluated logical outcome |
+| ERR-021 | Required portfolio runner, binding, tool, or resource is absent | TC-035 | Blocked task, actionable setup, and no fabricated result |
+| ERR-022 | Measurement sample is interrupted, negative, or bound to another environment | TC-036 | Retained invalid sample with reason; excluded from summaries |
+| ERR-023 | Manual disposition is absent, duplicated, unsupported, or bound to another report | TC-037 | Incomplete or stable refusal; never accepted implicitly |
+| ERR-024 | Native process exceeds time or output bounds | TC-038 | Child terminated and reaped; typed failed result with no logical claim |
+| ERR-025 | Executable path or native response violates the selected process boundary | TC-038 | Refusal before launch or typed failed result after launch |
+| ERR-026 | Measurement observation identity, phase/repetition cardinality, or order is invalid | TC-036 | `invalid_measurement_series` refusal |
+| ERR-027 | A derived source is absent, self-referential, or cyclic | TC-033 | `invalid_oracle_lineage` refusal before assessment |
+| ERR-028 | An oracle/observation envelope lacks an exact role-matched strict-reader output | TC-033 | Existing shared-reference refusal before result matching |
 
 ## State Transition Coverage
 
 | State Model | Transition | Test Case | Expected |
 |-------------|------------|-----------|----------|
-| Plan readiness | prepared prerequisites → ready | TC-009 | invocable only when applicable |
+| Plan readiness | prepared prerequisites → ready | TC-009 | native-invocable only when applicable with a qualified native capability and in-limit budget |
 | Plan readiness | missing prerequisites → blocked | TC-010 | setup tasks emitted |
 | Plan readiness | missing capability → unsupported | TC-010 | unsupported gap emitted |
 | Evidence freshness | within age → beyond age | TC-014 | fresh status becomes stale |
+| Combined freshness | at earliest expiry → after earliest expiry | TC-032 | fresh status becomes stale |
+| Oracle dependence | independent → shared or derived | TC-033 | correlation finding appears without aggregate score |
+| Oracle dependence | exact-matched → source outside exact graph | TC-033 | derived member becomes explicitly source-not-assessed |
 | Portfolio execution | check returns false | TC-019 | completed plus violated |
 | Portfolio execution | check throws | TC-019 | failed plus not-evaluated |
 | Human review | no disposition | TC-020 | not-run and incomplete |
 | Required task | allocation present → absent | TC-026 | ready task becomes blocked and remains visible |
 | Native runner | ready → prerequisite missing | TC-027 | runner request becomes null |
+| Domain portfolio | expected syntax acceptance → expected syntax refusal | TC-034 | completed logical outcome changes from satisfied to violated |
+| Domain portfolio | required native prerequisite present → absent | TC-035 | affected work becomes blocked; no result appears |
+| Domain evidence | at earliest expiry → one instant after | TC-035 | fresh result becomes stale with findings retained |
+| VP04 disposition | absent → one exact owner value | TC-037 | report becomes disposition-complete without changing automated results |
+| VP04 disposition | one exact owner value → foreign or duplicate | TC-037 | finalization refuses without changing the sealed core |
+| Native process | running → time/output limit | TC-038 | child is terminated and reaped; result becomes failed |
 
 ## Edge Cases
 
@@ -196,6 +281,26 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | EC-010 | A field from one input variant appears on another | FR-015 | TC-028 | Reader can guess a false unary interpretation |
 | EC-011 | JCS semantic digest is placed in an exact byte-digest field | FR-016 | TC-029 | Unrelated identity domains can be treated as equal |
 | EC-012 | Required feature set is reordered or duplicated | FR-016 | TC-029 | Equivalent sets can fail or duplicate requirements can pass |
+| EC-013 | Result and obligation expiry disagree | FR-018 | TC-032 | A later bound can silently extend stale evidence |
+| EC-014 | Different methods reuse one observation or derived oracle | FR-017 | TC-033 | Correlated outputs can be presented as independent confirmation |
+| EC-028 | Correlation edges connect transitively across different bases | FR-017 | TC-033 | One dependence component can be split into false independent confirmations |
+| EC-029 | Derived contribution lineage is self-referential or cyclic | FR-017 | TC-033 | Circular evidence can be presented as corroboration |
+| EC-030 | Contribution or result input order changes | FR-017 | TC-033 | Equivalent evidence can produce a different assessment identity |
+| EC-031 | An ambiguous exact candidate shares an oracle with a selected result | FR-017 | TC-033 | Unselected evidence can alter top-level dependence findings |
+| EC-032 | One exact result satisfies two inventoried obligations | FR-017 | TC-033 | One contribution can be double-counted as two dependence members |
+| EC-015 | Equivalent timestamps use different RFC 3339 offsets | FR-018 | TC-032 | Text comparison can disagree about one instant |
+| EC-016 | Maximum age addition exceeds the timestamp domain | FR-018 | TC-032 | Arithmetic can wrap, panic, or extend evidence validity |
+| EC-017 | An expected parser refusal is represented as process failure | FR-019 | TC-034 | A found syntax defect can be erased as infrastructure noise |
+| EC-018 | Two parser techniques reuse one observation | FR-019 | TC-035 | Method count can be mistaken for independent corroboration |
+| EC-019 | Setup duration is combined with incremental run duration | FR-020 | TC-036 | Integration cost cannot be reproduced or compared honestly |
+| EC-020 | An invalid timing observation is rewritten as zero | FR-020 | TC-036 | Summaries become artificially favorable |
+| EC-021 | A disposition from another report is copied onto the candidate | FR-021 | TC-037 | Human acceptance can be falsely attributed |
+| EC-022 | A disposition is included in the bytes whose digest it references | FR-021 | TC-037 | Report identity becomes circular or implementation-defined |
+| EC-023 | Shell text or inherited environment changes native invocation | NFR-006 | TC-038 | Reviewed arguments or execution context can be replaced silently |
+| EC-024 | A native child fills one pipe while the runner waits on another | NFR-006 | TC-038 | The qualified run can deadlock despite a nominal timeout |
+| EC-025 | Candidate pathname changes after validation but before execution | NFR-006 | TC-038 | Different executable bytes can replace the reviewed candidate |
+| EC-026 | A direct child exits while a descendant retains the output pipes | NFR-006 | TC-038 | The runner can block beyond its deadline or leave a live orphan |
+| EC-027 | A multiline `#[trace(...)]` compiles while the configured Quire reader sees only its first line | NFR-004 | TC-022 | Claimed acceptance criteria remain unbacked despite a green Rust test |
 
 ## Integration Test Matrix
 
@@ -204,7 +309,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Integration ID | Purpose | Target Project | Type | Test Cases | Status |
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
-| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ⛔ Blocked |
+| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
+| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | 🚧 Automated core retained; external disposition pending |
 
 ### Integration Test Details
 
@@ -216,6 +322,12 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | TC-031 | IT-002 | Exact supported shared references | Pinned schema, artifacts, and positive vectors | Every B-used role accepted | P0 |
 | TC-031 | IT-002 | One-axis reference mutations | Pinned adverse vectors and B mutations | Stable refusal before planning | P0 |
 | TC-031 | IT-002 | Unmapped JCS or trace/fault/manual role | Consumer role composition | No permissive fallback; integration fails | P0 |
+| TC-034 | IT-003 | Valid exact source | Real parse and parse-format-reparse commands | Two completed satisfied results | P0 |
+| TC-034 | IT-003 | One declared syntax mutation | Real parse command and expected diagnostic | Completed violated result; unexpected failure stays failed | P0 |
+| TC-035 | IT-003 | Missing prerequisite and expired exact result | Mutated plan and assessment time | Blocked work and stale finding remain explicit | P0 |
+| TC-036 | IT-003 | Five prescribed measured repetitions | Raw monotonic phase observations | Setup separated; summaries recompute exactly | P0 |
+| TC-037 | IT-003 | Exact report and review procedure | Verification-owner disposition | One bound value and bounded claims | P0 |
+| TC-038 | IT-003 | Controlled time, output, argument, environment, path, status, and protocol cases | Native process adapter | Bounded typed results and no orphan process | P0 |
 
 ## Resolved Coverage Gaps
 
@@ -232,7 +344,8 @@ reference dependency are ready. The rejected JavaScript prototype is not evidenc
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
 | Unit | 16 | 16 | 0 | 0 | 100% |
-| Integration | 5 | 3 | 0 | 2 | 60% |
-| Property | 8 | 4 | 0 | 4 | 50% |
+| Integration | 8 | 3 | 0 | 5 | 38% |
+| Property | 11 | 6 | 0 | 5 | 55% |
 | Static | 2 | 2 | 0 | 0 | 100% |
-| Overall | 31 | 25 | 0 | 6 | 81% |
+| Benchmark | 1 | 0 | 0 | 1 | 0% |
+| Overall | 38 | 27 | 0 | 11 | 71% |

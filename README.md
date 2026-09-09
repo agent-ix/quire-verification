@@ -14,8 +14,8 @@ Portable technique/capability/policy/plan/result contracts and qualified plannin
 The current slice defines `TechniqueDefinition`, `ToolCapability`,
 `SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a pinned
 Quoin catalog export without relocating it; constructs prerequisite-aware task
-plans; and assesses result scope and freshness without storing evidence or
-making sufficiency decisions.
+plans with closed bounded native runner requests; and assesses result scope and
+freshness without storing evidence or making sufficiency decisions.
 
 Run the complete Rust checks with:
 
@@ -60,6 +60,11 @@ authored-or-unknown classification, authored policy priority and score refusal,
 missing prerequisites, stale evidence, untriggered behavior, missing
 observations, exact plan/task/run/producer/adapter mismatches, ambiguous duplicate
 results, and simultaneous independent failures.
+
+Native requests copy the selected capability, adapter, permissions, complete
+role input, native artifact interface, and one finite budget. Missing budgets
+become setup dependencies, excessive budgets become explicit gaps, and manual
+work never receives native invocation permission.
 
 Every acceptance test imports the pinned `ix-trace-rs` macro and uses a bare,
 compiler-checked `#[trace(...)]` marker. `quire coverage --scope . --json`

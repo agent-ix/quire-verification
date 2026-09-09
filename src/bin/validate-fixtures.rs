@@ -17,7 +17,7 @@ fn main() -> ExitCode {
         Ok(summary) => {
             let contracts: usize = summary.iter().map(|item| item.contracts).sum();
             println!(
-                "validated {} fixtures and {contracts} public contract instances against e02-draft-1.schema.json",
+                "validated {} fixtures and {contracts} public contract instances against e02-draft-2.schema.json",
                 summary.len()
             );
             ExitCode::SUCCESS

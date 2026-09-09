@@ -8,7 +8,7 @@ Read README.md, LICENSE-DECISION.md and the owning issue before editing. This is
 - Record dependency licenses and copied/generated artifact provenance. Do not infer licensing from process or repository boundaries.
 - Keep private research, traces and issue links out of public releases. No public posting, visibility change, or source relicensing without explicit approval.
 - Use isolated worktrees for concurrent code sessions; preserve unrelated edits.
-- There is no compiler build/test command yet. Add and document real checks with the first implementation; do not fabricate successful tests.
+- Run `cargo test --workspace --all-features --locked` for the complete Rust compiler/test gate; use the additional formatting, Clippy, dependency-policy, and fixture commands documented in README.md for changes in their scope.
 
 <!-- required-language-policy:start -->
 ## Required implementation language and containment
