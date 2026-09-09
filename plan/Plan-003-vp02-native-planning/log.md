@@ -7,6 +7,12 @@ description: "Chronological log of changes to the Plan-003 bundle."
 
 ## History
 
+* **2026-09-09** — QUOIN gap analysis SR-129 audited the done bundle at
+  `62b1f38`: 5/5 tasks, 50/50 in-scope criteria, nine assigned test cases, and
+  all semantic triples pass with no high finding. The conditional verdict
+  retains the excluded vendored-tag and Filament status-column diagnostics;
+  its two stale lifecycle sentences were corrected immediately afterward.
+
 * **2026-09-09** — Tasks 014 and 015 completed for independent gap analysis.
   Implementation `86ebb0b` emits only exact bounded native requests, retained
   portfolio `96344bc` binds that implementation revision, and exact Rust review

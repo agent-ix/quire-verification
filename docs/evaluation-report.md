@@ -80,7 +80,7 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Complete Rust test suite (27 first-party tests) | 0.59 s | 166,984 KiB |
+| Complete Rust test suite (44 first-party tests) | 1.17 s | 217,320 KiB |
 | Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
 | Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
 | Release bounded local portfolio | 0.01 s | 9,940 KiB |

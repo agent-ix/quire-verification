@@ -60,4 +60,4 @@ before using the reference in planning or result identity comparison.
 - Contract validation and JCS behavior come from [FR-001](./FR-001-validate-public-contracts.md) and [FR-008](./FR-008-use-jcs.md).
 - The FS02/FS05 representation dependency is satisfied by merged specification
   revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. Independent B adoption and
-  qualification remain open until TC-029 and TC-031 pass.
+  qualification are implemented and pass TC-029 and TC-031.
