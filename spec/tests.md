@@ -58,7 +58,7 @@ not evidence.
 | FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | ✅ Complete |
 | FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | ✅ Complete |
 | FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
-| FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on the Plan-003 gate |
+| FR-017 | FR-017-AC-1..7 | TC-033 | 🚧 Planned |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
 | FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ⛔ Blocked on VP02/VP03 |
 | FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
@@ -111,7 +111,7 @@ not evidence.
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-3, FR-015-AC-5 | ✅ Passed |
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
-| TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
+| TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-7 | 🚧 Planned |
 | TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ⛔ Blocked |
 | TC-035 | Retain parser portfolio gaps and stale evidence | Property | P0 | FR-019-AC-3..FR-019-AC-6 | ⛔ Blocked |
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ⛔ Blocked |
@@ -146,6 +146,8 @@ not evidence.
 | TC-032 | result expiry later | obligation expiry earlier | exact boundary | fresh at boundary; stale after |
 | TC-033 | distinct techniques | shared observation | declared independent | correlated finding; no independence claim |
 | TC-033 | distinct techniques | distinct observations | unknown relation | unknown dependence; no aggregate score |
+| TC-033 | transitive oracle edge | observation edge | three contributions | one connected correlation finding with sorted members and bases |
+| TC-033 | valid derived source | source outside exact matches | derived relation | source-not-assessed finding; no independence claim |
 | TC-034 | valid source | direct parse | exact native candidate | completed and satisfied |
 | TC-034 | seeded syntax mutation | expected located refusal | exact native candidate | completed and violated |
 | TC-034 | valid source | unreadable native response | exact native candidate | failed and not-evaluated |
@@ -178,6 +180,11 @@ not evidence.
 | Shared byte digest | Exact | SHA-256 of supplied bytes | TC-029 | Accept selected reference |
 | Shared byte digest | Mismatch | One changed byte | TC-029 | Refuse before planning |
 | Required feature set | Duplicate | Same decoded feature twice | TC-029 | Refuse before comparison |
+| Oracle contributions | Min for evaluated result | 1 contribution | TC-033 | Accept after strict role validation |
+| Oracle contributions | Under min for evaluated result | 0 contributions | TC-033 | Schema refusal before assessment |
+| Contribution identity | Exact | 1 occurrence within a result | TC-033 | Accept |
+| Contribution identity | Duplicate | 2 equal IDs within a result | TC-033 | `duplicate_oracle_contribution_id` refusal |
+| Derived lineage | Cycle | Two contributions derive from each other | TC-033 | `invalid_oracle_lineage` refusal |
 | Measurement repetitions | Exact | 5 repetitions | TC-036 | Retain every phase observation |
 | Measurement repetitions | Under prescribed | 4 repetitions | TC-036 | Report remains incomplete |
 | Measurement series | Exact | 1 setup plus 5 repetitions of 3 automated phases | TC-036 | 16 unique ordered observations |
@@ -221,7 +228,7 @@ not evidence.
 | ERR-016 | Shared reference has a duplicate key, unknown version or feature, wrong role, or mismatched digest | TC-029, TC-031 | Stable pre-planning refusal |
 | ERR-017 | Result production is in the future or validity precedes production | TC-032 | `invalid_temporal_order` refusal |
 | ERR-018 | Oracle dependence is unknown, shared, or derived | TC-033 | Retain exact dependence finding; make no independence claim |
-| ERR-019 | Oracle contribution ID is duplicated or required relation is absent | TC-033 | Contract refusal before assessment |
+| ERR-019 | Oracle contribution ID is duplicated or a required/conditional field is absent | TC-033 | Schema or `duplicate_oracle_contribution_id` refusal before assessment |
 | ERR-020 | Native parser process or result protocol fails unexpectedly | TC-034 | Failed execution plus not-evaluated logical outcome |
 | ERR-021 | Required portfolio runner, binding, tool, or resource is absent | TC-035 | Blocked task, actionable setup, and no fabricated result |
 | ERR-022 | Measurement sample is interrupted, negative, or bound to another environment | TC-036 | Retained invalid sample with reason; excluded from summaries |
@@ -229,6 +236,8 @@ not evidence.
 | ERR-024 | Native process exceeds time or output bounds | TC-038 | Child terminated and reaped; typed failed result with no logical claim |
 | ERR-025 | Executable path or native response violates the selected process boundary | TC-038 | Refusal before launch or typed failed result after launch |
 | ERR-026 | Measurement observation identity, phase/repetition cardinality, or order is invalid | TC-036 | `invalid_measurement_series` refusal |
+| ERR-027 | A derived source is absent, self-referential, or cyclic | TC-033 | `invalid_oracle_lineage` refusal before assessment |
+| ERR-028 | An oracle/observation envelope lacks an exact role-matched strict-reader output | TC-033 | Existing shared-reference refusal before result matching |
 
 ## State Transition Coverage
 
@@ -240,6 +249,7 @@ not evidence.
 | Evidence freshness | within age → beyond age | TC-014 | fresh status becomes stale |
 | Combined freshness | at earliest expiry → after earliest expiry | TC-032 | fresh status becomes stale |
 | Oracle dependence | independent → shared or derived | TC-033 | correlation finding appears without aggregate score |
+| Oracle dependence | exact-matched → source outside exact graph | TC-033 | derived member becomes explicitly source-not-assessed |
 | Portfolio execution | check returns false | TC-019 | completed plus violated |
 | Portfolio execution | check throws | TC-019 | failed plus not-evaluated |
 | Human review | no disposition | TC-020 | not-run and incomplete |
@@ -270,6 +280,9 @@ not evidence.
 | EC-012 | Required feature set is reordered or duplicated | FR-016 | TC-029 | Equivalent sets can fail or duplicate requirements can pass |
 | EC-013 | Result and obligation expiry disagree | FR-018 | TC-032 | A later bound can silently extend stale evidence |
 | EC-014 | Different methods reuse one observation or derived oracle | FR-017 | TC-033 | Correlated outputs can be presented as independent confirmation |
+| EC-028 | Correlation edges connect transitively across different bases | FR-017 | TC-033 | One dependence component can be split into false independent confirmations |
+| EC-029 | Derived contribution lineage is self-referential or cyclic | FR-017 | TC-033 | Circular evidence can be presented as corroboration |
+| EC-030 | Contribution or result input order changes | FR-017 | TC-033 | Equivalent evidence can produce a different assessment identity |
 | EC-015 | Equivalent timestamps use different RFC 3339 offsets | FR-018 | TC-032 | Text comparison can disagree about one instant |
 | EC-016 | Maximum age addition exceeds the timestamp domain | FR-018 | TC-032 | Arithmetic can wrap, panic, or extend evidence validity |
 | EC-017 | An expected parser refusal is represented as process failure | FR-019 | TC-034 | A found syntax defect can be erased as infrastructure noise |
