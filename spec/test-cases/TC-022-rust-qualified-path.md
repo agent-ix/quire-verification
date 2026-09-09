@@ -10,8 +10,9 @@ relationships:
 
 ## Description
 
-Verify executable repository code is Rust, unsafe code is forbidden, and every
-required Rust quality gate passes.
+Verify executable repository code is Rust, unsafe code is forbidden, every
+required Rust quality gate passes, and maintained toolchain/dependency guidance
+describes the current Rust implementation.
 
 ## Test Procedure
 
@@ -19,14 +20,28 @@ Inspect governed paths for JavaScript or TypeScript executable files, then run
 `cargo fmt --check`, `cargo clippy --workspace --all-targets --all-features --
 -D warnings`, `cargo test --workspace --all-features`, and `cargo deny check`.
 Run `quire coverage --scope . --json` and confirm acceptance-evidence tests use
-the imported bare `#[trace(...)]` attribute from `ix-trace-rs`. On a clean CI
+the imported bare `#[trace(...)]` attribute from `ix-trace-rs`, and confirm each
+TC/AC argument in those attributes is discovered and bound. A marker that
+compiles but hides one or more continuation-line arguments from the configured
+Quire Rust trace reader fails this check. Report the first-party population as
+repository-owned Rust under `src/` and `tests/`; classify any symbols discovered
+under `vendor/` as dependency-owned and governed by that dependency's matrix
+rather than silently including them in the first-party denominator. On a clean CI
 runner with no cross-repository credential, resolve the repository-contained
 trace crate snapshot and verify its recorded upstream revision before running
-the Rust gates.
+the Rust gates. Read `AGENTS.md` and `LICENSE-DECISION.md`; require an available
+Cargo gate and pointers to `Cargo.toml`, `Cargo.lock`, and
+`docs/artifact-rights.md`, and reject claims that a removed npm manifest or
+JavaScript package remains current implementation evidence.
 
 ## Expected Results
 
 No JavaScript or TypeScript executable source remains, no unsafe code compiles,
 all four Rust gates exit successfully, and compiler-checked trace markers back
-every claimed matrix row. The clean runner obtains the exact reviewed trace
-macro source without private dependency authentication.
+every claimed matrix row and each named acceptance criterion. The coverage claim
+states its first-party population and separately identifies vendored dependency
+symbols as outside that population. The clean runner obtains the exact reviewed trace
+macro source without private dependency authentication. Maintained contributor
+and license guidance names the implemented Cargo workflow and Rust dependencies
+through their authoritative inventory and rights records, without stale npm or
+JavaScript implementation claims.

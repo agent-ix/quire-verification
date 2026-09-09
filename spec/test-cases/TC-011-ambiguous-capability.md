@@ -19,6 +19,5 @@ Add a second compatible capability for one selected property, omit
 
 ## Expected Results
 
-Planning fails with an ambiguity diagnostic. This procedure is specified but not
-yet automated.
-
+Planning fails with an ambiguity diagnostic through the tagged Rust acceptance
+test.

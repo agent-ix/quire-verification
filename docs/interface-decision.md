@@ -34,9 +34,13 @@ non-production environment authorization and an injection binding.
 
 `TechniqueResult` keeps execution, logical outcome, activation, participation,
 assumptions, observation adequacy, exact scope, provenance, and native artifact
-references as separate fields. The compatibility layer assesses results but does
-not retain artifacts or decide whether the evidence is sufficient. Those remain
-Quoin and human-owner responsibilities.
+references as separate fields. Each evaluated result also retains one or more
+closed oracle contributions that identify its oracle and observation and state
+whether their relationship is independent, shared, derived, or unknown. The
+compatibility layer validates contribution identity and lineage, reports
+dependence among uniquely selected results, and assesses results. It does not
+retain referenced artifacts or decide whether the evidence is sufficient.
+Those remain Quoin and human-owner responsibilities.
 
 ## Provisional shared identity seam
 
