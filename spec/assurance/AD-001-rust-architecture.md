@@ -62,6 +62,12 @@ typed envelope with stable codes.
 11. E02 draft-2 replaces draft-1 as a breaking private transition. The planner
     accepts only role-correct embedded envelopes that the selected strict reader
     validated in the caller's context; it provides no legacy fallback.
+12. Native runner requests are closed transport values emitted only for
+    applicable, ready, qualified `native-producer` work. A property budget
+    replaces rather than merges with the plan budget, both dimensions must fit
+    the capability's declared ceilings, and the wall-clock value cannot exceed
+    NFR-006's ten-second process boundary. Manual work remains outside this
+    invocation boundary.
 
 The rejected alternative was retaining the JavaScript prototype. A TypeScript
 port was also rejected because the component is eligible for the qualified path.
