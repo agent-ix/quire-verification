@@ -1,6 +1,6 @@
 {
   "assessment": {
-    "asOf": "2026-09-08T16:40:47Z",
+    "asOf": "2026-09-09T05:22:14Z",
     "denominator": 3,
     "evidenceOwner": "Quoin",
     "obligations": [
@@ -22,7 +22,7 @@
         ],
         "execution": {
           "detail": "checked 33 method definitions by techniqueId",
-          "elapsedMilliseconds": 10.765476,
+          "elapsedMilliseconds": 10.91171,
           "status": "completed"
         },
         "freshness": "fresh",
@@ -44,7 +44,7 @@
           "executionMode": "native-local",
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
-          "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "resultId": "RESULT-LOCAL-UNIT",
         "status": "supported"
@@ -67,7 +67,7 @@
         ],
         "execution": {
           "detail": "checked reversed and rotated catalog orders",
-          "elapsedMilliseconds": 36.43014,
+          "elapsedMilliseconds": 37.94218,
           "status": "completed"
         },
         "freshness": "fresh",
@@ -89,7 +89,7 @@
           "executionMode": "native-local",
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
-          "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "resultId": "RESULT-LOCAL-METAMORPHIC",
         "status": "supported"
@@ -138,7 +138,7 @@
           "executionMode": "native-local",
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
-          "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "resultId": "RESULT-LOCAL-HUMAN-REVIEW-PENDING",
         "status": "incomplete"
@@ -168,7 +168,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -179,14 +179,14 @@
           }
         ],
         "classification": "unknown",
-        "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+        "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
         "executionScope": {
           "paths": [
             "src/catalog.rs",
             "fixtures/quoin-catalog-export.json"
           ],
           "repository": "agent-ix/quire-verification",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "freshness": {
           "maxAgeSeconds": 2592000
@@ -204,7 +204,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -226,7 +226,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -251,7 +251,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -273,7 +273,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -297,7 +297,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -308,14 +308,14 @@
           }
         ],
         "classification": "unknown",
-        "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+        "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
         "executionScope": {
           "paths": [
             "src/catalog.rs",
             "fixtures/quoin-catalog-export.json"
           ],
           "repository": "agent-ix/quire-verification",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "freshness": {
           "maxAgeSeconds": 2592000
@@ -338,7 +338,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -363,7 +363,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -385,7 +385,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -400,14 +400,14 @@
       {
         "bindingRefs": [],
         "classification": "unknown",
-        "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+        "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
         "executionScope": {
           "paths": [
             "src/catalog.rs",
             "fixtures/quoin-catalog-export.json"
           ],
           "repository": "agent-ix/quire-verification",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
         },
         "freshness": {
           "maxAgeSeconds": 2592000
@@ -429,7 +429,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -451,7 +451,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -476,7 +476,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -498,7 +498,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -526,7 +526,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -586,7 +586,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -614,23 +614,7 @@
             "value": "LOCAL-HUMAN-REVIEW"
           }
         ],
-        "runnerRequest": {
-          "adapterId": "human-review-record",
-          "adapterVersion": "1",
-          "budget": {
-            "parallelism": 1,
-            "wallClockSeconds": 10
-          },
-          "capabilityId": "CAP-HUMAN-REVIEW",
-          "environmentPermissions": [],
-          "kind": "manual",
-          "nativeArtifactInterface": {
-            "mediaTypes": [
-              "application/json"
-            ],
-            "mode": "stdout-json"
-          }
-        },
+        "runnerRequest": null,
         "taskId": "verify:18:LOCAL-HUMAN-REVIEW:10:inspection",
         "techniqueId": "inspection"
       },
@@ -651,7 +635,7 @@
               "refVersion": "ix.artifact-ref/3-draft",
               "revision": {
                 "namespace": "quire-verification",
-                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+                "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
               },
               "wire": {
                 "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -684,6 +668,29 @@
           "environmentPermissions": [
             "read-repository-fixtures"
           ],
+          "input": {
+            "kind": "state",
+            "property": "all pinned method IDs and fields survive adaptation",
+            "snapshotRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:f719017942dd0ab18ce0ebe3cbea5a81185a487e1dfa107024e45bf3cc4fd288",
+                "identity": "snapshot:pinned-quoin-catalog",
+                "kind": "snapshot",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "quire-verification",
+                  "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
+                },
+                "wire": {
+                  "identity": "quire-verification/local-catalog-portfolio-v1",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          },
           "kind": "native-producer",
           "nativeArtifactInterface": {
             "mediaTypes": [
@@ -728,6 +735,12 @@
           "environmentPermissions": [
             "read-repository-fixtures"
           ],
+          "input": {
+            "kind": "relational",
+            "leftSubject": "catalog:original-order",
+            "relation": "adapted technique registry is bytewise equal",
+            "rightSubject": "catalog:permuted-order"
+          },
           "kind": "native-producer",
           "nativeArtifactInterface": {
             "mediaTypes": [
@@ -741,7 +754,7 @@
       }
     ]
   },
-  "producedAt": "2026-09-08T16:40:47Z",
+  "producedAt": "2026-09-09T05:22:14Z",
   "results": [
     {
       "activation": {
@@ -770,7 +783,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -781,10 +794,10 @@
         }
       ],
       "contractVersion": "quire-verification/e02-draft-2",
-      "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+      "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
       "execution": {
         "detail": "checked 33 method definitions by techniqueId",
-        "elapsedMilliseconds": 10.765476,
+        "elapsedMilliseconds": 10.91171,
         "status": "completed"
       },
       "executionScope": {
@@ -793,7 +806,7 @@
           "fixtures/quoin-catalog-export.json"
         ],
         "repository": "agent-ix/quire-verification",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "kind": "TechniqueResult",
       "logical": {
@@ -807,7 +820,7 @@
         "status": "complete"
       },
       "planId": "PLAN-LOCAL-CATALOG-PORTFOLIO",
-      "producedAt": "2026-09-08T16:40:47Z",
+      "producedAt": "2026-09-09T05:22:14Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
         "kind": "artifact",
@@ -819,7 +832,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -834,7 +847,7 @@
         "executionMode": "native-local",
         "producer": "quire-verification-local-portfolio",
         "producerVersion": "1",
-        "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "resultId": "RESULT-LOCAL-UNIT",
       "runRef": {
@@ -847,7 +860,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -867,7 +880,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -907,7 +920,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -918,10 +931,10 @@
         }
       ],
       "contractVersion": "quire-verification/e02-draft-2",
-      "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+      "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
       "execution": {
         "detail": "checked reversed and rotated catalog orders",
-        "elapsedMilliseconds": 36.43014,
+        "elapsedMilliseconds": 37.94218,
         "status": "completed"
       },
       "executionScope": {
@@ -930,7 +943,7 @@
           "fixtures/quoin-catalog-export.json"
         ],
         "repository": "agent-ix/quire-verification",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "kind": "TechniqueResult",
       "logical": {
@@ -944,7 +957,7 @@
         "status": "complete"
       },
       "planId": "PLAN-LOCAL-CATALOG-PORTFOLIO",
-      "producedAt": "2026-09-08T16:40:47Z",
+      "producedAt": "2026-09-09T05:22:14Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
         "kind": "artifact",
@@ -956,7 +969,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -971,7 +984,7 @@
         "executionMode": "native-local",
         "producer": "quire-verification-local-portfolio",
         "producerVersion": "1",
-        "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "resultId": "RESULT-LOCAL-METAMORPHIC",
       "runRef": {
@@ -984,7 +997,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -1004,7 +1017,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -1028,7 +1041,7 @@
       "assumptions": [],
       "bindingRefs": [],
       "contractVersion": "quire-verification/e02-draft-2",
-      "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
+      "dependencyClosure": "sha256-jcs:ba89ea770371c7cc792aba18ed47d6946a65e6c430ebcc6e98f2bc8f952d5687",
       "execution": {
         "detail": "verification-owner review pending",
         "status": "not-run"
@@ -1039,7 +1052,7 @@
           "fixtures/quoin-catalog-export.json"
         ],
         "repository": "agent-ix/quire-verification",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "revision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "kind": "TechniqueResult",
       "logical": {
@@ -1051,7 +1064,7 @@
         "status": "not-started"
       },
       "planId": "PLAN-LOCAL-CATALOG-PORTFOLIO",
-      "producedAt": "2026-09-08T16:40:47Z",
+      "producedAt": "2026-09-09T05:22:14Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
         "kind": "artifact",
@@ -1063,7 +1076,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -1078,7 +1091,7 @@
         "executionMode": "native-local",
         "producer": "quire-verification-local-portfolio",
         "producerVersion": "1",
-        "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
       },
       "resultId": "RESULT-LOCAL-HUMAN-REVIEW-PENDING",
       "runRef": {
@@ -1091,7 +1104,7 @@
           "refVersion": "ix.artifact-ref/3-draft",
           "revision": {
             "namespace": "quire-verification",
-            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
           },
           "wire": {
             "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -1111,7 +1124,7 @@
             "refVersion": "ix.artifact-ref/3-draft",
             "revision": {
               "namespace": "quire-verification",
-              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              "value": "86ebb0b8aedde235af90cb0d80ec16244584b135"
             },
             "wire": {
               "identity": "quire-verification/local-catalog-portfolio-v1",
@@ -1127,13 +1140,13 @@
   ],
   "runEffort": {
     "manual": "pending verification-owner",
-    "metamorphicMilliseconds": 36.43014,
-    "unitMilliseconds": 10.765476
+    "metamorphicMilliseconds": 37.94218,
+    "unitMilliseconds": 10.91171
   },
   "schemaVersion": "quire-verification/local-portfolio-report/v1",
   "setupEffort": {
     "kind": "one-time",
     "measuredSeparatelyIn": "docs/evaluation-report.md"
   },
-  "sourceRevision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+  "sourceRevision": "86ebb0b8aedde235af90cb0d80ec16244584b135"
 }
