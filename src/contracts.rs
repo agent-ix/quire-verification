@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex, OnceLock};
 
-use jsonschema::{Draft, Validator};
+use jsonschema::{Draft, Registry, Validator};
 use serde::Serialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -279,9 +279,9 @@ static DEFINITION_VALIDATORS: OnceLock<Mutex<BTreeMap<String, Arc<Validator>>>> 
 #[derive(Clone, Debug)]
 pub enum PublicContract {
     /// A portable verification technique definition.
-    TechniqueDefinition(wire::TechniqueDefinition),
+    TechniqueDefinition(Box<wire::TechniqueDefinition>),
     /// A qualified producer capability.
-    ToolCapability(wire::ToolCapability),
+    ToolCapability(Box<wire::ToolCapability>),
     /// An authored selection policy.
     SelectionPolicy(Box<wire::SelectionPolicy>),
     /// A prerequisite-aware verification plan.
@@ -361,8 +361,12 @@ pub fn validate_contract(value: Value) -> Result<PublicContract, VerificationErr
         )
     })?;
     match kind {
-        "TechniqueDefinition" => decode(value).map(PublicContract::TechniqueDefinition),
-        "ToolCapability" => decode(value).map(PublicContract::ToolCapability),
+        "TechniqueDefinition" => decode(value)
+            .map(Box::new)
+            .map(PublicContract::TechniqueDefinition),
+        "ToolCapability" => decode(value)
+            .map(Box::new)
+            .map(PublicContract::ToolCapability),
         "SelectionPolicy" => decode(value)
             .map(Box::new)
             .map(PublicContract::SelectionPolicy),
@@ -435,12 +439,8 @@ fn definition_validator(name: &str) -> Result<Arc<Validator>, VerificationError>
         "$defs": definitions,
         "$ref": format!("#/$defs/{name}"),
     });
-    let validator = jsonschema::options()
-        .with_draft(Draft::Draft202012)
-        .build(&wrapper)
-        .map_err(|error| {
-            VerificationError::new(VerificationErrorCode::SchemaViolation, error.to_string())
-        })?;
+    let validator = build_contract_validator(&wrapper)
+        .map_err(|error| VerificationError::new(VerificationErrorCode::SchemaViolation, error))?;
     let validator = Arc::new(validator);
     let mut validators = cache.lock().map_err(|_| validator_cache_error())?;
     Ok(validators
@@ -621,7 +621,7 @@ fn decode<T: serde::de::DeserializeOwned>(value: Value) -> Result<T, Verificatio
 
 fn contract_schema() -> Result<&'static Value, VerificationError> {
     match CONTRACT_SCHEMA.get_or_init(|| {
-        serde_json::from_str(include_str!("../contracts/e02-draft-1.schema.json"))
+        serde_json::from_str(include_str!("../contracts/e02-draft-2.schema.json"))
             .map_err(|error| error.to_string())
     }) {
         Ok(schema) => Ok(schema),
@@ -635,12 +635,9 @@ fn contract_schema() -> Result<&'static Value, VerificationError> {
 fn contract_validator() -> Result<&'static Validator, VerificationError> {
     match CONTRACT_VALIDATOR.get_or_init(|| {
         let schema: Value =
-            serde_json::from_str(include_str!("../contracts/e02-draft-1.schema.json"))
+            serde_json::from_str(include_str!("../contracts/e02-draft-2.schema.json"))
                 .map_err(|error| error.to_string())?;
-        jsonschema::options()
-            .with_draft(Draft::Draft202012)
-            .build(&schema)
-            .map_err(|error| error.to_string())
+        build_contract_validator(&schema)
     }) {
         Ok(validator) => Ok(validator),
         Err(detail) => Err(VerificationError::new(
@@ -648,4 +645,21 @@ fn contract_validator() -> Result<&'static Validator, VerificationError> {
             detail.clone(),
         )),
     }
+}
+
+fn build_contract_validator(schema: &Value) -> Result<Validator, String> {
+    let shared: Value = serde_json::from_str(include_str!(
+        "../contracts/shared-reference-2-draft/schema.json"
+    ))
+    .map_err(|error| error.to_string())?;
+    let registry = Registry::new()
+        .add("urn:ix:shared-reference:2-draft", &shared)
+        .map_err(|error| error.to_string())?
+        .prepare()
+        .map_err(|error| error.to_string())?;
+    jsonschema::options()
+        .with_draft(Draft::Draft202012)
+        .with_registry(&registry)
+        .build(schema)
+        .map_err(|error| error.to_string())
 }

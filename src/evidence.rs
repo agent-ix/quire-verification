@@ -39,16 +39,12 @@ pub fn assess_evidence(packet: &Value) -> Result<Value, VerificationError> {
     let mut obligations = Vec::with_capacity(inventory.len());
     for property in inventory {
         validate_schema_definition("EvidenceObligation", property)?;
-        let property_identity = string_field(
-            field(property, "propertyRef", "property")?,
-            "identity",
-            "property.propertyRef",
-        )?;
+        let property_identity = artifact_identity(field(property, "propertyRef", "property")?)?;
         let candidates = results
             .iter()
             .filter(|result| {
                 result
-                    .pointer("/propertyRef/identity")
+                    .pointer("/propertyRef/value/identity")
                     .and_then(Value::as_str)
                     == Some(property_identity)
             })
@@ -119,6 +115,14 @@ pub fn assess_evidence(packet: &Value) -> Result<Value, VerificationError> {
         "sufficiencyDecision": "not-made",
         "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding",
     }))
+}
+
+fn artifact_identity(reference: &Value) -> Result<&str, VerificationError> {
+    string_field(
+        field(reference, "value", "artifact envelope")?,
+        "identity",
+        "artifact envelope.value",
+    )
 }
 
 /// Returns every identity or scope dimension that differs under RFC 8785 JCS.

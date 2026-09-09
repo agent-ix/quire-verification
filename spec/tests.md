@@ -9,9 +9,9 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
-bounded-parser-portfolio slices to a concrete test case. The 30 implemented cases
-run in Rust through compiler-checked `ix-trace-rs` markers; TC-027, TC-028,
-TC-030, and TC-033 through TC-037 remain pending until their reviewed
+bounded-parser-portfolio slices to a concrete test case. The 31 implemented cases
+run in Rust through compiler-checked `ix-trace-rs` markers; TC-027, TC-030, and
+TC-033 through TC-037 remain pending until their reviewed
 implementation and dependencies are ready. The rejected JavaScript prototype is
 not evidence.
 
@@ -43,7 +43,7 @@ not evidence.
 | Functional Req | Acceptance Criteria | Test Cases | Coverage Status |
 |----------------|---------------------|------------|-----------------|
 | FR-001 | FR-001-AC-1..5 | TC-001, TC-002 | ✅ Complete |
-| FR-002 | FR-002-AC-1..4 | TC-003, TC-004, TC-028 | 🚧 Partial |
+| FR-002 | FR-002-AC-1..4 | TC-003, TC-004, TC-028 | ✅ Complete |
 | FR-003 | FR-003-AC-1..3 | TC-005, TC-006 | ✅ Complete |
 | FR-004 | FR-004-AC-1..3 | TC-007, TC-008, TC-021 | ✅ Complete |
 | FR-005 | FR-005-AC-1..6 | TC-009, TC-010, TC-011 | ✅ Complete |
@@ -56,7 +56,7 @@ not evidence.
 | FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
 | FR-013 | FR-013-AC-1..5 | TC-026, TC-030 | ✅ Complete |
 | FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
-| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
+| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Partial |
 | FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
 | FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on the Plan-003 gate |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
@@ -69,7 +69,7 @@ not evidence.
 | Non-Functional Req | Verification Method | Evidence/Test Cases | Status |
 |--------------------|---------------------|---------------------|--------|
 | NFR-001 | Property and deterministic-order tests | TC-012, TC-013, TC-015, TC-016, TC-018 | ✅ Complete |
-| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006, TC-028 | 🚧 Partial |
+| NFR-002 | Static inspection and fixture validation | TC-003, TC-005, TC-006, TC-028 | ✅ Complete |
 | NFR-003 | Adverse-state tests and claim inspection | TC-008, TC-014, TC-015, TC-020 | ✅ Complete |
 | NFR-004 | Rust source, quality gates, and maintained toolchain/dependency guidance | TC-022 | ✅ Complete |
 | NFR-005 | Boundary resource-limit tests | TC-023 | ✅ Complete |
@@ -106,7 +106,7 @@ not evidence.
 | TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
 | TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-5 | ✅ Passed |
 | TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
-| TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-002-AC-4, FR-015-AC-1..FR-015-AC-4, NFR-002-AC-3 | 🚧 Planned |
+| TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-002-AC-4, FR-015-AC-1..FR-015-AC-4, NFR-002-AC-3 | ✅ Passed |
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ✅ Implemented |
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |

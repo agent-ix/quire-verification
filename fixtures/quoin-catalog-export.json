@@ -7,11 +7,23 @@
     "modulePath": "spec_artifacts_process/manifest.yaml",
     "license": "AGPL-3.0-or-later",
     "sourceRef": {
-      "authority": "github.com/agent-ix/spec-artifacts-process",
-      "identity": "module:spec-artifacts-process/verification_catalog",
-      "revision": "61a20e010d5e758f52864ad3152ccdb304a39d27",
-      "digest": "git:61a20e010d5e758f52864ad3152ccdb304a39d27",
-      "profile": "quoin-verification-catalog/v1"
+      "wireVersion": "ix.shared-reference/2-draft",
+      "kind": "artifact",
+      "value": {
+        "refVersion": "ix.artifact-ref/3-draft",
+        "kind": "source",
+        "authority": "github.com/agent-ix/spec-artifacts-process",
+        "identity": "module:spec-artifacts-process/verification_catalog",
+        "revision": {
+          "namespace": "quire-verification",
+          "value": "61a20e010d5e758f52864ad3152ccdb304a39d27"
+        },
+        "digest": "sha256:0b7caed32bb93a5d2edaa8e847a7b602779e30a7cc8c29b15c65d5b0541d32fb",
+        "wire": {
+          "identity": "quoin-verification-catalog/v1",
+          "version": "1"
+        }
+      }
     }
   },
   "catalog": {

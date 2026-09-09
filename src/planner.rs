@@ -9,9 +9,10 @@ use chrono::{DateTime, FixedOffset};
 use serde_json::{Value, json};
 
 use crate::contracts::{
-    VerificationError, VerificationErrorCode, contract_version, jcs_equal, validate_contract,
-    validate_plan_value, validate_schema_definition,
+    VerificationError, VerificationErrorCode, contract_version, jcs_canonicalize, jcs_equal,
+    validate_contract, validate_plan_value, validate_schema_definition,
 };
+use crate::shared_reference::ValidatedSharedReference;
 use crate::value::{arrays_field, field, object, optional_array, string_field};
 
 const FAULT_SAFETY_PREREQUISITES: [(&str, &str); 3] = [
@@ -24,7 +25,10 @@ const FAULT_SAFETY_PREREQUISITES: [(&str, &str); 3] = [
 ///
 /// # Errors
 /// Returns an input, timestamp, schema, capability, or plan-graph error.
-pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationError> {
+pub fn build_verification_plan(
+    request: &Value,
+    validated_references: &[ValidatedSharedReference],
+) -> Result<Value, VerificationError> {
     object(request, "plan request")?;
     let plan_id = string_field(request, "planId", "plan request")?;
     let policy = field(request, "policy", "plan request")?;
@@ -39,7 +43,8 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
         .map(|value| parse_timestamp(value, "policy.validUntil").map(|until| as_of > until))
         .transpose()?
         .unwrap_or(false);
-    let properties = collect_properties(request)?;
+    let reference_index = validated_reference_index(validated_references);
+    let properties = collect_properties(request, &reference_index)?;
     let inventory = normalized_inventory(&properties)?;
     let capabilities = collect_capabilities(request)?;
     let available = optional_array(request, "availablePrerequisites", "plan request")?
@@ -85,10 +90,21 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
     Ok(plan)
 }
 
-fn collect_properties(request: &Value) -> Result<BTreeMap<String, &Value>, VerificationError> {
+fn validated_reference_index(references: &[ValidatedSharedReference]) -> BTreeMap<&[u8], &str> {
+    references
+        .iter()
+        .filter_map(ValidatedSharedReference::planning_key)
+        .collect()
+}
+
+fn collect_properties<'a>(
+    request: &'a Value,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<BTreeMap<String, &'a Value>, VerificationError> {
     let mut properties = BTreeMap::new();
     for property in arrays_field(request, "properties", "plan request")? {
         validate_schema_definition("PropertyInventoryItem", property)?;
+        validate_property_input(property, validated_references)?;
         let property_id = string_field(property, "propertyId", "property")?.to_owned();
         if properties.insert(property_id.clone(), property).is_some() {
             return Err(VerificationError::new(
@@ -99,6 +115,76 @@ fn collect_properties(request: &Value) -> Result<BTreeMap<String, &Value>, Verif
         }
     }
     Ok(properties)
+}
+
+fn validate_property_input(
+    property: &Value,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<(), VerificationError> {
+    let input = field(property, "input", "property")?;
+    let kind = string_field(input, "kind", "property.input")?;
+    match kind {
+        "state" => validate_input_reference(input, "snapshotRef", "snapshot", validated_references),
+        "relational" => {
+            let left = string_field(input, "leftSubject", "property.input")?;
+            let right = string_field(input, "rightSubject", "property.input")?;
+            if left == right {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::InvalidInput,
+                    "relational input subjects must be distinct",
+                )
+                .with_context(
+                    "property_id",
+                    string_field(property, "propertyId", "property")?,
+                ));
+            }
+            Ok(())
+        }
+        "trace" => validate_input_reference(input, "traceRef", "trace", validated_references),
+        "fault" => {
+            validate_input_reference(input, "faultModelRef", "fault-model", validated_references)?;
+            validate_input_reference(input, "mitigationOracleRef", "oracle", validated_references)
+        }
+        "manual" => validate_input_reference(
+            input,
+            "reviewProcedureRef",
+            "review-procedure",
+            validated_references,
+        ),
+        _ => Err(VerificationError::new(
+            VerificationErrorCode::SchemaViolation,
+            "unknown property input kind",
+        )
+        .with_context("input_kind", kind)),
+    }
+}
+
+fn validate_input_reference(
+    input: &Value,
+    field_name: &str,
+    expected_role: &str,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<(), VerificationError> {
+    let envelope = field(input, field_name, "property.input")?;
+    let canonical = jcs_canonicalize(envelope)?;
+    let Some(role) = validated_references.get(canonical.as_slice()) else {
+        return Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "property input reference was not accepted by the strict reader",
+        )
+        .with_context("field", field_name)
+        .with_context("expected_role", expected_role));
+    };
+    if *role != expected_role {
+        return Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "validated property input reference has the wrong role",
+        )
+        .with_context("actual_role", *role)
+        .with_context("expected_role", expected_role)
+        .with_context("field", field_name));
+    }
+    Ok(())
 }
 
 fn normalized_inventory(
@@ -253,9 +339,6 @@ fn setup_tasks(
         tasks.push(json!({
             "taskId": setup_id, "kind": "manual-prerequisite",
             "prerequisite": prerequisite, "requiredBy": [verification_id],
-            "input": {"kind": "manual", "action": "satisfy-prerequisite", "prerequisite": prerequisite,
-                "reviewProcedure": format!("Resolve {kind}:{id} and record its source and disposition."),
-                "requiredDisposition": ["satisfied", "deferred", "rejected"]},
             "readiness": "blocked",
             "dependencies": [], "missingPrerequisites": [prerequisite], "runnerRequest": null,
             "invocationAllowed": false,

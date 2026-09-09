@@ -48,7 +48,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-SUPPORTED",
@@ -108,7 +108,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-FAILED",
@@ -163,7 +163,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-UNSUPPORTED",
@@ -235,7 +235,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-INADQUATE",
@@ -290,7 +290,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-UNTRIGGERED",
@@ -344,7 +344,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-STALE",
@@ -419,7 +419,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-INCOMPLETE",
@@ -474,7 +474,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-VIOLATED",
@@ -535,7 +535,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-PARTIAL",
@@ -590,7 +590,7 @@
           "adapterVersion": "1",
           "executionMode": "fixture-replay",
           "producer": "quire-verification-fixture",
-          "producerVersion": "e02-draft-1",
+          "producerVersion": "e02-draft-2",
           "sourceRevision": "parser-r1"
         },
         "resultId": "RESULT-ASSUMPTION-UNMET",
@@ -606,17 +606,29 @@
       "parallelism": 1,
       "wallClockSeconds": 60
     },
-    "contractVersion": "quire-verification/e02-draft-1",
+    "contractVersion": "quire-verification/e02-draft-2",
     "evidenceOwner": "Quoin",
     "inventory": [
       {
         "bindingRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:bindingparserfault",
-            "identity": "binding:parser-fault",
-            "profile": "quire-fault/e02-fixture-v1",
-            "revision": "binding-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "binding",
+              "authority": "fixture.agent-ix.local",
+              "identity": "binding:parser-fault",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "binding-r1"
+              },
+              "digest": "sha256:99cc9a00c665faef84947394782fff7447bb989a80a7d328f85edb89ad12adf3",
+              "wire": {
+                "identity": "quire-fault/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ],
         "dependencyClosure": "sha256:closure-fault-r1",
@@ -633,32 +645,86 @@
         },
         "input": {
           "faultModelRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:faultreaderror00",
-            "identity": "fault:read-error",
-            "profile": "quire-fault/e02-fixture-v1",
-            "revision": "fault-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "fault-model",
+              "authority": "fixture.agent-ix.local",
+              "identity": "fault:read-error",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "fault-r1"
+              },
+              "digest": "sha256:75cd1c37ba5758f14cbc397c12ee737562b53b4852bc7d3f0bf2fa7438c8d950",
+              "wire": {
+                "identity": "quire-fault/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           },
           "kind": "fault",
-          "mitigationOracle": "independent recovery event",
-          "requestedInjectionSite": "fixture-only"
+          "requestedInjectionSite": "fixture-only",
+          "mitigationOracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "independent recovery event",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:a5d6f527ab1cbae2aae3efa9a91e54341fe2e31284e087d307c79ffdd5c301de",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          }
         },
         "profile": "quire-fault/e02-fixture-v1",
         "propertyId": "PROP-FAULT",
         "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "digest": "sha256:propertyparserrecovery",
-          "identity": "property:parser-recovery",
-          "profile": "quire-fault/e02-fixture-v1",
-          "revision": "property-r1"
+          "wireVersion": "ix.shared-reference/2-draft",
+          "kind": "artifact",
+          "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": "property",
+            "authority": "fixture.agent-ix.local",
+            "identity": "property:parser-recovery",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "property-r1"
+            },
+            "digest": "sha256:f5ebe4b3e55571c7349d6581d820e3b9722168b9d44521cce274a42a493c1ad0",
+            "wire": {
+              "identity": "quire-fault/e02-fixture-v1",
+              "version": "1"
+            }
+          }
         },
         "subjectRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectparser000",
-            "identity": "subject:parser",
-            "profile": "quire-fault/e02-fixture-v1",
-            "revision": "parser-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:parser",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "parser-r1"
+              },
+              "digest": "sha256:0228cf3cb0dc60dabc6ed5ccf4cb0865356ddc1c1c783a9cc028a1837250082a",
+              "wire": {
+                "identity": "quire-fault/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ]
       },
@@ -682,35 +748,89 @@
             "revise",
             "reject"
           ],
-          "reviewProcedure": "Compare source spans to the authored fixture."
+          "reviewProcedureRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "review-procedure",
+              "authority": "fixture.agent-ix.local",
+              "identity": "Compare source spans to the authored fixture.",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:142dc3872d47b0ad4477d3acc92c0351851d8850b6938eea3eace5e550ebed95",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          }
         },
         "profile": "quire-manual/e02-fixture-v1",
         "propertyId": "PROP-MANUAL",
         "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "digest": "sha256:propertysourcecorrespondencereview",
-          "identity": "property:source-correspondence-review",
-          "profile": "quire-manual/e02-fixture-v1",
-          "revision": "property-r1"
+          "wireVersion": "ix.shared-reference/2-draft",
+          "kind": "artifact",
+          "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": "property",
+            "authority": "fixture.agent-ix.local",
+            "identity": "property:source-correspondence-review",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "property-r1"
+            },
+            "digest": "sha256:2ef0c87d1f5b53dcc4b49fa4b7bf86d249eb71ec42ae83888711fe761aed00f2",
+            "wire": {
+              "identity": "quire-manual/e02-fixture-v1",
+              "version": "1"
+            }
+          }
         },
         "subjectRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectsourcemap",
-            "identity": "subject:source-map",
-            "profile": "quire-manual/e02-fixture-v1",
-            "revision": "source-map-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:source-map",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "source-map-r1"
+              },
+              "digest": "sha256:165880b26c5bb980703abaf54b77f6f911f61e07b5c05ec7c2d8ed457b3376ae",
+              "wire": {
+                "identity": "quire-manual/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ]
       },
       {
         "bindingRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:bindingroundtrip",
-            "identity": "binding:roundtrip",
-            "profile": "quire-relational/e02-fixture-v1",
-            "revision": "binding-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "binding",
+              "authority": "fixture.agent-ix.local",
+              "identity": "binding:roundtrip",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "binding-r1"
+              },
+              "digest": "sha256:aa9f4823e51024072c86a0f58515787b2601f4bc13f926ff3b9ef46662b423b0",
+              "wire": {
+                "identity": "quire-relational/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ],
         "dependencyClosure": "sha256:closure-relation-r1",
@@ -733,37 +853,85 @@
         "profile": "quire-relational/e02-fixture-v1",
         "propertyId": "PROP-RELATION",
         "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "digest": "sha256:propertyparserroundtrip",
-          "identity": "property:parser-roundtrip",
-          "profile": "quire-relational/e02-fixture-v1",
-          "revision": "property-r1"
+          "wireVersion": "ix.shared-reference/2-draft",
+          "kind": "artifact",
+          "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": "property",
+            "authority": "fixture.agent-ix.local",
+            "identity": "property:parser-roundtrip",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "property-r1"
+            },
+            "digest": "sha256:fe94459c8d49bcd789351a00c5733936ccc2c70c8aa3b33a1e07ac23d16515f7",
+            "wire": {
+              "identity": "quire-relational/e02-fixture-v1",
+              "version": "1"
+            }
+          }
         },
         "subjectRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectparserbefore",
-            "identity": "subject:parser-before",
-            "profile": "quire-relational/e02-fixture-v1",
-            "revision": "parser-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:parser-before",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "parser-r1"
+              },
+              "digest": "sha256:3122608eb8f886bd760ef77b9d93b975c7cc129dbeaa0ed8fdd13759ae64d711",
+              "wire": {
+                "identity": "quire-relational/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           },
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectparserafter",
-            "identity": "subject:parser-after",
-            "profile": "quire-relational/e02-fixture-v1",
-            "revision": "parser-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:parser-after",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "parser-r1"
+              },
+              "digest": "sha256:848282da94a6cb4c5bbf3fe35736bf67e9344c9a029b357f7b79bc8e142743ab",
+              "wire": {
+                "identity": "quire-relational/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ]
       },
       {
         "bindingRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:bindingparserstate",
-            "identity": "binding:parser-state",
-            "profile": "quire-state/e02-fixture-v1",
-            "revision": "binding-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "binding",
+              "authority": "fixture.agent-ix.local",
+              "identity": "binding:parser-state",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "binding-r1"
+              },
+              "digest": "sha256:273d9e3dc2efd29a0992ca53f47564c1d28683fb8105f1c5cdda3254eb891f65",
+              "wire": {
+                "identity": "quire-state/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ],
         "classification": "unknown",
@@ -782,40 +950,88 @@
           "kind": "state",
           "property": "state is internally consistent",
           "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:snapshotparservalid",
-            "identity": "snapshot:parser-valid",
-            "profile": "quire-state/e02-fixture-v1",
-            "revision": "snapshot-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "snapshot",
+              "authority": "fixture.agent-ix.local",
+              "identity": "snapshot:parser-valid",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "snapshot-r1"
+              },
+              "digest": "sha256:c2fb91ca26d3ad10fae70139acf281f5b21e7c82ac125579bd82d00f9b1e8652",
+              "wire": {
+                "identity": "quire-state/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         },
         "profile": "quire-state/e02-fixture-v1",
         "propertyId": "PROP-STATE",
         "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "digest": "sha256:propertyparserstateinvariant",
-          "identity": "property:parser-state-invariant",
-          "profile": "quire-state/e02-fixture-v1",
-          "revision": "property-r1"
+          "wireVersion": "ix.shared-reference/2-draft",
+          "kind": "artifact",
+          "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": "property",
+            "authority": "fixture.agent-ix.local",
+            "identity": "property:parser-state-invariant",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "property-r1"
+            },
+            "digest": "sha256:c0736aa820a06fec22e2fc068ed70366a92ed54f089dec6bc00a0d2ec54890dd",
+            "wire": {
+              "identity": "quire-state/e02-fixture-v1",
+              "version": "1"
+            }
+          }
         },
         "subjectRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectparser000",
-            "identity": "subject:parser",
-            "profile": "quire-state/e02-fixture-v1",
-            "revision": "parser-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:parser",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "parser-r1"
+              },
+              "digest": "sha256:0228cf3cb0dc60dabc6ed5ccf4cb0865356ddc1c1c783a9cc028a1837250082a",
+              "wire": {
+                "identity": "quire-state/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ]
       },
       {
         "bindingRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:bindingparserevents",
-            "identity": "binding:parser-events",
-            "profile": "quire-trace/e02-fixture-v1",
-            "revision": "binding-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "binding",
+              "authority": "fixture.agent-ix.local",
+              "identity": "binding:parser-events",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "binding-r1"
+              },
+              "digest": "sha256:027d737d81c69d90e0561a9abf56b2b8a440ebab9443b999a90c6ea7e3161f17",
+              "wire": {
+                "identity": "quire-trace/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ],
         "dependencyClosure": "sha256:closure-trace-r1",
@@ -834,29 +1050,65 @@
           "completion": "closed-fixture",
           "kind": "trace",
           "traceRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:traceparserevents",
-            "identity": "trace:parser-events",
-            "profile": "quire-trace/e02-fixture-v1",
-            "revision": "trace-fixture-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "trace",
+              "authority": "fixture.agent-ix.local",
+              "identity": "trace:parser-events",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "trace-fixture-r1"
+              },
+              "digest": "sha256:0b2a52d862d143854501a18c223c1661d052a1cb5b1b4f6b5f1449b6e28b05f9",
+              "wire": {
+                "identity": "quire-trace/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         },
         "profile": "quire-trace/e02-fixture-v1",
         "propertyId": "PROP-TRACE",
         "propertyRef": {
-          "authority": "fixture.agent-ix.local",
-          "digest": "sha256:propertyparsereventorder",
-          "identity": "property:parser-event-order",
-          "profile": "quire-trace/e02-fixture-v1",
-          "revision": "property-r1"
+          "wireVersion": "ix.shared-reference/2-draft",
+          "kind": "artifact",
+          "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": "property",
+            "authority": "fixture.agent-ix.local",
+            "identity": "property:parser-event-order",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "property-r1"
+            },
+            "digest": "sha256:125a86319930966aa2a937ae2dcb8109982a31b68a32d7fd64870e38b4e09fb4",
+            "wire": {
+              "identity": "quire-trace/e02-fixture-v1",
+              "version": "1"
+            }
+          }
         },
         "subjectRefs": [
           {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:subjectparsertrace",
-            "identity": "subject:parser-trace",
-            "profile": "quire-trace/e02-fixture-v1",
-            "revision": "parser-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "source",
+              "authority": "fixture.agent-ix.local",
+              "identity": "subject:parser-trace",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "parser-r1"
+              },
+              "digest": "sha256:4b75bd0c1a3739a312178db6c18de4422414658f04bcb90befd41bdf2480551f",
+              "wire": {
+                "identity": "quire-trace/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         ]
       }
@@ -867,11 +1119,23 @@
       "freshness": "current",
       "policyId": "POLICY-PARSER-FIXTURE",
       "sourceRef": {
-        "authority": "fixture.agent-ix.local",
-        "digest": "sha256:policyparserbaseline",
-        "identity": "policy:parser-baseline",
-        "profile": "quire-selection-policy/e02-fixture-v1",
-        "revision": "policy-r1"
+        "wireVersion": "ix.shared-reference/2-draft",
+        "kind": "artifact",
+        "value": {
+          "refVersion": "ix.artifact-ref/3-draft",
+          "kind": "source",
+          "authority": "fixture.agent-ix.local",
+          "identity": "policy:parser-baseline",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "policy-r1"
+          },
+          "digest": "sha256:9b714580e69c5ba7f9097c05306a79760927e9c181d573dfba7ed21cea970a5e",
+          "wire": {
+            "identity": "quire-selection-policy/e02-fixture-v1",
+            "version": "1"
+          }
+        }
       },
       "validUntil": "2026-09-30T00:00:00Z",
       "version": "1"
@@ -881,21 +1145,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "non-production-fault-scope",
-            "kind": "environment-authorization",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve environment-authorization:non-production-fault-scope and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -915,21 +1164,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "confirmed-injection-site",
-            "kind": "injection-binding",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve injection-binding:confirmed-injection-site and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -949,21 +1183,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "independent-effect-observation",
-            "kind": "observation-binding",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve observation-binding:independent-effect-observation and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -983,21 +1202,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "CAP-RELATION",
-            "kind": "capability-qualification",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve capability-qualification:CAP-RELATION and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -1017,21 +1221,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "parser-roundtrip-domain",
-            "kind": "common-domain",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve common-domain:parser-roundtrip-domain and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -1051,21 +1240,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "roundtrip-equivalence",
-            "kind": "relation-binding",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve relation-binding:roundtrip-equivalence and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -1085,21 +1259,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "CAP-TRACE",
-            "kind": "capability-qualification",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve capability-qualification:CAP-TRACE and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -1119,21 +1278,6 @@
       {
         "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
-            "id": "parser-event-binding",
-            "kind": "observation-binding",
-            "required": true
-          },
-          "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
-          ],
-          "reviewProcedure": "Resolve observation-binding:parser-event-binding and record its source and disposition."
-        },
         "invocationAllowed": false,
         "kind": "manual-prerequisite",
         "missingPrerequisites": [
@@ -1160,15 +1304,45 @@
         "gaps": [],
         "input": {
           "faultModelRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:faultreaderror00",
-            "identity": "fault:read-error",
-            "profile": "quire-fault/e02-fixture-v1",
-            "revision": "fault-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "fault-model",
+              "authority": "fixture.agent-ix.local",
+              "identity": "fault:read-error",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "fault-r1"
+              },
+              "digest": "sha256:75cd1c37ba5758f14cbc397c12ee737562b53b4852bc7d3f0bf2fa7438c8d950",
+              "wire": {
+                "identity": "quire-fault/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           },
           "kind": "fault",
-          "mitigationOracle": "independent recovery event",
-          "requestedInjectionSite": "fixture-only"
+          "requestedInjectionSite": "fixture-only",
+          "mitigationOracleRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "oracle",
+              "authority": "fixture.agent-ix.local",
+              "identity": "independent recovery event",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:a5d6f527ab1cbae2aae3efa9a91e54341fe2e31284e087d307c79ffdd5c301de",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          }
         },
         "invocationAllowed": false,
         "kind": "verification",
@@ -1231,7 +1405,25 @@
             "revise",
             "reject"
           ],
-          "reviewProcedure": "Compare source spans to the authored fixture."
+          "reviewProcedureRef": {
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "review-procedure",
+              "authority": "fixture.agent-ix.local",
+              "identity": "Compare source spans to the authored fixture.",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "synthetic-r1"
+              },
+              "digest": "sha256:142dc3872d47b0ad4477d3acc92c0351851d8850b6938eea3eace5e550ebed95",
+              "wire": {
+                "identity": "quire-verification.synthetic",
+                "version": "1"
+              }
+            }
+          }
         },
         "invocationAllowed": true,
         "kind": "verification",
@@ -1337,11 +1529,23 @@
           "kind": "state",
           "property": "state is internally consistent",
           "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:snapshotparservalid",
-            "identity": "snapshot:parser-valid",
-            "profile": "quire-state/e02-fixture-v1",
-            "revision": "snapshot-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "snapshot",
+              "authority": "fixture.agent-ix.local",
+              "identity": "snapshot:parser-valid",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "snapshot-r1"
+              },
+              "digest": "sha256:c2fb91ca26d3ad10fae70139acf281f5b21e7c82ac125579bd82d00f9b1e8652",
+              "wire": {
+                "identity": "quire-state/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         },
         "invocationAllowed": true,
@@ -1386,11 +1590,23 @@
           "kind": "state",
           "property": "state is internally consistent",
           "snapshotRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:snapshotparservalid",
-            "identity": "snapshot:parser-valid",
-            "profile": "quire-state/e02-fixture-v1",
-            "revision": "snapshot-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "snapshot",
+              "authority": "fixture.agent-ix.local",
+              "identity": "snapshot:parser-valid",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "snapshot-r1"
+              },
+              "digest": "sha256:c2fb91ca26d3ad10fae70139acf281f5b21e7c82ac125579bd82d00f9b1e8652",
+              "wire": {
+                "identity": "quire-state/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         },
         "invocationAllowed": true,
@@ -1439,11 +1655,23 @@
           "completion": "closed-fixture",
           "kind": "trace",
           "traceRef": {
-            "authority": "fixture.agent-ix.local",
-            "digest": "sha256:traceparserevents",
-            "identity": "trace:parser-events",
-            "profile": "quire-trace/e02-fixture-v1",
-            "revision": "trace-fixture-r1"
+            "wireVersion": "ix.shared-reference/2-draft",
+            "kind": "artifact",
+            "value": {
+              "refVersion": "ix.artifact-ref/3-draft",
+              "kind": "trace",
+              "authority": "fixture.agent-ix.local",
+              "identity": "trace:parser-events",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "trace-fixture-r1"
+              },
+              "digest": "sha256:0b2a52d862d143854501a18c223c1661d052a1cb5b1b4f6b5f1449b6e28b05f9",
+              "wire": {
+                "identity": "quire-trace/e02-fixture-v1",
+                "version": "1"
+              }
+            }
           }
         },
         "invocationAllowed": false,

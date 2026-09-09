@@ -22,7 +22,7 @@
         ],
         "execution": {
           "detail": "checked 33 method definitions by techniqueId",
-          "elapsedMilliseconds": 9.267519,
+          "elapsedMilliseconds": 10.765476,
           "status": "completed"
         },
         "freshness": "fresh",
@@ -67,7 +67,7 @@
         ],
         "execution": {
           "detail": "checked reversed and rotated catalog orders",
-          "elapsedMilliseconds": 29.525932,
+          "elapsedMilliseconds": 36.43014,
           "status": "completed"
         },
         "freshness": "fresh",
@@ -153,17 +153,29 @@
       "parallelism": 1,
       "wallClockSeconds": 10
     },
-    "contractVersion": "quire-verification/e02-draft-1",
+    "contractVersion": "quire-verification/e02-draft-2",
     "evidenceOwner": "Quoin",
     "inventory": [
       {
         "bindingRefs": [
           {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "binding:pinned-quoin-catalog-export",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:c4a69e53bf02527a301b1d54736bf68ca4dc5c2169aa4946821f1e0a805f751d",
+              "identity": "binding:pinned-quoin-catalog-export",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         ],
         "classification": "unknown",
@@ -183,21 +195,45 @@
           "kind": "state",
           "property": "all pinned method IDs and fields survive adaptation",
           "snapshotRef": {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "snapshot:pinned-quoin-catalog",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f719017942dd0ab18ce0ebe3cbea5a81185a487e1dfa107024e45bf3cc4fd288",
+              "identity": "snapshot:pinned-quoin-catalog",
+              "kind": "snapshot",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         },
         "profile": "quire-verification/local-catalog-portfolio-v1",
         "propertyId": "LOCAL-CATALOG-PARITY",
         "propertyRef": {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "property:quoin-catalog-field-parity",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:a19580b4f68c11875ba5a492746d0972d8ea8c0865ba314a4167766f863ec9f5",
+            "identity": "property:quoin-catalog-field-parity",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         },
         "resultBinding": {
           "adapter": "native-rust",
@@ -206,21 +242,45 @@
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
           "runRef": {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "run:local-catalog-portfolio",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+              "identity": "run:local-catalog-portfolio",
+              "kind": "run-artifact",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           },
-          "taskId": "verify:LOCAL-CATALOG-PARITY:unit-testing"
+          "taskId": "verify:20:LOCAL-CATALOG-PARITY:12:unit-testing"
         },
         "subjectRefs": [
           {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "repository:quire-verification",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+              "identity": "repository:quire-verification",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         ],
         "techniqueId": "unit-testing"
@@ -228,11 +288,23 @@
       {
         "bindingRefs": [
           {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "binding:catalog-adapter",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:7a75dafff821da0f2596311297fb0197ebf13944ff3137c15f1ef6b9076a783e",
+              "identity": "binding:catalog-adapter",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         ],
         "classification": "unknown",
@@ -257,11 +329,23 @@
         "profile": "quire-verification/local-catalog-portfolio-v1",
         "propertyId": "LOCAL-CATALOG-PERMUTATION",
         "propertyRef": {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "property:catalog-permutation-invariance",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:dc2aa755564efbdfce4c5b40845b910f6783833b0594898ee72a64eddf6bc3f4",
+            "identity": "property:catalog-permutation-invariance",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         },
         "resultBinding": {
           "adapter": "native-rust",
@@ -270,21 +354,45 @@
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
           "runRef": {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "run:local-catalog-portfolio",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+              "identity": "run:local-catalog-portfolio",
+              "kind": "run-artifact",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           },
-          "taskId": "verify:LOCAL-CATALOG-PERMUTATION:metamorphic-testing"
+          "taskId": "verify:25:LOCAL-CATALOG-PERMUTATION:19:metamorphic-testing"
         },
         "subjectRefs": [
           {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "repository:quire-verification",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+              "identity": "repository:quire-verification",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         ],
         "techniqueId": "metamorphic-testing"
@@ -311,16 +419,46 @@
             "revise",
             "reject"
           ],
-          "reviewProcedure": "Review identity ownership, compatibility behavior, claim limits, and rights disposition."
+          "reviewProcedureRef": {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:cd90ef5595df38973ae99058e7635d318d678981081d063d8d14c22bea5a0e3b",
+              "identity": "procedure:e02-boundary-review",
+              "kind": "review-procedure",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
         },
         "profile": "quire-verification/local-catalog-portfolio-v1",
         "propertyId": "LOCAL-HUMAN-REVIEW",
         "propertyRef": {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "property:e02-boundary-human-review",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:a23f6ea21f827ca1c4540e7461cec3f385c23e9e861905574dcde382e182a5a7",
+            "identity": "property:e02-boundary-human-review",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         },
         "resultBinding": {
           "adapter": "native-rust",
@@ -329,21 +467,45 @@
           "producer": "quire-verification-local-portfolio",
           "producerVersion": "1",
           "runRef": {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "run:local-catalog-portfolio",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+              "identity": "run:local-catalog-portfolio",
+              "kind": "run-artifact",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           },
-          "taskId": "verify:LOCAL-HUMAN-REVIEW:inspection"
+          "taskId": "verify:18:LOCAL-HUMAN-REVIEW:10:inspection"
         },
         "subjectRefs": [
           {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "repository:quire-verification",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+              "identity": "repository:quire-verification",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         ],
         "techniqueId": "inspection"
@@ -355,11 +517,23 @@
       "freshness": "current",
       "policyId": "POLICY-LOCAL-CATALOG-PORTFOLIO",
       "sourceRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "policy:local-catalog-portfolio",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:0fe0ca1f55a50213d7875f83fd983dea35c858d41f47e0ab38fe19d36192c54e",
+          "identity": "policy:local-catalog-portfolio",
+          "kind": "source",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "validUntil": "2026-10-07T00:00:00Z",
       "version": "1"
@@ -367,25 +541,63 @@
     "sufficiencyOwner": "authored-human-decision",
     "tasks": [
       {
-        "applicability": "applicable",
         "dependencies": [],
-        "input": {
-          "action": "satisfy-prerequisite",
-          "kind": "manual",
-          "prerequisite": {
+        "invocationAllowed": false,
+        "kind": "manual-prerequisite",
+        "missingPrerequisites": [
+          {
             "id": "verification-owner",
             "kind": "reviewer",
             "required": true
-          },
+          }
+        ],
+        "prerequisite": {
+          "id": "verification-owner",
+          "kind": "reviewer",
+          "required": true
+        },
+        "readiness": "blocked",
+        "requiredBy": [
+          "verify:18:LOCAL-HUMAN-REVIEW:10:inspection"
+        ],
+        "runnerRequest": null,
+        "taskId": "setup:8:reviewer:18:verification-owner"
+      },
+      {
+        "applicability": "applicable",
+        "dependencies": [
+          "setup:8:reviewer:18:verification-owner"
+        ],
+        "gaps": [],
+        "input": {
+          "kind": "manual",
           "requiredDisposition": [
-            "satisfied",
-            "deferred",
-            "rejected"
+            "accept",
+            "revise",
+            "reject"
           ],
-          "reviewProcedure": "Resolve reviewer:verification-owner and record its source and disposition."
+          "reviewProcedureRef": {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:cd90ef5595df38973ae99058e7635d318d678981081d063d8d14c22bea5a0e3b",
+              "identity": "procedure:e02-boundary-review",
+              "kind": "review-procedure",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
         },
         "invocationAllowed": false,
-        "kind": "manual-prerequisite",
+        "kind": "verification",
         "missingPrerequisites": [
           {
             "id": "verification-owner",
@@ -396,8 +608,30 @@
         "priority": "required",
         "propertyId": "LOCAL-HUMAN-REVIEW",
         "readiness": "blocked",
-        "runnerRequest": null,
-        "taskId": "setup:LOCAL-HUMAN-REVIEW:inspection:reviewer:verification-owner",
+        "reasons": [
+          {
+            "rule": "project-authored",
+            "value": "LOCAL-HUMAN-REVIEW"
+          }
+        ],
+        "runnerRequest": {
+          "adapterId": "human-review-record",
+          "adapterVersion": "1",
+          "budget": {
+            "parallelism": 1,
+            "wallClockSeconds": 10
+          },
+          "capabilityId": "CAP-HUMAN-REVIEW",
+          "environmentPermissions": [],
+          "kind": "manual",
+          "nativeArtifactInterface": {
+            "mediaTypes": [
+              "application/json"
+            ],
+            "mode": "stdout-json"
+          }
+        },
+        "taskId": "verify:18:LOCAL-HUMAN-REVIEW:10:inspection",
         "techniqueId": "inspection"
       },
       {
@@ -408,11 +642,23 @@
           "kind": "state",
           "property": "all pinned method IDs and fields survive adaptation",
           "snapshotRef": {
-            "authority": "github.com/agent-ix/quire-verification",
-            "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-            "identity": "snapshot:pinned-quoin-catalog",
-            "profile": "quire-verification/local-catalog-portfolio-v1",
-            "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f719017942dd0ab18ce0ebe3cbea5a81185a487e1dfa107024e45bf3cc4fd288",
+              "identity": "snapshot:pinned-quoin-catalog",
+              "kind": "snapshot",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "quire-verification",
+                "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+              },
+              "wire": {
+                "identity": "quire-verification/local-catalog-portfolio-v1",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
           }
         },
         "invocationAllowed": true,
@@ -446,7 +692,7 @@
             "mode": "stdout-json"
           }
         },
-        "taskId": "verify:LOCAL-CATALOG-PARITY:unit-testing",
+        "taskId": "verify:20:LOCAL-CATALOG-PARITY:12:unit-testing",
         "techniqueId": "unit-testing"
       },
       {
@@ -490,61 +736,8 @@
             "mode": "stdout-json"
           }
         },
-        "taskId": "verify:LOCAL-CATALOG-PERMUTATION:metamorphic-testing",
+        "taskId": "verify:25:LOCAL-CATALOG-PERMUTATION:19:metamorphic-testing",
         "techniqueId": "metamorphic-testing"
-      },
-      {
-        "applicability": "applicable",
-        "dependencies": [
-          "setup:LOCAL-HUMAN-REVIEW:inspection:reviewer:verification-owner"
-        ],
-        "gaps": [],
-        "input": {
-          "kind": "manual",
-          "requiredDisposition": [
-            "accept",
-            "revise",
-            "reject"
-          ],
-          "reviewProcedure": "Review identity ownership, compatibility behavior, claim limits, and rights disposition."
-        },
-        "invocationAllowed": false,
-        "kind": "verification",
-        "missingPrerequisites": [
-          {
-            "id": "verification-owner",
-            "kind": "reviewer",
-            "required": true
-          }
-        ],
-        "priority": "required",
-        "propertyId": "LOCAL-HUMAN-REVIEW",
-        "readiness": "blocked",
-        "reasons": [
-          {
-            "rule": "project-authored",
-            "value": "LOCAL-HUMAN-REVIEW"
-          }
-        ],
-        "runnerRequest": {
-          "adapterId": "human-review-record",
-          "adapterVersion": "1",
-          "budget": {
-            "parallelism": 1,
-            "wallClockSeconds": 10
-          },
-          "capabilityId": "CAP-HUMAN-REVIEW",
-          "environmentPermissions": [],
-          "kind": "manual",
-          "nativeArtifactInterface": {
-            "mediaTypes": [
-              "application/json"
-            ],
-            "mode": "stdout-json"
-          }
-        },
-        "taskId": "verify:LOCAL-HUMAN-REVIEW:inspection",
-        "techniqueId": "inspection"
       }
     ]
   },
@@ -568,18 +761,30 @@
       ],
       "bindingRefs": [
         {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "binding:pinned-quoin-catalog-export",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:c4a69e53bf02527a301b1d54736bf68ca4dc5c2169aa4946821f1e0a805f751d",
+            "identity": "binding:pinned-quoin-catalog-export",
+            "kind": "binding",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         }
       ],
-      "contractVersion": "quire-verification/e02-draft-1",
+      "contractVersion": "quire-verification/e02-draft-2",
       "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
       "execution": {
         "detail": "checked 33 method definitions by techniqueId",
-        "elapsedMilliseconds": 9.267519,
+        "elapsedMilliseconds": 10.765476,
         "status": "completed"
       },
       "executionScope": {
@@ -605,11 +810,23 @@
       "producedAt": "2026-09-08T16:40:47Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "property:quoin-catalog-field-parity",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:a19580b4f68c11875ba5a492746d0972d8ea8c0865ba314a4167766f863ec9f5",
+          "identity": "property:quoin-catalog-field-parity",
+          "kind": "property",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "provenance": {
         "adapter": "native-rust",
@@ -621,22 +838,46 @@
       },
       "resultId": "RESULT-LOCAL-UNIT",
       "runRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "run:local-catalog-portfolio",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+          "identity": "run:local-catalog-portfolio",
+          "kind": "run-artifact",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "subjectRefs": [
         {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "repository:quire-verification",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+            "identity": "repository:quire-verification",
+            "kind": "source",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         }
       ],
-      "taskId": "verify:LOCAL-CATALOG-PARITY:unit-testing",
+      "taskId": "verify:20:LOCAL-CATALOG-PARITY:12:unit-testing",
       "techniqueId": "unit-testing"
     },
     {
@@ -657,18 +898,30 @@
       ],
       "bindingRefs": [
         {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "binding:catalog-adapter",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:7a75dafff821da0f2596311297fb0197ebf13944ff3137c15f1ef6b9076a783e",
+            "identity": "binding:catalog-adapter",
+            "kind": "binding",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         }
       ],
-      "contractVersion": "quire-verification/e02-draft-1",
+      "contractVersion": "quire-verification/e02-draft-2",
       "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
       "execution": {
         "detail": "checked reversed and rotated catalog orders",
-        "elapsedMilliseconds": 29.525932,
+        "elapsedMilliseconds": 36.43014,
         "status": "completed"
       },
       "executionScope": {
@@ -694,11 +947,23 @@
       "producedAt": "2026-09-08T16:40:47Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "property:catalog-permutation-invariance",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:dc2aa755564efbdfce4c5b40845b910f6783833b0594898ee72a64eddf6bc3f4",
+          "identity": "property:catalog-permutation-invariance",
+          "kind": "property",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "provenance": {
         "adapter": "native-rust",
@@ -710,22 +975,46 @@
       },
       "resultId": "RESULT-LOCAL-METAMORPHIC",
       "runRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "run:local-catalog-portfolio",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+          "identity": "run:local-catalog-portfolio",
+          "kind": "run-artifact",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "subjectRefs": [
         {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "repository:quire-verification",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+            "identity": "repository:quire-verification",
+            "kind": "source",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         }
       ],
-      "taskId": "verify:LOCAL-CATALOG-PERMUTATION:metamorphic-testing",
+      "taskId": "verify:25:LOCAL-CATALOG-PERMUTATION:19:metamorphic-testing",
       "techniqueId": "metamorphic-testing"
     },
     {
@@ -738,7 +1027,7 @@
       },
       "assumptions": [],
       "bindingRefs": [],
-      "contractVersion": "quire-verification/e02-draft-1",
+      "contractVersion": "quire-verification/e02-draft-2",
       "dependencyClosure": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
       "execution": {
         "detail": "verification-owner review pending",
@@ -765,11 +1054,23 @@
       "producedAt": "2026-09-08T16:40:47Z",
       "profile": "quire-verification/local-catalog-portfolio-v1",
       "propertyRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "property:e02-boundary-human-review",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:a23f6ea21f827ca1c4540e7461cec3f385c23e9e861905574dcde382e182a5a7",
+          "identity": "property:e02-boundary-human-review",
+          "kind": "property",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "provenance": {
         "adapter": "native-rust",
@@ -781,29 +1082,53 @@
       },
       "resultId": "RESULT-LOCAL-HUMAN-REVIEW-PENDING",
       "runRef": {
-        "authority": "github.com/agent-ix/quire-verification",
-        "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-        "identity": "run:local-catalog-portfolio",
-        "profile": "quire-verification/local-catalog-portfolio-v1",
-        "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+        "kind": "artifact",
+        "value": {
+          "authority": "github.com/agent-ix/quire-verification",
+          "digest": "sha256:d6f3137855076ffaef0ef92787f676351f4aa72a1c7287dc11cff45ad1eef701",
+          "identity": "run:local-catalog-portfolio",
+          "kind": "run-artifact",
+          "refVersion": "ix.artifact-ref/3-draft",
+          "revision": {
+            "namespace": "quire-verification",
+            "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          },
+          "wire": {
+            "identity": "quire-verification/local-catalog-portfolio-v1",
+            "version": "1"
+          }
+        },
+        "wireVersion": "ix.shared-reference/2-draft"
       },
       "subjectRefs": [
         {
-          "authority": "github.com/agent-ix/quire-verification",
-          "digest": "sha256-jcs:295675bdfc5f5fa12da019f7f89bf03d7ecbb363436feedc7f10e18e4d0820fd",
-          "identity": "repository:quire-verification",
-          "profile": "quire-verification/local-catalog-portfolio-v1",
-          "revision": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:f5447a16d3c7f85ceb0749b93cd514c8029cf638a9ee4450272336a1fe2f37f8",
+            "identity": "repository:quire-verification",
+            "kind": "source",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "quire-verification",
+              "value": "15e38f519ade4d91ba7bb015ac53013bbb3a749a"
+            },
+            "wire": {
+              "identity": "quire-verification/local-catalog-portfolio-v1",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
         }
       ],
-      "taskId": "verify:LOCAL-HUMAN-REVIEW:inspection",
+      "taskId": "verify:18:LOCAL-HUMAN-REVIEW:10:inspection",
       "techniqueId": "inspection"
     }
   ],
   "runEffort": {
     "manual": "pending verification-owner",
-    "metamorphicMilliseconds": 29.525932,
-    "unitMilliseconds": 9.267519
+    "metamorphicMilliseconds": 36.43014,
+    "unitMilliseconds": 10.765476
   },
   "schemaVersion": "quire-verification/local-portfolio-report/v1",
   "setupEffort": {

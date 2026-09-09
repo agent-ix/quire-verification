@@ -6,6 +6,7 @@
 use std::time::Instant;
 
 use serde_json::{Map, Value, json};
+use sha2::{Digest, Sha256};
 
 use crate::catalog::{adapt_quoin_catalog, by_technique_id};
 use crate::contracts::{
@@ -14,6 +15,10 @@ use crate::contracts::{
 };
 use crate::evidence::assess_evidence;
 use crate::planner::{build_verification_plan, verification_task_id};
+use crate::shared_reference::{
+    ArtifactExpectation, ReferenceExpectation, ReferenceSupport, SharedReferenceReader,
+    ValidatedSharedReference,
+};
 use crate::value::{arrays_field, field, string_field};
 
 const PROFILE: &str = "quire-verification/local-catalog-portfolio-v1";
@@ -59,7 +64,7 @@ where
 {
     let source_digest = validate_portfolio_inputs(source_revision, produced_at, catalog)?;
     let (properties, run_ref) = build_properties(source_revision, &source_digest)?;
-    let plan = build_portfolio_plan(source_revision, produced_at, &source_digest, &properties)?;
+    let plan = build_portfolio_plan(source_revision, produced_at, &properties)?;
     let parity = observe(|| check_catalog_parity(catalog, &adapter));
     let permutation = observe(|| check_permutation_invariance(catalog, &adapter));
     let results = build_results(
@@ -111,10 +116,19 @@ fn validate_portfolio_inputs(
     }))
 }
 
-fn artifact_ref(source_digest: &str, identity: &str, revision: &str) -> Value {
+fn artifact_ref(kind: &str, identity: &str, revision: &str) -> Value {
     json!({
-        "authority": "github.com/agent-ix/quire-verification", "identity": identity,
-        "revision": revision, "digest": source_digest, "profile": PROFILE,
+        "wireVersion": "ix.shared-reference/2-draft",
+        "kind": "artifact",
+        "value": {
+            "refVersion": "ix.artifact-ref/3-draft",
+            "kind": kind,
+            "authority": "github.com/agent-ix/quire-verification",
+            "identity": identity,
+            "revision": {"namespace": "quire-verification", "value": revision},
+            "digest": format!("sha256:{:x}", Sha256::digest(identity.as_bytes())),
+            "wire": {"identity": PROFILE, "version": "1"},
+        },
     })
 }
 
@@ -122,19 +136,15 @@ fn build_properties(
     source_revision: &str,
     source_digest: &str,
 ) -> Result<(Vec<Value>, Value), VerificationError> {
-    let subject_ref = artifact_ref(
-        source_digest,
-        "repository:quire-verification",
-        source_revision,
-    );
+    let subject_ref = artifact_ref("source", "repository:quire-verification", source_revision);
     let run_ref = artifact_ref(
-        source_digest,
+        "run-artifact",
         "run:local-catalog-portfolio",
         source_revision,
     );
     let common = |property_id: &str, property_ref: &str, binding_refs: Vec<Value>, input: Value| {
         json!({
-            "propertyId": property_id, "propertyRef": artifact_ref(source_digest, property_ref, source_revision),
+            "propertyId": property_id, "propertyRef": artifact_ref("property", property_ref, source_revision),
             "subjectRefs": [subject_ref], "profile": PROFILE, "bindingRefs": binding_refs,
             "dependencyClosure": source_digest,
             "executionScope": {"repository": "agent-ix/quire-verification", "revision": source_revision, "paths": ["src/catalog.rs", "fixtures/quoin-catalog-export.json"]},
@@ -146,19 +156,19 @@ fn build_properties(
             "LOCAL-CATALOG-PARITY",
             "property:quoin-catalog-field-parity",
             vec![artifact_ref(
-                source_digest,
+                "binding",
                 "binding:pinned-quoin-catalog-export",
                 source_revision,
             )],
             json!({
-                "kind": "state", "snapshotRef": artifact_ref(source_digest, "snapshot:pinned-quoin-catalog", source_revision), "property": "all pinned method IDs and fields survive adaptation",
+                "kind": "state", "snapshotRef": artifact_ref("snapshot", "snapshot:pinned-quoin-catalog", source_revision), "property": "all pinned method IDs and fields survive adaptation",
             }),
         ),
         common(
             "LOCAL-CATALOG-PERMUTATION",
             "property:catalog-permutation-invariance",
             vec![artifact_ref(
-                source_digest,
+                "binding",
                 "binding:catalog-adapter",
                 source_revision,
             )],
@@ -171,7 +181,9 @@ fn build_properties(
             "property:e02-boundary-human-review",
             Vec::new(),
             json!({
-                "kind": "manual", "reviewProcedure": "Review identity ownership, compatibility behavior, claim limits, and rights disposition.", "requiredDisposition": ["accept", "revise", "reject"],
+                "kind": "manual",
+                "reviewProcedureRef": artifact_ref("review-procedure", "procedure:e02-boundary-review", source_revision),
+                "requiredDisposition": ["accept", "revise", "reject"],
             }),
         ),
     ];
@@ -192,12 +204,11 @@ fn build_properties(
 fn build_portfolio_plan(
     source_revision: &str,
     produced_at: &str,
-    source_digest: &str,
     properties: &[Value],
 ) -> Result<Value, VerificationError> {
     let policy = json!({
         "contractVersion": contract_version(), "kind": "SelectionPolicy", "policyId": "POLICY-LOCAL-CATALOG-PORTFOLIO", "version": "1",
-        "validUntil": "2026-10-07T00:00:00Z", "sourceRef": artifact_ref(source_digest, "policy:local-catalog-portfolio", source_revision),
+        "validUntil": "2026-10-07T00:00:00Z", "sourceRef": artifact_ref("source", "policy:local-catalog-portfolio", source_revision),
         "provenance": {"kind": "project-authored", "standardDerived": false, "rights": "AGPL-3.0-or-later"},
         "rules": [
             {"ruleId": "fixed-parity", "priority": "required", "explanation": "Compare every field with the pinned existing behavior."},
@@ -219,11 +230,63 @@ fn build_portfolio_plan(
         "propertyId": property, "techniqueId": technique, "applicability": "applicable", "priority": priority,
         "reasons": [{"rule": "project-authored", "value": property}],
     })).collect::<Vec<_>>();
-    build_verification_plan(&json!({
+    let request = json!({
         "planId": PLAN_ID, "asOf": produced_at, "policy": policy, "properties": properties,
         "capabilities": capabilities, "selections": selections, "availablePrerequisites": [],
         "budget": {"wallClockSeconds": 10, "parallelism": 1},
-    }))
+    });
+    let references = validate_portfolio_planning_references(&request)?;
+    build_verification_plan(&request, &references)
+}
+
+fn validate_portfolio_planning_references(
+    request: &Value,
+) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
+    let mut support = ReferenceSupport::default();
+    support
+        .wire_versions
+        .entry(PROFILE.to_owned())
+        .or_default()
+        .insert("1".to_owned());
+    let mut reader = SharedReferenceReader::new(support);
+    let mut validated = Vec::new();
+    for property in arrays_field(request, "properties", "portfolio request")? {
+        let input = field(property, "input", "portfolio property")?;
+        let fields: &[&str] = match string_field(input, "kind", "portfolio property input")? {
+            "state" => &["snapshotRef"],
+            "relational" => &[],
+            "manual" => &["reviewProcedureRef"],
+            _ => {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::InvalidInput,
+                    "local portfolio contains an unsupported input kind",
+                ));
+            }
+        };
+        for field_name in fields {
+            let envelope = field(input, field_name, "portfolio property input")?;
+            let value = field(envelope, "value", "portfolio artifact envelope")?;
+            let identity = string_field(value, "identity", "portfolio artifact")?.to_owned();
+            let revision = field(value, "revision", "portfolio artifact")?;
+            let expectation = ArtifactExpectation {
+                ref_version: "ix.artifact-ref/3-draft".to_owned(),
+                kind: string_field(value, "kind", "portfolio artifact")?.to_owned(),
+                authority: "github.com/agent-ix/quire-verification".to_owned(),
+                identity: identity.clone(),
+                revision_namespace: "quire-verification".to_owned(),
+                revision_value: string_field(revision, "value", "portfolio revision")?.to_owned(),
+                digest: format!("sha256:{:x}", Sha256::digest(identity.as_bytes())),
+                wire_identity: PROFILE.to_owned(),
+                wire_version: "1".to_owned(),
+                bytes: Some(identity.into_bytes()),
+            };
+            let bytes = serde_json::to_vec(envelope).map_err(|error| {
+                VerificationError::new(VerificationErrorCode::InvalidJson, error.to_string())
+            })?;
+            validated.push(reader.read(&bytes, &ReferenceExpectation::Artifact(expectation))?);
+        }
+    }
+    Ok(validated)
 }
 
 fn build_results(

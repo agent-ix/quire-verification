@@ -1,8 +1,9 @@
 # Private contract packet
 
-`e02-draft-1.schema.json` is the authoritative definition of the five E02
-contracts and their shared provisional artifact-reference seam. The Rust build
-derives wire types and vocabulary constants from this file. At runtime,
+`e02-draft-2.schema.json` is the authoritative definition of the five E02
+contracts. Its artifact envelopes resolve the retained shared-reference draft-2
+schema rather than restating that schema's fields. The Rust build derives wire
+types and vocabulary constants from those two sources. At runtime,
 `src/contracts.rs` compiles the complete draft 2020-12 schema, including
 conditional assertions that are not constructive Rust types. The only additional plan validation is for duplicate
 task IDs, unknown dependency references, and dependency cycles, which require
@@ -21,6 +22,11 @@ migration envelopes. Runtime validation compiles the complete schemas locally,
 then applies authority, identity, byte-digest, JCS, feature-set, source-map, and
 explicit-migration checks. No unknown version or kind falls through to another
 decoder.
+
+The planner accepts reference-bearing property inputs only when the caller also
+supplies the matching opaque value returned by the strict shared-reference
+reader. Matching uses exact RFC 8785 JCS bytes and the artifact's selected role.
+E02 draft-1 has no compatibility or migration path.
 
 `shared-reference-snapshot.sha256` covers both schemas and all fourteen selected
 amendment fixtures. `shared-reference-UPSTREAM.md` records their exact private

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://private.agent-ix.local/quire-verification/e02-draft-1.schema.json",
+  "$id": "https://private.agent-ix.local/quire-verification/e02-draft-2.schema.json",
   "title": "Private E02 verification interface draft",
   "description": "Provisional private interface; not a published normative schema.",
   "oneOf": [
@@ -11,17 +11,45 @@
     { "$ref": "#/$defs/TechniqueResult" }
   ],
   "$defs": {
-    "ArtifactRef": {
+    "SharedArtifactEnvelope": {
       "type": "object",
-      "required": ["authority", "identity", "revision", "digest", "profile"],
+      "required": ["wireVersion", "kind", "value"],
       "properties": {
-        "authority": { "type": "string", "minLength": 1 },
-        "identity": { "type": "string", "minLength": 1 },
-        "revision": { "type": "string", "minLength": 1 },
-        "digest": { "type": "string", "minLength": 1 },
-        "profile": { "type": "string", "minLength": 1 }
+        "wireVersion": { "const": "ix.shared-reference/2-draft" },
+        "kind": { "const": "artifact" },
+        "value": { "$ref": "urn:ix:shared-reference:2-draft#/$defs/ArtifactRef" }
       },
       "additionalProperties": false
+    },
+    "SnapshotReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "snapshot" } }, "required": ["kind"] } } }
+      ]
+    },
+    "TraceReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "trace" } }, "required": ["kind"] } } }
+      ]
+    },
+    "FaultModelReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "fault-model" } }, "required": ["kind"] } } }
+      ]
+    },
+    "OracleReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "oracle" } }, "required": ["kind"] } } }
+      ]
+    },
+    "ReviewProcedureReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "review-procedure" } }, "required": ["kind"] } } }
+      ]
     },
     "Prerequisite": {
       "type": "object",
@@ -40,10 +68,10 @@
           "required": ["kind", "snapshotRef", "property"],
           "properties": {
             "kind": { "const": "state" },
-            "snapshotRef": { "$ref": "#/$defs/ArtifactRef" },
+            "snapshotRef": { "$ref": "#/$defs/SnapshotReference" },
             "property": { "type": "string", "minLength": 1 }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -54,43 +82,44 @@
             "rightSubject": { "type": "string", "minLength": 1 },
             "relation": { "type": "string", "minLength": 1 }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         },
         {
           "type": "object",
           "required": ["kind", "traceRef", "clockProfile", "completion"],
           "properties": {
             "kind": { "const": "trace" },
-            "traceRef": { "$ref": "#/$defs/ArtifactRef" },
+            "traceRef": { "$ref": "#/$defs/TraceReference" },
             "clockProfile": { "type": "string", "minLength": 1 },
             "completion": { "type": "string", "minLength": 1 }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         },
         {
           "type": "object",
-          "required": ["kind", "faultModelRef", "requestedInjectionSite", "mitigationOracle"],
+          "required": ["kind", "faultModelRef", "requestedInjectionSite", "mitigationOracleRef"],
           "properties": {
             "kind": { "const": "fault" },
-            "faultModelRef": { "$ref": "#/$defs/ArtifactRef" },
+            "faultModelRef": { "$ref": "#/$defs/FaultModelReference" },
             "requestedInjectionSite": { "type": "string", "minLength": 1 },
-            "mitigationOracle": { "type": "string", "minLength": 1 }
+            "mitigationOracleRef": { "$ref": "#/$defs/OracleReference" }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         },
         {
           "type": "object",
-          "required": ["kind", "reviewProcedure", "requiredDisposition"],
+          "required": ["kind", "reviewProcedureRef", "requiredDisposition"],
           "properties": {
             "kind": { "const": "manual" },
-            "reviewProcedure": { "type": "string", "minLength": 1 },
+            "reviewProcedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
             "requiredDisposition": {
               "type": "array",
-              "items": { "type": "string", "minLength": 1 },
-              "minItems": 1
+              "items": { "enum": ["accept", "revise", "reject"] },
+              "minItems": 1,
+              "uniqueItems": true
             }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         }
       ]
     },
@@ -98,7 +127,7 @@
       "type": "object",
       "required": ["contractVersion", "kind", "techniqueId", "name", "class", "purpose", "applicability", "sourceRef"],
       "properties": {
-        "contractVersion": { "const": "quire-verification/e02-draft-1" },
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "TechniqueDefinition" },
         "techniqueId": { "type": "string", "minLength": 1 },
         "name": { "type": "string", "minLength": 1 },
@@ -108,7 +137,7 @@
         "applicability": { "type": "object" },
         "possibleClaims": { "type": "array", "items": { "type": "string" } },
         "legacyToolingHints": { "type": "array", "items": { "type": "string" } },
-        "sourceRef": { "$ref": "#/$defs/ArtifactRef" }
+        "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" }
       },
       "additionalProperties": true
     },
@@ -118,10 +147,10 @@
       "properties": {
         "propertyId": { "type": "string", "minLength": 1 },
         "classification": { "type": "string", "minLength": 1 },
-        "propertyRef": { "$ref": "#/$defs/ArtifactRef" },
-        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
+        "propertyRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
         "profile": { "type": "string", "minLength": 1 },
-        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
+        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
         "dependencyClosure": { "type": "string", "minLength": 1 },
         "executionScope": { "type": "object" },
         "freshness": { "$ref": "#/$defs/Freshness" },
@@ -148,7 +177,7 @@
       "properties": {
         "planId": { "type": "string", "minLength": 1 },
         "taskId": { "type": "string", "minLength": 1 },
-        "runRef": { "$ref": "#/$defs/ArtifactRef" },
+        "runRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
         "producer": { "type": "string", "minLength": 1 },
         "producerVersion": { "type": "string", "minLength": 1 },
         "adapter": { "type": "string", "minLength": 1 },
@@ -173,7 +202,7 @@
       "type": "object",
       "required": ["contractVersion", "kind", "capabilityId", "techniqueId", "qualification", "inputKinds", "profiles", "prerequisites", "runner", "environmentPermissions", "nativeArtifactInterface"],
       "properties": {
-        "contractVersion": { "const": "quire-verification/e02-draft-1" },
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "ToolCapability" },
         "capabilityId": { "type": "string", "minLength": 1 },
         "techniqueId": { "type": "string", "minLength": 1 },
@@ -204,12 +233,12 @@
       "type": "object",
       "required": ["contractVersion", "kind", "policyId", "version", "sourceRef", "rules", "provenance"],
       "properties": {
-        "contractVersion": { "const": "quire-verification/e02-draft-1" },
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "SelectionPolicy" },
         "policyId": { "type": "string", "minLength": 1 },
         "version": { "type": "string", "minLength": 1 },
         "validUntil": { "type": "string", "format": "date-time" },
-        "sourceRef": { "$ref": "#/$defs/ArtifactRef" },
+        "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
         "provenance": {
           "type": "object",
           "properties": {
@@ -263,7 +292,7 @@
       "type": "object",
       "required": ["contractVersion", "kind", "planId", "policyRef", "inventory", "tasks", "evidenceOwner", "sufficiencyOwner"],
       "properties": {
-        "contractVersion": { "const": "quire-verification/e02-draft-1" },
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "VerificationPlan" },
         "planId": { "type": "string", "minLength": 1 },
         "policyRef": { "type": "object" },
@@ -272,7 +301,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["taskId", "kind", "input", "readiness", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
+            "required": ["taskId", "kind", "readiness", "dependencies", "missingPrerequisites", "runnerRequest", "invocationAllowed"],
             "properties": {
               "taskId": { "type": "string", "minLength": 1 },
               "kind": { "enum": ["verification", "manual-prerequisite"] },
@@ -328,10 +357,11 @@
                 },
                 "then": {
                   "type": "object",
-                  "required": ["propertyId", "techniqueId", "applicability", "priority", "reasons", "gaps"],
+                  "required": ["propertyId", "techniqueId", "input", "applicability", "priority", "reasons", "gaps"],
                   "properties": {
                     "propertyId": true,
                     "techniqueId": true,
+                    "input": true,
                     "applicability": true,
                     "priority": true,
                     "reasons": true,
@@ -351,6 +381,7 @@
                   "properties": {
                     "propertyId": false,
                     "techniqueId": false,
+                    "input": false,
                     "prerequisite": true,
                     "requiredBy": true
                   }
@@ -393,19 +424,19 @@
       "type": "object",
       "required": ["contractVersion", "kind", "resultId", "planId", "taskId", "runRef", "techniqueId", "producedAt", "propertyRef", "subjectRefs", "profile", "bindingRefs", "dependencyClosure", "executionScope", "execution", "logical", "activation", "participation", "assumptions", "adequacy", "provenance", "nativeArtifacts"],
       "properties": {
-        "contractVersion": { "const": "quire-verification/e02-draft-1" },
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
         "kind": { "const": "TechniqueResult" },
         "resultId": { "type": "string", "minLength": 1 },
         "planId": { "type": "string", "minLength": 1 },
         "taskId": { "type": "string", "minLength": 1 },
-        "runRef": { "$ref": "#/$defs/ArtifactRef" },
+        "runRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
         "techniqueId": { "type": "string", "minLength": 1 },
         "producedAt": { "type": "string", "format": "date-time" },
         "validUntil": { "type": "string", "format": "date-time" },
-        "propertyRef": { "$ref": "#/$defs/ArtifactRef" },
-        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
+        "propertyRef": { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        "subjectRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
         "profile": { "type": "string", "minLength": 1 },
-        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/ArtifactRef" } },
+        "bindingRefs": { "type": "array", "items": { "$ref": "#/$defs/SharedArtifactEnvelope" } },
         "dependencyClosure": { "type": "string", "minLength": 1 },
         "executionScope": { "type": "object" },
         "execution": {
@@ -537,7 +568,7 @@
           "properties": {
             "quoinRevision": { "type": "string", "minLength": 1 },
             "moduleRevision": { "type": "string", "minLength": 1 },
-            "sourceRef": { "$ref": "#/$defs/ArtifactRef" }
+            "sourceRef": { "$ref": "#/$defs/SharedArtifactEnvelope" }
           },
           "additionalProperties": true
         },

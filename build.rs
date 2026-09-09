@@ -12,10 +12,11 @@ use schemars::schema::RootSchema;
 use serde_json::Value;
 use typify::{TypeSpace, TypeSpaceSettings};
 
+const E02_SCHEMA_PATH: &str = "contracts/e02-draft-2.schema.json";
+const SHARED_V1_SCHEMA_PATH: &str = "contracts/shared-reference-1-draft.schema.json";
+const SHARED_V2_SCHEMA_PATH: &str = "contracts/shared-reference-2-draft/schema.json";
+
 fn main() -> Result<(), Box<dyn Error>> {
-    const E02_SCHEMA_PATH: &str = "contracts/e02-draft-1.schema.json";
-    const SHARED_V1_SCHEMA_PATH: &str = "contracts/shared-reference-1-draft.schema.json";
-    const SHARED_V2_SCHEMA_PATH: &str = "contracts/shared-reference-2-draft/schema.json";
     for path in [
         E02_SCHEMA_PATH,
         SHARED_V1_SCHEMA_PATH,
@@ -61,19 +62,56 @@ fn generate_types(
 ) -> Result<(), Box<dyn Error>> {
     let mut schema: Value = serde_json::from_str(&fs::read_to_string(schema_path)?)?;
     strip_non_constructive_keywords(&mut schema);
-    if schema_path == "contracts/shared-reference-2-draft/schema.json" {
+    if schema_path == SHARED_V2_SCHEMA_PATH {
         relax_alternative_digest_codegen(&mut schema)?;
+    } else if schema_path == E02_SCHEMA_PATH {
+        localize_shared_references_for_codegen(&mut schema);
     }
     let root: RootSchema = serde_json::from_value(schema)?;
     let mut settings = TypeSpaceSettings::default();
     settings.with_map_type("::std::collections::BTreeMap".to_owned());
     let mut type_space = TypeSpace::new(&settings);
+    if schema_path == E02_SCHEMA_PATH {
+        let mut shared: Value = serde_json::from_str(&fs::read_to_string(SHARED_V2_SCHEMA_PATH)?)?;
+        strip_non_constructive_keywords(&mut shared);
+        relax_alternative_digest_codegen(&mut shared)?;
+        let shared: RootSchema = serde_json::from_value(shared)?;
+        type_space.add_ref_types(shared.definitions)?;
+    }
     type_space.add_root_schema(root)?;
 
     let output =
         PathBuf::from(env::var_os("OUT_DIR").ok_or("OUT_DIR is not set")?).join(output_name);
     fs::write(output, format!("{prefix} {}", type_space.to_stream()))?;
     Ok(())
+}
+
+// Typify 0.7 does not retrieve external schemas. For code generation only,
+// resolve the authored URN to definitions loaded below from the exact retained
+// schema. Runtime validation keeps the external reference and registry.
+fn localize_shared_references_for_codegen(value: &mut Value) {
+    match value {
+        Value::Object(fields) => {
+            const PREFIX: &str = "urn:ix:shared-reference:2-draft#/$defs/";
+            let localized = fields
+                .get("$ref")
+                .and_then(Value::as_str)
+                .and_then(|reference| reference.strip_prefix(PREFIX))
+                .map(|definition| Value::String(format!("#/$defs/{definition}")));
+            if let Some(localized) = localized {
+                fields.insert("$ref".to_owned(), localized);
+            }
+            for child in fields.values_mut() {
+                localize_shared_references_for_codegen(child);
+            }
+        }
+        Value::Array(items) => {
+            for child in items {
+                localize_shared_references_for_codegen(child);
+            }
+        }
+        Value::Null | Value::Bool(_) | Value::Number(_) | Value::String(_) => {}
+    }
 }
 
 // Typify unifies the digest property shared by the two CanonicalIdentity

@@ -146,13 +146,63 @@ pub enum ReferenceExpectation {
     SourceMap(SourceMapExpectation),
 }
 
-/// A schema-derived shared-reference value that passed all selected checks.
 #[derive(Clone, Debug)]
-pub enum ValidatedSharedReference {
-    /// A retained version-1 source-map value.
-    Version1(Box<wire_v1::ProposedSharedReferenceEnvelopeStructuralValidationOnly>),
-    /// A version-2 artifact or semantic value.
-    Version2(Box<wire_v2::SharedArtifactAndSemanticReferenceAmendmentStructuralValidationOnly>),
+enum ValidatedReferenceWire {
+    Version1 {
+        _value: Box<wire_v1::ProposedSharedReferenceEnvelopeStructuralValidationOnly>,
+    },
+    Version2 {
+        _value: Box<wire_v2::SharedArtifactAndSemanticReferenceAmendmentStructuralValidationOnly>,
+    },
+}
+
+/// An opaque schema-derived reference that passed every selected reader check.
+///
+/// Callers can retain and pass this value to planning but cannot construct a
+/// validation claim without executing [`SharedReferenceReader::read`].
+#[derive(Clone, Debug)]
+pub struct ValidatedSharedReference {
+    _wire: ValidatedReferenceWire,
+    canonical_envelope: Box<[u8]>,
+    planning_role: Option<Box<str>>,
+}
+
+impl ValidatedSharedReference {
+    fn version1(
+        value: &Value,
+        wire: wire_v1::ProposedSharedReferenceEnvelopeStructuralValidationOnly,
+    ) -> Result<Self, VerificationError> {
+        Ok(Self {
+            _wire: ValidatedReferenceWire::Version1 {
+                _value: Box::new(wire),
+            },
+            canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
+            planning_role: None,
+        })
+    }
+
+    fn version2(
+        value: &Value,
+        wire: wire_v2::SharedArtifactAndSemanticReferenceAmendmentStructuralValidationOnly,
+    ) -> Result<Self, VerificationError> {
+        let planning_role = (value.get("kind").and_then(Value::as_str) == Some("artifact"))
+            .then(|| value.pointer("/value/kind").and_then(Value::as_str))
+            .flatten()
+            .map(Box::<str>::from);
+        Ok(Self {
+            _wire: ValidatedReferenceWire::Version2 {
+                _value: Box::new(wire),
+            },
+            canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
+            planning_role,
+        })
+    }
+
+    pub(crate) fn planning_key(&self) -> Option<(&[u8], &str)> {
+        self.planning_role
+            .as_deref()
+            .map(|role| (self.canonical_envelope.as_ref(), role))
+    }
 }
 
 /// Stateful strict reader that detects immutable identity conflicts across inputs.
@@ -192,19 +242,19 @@ impl SharedReferenceReader {
                     validate_schema(v2_validator()?, &value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_artifact(value_at(&value, "/value")?, expected)?;
-                    Ok(ValidatedSharedReference::Version2(Box::new(generated)))
+                    ValidatedSharedReference::version2(&value, generated)
                 }
                 (V2, "semantic", ReferenceExpectation::Semantic(expected)) => {
                     validate_schema(v2_validator()?, &value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_semantic(value_at(&value, "/value")?, expected)?;
-                    Ok(ValidatedSharedReference::Version2(Box::new(generated)))
+                    ValidatedSharedReference::version2(&value, generated)
                 }
                 (V1, "source-map", ReferenceExpectation::SourceMap(expected)) => {
                     validate_schema(v1_validator()?, &value)?;
                     let generated = decode_v1(value.clone())?;
                     self.validate_source_map(value_at(&value, "/value")?, expected)?;
-                    Ok(ValidatedSharedReference::Version1(Box::new(generated)))
+                    ValidatedSharedReference::version1(&value, generated)
                 }
                 (V1 | V2, _, _) => Err(refusal(
                     VerificationErrorCode::IdentityMismatch,
@@ -275,7 +325,7 @@ impl SharedReferenceReader {
                 )
             })?;
             self.validate_migration(value_at(&value, "/value")?, expectation)?;
-            Ok(ValidatedSharedReference::Version1(Box::new(generated)))
+            ValidatedSharedReference::version1(&value, generated)
         })();
         if result.is_err() {
             self.observed_identities = checkpoint;

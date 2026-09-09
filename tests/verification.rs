@@ -21,7 +21,11 @@ use quire_verification::evidence::{assess_evidence, findings_for, scope_differen
 use quire_verification::fixtures::{
     check_quoin_baseline, render_fixture_packet, validate_all_fixtures,
 };
-use quire_verification::planner::build_verification_plan;
+use quire_verification::planner::build_verification_plan as build_plan_from_validated;
+use quire_verification::shared_reference::{
+    ArtifactExpectation, ReferenceExpectation, ReferenceSupport, SharedReferenceReader,
+    ValidatedSharedReference,
+};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
@@ -39,8 +43,91 @@ fn fixture(name: &str) -> Value {
 }
 
 fn built_plan() -> Value {
-    build_verification_plan(&fixture("portfolio.json")["planRequest"])
-        .expect("fixture plan must build")
+    build_fixture_plan(&fixture("portfolio.json")["planRequest"]).expect("fixture plan must build")
+}
+
+fn build_fixture_plan(request: &Value) -> Result<Value, VerificationError> {
+    let references = validated_fixture_references(request)?;
+    build_plan_from_validated(request, &references)
+}
+
+fn validated_fixture_references(
+    request: &Value,
+) -> Result<Vec<ValidatedSharedReference>, VerificationError> {
+    let mut envelopes = Vec::new();
+    for property in request["properties"]
+        .as_array()
+        .expect("fixture properties")
+    {
+        let input = &property["input"];
+        match input["kind"].as_str().expect("fixture input kind") {
+            "state" => envelopes.push(&input["snapshotRef"]),
+            "trace" => envelopes.push(&input["traceRef"]),
+            "fault" => {
+                envelopes.push(&input["faultModelRef"]);
+                envelopes.push(&input["mitigationOracleRef"]);
+            }
+            "manual" => envelopes.push(&input["reviewProcedureRef"]),
+            "relational" => {}
+            kind => panic!("unexpected fixture input kind {kind}"),
+        }
+    }
+    let mut support = ReferenceSupport::default();
+    let expectations = envelopes
+        .iter()
+        .map(|envelope| {
+            let value = &envelope["value"];
+            let wire_identity = value["wire"]["identity"]
+                .as_str()
+                .expect("fixture wire identity")
+                .to_owned();
+            let wire_version = value["wire"]["version"]
+                .as_str()
+                .expect("fixture wire version")
+                .to_owned();
+            support
+                .wire_versions
+                .entry(wire_identity.clone())
+                .or_default()
+                .insert(wire_version.clone());
+            let identity = value["identity"]
+                .as_str()
+                .expect("fixture artifact identity")
+                .to_owned();
+            ArtifactExpectation {
+                ref_version: value["refVersion"]
+                    .as_str()
+                    .expect("ref version")
+                    .to_owned(),
+                kind: value["kind"].as_str().expect("artifact kind").to_owned(),
+                authority: value["authority"].as_str().expect("authority").to_owned(),
+                identity: identity.clone(),
+                revision_namespace: value["revision"]["namespace"]
+                    .as_str()
+                    .expect("revision namespace")
+                    .to_owned(),
+                revision_value: value["revision"]["value"]
+                    .as_str()
+                    .expect("revision value")
+                    .to_owned(),
+                digest: value["digest"].as_str().expect("digest").to_owned(),
+                wire_identity,
+                wire_version,
+                bytes: Some(identity.into_bytes()),
+            }
+        })
+        .collect::<Vec<_>>();
+    let mut reader = SharedReferenceReader::new(support);
+    envelopes
+        .iter()
+        .zip(expectations)
+        .map(|(envelope, expectation)| {
+            reader.read(
+                &serde_json::to_vec(envelope).expect("fixture reference serialization"),
+                &ReferenceExpectation::Artifact(expectation),
+            )
+        })
+        .collect()
 }
 
 fn find_by<'a>(values: &'a [Value], key: &str, expected: &str) -> &'a Value {
@@ -140,7 +227,7 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]
 #[test]
 fn tc_003_derives_contract_vocabulary_and_types_from_one_schema() {
-    assert_eq!(contract_version(), "quire-verification/e02-draft-1");
+    assert_eq!(contract_version(), "quire-verification/e02-draft-2");
     assert_eq!(
         input_kinds(),
         ["state", "relational", "trace", "fault", "manual"]
@@ -148,7 +235,7 @@ fn tc_003_derives_contract_vocabulary_and_types_from_one_schema() {
     let build_script = include_str!("../build.rs");
     assert_eq!(
         build_script
-            .matches("contracts/e02-draft-1.schema.json")
+            .matches("contracts/e02-draft-2.schema.json")
             .count(),
         1
     );
@@ -337,7 +424,7 @@ fn tc_010_exposes_unsupported_blocked_stale_and_fault_work() {
         .as_array_mut()
         .expect("selections")
         .retain(|item| item["techniqueId"] == "fuzzing");
-    let plan = build_verification_plan(&request).expect("unsupported plan");
+    let plan = build_fixture_plan(&request).expect("unsupported plan");
     let task = find_by(
         plan["tasks"].as_array().expect("tasks"),
         "kind",
@@ -368,7 +455,7 @@ fn tc_010_exposes_unsupported_blocked_stale_and_fault_work() {
         .as_array_mut()
         .expect("selections")
         .truncate(1);
-    let stale_plan = build_verification_plan(&stale).expect("stale plan");
+    let stale_plan = build_fixture_plan(&stale).expect("stale plan");
     assert_eq!(stale_plan["policyRef"]["freshness"], "stale");
 }
 
@@ -382,6 +469,186 @@ fn tc_026_coalesces_plan_level_prerequisites() {
     assert_near_match_remains_missing(&source);
     assert_stale_policy_remains_missing(&source);
     assert_delimiter_bearing_selection_ids_remain_distinct(&source);
+}
+
+#[trace("TC-028", "FR-002-AC-4", "NFR-002-AC-3")]
+#[trace("FR-015-AC-1", "FR-015-AC-2")]
+#[trace("FR-015-AC-3", "FR-015-AC-4")]
+#[test]
+fn tc_028_preserves_closed_role_inputs_and_requires_strict_reader_outputs() {
+    let source = fixture("portfolio.json");
+    let request = &source["planRequest"];
+    let references = validated_fixture_references(request).expect("fixture references");
+    assert_role_inputs_round_trip(request, &references);
+    assert_shared_definition_is_external();
+    assert_required_input_fields(request, &references);
+    assert_invalid_role_inputs_are_refused(request, &references);
+}
+
+fn assert_role_inputs_round_trip(request: &Value, references: &[ValidatedSharedReference]) {
+    let plan = build_plan_from_validated(request, references).expect("role-correct plan");
+    let tasks = plan["tasks"].as_array().expect("plan tasks");
+    for property in request["properties"].as_array().expect("properties") {
+        let property_id = property["propertyId"].as_str().expect("property id");
+        let task = tasks
+            .iter()
+            .find(|task| {
+                task["kind"] == "verification" && task["propertyId"].as_str() == Some(property_id)
+            })
+            .expect("verification task for property");
+        assert!(jcs_equal(&task["input"], &property["input"]).expect("JCS comparison"));
+    }
+    let manual = tasks
+        .iter()
+        .find(|task| task["input"]["kind"] == "manual")
+        .expect("manual task");
+    assert_eq!(
+        manual["input"]["requiredDisposition"],
+        json!(["accept", "revise", "reject"])
+    );
+    assert_eq!(manual["runnerRequest"]["kind"], "manual");
+}
+
+fn assert_shared_definition_is_external() {
+    let schema: Value = serde_json::from_str(include_str!("../contracts/e02-draft-2.schema.json"))
+        .expect("authoritative schema");
+    assert!(schema["$defs"].get("ArtifactRef").is_none());
+    assert_eq!(
+        schema.pointer("/$defs/SharedArtifactEnvelope/properties/value/$ref"),
+        Some(&json!("urn:ix:shared-reference:2-draft#/$defs/ArtifactRef"))
+    );
+    let build_script = include_str!("../build.rs");
+    assert!(build_script.contains("type_space.add_ref_types(shared.definitions)"));
+}
+
+fn assert_required_input_fields(request: &Value, references: &[ValidatedSharedReference]) {
+    for (property_index, property) in request["properties"]
+        .as_array()
+        .expect("properties")
+        .iter()
+        .enumerate()
+    {
+        for required in property["input"].as_object().expect("closed input").keys() {
+            let mut missing = request.clone();
+            missing["properties"][property_index]["input"]
+                .as_object_mut()
+                .expect("input object")
+                .remove(required);
+            assert_eq!(
+                build_plan_from_validated(&missing, references)
+                    .expect_err("required input field")
+                    .code(),
+                VerificationErrorCode::SchemaViolation,
+                "input kind {} accepted without {required}",
+                property["input"]["kind"]
+            );
+        }
+    }
+}
+
+fn assert_invalid_role_inputs_are_refused(
+    request: &Value,
+    references: &[ValidatedSharedReference],
+) {
+    let mut aliased = request.clone();
+    aliased["properties"][1]["input"]["rightSubject"] =
+        aliased["properties"][1]["input"]["leftSubject"].clone();
+    assert_eq!(
+        build_plan_from_validated(&aliased, references)
+            .expect_err("equal relational subjects")
+            .code(),
+        VerificationErrorCode::InvalidInput
+    );
+
+    let reference_pointers = [
+        "/properties/0/input/snapshotRef",
+        "/properties/2/input/traceRef",
+        "/properties/3/input/faultModelRef",
+        "/properties/3/input/mitigationOracleRef",
+        "/properties/4/input/reviewProcedureRef",
+    ];
+    for pointer in reference_pointers {
+        let mut wrong_version = request.clone();
+        wrong_version
+            .pointer_mut(&format!("{pointer}/wireVersion"))
+            .expect("wire version")
+            .clone_from(&json!("ix.shared-reference/1-draft"));
+        assert_eq!(
+            build_plan_from_validated(&wrong_version, references)
+                .expect_err("wrong shared-reference version")
+                .code(),
+            VerificationErrorCode::SchemaViolation
+        );
+
+        let mut wrong_artifact_version = request.clone();
+        wrong_artifact_version
+            .pointer_mut(&format!("{pointer}/value/refVersion"))
+            .expect("artifact reference version")
+            .clone_from(&json!("ix.artifact-ref/2-draft"));
+        assert_eq!(
+            build_plan_from_validated(&wrong_artifact_version, references)
+                .expect_err("wrong artifact-reference version")
+                .code(),
+            VerificationErrorCode::SchemaViolation
+        );
+
+        let mut wrong_role = request.clone();
+        wrong_role
+            .pointer_mut(&format!("{pointer}/value/kind"))
+            .expect("artifact role")
+            .clone_from(&json!("observation"));
+        assert_eq!(
+            build_plan_from_validated(&wrong_role, references)
+                .expect_err("wrong artifact role")
+                .code(),
+            VerificationErrorCode::SchemaViolation
+        );
+
+        let mut unvalidated = request.clone();
+        unvalidated
+            .pointer_mut(&format!("{pointer}/value/identity"))
+            .expect("artifact identity")
+            .clone_from(&json!("artifact:not-read"));
+        assert_eq!(
+            build_plan_from_validated(&unvalidated, references)
+                .expect_err("unvalidated envelope")
+                .code(),
+            VerificationErrorCode::IdentityMismatch
+        );
+    }
+
+    let mut cross_variant = request.clone();
+    cross_variant["properties"][0]["input"]["relation"] = json!("foreign");
+    assert_eq!(
+        build_plan_from_validated(&cross_variant, references)
+            .expect_err("cross-variant input field")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut unknown = request.clone();
+    unknown["properties"][2]["input"]["unknown"] = json!(true);
+    assert_eq!(
+        build_plan_from_validated(&unknown, references)
+            .expect_err("unknown input field")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut duplicate = request.clone();
+    duplicate["properties"][4]["input"]["requiredDisposition"] = json!(["accept", "accept"]);
+    assert_eq!(
+        build_plan_from_validated(&duplicate, references)
+            .expect_err("duplicate manual disposition")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut draft_1 = request.clone();
+    draft_1["policy"]["contractVersion"] = json!("quire-verification/e02-draft-1");
+    assert_eq!(
+        build_plan_from_validated(&draft_1, references)
+            .expect_err("draft-1 request")
+            .code(),
+        VerificationErrorCode::UnsupportedContractVersion
+    );
 }
 
 fn plan_with_every_prerequisite_missing(source: &Value) -> Value {
@@ -401,7 +668,7 @@ fn plan_with_every_prerequisite_missing(source: &Value) -> Value {
             "required": true
         }));
     request["availablePrerequisites"] = json!([]);
-    build_verification_plan(&request).expect("blocked plan")
+    build_fixture_plan(&request).expect("blocked plan")
 }
 
 fn assert_plan_level_setup_tasks(plan: &Value) {
@@ -437,6 +704,7 @@ fn assert_plan_level_setup_tasks(plan: &Value) {
     {
         assert!(setup.get("propertyId").is_none());
         assert!(setup.get("techniqueId").is_none());
+        assert!(setup.get("input").is_none());
         let required_by = setup["requiredBy"].as_array().expect("requiredBy");
         assert!(!required_by.is_empty());
         assert!(required_by.windows(2).all(|pair| {
@@ -499,7 +767,7 @@ fn assert_near_match_remains_missing(source: &Value) {
         .as_array_mut()
         .expect("available prerequisites")
         .push(json!({"kind": "a", "id": "b:c"}));
-    let near_plan = build_verification_plan(&near_match).expect("near-match plan");
+    let near_plan = build_fixture_plan(&near_match).expect("near-match plan");
     let near_tasks = near_plan["tasks"].as_array().expect("near-match tasks");
     assert!(
         near_tasks
@@ -532,7 +800,7 @@ fn assert_stale_policy_remains_missing(source: &Value) {
             "kind": "policy-freshness",
             "id": "POLICY-PARSER-FIXTURE@1"
         }));
-    let stale_plan = build_verification_plan(&stale).expect("stale plan");
+    let stale_plan = build_fixture_plan(&stale).expect("stale plan");
     let stale_tasks = stale_plan["tasks"].as_array().expect("stale tasks");
     assert!(
         stale_tasks.iter().any(|task| {
@@ -570,7 +838,7 @@ fn assert_delimiter_bearing_selection_ids_remain_distinct(source: &Value) {
     request["selections"][1]["propertyId"] = json!("a");
     request["selections"][1]["techniqueId"] = json!("b:c");
 
-    let plan = build_verification_plan(&request).expect("delimiter-bearing plan");
+    let plan = build_fixture_plan(&request).expect("delimiter-bearing plan");
     let tasks = plan["tasks"].as_array().expect("tasks");
     assert!(
         tasks
@@ -600,7 +868,7 @@ fn tc_011_rejects_ambiguous_capabilities() {
         .expect("selections")
         .truncate(1);
     assert_eq!(
-        build_verification_plan(&request)
+        build_fixture_plan(&request)
             .expect_err("ambiguous capability must fail")
             .code(),
         VerificationErrorCode::AmbiguousCapability
@@ -619,7 +887,7 @@ fn tc_024_keeps_applicability_readiness_and_classification_independent() {
             .truncate(1);
         request["selections"][0]["applicability"] = json!(applicability);
         request["properties"][0]["classification"] = json!("safety-critical");
-        let plan = build_verification_plan(&request).expect("qualified plan");
+        let plan = build_fixture_plan(&request).expect("qualified plan");
         let task = find_by(
             plan["tasks"].as_array().expect("tasks"),
             "kind",
@@ -648,7 +916,7 @@ fn tc_024_keeps_applicability_readiness_and_classification_independent() {
         .as_array_mut()
         .expect("capabilities")
         .retain(|item| item["techniqueId"] != "property-based-testing");
-    let unsupported_plan = build_verification_plan(&unsupported).expect("unsupported plan");
+    let unsupported_plan = build_fixture_plan(&unsupported).expect("unsupported plan");
     let unsupported_task = find_by(
         unsupported_plan["tasks"].as_array().expect("tasks"),
         "kind",
@@ -661,7 +929,7 @@ fn tc_024_keeps_applicability_readiness_and_classification_independent() {
     let mut empty = source["planRequest"].clone();
     empty["properties"][0]["classification"] = json!("");
     assert_eq!(
-        build_verification_plan(&empty)
+        build_fixture_plan(&empty)
             .expect_err("empty classification must fail")
             .code(),
         VerificationErrorCode::SchemaViolation
@@ -690,7 +958,7 @@ fn tc_025_retains_authored_policy_and_rejects_ordinal_scoring() {
             .truncate(1);
         request["selections"][0]["priority"] = json!(priority);
         request["selections"][0]["reasons"] = reasons.clone();
-        let plan = build_verification_plan(&request).expect("authored policy plan");
+        let plan = build_fixture_plan(&request).expect("authored policy plan");
         let task = find_by(
             plan["tasks"].as_array().expect("tasks"),
             "kind",
@@ -944,7 +1212,7 @@ fn tc_032_refuses_invalid_temporal_inputs_and_overflow() {
         .as_object_mut()
         .expect("property object")
         .remove("freshness");
-    build_verification_plan(&planning_only)
+    build_fixture_plan(&planning_only)
         .expect("planning property is not yet an evidence obligation");
 
     let mut unsafe_age = one_result_packet();
