@@ -3,7 +3,7 @@ id: SR-155
 title: "Integrity review of the issue 13 qualification specification"
 type: SpecReview
 analysis: integrity
-scope: "StR-002, US-004, FR-022..FR-027, NFR-007..NFR-008, TM-001"
+scope: "quire-verification@06630ec; StR-002, US-004, FR-022..FR-027, NFR-007..NFR-008, TM-001"
 review_set: all
 ---
 # Integrity review of the issue 13 qualification specification
@@ -31,4 +31,5 @@ NFR-006, and required to return typed failures.
 
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
-| FND-001 | low | No completeness, conflict, atomicity, or hidden-fallback defect remains in the reviewed qualification slice. | StR-002, FR-022..FR-027, NFR-007..NFR-008 |
+| FND-001 | medium | Resolved: the stakeholder need now has direct satisfaction edges from every required FR/NFR, and shared multi-task test cases have one declared completion owner. | StR-002, Task-028..Task-032 |
+| FND-002 | low | No completeness, conflict, atomicity, or hidden-fallback defect remains in the reviewed qualification slice. | StR-002, FR-022..FR-027, NFR-007..NFR-008 |

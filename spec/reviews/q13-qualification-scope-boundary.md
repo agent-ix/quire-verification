@@ -3,7 +3,7 @@ id: SR-159
 title: "Scope and boundary review of the issue 13 qualification specification"
 type: SpecReview
 analysis: scope-boundary
-scope: "StR-002, FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
+scope: "quire-verification@06630ec; StR-002, FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
 review_set: all
 ---
 # Scope and boundary review of the issue 13 qualification specification

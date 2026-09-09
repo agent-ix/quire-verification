@@ -3,7 +3,7 @@ id: SR-154
 title: "Failure-domain review of the issue 13 qualification specification"
 type: SpecReview
 analysis: failure-domain
-scope: "FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
+scope: "quire-verification@06630ec; FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
 review_set: all
 ---
 # Failure-domain review of the issue 13 qualification specification

@@ -3,7 +3,7 @@ id: SR-156
 title: "Dependency review of the issue 13 qualification specification"
 type: SpecReview
 analysis: dependency
-scope: "StR-002, FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
+scope: "quire-verification@06630ec; StR-002, FR-022..FR-027, NFR-007..NFR-008, AD-002, IT-004"
 review_set: all
 ---
 # Dependency review of the issue 13 qualification specification
@@ -23,7 +23,7 @@ revisions are gates owned outside this plan.
 | FR-022 | Enablement | Freezes the identity and claim every later artifact uses. |
 | FR-023 | Enablement | Supplies the closed input population and lineage. |
 | FR-024 | Enablement | Defines the oracle authority and dependence model. |
-| FR-025 | Feature | Executes the discriminating evidence techniques. |
+| FR-025 | Feature | Produces one exact result for each selected discriminating evidence technique. |
 | FR-026 | Feature | Exercises the selected real production chain. |
 | NFR-007 | Cross-cutting constraint | Governs measurement for the production chain. |
 | NFR-008 | Cross-cutting constraint | Governs all retained identities and reproduction. |
@@ -56,4 +56,5 @@ graph TD
 
 | ID | Severity | Summary | Refs |
 |----|----------|---------|------|
-| FND-001 | low | No cycle or implicit internal prerequisite remains; unavailable external revisions block only their dependent tasks. | FR-022, FR-026, AD-002 |
+| FND-001 | medium | Resolved: Task-029 and Task-032 now own completion of the shared TC-042 and TC-044 gates after their explicit enabling tasks. | Task-028..Task-032, TC-042, TC-044 |
+| FND-002 | low | No cycle or implicit internal prerequisite remains; unavailable external revisions block only their dependent tasks. | FR-022, FR-026, AD-002 |

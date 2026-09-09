@@ -3,7 +3,7 @@ id: SR-157
 title: "Evidence review of the issue 13 qualification specification"
 type: SpecReview
 analysis: evidence
-scope: "FR-022..FR-027, NFR-007..NFR-008, TC-039..TC-045, IT-004"
+scope: "quire-verification@06630ec; FR-022..FR-027, NFR-007..NFR-008, TC-039..TC-045, IT-004"
 review_set: all
 ---
 # Evidence review of the issue 13 qualification specification
