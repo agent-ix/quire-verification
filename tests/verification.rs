@@ -229,6 +229,43 @@ fn tc_006_rejects_an_unhandled_fixture_and_ci_runs_validation_first() {
             .find("cargo test")
             .is_some_and(|test| validate < test)
     }));
+    let workflows = fs::read_dir(Path::new(env!("CARGO_MANIFEST_DIR")).join(".github/workflows"))
+        .expect("workflow directory");
+    for entry in workflows {
+        let path = entry.expect("workflow entry").path();
+        let is_workflow = path
+            .extension()
+            .and_then(|extension| extension.to_str())
+            .is_some_and(|extension| matches!(extension, "yml" | "yaml"));
+        if !is_workflow {
+            continue;
+        }
+        let configuration = fs::read_to_string(&path).expect("workflow configuration");
+        let trigger_section = configuration
+            .split_once("\njobs:")
+            .map_or(configuration.as_str(), |(prefix, _)| prefix);
+        assert!(
+            trigger_section.contains("\non:\n  workflow_dispatch:"),
+            "{} must declare workflow_dispatch",
+            path.display()
+        );
+        for automatic_trigger in [
+            "pull_request:",
+            "pull_request_target:",
+            "push:",
+            "schedule:",
+            "workflow_run:",
+            "repository_dispatch:",
+        ] {
+            assert!(
+                !trigger_section
+                    .lines()
+                    .any(|line| line.trim() == automatic_trigger),
+                "{} declares automatic trigger {automatic_trigger}",
+                path.display()
+            );
+        }
+    }
 }
 
 #[trace("TC-007", "FR-004-AC-1")]
