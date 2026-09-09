@@ -1,0 +1,2029 @@
+{
+  "core": {
+    "adapters": [
+      "native-rust"
+    ],
+    "assessedAt": "2026-09-09T20:00:00Z",
+    "assessment": {
+      "asOf": "2026-09-09T20:00:00Z",
+      "denominator": 3,
+      "evidenceOwner": "Quoin",
+      "obligations": [
+        {
+          "activation": {
+            "status": "activated"
+          },
+          "adequacy": {
+            "status": "adequate"
+          },
+          "assumptions": [],
+          "execution": {
+            "status": "completed"
+          },
+          "freshness": "fresh",
+          "gaps": [],
+          "logical": {
+            "outcome": "satisfied"
+          },
+          "nativeArtifacts": [
+            {
+              "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+              "mediaType": "text/plain",
+              "uri": "vp04-native:roundtrip-format-1:stdout"
+            },
+            {
+              "digest": "sha256:586264ad2424f6102a1569669366985a4f5b7d848f7d3dc5664c56036b96c210",
+              "mediaType": "application/json",
+              "uri": "vp04-native:roundtrip-parse:stdout"
+            },
+            {
+              "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+              "mediaType": "text/plain",
+              "uri": "vp04-native:roundtrip-format-2:stdout"
+            }
+          ],
+          "oracleContributions": [
+            {
+              "contributionId": "contribution:VP04-REAL-ROUNDTRIP",
+              "dependenceGroupId": "quire-spec-parser-candidate",
+              "observationRef": {
+                "kind": "artifact",
+                "value": {
+                  "authority": "github.com/agent-ix/quire-verification",
+                  "digest": "sha256:cdcbbc17f528bce05b97241d1258ddd4f05f532c81343b955da2af2449c5b163",
+                  "identity": "observation:vp04-roundtrip",
+                  "kind": "observation",
+                  "refVersion": "ix.artifact-ref/3-draft",
+                  "revision": {
+                    "namespace": "sha256",
+                    "value": "cdcbbc17f528bce05b97241d1258ddd4f05f532c81343b955da2af2449c5b163"
+                  },
+                  "wire": {
+                    "identity": "text/plain",
+                    "version": "1"
+                  }
+                },
+                "wireVersion": "ix.shared-reference/2-draft"
+              },
+              "oracleRef": {
+                "kind": "artifact",
+                "value": {
+                  "authority": "github.com/agent-ix/quire-verification",
+                  "digest": "sha256:a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d",
+                  "identity": "oracle:quire-spec-parser-protocol",
+                  "kind": "oracle",
+                  "refVersion": "ix.artifact-ref/3-draft",
+                  "revision": {
+                    "namespace": "sha256",
+                    "value": "a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d"
+                  },
+                  "wire": {
+                    "identity": "text/plain",
+                    "version": "1"
+                  }
+                },
+                "wireVersion": "ix.shared-reference/2-draft"
+              },
+              "relation": "shared"
+            }
+          ],
+          "participation": {
+            "status": "complete"
+          },
+          "propertyId": "VP04-ROUNDTRIP",
+          "provenance": {
+            "adapter": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "producer": "quire-spec-language",
+            "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+            "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+          },
+          "resultId": "VP04-REAL-ROUNDTRIP",
+          "status": "supported"
+        },
+        {
+          "activation": {
+            "status": "not-required"
+          },
+          "adequacy": {
+            "status": "not-assessed"
+          },
+          "assumptions": [],
+          "execution": {
+            "status": "not-run"
+          },
+          "freshness": "fresh",
+          "gaps": [
+            {
+              "detail": null,
+              "kind": "incomplete"
+            },
+            {
+              "kind": "observation-inadequate",
+              "missing": []
+            },
+            {
+              "kind": "partial-participation",
+              "missing": [],
+              "status": "not-started"
+            }
+          ],
+          "logical": {
+            "outcome": "not-evaluated"
+          },
+          "nativeArtifacts": [],
+          "oracleContributions": [],
+          "participation": {
+            "status": "not-started"
+          },
+          "propertyId": "VP04-DISPOSITION",
+          "provenance": {
+            "adapter": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "producer": "quire-spec-language",
+            "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+            "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+          },
+          "resultId": "VP04-REAL-DISPOSITION-PENDING",
+          "status": "incomplete"
+        },
+        {
+          "candidateResultIds": [
+            "VP04-REAL-ADVERSE",
+            "VP04-REAL-DIRECT"
+          ],
+          "gaps": [
+            {
+              "kind": "ambiguous-results",
+              "resultIds": [
+                "VP04-REAL-ADVERSE",
+                "VP04-REAL-DIRECT"
+              ]
+            }
+          ],
+          "propertyId": "VP04-DIRECT",
+          "resultId": null,
+          "status": "ambiguous"
+        }
+      ],
+      "oracleDependenceFindings": [
+        {
+          "kind": "oracle-dependence-unknown",
+          "member": {
+            "contributionId": "contribution:VP04-REAL-ROUNDTRIP",
+            "resultId": "VP04-REAL-ROUNDTRIP"
+          },
+          "reason": "shared-group-unresolved"
+        }
+      ],
+      "statusSemantics": "compatibility summary only; gaps enumerate every applicable independent result finding",
+      "sufficiencyDecision": "not-made"
+    },
+    "candidateRef": {
+      "kind": "artifact",
+      "value": {
+        "authority": "github.com/agent-ix/quire-verification",
+        "digest": "sha256:c6bd75613f85dfd38aaf37169aed0a3d7409466d4b2f34dcc5397896c46579e5",
+        "identity": "quire-spec-language:quire-spec",
+        "kind": "executable-projection",
+        "refVersion": "ix.artifact-ref/3-draft",
+        "revision": {
+          "namespace": "git",
+          "value": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "wire": {
+          "identity": "application/vnd.agent-ix.rust-elf",
+          "version": "1"
+        }
+      },
+      "wireVersion": "ix.shared-reference/2-draft"
+    },
+    "claimLimits": [
+      "The run establishes only the declared parser syntax responses and format stability for these fixtures.",
+      "Quoin retains ownership of evidence interpretation and sufficiency."
+    ],
+    "commands": [
+      {
+        "arguments": [
+          "parse",
+          "test:parent",
+          "fixture:1",
+          "/home/peter/dev/quire-verification-agent-b-vp01/fixtures/vp04/parent.native"
+        ],
+        "commandId": "direct-parse",
+        "expectedExitCode": 0,
+        "responseKind": "parsed-json"
+      },
+      {
+        "arguments": [
+          "format",
+          "test:parent",
+          "fixture:1",
+          "/home/peter/dev/quire-verification-agent-b-vp01/fixtures/vp04/parent.native"
+        ],
+        "commandId": "roundtrip-format-1",
+        "expectedExitCode": 0,
+        "responseKind": "formatted-source"
+      },
+      {
+        "arguments": [
+          "parse",
+          "test:parent",
+          "fixture:formatted",
+          "/home/peter/dev/quire-verification-agent-b-vp01/fixtures/vp04/.quire-verification-formatted-PQBJXE.native"
+        ],
+        "commandId": "roundtrip-parse",
+        "expectedExitCode": 0,
+        "responseKind": "parsed-json"
+      },
+      {
+        "arguments": [
+          "format",
+          "test:parent",
+          "fixture:formatted",
+          "/home/peter/dev/quire-verification-agent-b-vp01/fixtures/vp04/.quire-verification-formatted-PQBJXE.native"
+        ],
+        "commandId": "roundtrip-format-2",
+        "expectedExitCode": 0,
+        "responseKind": "formatted-source"
+      },
+      {
+        "arguments": [
+          "parse",
+          "test:parent",
+          "fixture:invalid",
+          "/home/peter/dev/quire-verification-agent-b-vp01/fixtures/vp04/parent-invalid.native"
+        ],
+        "commandId": "syntax-refusal",
+        "expectedExitCode": 1,
+        "responseKind": "diagnostic-json"
+      }
+    ],
+    "dependencyClosureRef": {
+      "kind": "artifact",
+      "value": {
+        "authority": "github.com/agent-ix/quire-verification",
+        "digest": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+        "identity": "quire-spec-language:Cargo.lock",
+        "kind": "dependency-closure",
+        "refVersion": "ix.artifact-ref/3-draft",
+        "revision": {
+          "namespace": "git",
+          "value": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "wire": {
+          "identity": "application/toml",
+          "version": "1"
+        }
+      },
+      "wireVersion": "ix.shared-reference/2-draft"
+    },
+    "environmentRef": {
+      "kind": "artifact",
+      "value": {
+        "authority": "github.com/agent-ix/quire-verification",
+        "digest": "sha256:3295377992e48207475826e9fecd241cbd67bfe509293294c741f6d5cf0bdb82",
+        "identity": "vp04:linux-x86_64",
+        "kind": "environment",
+        "refVersion": "ix.artifact-ref/3-draft",
+        "revision": {
+          "namespace": "sha256",
+          "value": "3295377992e48207475826e9fecd241cbd67bfe509293294c741f6d5cf0bdb82"
+        },
+        "wire": {
+          "identity": "text/plain",
+          "version": "1"
+        }
+      },
+      "wireVersion": "ix.shared-reference/2-draft"
+    },
+    "evidenceOwner": "Quoin",
+    "interpretation": "These observations describe only the selected quire-spec revision and exact fixture pair.",
+    "measurements": {
+      "candidateIdentity": "sha256:c6bd75613f85dfd38aaf37169aed0a3d7409466d4b2f34dcc5397896c46579e5",
+      "context": {
+        "alternativeExplanations": [
+          "process scheduling",
+          "filesystem cache state",
+          "thermal state"
+        ],
+        "cacheTreatment": "five sequential repetitions with naturally warmed filesystem cache",
+        "clock": "monotonic-process-local",
+        "commandOrder": [
+          "setup",
+          "direct-parse",
+          "parse-format-reparse",
+          "complete-run"
+        ],
+        "environmentalDifferences": [],
+        "exclusions": [
+          "build and download time",
+          "other machines",
+          "other fixtures",
+          "human review latency"
+        ],
+        "population": "16 VP04 slots for quire-spec at the selected revision and fixture pair",
+        "uncertainty": "process scheduling, filesystem cache, clock granularity, build residue, and thermal state"
+      },
+      "environmentIdentity": "sha256:3295377992e48207475826e9fecd241cbd67bfe509293294c741f6d5cf0bdb82",
+      "observations": [
+        {
+          "elapsedNanoseconds": 221009422,
+          "observationId": "setup-0",
+          "phase": "setup",
+          "repetition": 0,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 2041911,
+          "observationId": "direct-1",
+          "phase": "direct-parse",
+          "repetition": 1,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 4169183,
+          "observationId": "roundtrip-1",
+          "phase": "parse-format-reparse",
+          "repetition": 1,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 36877311,
+          "observationId": "complete-1",
+          "phase": "complete-run",
+          "repetition": 1,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 2228332,
+          "observationId": "direct-2",
+          "phase": "direct-parse",
+          "repetition": 2,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 4424346,
+          "observationId": "roundtrip-2",
+          "phase": "parse-format-reparse",
+          "repetition": 2,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 15429756,
+          "observationId": "complete-2",
+          "phase": "complete-run",
+          "repetition": 2,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 1873958,
+          "observationId": "direct-3",
+          "phase": "direct-parse",
+          "repetition": 3,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 4218739,
+          "observationId": "roundtrip-3",
+          "phase": "parse-format-reparse",
+          "repetition": 3,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 16778513,
+          "observationId": "complete-3",
+          "phase": "complete-run",
+          "repetition": 3,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 2157539,
+          "observationId": "direct-4",
+          "phase": "direct-parse",
+          "repetition": 4,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 4412547,
+          "observationId": "roundtrip-4",
+          "phase": "parse-format-reparse",
+          "repetition": 4,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 15530096,
+          "observationId": "complete-4",
+          "phase": "complete-run",
+          "repetition": 4,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 1755148,
+          "observationId": "direct-5",
+          "phase": "direct-parse",
+          "repetition": 5,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 4199553,
+          "observationId": "roundtrip-5",
+          "phase": "parse-format-reparse",
+          "repetition": 5,
+          "status": "valid"
+        },
+        {
+          "elapsedNanoseconds": 15710773,
+          "observationId": "complete-5",
+          "phase": "complete-run",
+          "repetition": 5,
+          "status": "valid"
+        }
+      ],
+      "schemaVersion": "quire-verification.vp04-measurements/v1",
+      "summaries": [
+        {
+          "maximumNanoseconds": 221009422,
+          "medianNanoseconds": 221009422,
+          "minimumNanoseconds": 221009422,
+          "phase": "setup",
+          "validSampleCount": 1
+        },
+        {
+          "maximumNanoseconds": 2228332,
+          "medianNanoseconds": 2041911,
+          "minimumNanoseconds": 1755148,
+          "phase": "direct-parse",
+          "validSampleCount": 5
+        },
+        {
+          "maximumNanoseconds": 4424346,
+          "medianNanoseconds": 4218739,
+          "minimumNanoseconds": 4169183,
+          "phase": "parse-format-reparse",
+          "validSampleCount": 5
+        },
+        {
+          "maximumNanoseconds": 36877311,
+          "medianNanoseconds": 15710773,
+          "minimumNanoseconds": 15429756,
+          "phase": "complete-run",
+          "validSampleCount": 5
+        }
+      ]
+    },
+    "mutationRef": {
+      "kind": "artifact",
+      "value": {
+        "authority": "github.com/agent-ix/quire-verification",
+        "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+        "identity": "quire-spec:parent-invalid.native",
+        "kind": "source",
+        "refVersion": "ix.artifact-ref/3-draft",
+        "revision": {
+          "namespace": "vp04-mutation-of-git",
+          "value": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "wire": {
+          "identity": "text/plain",
+          "version": "1"
+        }
+      },
+      "wireVersion": "ix.shared-reference/2-draft"
+    },
+    "nativeRuns": [
+      {
+        "commandId": "direct-parse",
+        "errorCode": null,
+        "observedExitCode": 0,
+        "runId": "direct-parse-run",
+        "status": "completed",
+        "stderrArtifact": null,
+        "stdoutArtifact": {
+          "digest": "sha256:7e60dfa2abd7fe01092fe218dcfbf45406b7fb8e74c3bca3fa37a33d544e4f85",
+          "mediaType": "application/json",
+          "uri": "vp04-native:direct-parse:stdout"
+        }
+      },
+      {
+        "commandId": "roundtrip-format-1",
+        "errorCode": null,
+        "observedExitCode": 0,
+        "runId": "roundtrip-format-1-run",
+        "status": "completed",
+        "stderrArtifact": null,
+        "stdoutArtifact": {
+          "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+          "mediaType": "text/plain",
+          "uri": "vp04-native:roundtrip-format-1:stdout"
+        }
+      },
+      {
+        "commandId": "roundtrip-parse",
+        "errorCode": null,
+        "observedExitCode": 0,
+        "runId": "roundtrip-parse-run",
+        "status": "completed",
+        "stderrArtifact": null,
+        "stdoutArtifact": {
+          "digest": "sha256:586264ad2424f6102a1569669366985a4f5b7d848f7d3dc5664c56036b96c210",
+          "mediaType": "application/json",
+          "uri": "vp04-native:roundtrip-parse:stdout"
+        }
+      },
+      {
+        "commandId": "roundtrip-format-2",
+        "errorCode": null,
+        "observedExitCode": 0,
+        "runId": "roundtrip-format-2-run",
+        "status": "completed",
+        "stderrArtifact": null,
+        "stdoutArtifact": {
+          "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+          "mediaType": "text/plain",
+          "uri": "vp04-native:roundtrip-format-2:stdout"
+        }
+      },
+      {
+        "commandId": "syntax-refusal",
+        "errorCode": null,
+        "observedExitCode": 1,
+        "runId": "syntax-refusal-run",
+        "status": "completed",
+        "stderrArtifact": {
+          "digest": "sha256:1af201c7e1fb9e88b1ab1156a9a15740b8c568b064476eb1f81a775b2ad08dcf",
+          "mediaType": "application/json",
+          "uri": "vp04-native:syntax-refusal:stderr"
+        },
+        "stdoutArtifact": null
+      }
+    ],
+    "plan": {
+      "budget": {
+        "parallelism": 1,
+        "wallClockSeconds": 10
+      },
+      "contractVersion": "quire-verification/e02-draft-2",
+      "evidenceOwner": "Quoin",
+      "inventory": [
+        {
+          "bindingRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e",
+                "identity": "binding:VP04-DIRECT",
+                "kind": "binding",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "classification": "unknown",
+          "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+          "executionScope": {
+            "paths": [
+              "src/main.rs",
+              "src/parser.rs",
+              "src/format.rs"
+            ],
+            "repository": "agent-ix/quire-spec-language",
+            "revision": "2be73504edff1224d6396da15edca3775905d37b"
+          },
+          "freshness": {
+            "maxAgeSeconds": 2592000
+          },
+          "input": {
+            "kind": "state",
+            "property": "exact successful parse response",
+            "snapshotRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                "identity": "snapshot:parent.native",
+                "kind": "snapshot",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          },
+          "profile": "quire-native-parser/v1",
+          "propertyId": "VP04-DIRECT",
+          "propertyRef": {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205",
+              "identity": "property:vp04-direct-parse",
+              "kind": "property",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          "resultBinding": {
+            "adapter": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "planId": "PLAN-VP04-QUIRE-SPEC",
+            "producer": "quire-spec-language",
+            "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+            "runRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+                "identity": "run:vp04-real-parser",
+                "kind": "run-artifact",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+                },
+                "wire": {
+                  "identity": "application/json",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "taskId": "verify:11:VP04-DIRECT:12:unit-testing"
+          },
+          "subjectRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                "identity": "quire-spec:parent.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+                "identity": "quire-spec:parent-invalid.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "vp04-mutation-of-git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "techniqueId": "unit-testing"
+        },
+        {
+          "bindingRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bcbe243a49c493e5b4b282dd33da8a6dc86006147f20241aaf6f69c586deed49",
+                "identity": "binding:VP04-DISPOSITION",
+                "kind": "binding",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "bcbe243a49c493e5b4b282dd33da8a6dc86006147f20241aaf6f69c586deed49"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "classification": "unknown",
+          "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+          "executionScope": {
+            "paths": [
+              "src/main.rs",
+              "src/parser.rs",
+              "src/format.rs"
+            ],
+            "repository": "agent-ix/quire-spec-language",
+            "revision": "2be73504edff1224d6396da15edca3775905d37b"
+          },
+          "freshness": {
+            "maxAgeSeconds": 2592000
+          },
+          "input": {
+            "kind": "manual",
+            "requiredDisposition": [
+              "accept",
+              "revise",
+              "reject"
+            ],
+            "reviewProcedureRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:0f105dbb172e3c1628e8f1f2fdf6ba65a21421032ce52f3746c36dd087980944",
+                "identity": "procedure:vp04-verification-owner",
+                "kind": "review-procedure",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "0f105dbb172e3c1628e8f1f2fdf6ba65a21421032ce52f3746c36dd087980944"
+                },
+                "wire": {
+                  "identity": "text/markdown",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          },
+          "profile": "quire-native-review/v1",
+          "propertyId": "VP04-DISPOSITION",
+          "propertyRef": {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:8c92e761050a31c1c8b9149f1f74a0478f68dc1a04f194eca8e6ac79668e25a5",
+              "identity": "property:vp04-human-disposition",
+              "kind": "property",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "8c92e761050a31c1c8b9149f1f74a0478f68dc1a04f194eca8e6ac79668e25a5"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          "resultBinding": {
+            "adapter": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "planId": "PLAN-VP04-QUIRE-SPEC",
+            "producer": "quire-spec-language",
+            "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+            "runRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+                "identity": "run:vp04-real-parser",
+                "kind": "run-artifact",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+                },
+                "wire": {
+                  "identity": "application/json",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "taskId": "verify:16:VP04-DISPOSITION:10:inspection"
+          },
+          "subjectRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                "identity": "quire-spec:parent.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+                "identity": "quire-spec:parent-invalid.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "vp04-mutation-of-git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "techniqueId": "inspection"
+        },
+        {
+          "bindingRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:f9137eb336937aea42a9f3184ab4c7d94073414f63ea31756783a78cd1ed8ddf",
+                "identity": "binding:VP04-ROUNDTRIP",
+                "kind": "binding",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "f9137eb336937aea42a9f3184ab4c7d94073414f63ea31756783a78cd1ed8ddf"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "classification": "unknown",
+          "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+          "executionScope": {
+            "paths": [
+              "src/main.rs",
+              "src/parser.rs",
+              "src/format.rs"
+            ],
+            "repository": "agent-ix/quire-spec-language",
+            "revision": "2be73504edff1224d6396da15edca3775905d37b"
+          },
+          "freshness": {
+            "maxAgeSeconds": 2592000
+          },
+          "input": {
+            "kind": "relational",
+            "leftSubject": "source:valid",
+            "relation": "first and second format outputs are byte-equal",
+            "rightSubject": "source:formatted"
+          },
+          "profile": "quire-native-roundtrip/v1",
+          "propertyId": "VP04-ROUNDTRIP",
+          "propertyRef": {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:79ae566b267d4fa49094e072aeeec03e5a84f4317b2a370b2ec9a9e2fc300387",
+              "identity": "property:vp04-format-stability",
+              "kind": "property",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "79ae566b267d4fa49094e072aeeec03e5a84f4317b2a370b2ec9a9e2fc300387"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          "resultBinding": {
+            "adapter": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "planId": "PLAN-VP04-QUIRE-SPEC",
+            "producer": "quire-spec-language",
+            "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+            "runRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+                "identity": "run:vp04-real-parser",
+                "kind": "run-artifact",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+                },
+                "wire": {
+                  "identity": "application/json",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "taskId": "verify:14:VP04-ROUNDTRIP:19:metamorphic-testing"
+          },
+          "subjectRefs": [
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                "identity": "quire-spec:parent.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+                "identity": "quire-spec:parent-invalid.native",
+                "kind": "source",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "vp04-mutation-of-git",
+                  "value": "2be73504edff1224d6396da15edca3775905d37b"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          ],
+          "techniqueId": "metamorphic-testing"
+        }
+      ],
+      "kind": "VerificationPlan",
+      "planId": "PLAN-VP04-QUIRE-SPEC",
+      "policyRef": {
+        "freshness": "current",
+        "policyId": "POLICY-VP04-QUIRE-SPEC",
+        "sourceRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+            "identity": "quire-spec:parent.native",
+            "kind": "source",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "git",
+              "value": "2be73504edff1224d6396da15edca3775905d37b"
+            },
+            "wire": {
+              "identity": "text/plain",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "validUntil": "2026-10-09T20:00:00Z",
+        "version": "1"
+      },
+      "sufficiencyOwner": "authored-human-decision",
+      "tasks": [
+        {
+          "dependencies": [],
+          "invocationAllowed": false,
+          "kind": "manual-prerequisite",
+          "missingPrerequisites": [
+            {
+              "id": "agent-ix-verification-owner",
+              "kind": "reviewer",
+              "required": true
+            }
+          ],
+          "prerequisite": {
+            "id": "agent-ix-verification-owner",
+            "kind": "reviewer",
+            "required": true
+          },
+          "readiness": "blocked",
+          "requiredBy": [
+            "verify:16:VP04-DISPOSITION:10:inspection"
+          ],
+          "runnerRequest": null,
+          "taskId": "setup:8:reviewer:27:agent-ix-verification-owner"
+        },
+        {
+          "applicability": "applicable",
+          "dependencies": [],
+          "gaps": [],
+          "input": {
+            "kind": "state",
+            "property": "exact successful parse response",
+            "snapshotRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                "identity": "snapshot:parent.native",
+                "kind": "snapshot",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          },
+          "invocationAllowed": true,
+          "kind": "verification",
+          "missingPrerequisites": [],
+          "priority": "required",
+          "propertyId": "VP04-DIRECT",
+          "readiness": "ready",
+          "reasons": [
+            {
+              "rule": "exact-direct",
+              "value": "reviewed parser CLI"
+            }
+          ],
+          "runnerRequest": {
+            "adapterId": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "budget": {
+              "parallelism": 1,
+              "wallClockSeconds": 10
+            },
+            "capabilityId": "CAP-VP04-DIRECT",
+            "environmentPermissions": [
+              "read-qualified-fixture"
+            ],
+            "input": {
+              "kind": "state",
+              "property": "exact successful parse response",
+              "snapshotRef": {
+                "kind": "artifact",
+                "value": {
+                  "authority": "github.com/agent-ix/quire-verification",
+                  "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+                  "identity": "snapshot:parent.native",
+                  "kind": "snapshot",
+                  "refVersion": "ix.artifact-ref/3-draft",
+                  "revision": {
+                    "namespace": "sha256",
+                    "value": "bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018"
+                  },
+                  "wire": {
+                    "identity": "text/plain",
+                    "version": "1"
+                  }
+                },
+                "wireVersion": "ix.shared-reference/2-draft"
+              }
+            },
+            "kind": "native-producer",
+            "nativeArtifactInterface": {
+              "mediaTypes": [
+                "application/json",
+                "text/plain"
+              ],
+              "mode": "reference-only"
+            }
+          },
+          "taskId": "verify:11:VP04-DIRECT:12:unit-testing",
+          "techniqueId": "unit-testing"
+        },
+        {
+          "applicability": "applicable",
+          "dependencies": [],
+          "gaps": [],
+          "input": {
+            "kind": "relational",
+            "leftSubject": "source:valid",
+            "relation": "first and second format outputs are byte-equal",
+            "rightSubject": "source:formatted"
+          },
+          "invocationAllowed": true,
+          "kind": "verification",
+          "missingPrerequisites": [],
+          "priority": "required",
+          "propertyId": "VP04-ROUNDTRIP",
+          "readiness": "ready",
+          "reasons": [
+            {
+              "rule": "exact-roundtrip",
+              "value": "reviewed parser CLI"
+            }
+          ],
+          "runnerRequest": {
+            "adapterId": "native-rust",
+            "adapterVersion": "quire-verification/e02-draft-2",
+            "budget": {
+              "parallelism": 1,
+              "wallClockSeconds": 10
+            },
+            "capabilityId": "CAP-VP04-ROUNDTRIP",
+            "environmentPermissions": [
+              "read-qualified-fixture"
+            ],
+            "input": {
+              "kind": "relational",
+              "leftSubject": "source:valid",
+              "relation": "first and second format outputs are byte-equal",
+              "rightSubject": "source:formatted"
+            },
+            "kind": "native-producer",
+            "nativeArtifactInterface": {
+              "mediaTypes": [
+                "application/json",
+                "text/plain"
+              ],
+              "mode": "reference-only"
+            }
+          },
+          "taskId": "verify:14:VP04-ROUNDTRIP:19:metamorphic-testing",
+          "techniqueId": "metamorphic-testing"
+        },
+        {
+          "applicability": "applicable",
+          "dependencies": [
+            "setup:8:reviewer:27:agent-ix-verification-owner"
+          ],
+          "gaps": [],
+          "input": {
+            "kind": "manual",
+            "requiredDisposition": [
+              "accept",
+              "revise",
+              "reject"
+            ],
+            "reviewProcedureRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:0f105dbb172e3c1628e8f1f2fdf6ba65a21421032ce52f3746c36dd087980944",
+                "identity": "procedure:vp04-verification-owner",
+                "kind": "review-procedure",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "0f105dbb172e3c1628e8f1f2fdf6ba65a21421032ce52f3746c36dd087980944"
+                },
+                "wire": {
+                  "identity": "text/markdown",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            }
+          },
+          "invocationAllowed": false,
+          "kind": "verification",
+          "missingPrerequisites": [
+            {
+              "id": "agent-ix-verification-owner",
+              "kind": "reviewer",
+              "required": true
+            }
+          ],
+          "priority": "required",
+          "propertyId": "VP04-DISPOSITION",
+          "readiness": "blocked",
+          "reasons": [
+            {
+              "rule": "human-disposition",
+              "value": "external owner"
+            }
+          ],
+          "runnerRequest": null,
+          "taskId": "verify:16:VP04-DISPOSITION:10:inspection",
+          "techniqueId": "inspection"
+        }
+      ]
+    },
+    "producers": [
+      "quire-spec-language@2be73504edff1224d6396da15edca3775905d37b",
+      "quire-verification"
+    ],
+    "reportId": "VP04-QUIRE-SPEC-LC01",
+    "results": [
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "status": "adequate"
+        },
+        "assumptions": [],
+        "bindingRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e",
+              "identity": "binding:VP04-DIRECT",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "contractVersion": "quire-verification/e02-draft-2",
+        "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+        "execution": {
+          "status": "completed"
+        },
+        "executionScope": {
+          "paths": [
+            "src/main.rs",
+            "src/parser.rs",
+            "src/format.rs"
+          ],
+          "repository": "agent-ix/quire-spec-language",
+          "revision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "kind": "TechniqueResult",
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:7e60dfa2abd7fe01092fe218dcfbf45406b7fb8e74c3bca3fa37a33d544e4f85",
+            "mediaType": "application/json",
+            "uri": "vp04-native:direct-parse:stdout"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "contribution:VP04-REAL-DIRECT",
+            "dependenceGroupId": "quire-spec-parser-candidate",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:6f74e18a6348e1e364eed6e09108c5b369657bf20ea541f6098c17de5dee88e8",
+                "identity": "observation:vp04-direct",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "6f74e18a6348e1e364eed6e09108c5b369657bf20ea541f6098c17de5dee88e8"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d",
+                "identity": "oracle:quire-spec-parser-protocol",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "shared"
+          }
+        ],
+        "participation": {
+          "status": "complete"
+        },
+        "planId": "PLAN-VP04-QUIRE-SPEC",
+        "producedAt": "2026-09-09T20:00:00Z",
+        "profile": "quire-native-parser/v1",
+        "propertyRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205",
+            "identity": "property:vp04-direct-parse",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205"
+            },
+            "wire": {
+              "identity": "text/plain",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "provenance": {
+          "adapter": "native-rust",
+          "adapterVersion": "quire-verification/e02-draft-2",
+          "producer": "quire-spec-language",
+          "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+          "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "resultId": "VP04-REAL-DIRECT",
+        "runRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+            "identity": "run:vp04-real-parser",
+            "kind": "run-artifact",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+            },
+            "wire": {
+              "identity": "application/json",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "subjectRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+              "identity": "quire-spec:parent.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+              "identity": "quire-spec:parent-invalid.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "vp04-mutation-of-git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "taskId": "verify:11:VP04-DIRECT:12:unit-testing",
+        "techniqueId": "unit-testing",
+        "validUntil": "2026-10-09T20:00:00Z"
+      },
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "status": "adequate"
+        },
+        "assumptions": [],
+        "bindingRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:f9137eb336937aea42a9f3184ab4c7d94073414f63ea31756783a78cd1ed8ddf",
+              "identity": "binding:VP04-ROUNDTRIP",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "f9137eb336937aea42a9f3184ab4c7d94073414f63ea31756783a78cd1ed8ddf"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "contractVersion": "quire-verification/e02-draft-2",
+        "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+        "execution": {
+          "status": "completed"
+        },
+        "executionScope": {
+          "paths": [
+            "src/main.rs",
+            "src/parser.rs",
+            "src/format.rs"
+          ],
+          "repository": "agent-ix/quire-spec-language",
+          "revision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "kind": "TechniqueResult",
+        "logical": {
+          "outcome": "satisfied"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+            "mediaType": "text/plain",
+            "uri": "vp04-native:roundtrip-format-1:stdout"
+          },
+          {
+            "digest": "sha256:586264ad2424f6102a1569669366985a4f5b7d848f7d3dc5664c56036b96c210",
+            "mediaType": "application/json",
+            "uri": "vp04-native:roundtrip-parse:stdout"
+          },
+          {
+            "digest": "sha256:4df9a865a1fd75e6b10b7fe9cea6118018bac19eca9552d9f6feb0a87ceecde4",
+            "mediaType": "text/plain",
+            "uri": "vp04-native:roundtrip-format-2:stdout"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "contribution:VP04-REAL-ROUNDTRIP",
+            "dependenceGroupId": "quire-spec-parser-candidate",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:cdcbbc17f528bce05b97241d1258ddd4f05f532c81343b955da2af2449c5b163",
+                "identity": "observation:vp04-roundtrip",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "cdcbbc17f528bce05b97241d1258ddd4f05f532c81343b955da2af2449c5b163"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d",
+                "identity": "oracle:quire-spec-parser-protocol",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "shared"
+          }
+        ],
+        "participation": {
+          "status": "complete"
+        },
+        "planId": "PLAN-VP04-QUIRE-SPEC",
+        "producedAt": "2026-09-09T20:00:00Z",
+        "profile": "quire-native-roundtrip/v1",
+        "propertyRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:79ae566b267d4fa49094e072aeeec03e5a84f4317b2a370b2ec9a9e2fc300387",
+            "identity": "property:vp04-format-stability",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "79ae566b267d4fa49094e072aeeec03e5a84f4317b2a370b2ec9a9e2fc300387"
+            },
+            "wire": {
+              "identity": "text/plain",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "provenance": {
+          "adapter": "native-rust",
+          "adapterVersion": "quire-verification/e02-draft-2",
+          "producer": "quire-spec-language",
+          "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+          "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "resultId": "VP04-REAL-ROUNDTRIP",
+        "runRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+            "identity": "run:vp04-real-parser",
+            "kind": "run-artifact",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+            },
+            "wire": {
+              "identity": "application/json",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "subjectRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+              "identity": "quire-spec:parent.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+              "identity": "quire-spec:parent-invalid.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "vp04-mutation-of-git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "taskId": "verify:14:VP04-ROUNDTRIP:19:metamorphic-testing",
+        "techniqueId": "metamorphic-testing",
+        "validUntil": "2026-10-09T20:00:00Z"
+      },
+      {
+        "activation": {
+          "status": "activated"
+        },
+        "adequacy": {
+          "status": "adequate"
+        },
+        "assumptions": [],
+        "bindingRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e",
+              "identity": "binding:VP04-DIRECT",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "57b18be4d85413fe9358120eb3e750ccfed738391e0a76649d3fb0c764cd403e"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "contractVersion": "quire-verification/e02-draft-2",
+        "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+        "execution": {
+          "status": "completed"
+        },
+        "executionScope": {
+          "paths": [
+            "src/main.rs",
+            "src/parser.rs",
+            "src/format.rs"
+          ],
+          "repository": "agent-ix/quire-spec-language",
+          "revision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "kind": "TechniqueResult",
+        "logical": {
+          "outcome": "violated"
+        },
+        "nativeArtifacts": [
+          {
+            "digest": "sha256:1af201c7e1fb9e88b1ab1156a9a15740b8c568b064476eb1f81a775b2ad08dcf",
+            "mediaType": "application/json",
+            "uri": "vp04-native:syntax-refusal:stderr"
+          }
+        ],
+        "oracleContributions": [
+          {
+            "contributionId": "contribution:VP04-REAL-ADVERSE",
+            "dependenceGroupId": "quire-spec-parser-candidate",
+            "observationRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:344e74e58aedac27fa8d8846692567a0e15cb8793be3c039dae24bca18692d6f",
+                "identity": "observation:vp04-adverse",
+                "kind": "observation",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "344e74e58aedac27fa8d8846692567a0e15cb8793be3c039dae24bca18692d6f"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "oracleRef": {
+              "kind": "artifact",
+              "value": {
+                "authority": "github.com/agent-ix/quire-verification",
+                "digest": "sha256:a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d",
+                "identity": "oracle:quire-spec-parser-protocol",
+                "kind": "oracle",
+                "refVersion": "ix.artifact-ref/3-draft",
+                "revision": {
+                  "namespace": "sha256",
+                  "value": "a44cd0266d351273c1adc06c5df575dc720e45d4a253a2dbc9d09f3dc725115d"
+                },
+                "wire": {
+                  "identity": "text/plain",
+                  "version": "1"
+                }
+              },
+              "wireVersion": "ix.shared-reference/2-draft"
+            },
+            "relation": "shared"
+          }
+        ],
+        "participation": {
+          "status": "complete"
+        },
+        "planId": "PLAN-VP04-QUIRE-SPEC",
+        "producedAt": "2026-09-09T20:00:00Z",
+        "profile": "quire-native-parser/v1",
+        "propertyRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205",
+            "identity": "property:vp04-direct-parse",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "669b9917bf29f98a3d36cdc083fecd61423eb6cf01f571a587a1cc92a483b205"
+            },
+            "wire": {
+              "identity": "text/plain",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "provenance": {
+          "adapter": "native-rust",
+          "adapterVersion": "quire-verification/e02-draft-2",
+          "producer": "quire-spec-language",
+          "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+          "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "resultId": "VP04-REAL-ADVERSE",
+        "runRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+            "identity": "run:vp04-real-parser",
+            "kind": "run-artifact",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+            },
+            "wire": {
+              "identity": "application/json",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "subjectRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+              "identity": "quire-spec:parent.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+              "identity": "quire-spec:parent-invalid.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "vp04-mutation-of-git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "taskId": "verify:11:VP04-DIRECT:12:unit-testing",
+        "techniqueId": "unit-testing",
+        "validUntil": "2026-10-09T20:00:00Z"
+      },
+      {
+        "activation": {
+          "status": "not-required"
+        },
+        "adequacy": {
+          "status": "not-assessed"
+        },
+        "assumptions": [],
+        "bindingRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:bcbe243a49c493e5b4b282dd33da8a6dc86006147f20241aaf6f69c586deed49",
+              "identity": "binding:VP04-DISPOSITION",
+              "kind": "binding",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "sha256",
+                "value": "bcbe243a49c493e5b4b282dd33da8a6dc86006147f20241aaf6f69c586deed49"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "contractVersion": "quire-verification/e02-draft-2",
+        "dependencyClosure": "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444",
+        "execution": {
+          "status": "not-run"
+        },
+        "executionScope": {
+          "paths": [
+            "src/main.rs",
+            "src/parser.rs",
+            "src/format.rs"
+          ],
+          "repository": "agent-ix/quire-spec-language",
+          "revision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "kind": "TechniqueResult",
+        "logical": {
+          "outcome": "not-evaluated"
+        },
+        "nativeArtifacts": [],
+        "oracleContributions": [],
+        "participation": {
+          "status": "not-started"
+        },
+        "planId": "PLAN-VP04-QUIRE-SPEC",
+        "producedAt": "2026-09-09T20:00:00Z",
+        "profile": "quire-native-review/v1",
+        "propertyRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:8c92e761050a31c1c8b9149f1f74a0478f68dc1a04f194eca8e6ac79668e25a5",
+            "identity": "property:vp04-human-disposition",
+            "kind": "property",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "8c92e761050a31c1c8b9149f1f74a0478f68dc1a04f194eca8e6ac79668e25a5"
+            },
+            "wire": {
+              "identity": "text/plain",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "provenance": {
+          "adapter": "native-rust",
+          "adapterVersion": "quire-verification/e02-draft-2",
+          "producer": "quire-spec-language",
+          "producerVersion": "2be73504edff1224d6396da15edca3775905d37b",
+          "sourceRevision": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "resultId": "VP04-REAL-DISPOSITION-PENDING",
+        "runRef": {
+          "kind": "artifact",
+          "value": {
+            "authority": "github.com/agent-ix/quire-verification",
+            "digest": "sha256:c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029",
+            "identity": "run:vp04-real-parser",
+            "kind": "run-artifact",
+            "refVersion": "ix.artifact-ref/3-draft",
+            "revision": {
+              "namespace": "sha256",
+              "value": "c2f87649fa3c37bc72bb322e20d3f000d6a925c7a392a3f848b6ae5545e31029"
+            },
+            "wire": {
+              "identity": "application/json",
+              "version": "1"
+            }
+          },
+          "wireVersion": "ix.shared-reference/2-draft"
+        },
+        "subjectRefs": [
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+              "identity": "quire-spec:parent.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          },
+          {
+            "kind": "artifact",
+            "value": {
+              "authority": "github.com/agent-ix/quire-verification",
+              "digest": "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa",
+              "identity": "quire-spec:parent-invalid.native",
+              "kind": "source",
+              "refVersion": "ix.artifact-ref/3-draft",
+              "revision": {
+                "namespace": "vp04-mutation-of-git",
+                "value": "2be73504edff1224d6396da15edca3775905d37b"
+              },
+              "wire": {
+                "identity": "text/plain",
+                "version": "1"
+              }
+            },
+            "wireVersion": "ix.shared-reference/2-draft"
+          }
+        ],
+        "taskId": "verify:16:VP04-DISPOSITION:10:inspection",
+        "techniqueId": "inspection",
+        "validUntil": "2026-10-09T20:00:00Z"
+      }
+    ],
+    "schemaVersion": "quire-verification.vp04-report-core/v1",
+    "subjectRef": {
+      "kind": "artifact",
+      "value": {
+        "authority": "github.com/agent-ix/quire-verification",
+        "digest": "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018",
+        "identity": "quire-spec:parent.native",
+        "kind": "source",
+        "refVersion": "ix.artifact-ref/3-draft",
+        "revision": {
+          "namespace": "git",
+          "value": "2be73504edff1224d6396da15edca3775905d37b"
+        },
+        "wire": {
+          "identity": "text/plain",
+          "version": "1"
+        }
+      },
+      "wireVersion": "ix.shared-reference/2-draft"
+    },
+    "sufficiencyDecision": "not-made",
+    "taskIds": [
+      "setup:8:reviewer:27:agent-ix-verification-owner",
+      "verify:11:VP04-DIRECT:12:unit-testing",
+      "verify:14:VP04-ROUNDTRIP:19:metamorphic-testing",
+      "verify:16:VP04-DISPOSITION:10:inspection"
+    ]
+  },
+  "coreDigest": "sha256-jcs:db03d0c81141e06135fa68c84125253ed28b0e92e961abb5b0c44c8a7abd56f2",
+  "disposition": null,
+  "dispositionRef": null,
+  "schemaVersion": "quire-verification.vp04-report/v1",
+  "status": "incomplete"
+}

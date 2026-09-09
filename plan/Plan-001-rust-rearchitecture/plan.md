@@ -45,7 +45,7 @@ relationships:
 - [x] **NFR-001**: Produce deterministic structured comparison output.
 - [x] **NFR-002**: Maintain one authored public-contract source.
 - [x] **NFR-003**: Preserve conservative assurance claims.
-- [x] **NFR-004**: Implement every executable path in Rust.
+- [x] **NFR-004**: Implement every executable path in Rust and bind every acceptance-marker argument through Quire.
 - [x] **NFR-005**: Enforce bounded JSON ingestion.
 
 ## Dependency Graph
@@ -97,16 +97,16 @@ accepted deliverable.
 - [x] **TC-018**: Compare catalog parity by technique identifier.
 - [x] **TC-019**: Return violated and failed portfolio results.
 - [x] **TC-020**: Retain pending human work and bounded claims.
-- [x] **TC-022**: Enforce the Rust qualified-path implementation.
+- [x] **TC-022**: Enforce the Rust qualified-path implementation and cross-reader trace binding.
 
-## Completed Work
+## Completed Work and Open Remediation
 
 ### Track A: Critical Path
 
 - **A1 = Task-001** Rust contract core — Hard; exit: generated wire types, runtime schema validation, JCS, stable errors, and resource limits pass TC-001..TC-004, TC-016, TC-017, and TC-023.
 - **A2 = Task-004** Rust evidence assessor — Hard; exit: every binding dimension and independent finding passes TC-012..TC-015.
 - **A3 = Task-006** Rust bounded portfolio — Hard; exit: parity, permutation, violated, failed, and pending-human outcomes pass TC-018..TC-020.
-- **Gate = Task-007** Qualified-path review — Hard; pass: Quoin validation, Rust gates, exact rust-review, and gap-analysis all succeed with no high finding.
+- **Gate = Task-007** Qualified-path review — Complete; Quoin validation, Rust gates, exact rust-review, and cross-reader trace reconciliation pass with every compiled marker argument bound by Quire.
 
 ### Track B: Parallel After Contract Core
 

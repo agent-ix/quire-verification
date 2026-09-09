@@ -21,6 +21,6 @@ limit through the corresponding public Rust boundary.
 ## Expected Results
 
 At-limit inputs reach normal validation, over-limit inputs return stable resource
-limit errors, and no case panics or performs an unbounded recursive walk. This
-procedure remains pending until the Rust implementation exists.
-
+limit errors, and no case panics or performs an unbounded recursive walk. The
+Rust implementation and its compiler-checked TC-023 trace now supply this
+evidence.

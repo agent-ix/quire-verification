@@ -9,7 +9,7 @@ ran.
 
 The admitted subject is a synthetic parser at revision `parser-r1`. The packet
 uses pinned Quoin/catalog sources, private provisional identity/profile names,
-synthetic bindings and native artifact references, a 60-second fixture budget,
+synthetic bindings and native artifact references, a 10-second fixture budget,
 and no credentials or retained user data. The acceptance threshold for this
 slice was deterministic parity for every pinned method ID plus explicit plans
 and result states for the required positive, adverse, missing-input, stale,
@@ -36,7 +36,8 @@ an adapted field corruption, and an adapter exception.
 - The retained plan contains 14 tasks: six verification tasks and eight visible
   prerequisite tasks. It distinguishes all five input shapes. State property,
   fuzz, and manual tasks are ready; relational, trace, and fault tasks are
-  blocked. The fault task cannot be invoked.
+  blocked. Only the ready native state-property and fuzz tasks receive closed
+  runner requests; manual and blocked work cannot be invoked.
 - Applicability remains independent from readiness. Property classification is
   either preserved as a non-empty authored value or emitted as `unknown`; empty
   classification and ordinal policy scores are rejected, while authored
@@ -58,8 +59,12 @@ an adapted field corruption, and an adapter exception.
 - Digests and structured identity comparisons use RFC 8785 JCS. Catalog parity
   resolves methods by `techniqueId`, and injected violations or execution
   errors are retained as violated or failed `TechniqueResult` records.
+- Every evaluated result retains a closed oracle contribution whose oracle and
+  observation references pass the strict shared-reference reader. Assessment
+  validates exact membership and derived lineage, then reports correlation or
+  unknown dependence among uniquely selected results without assigning a score.
 - The retained local portfolio at source revision
-  `f6b5587fa5e4f39dab6ee632f729906489e4fb2b` executed two complementary
+  `32d2680e8eca3c128dd531763b8cdba47cf61f8f` executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its
@@ -70,7 +75,7 @@ an adapted field corruption, and an adapter exception.
 
 The one-time implementation and rewrite window was measured from the E02 claim
 at `2026-09-08T00:41:35Z` through the retained Rust local portfolio at
-`2026-09-08T06:11:18Z`: 5 hours 29 minutes 43 seconds. It includes the QUOIN
+`2026-09-09T06:46:56Z`: 30 hours 5 minutes 21 seconds elapsed. It includes the QUOIN
 specification/review/plan cycle, the rejected prototype, full Rust replacement,
 fixture and portfolio work, documentation, failure correction, Rust review, and
 tests. It excludes earlier source reading and future owner disposition.
@@ -79,7 +84,7 @@ Repeatable local costs on this checkout were:
 
 | Operation | Wall time | Maximum RSS |
 |---|---:|---:|
-| Complete Rust test suite (27 first-party tests) | 0.59 s | 166,984 KiB |
+| Complete Rust test suite (48 first-party tests) | 1.17 s | 217,320 KiB |
 | Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
 | Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
 | Release bounded local portfolio | 0.01 s | 9,940 KiB |
@@ -97,8 +102,9 @@ Agent B disposition: the bounded compatibility implementation in this pull
 request is complete and produces useful gaps without changing catalog or
 evidence ownership. This is not completion of parent E02 or its VP01–VP04
 track. VP01 still needs its acceptance dependencies and reviewed migration;
-VP02/VP03 still need the accepted shared identity/version seam and consumer
-integration; VP03 still lacks correlated-oracle evidence; and VP04 still needs
+VP02 implementation is complete but its acceptance remains gated on VP01; VP03
+now retains and reports correlated-oracle evidence but still needs its external
+acceptance dependencies; and VP04 still needs
 a reviewed native parser or aggregate producer portfolio, a seeded domain
 defect, agreed thresholds, and the recorded reviewer disposition. E01, FS02,
 FS05, and E04 remain open.

@@ -32,9 +32,10 @@ assurance framework.
 
 ## Views
 
-The contract module embeds `contracts/e02-draft-1.schema.json`, compiles its
-draft 2020-12 validator once, and exposes generated Rust wire types plus
-vocabularies derived from the same schema. The catalog adapter converts pinned
+The contract module embeds `contracts/e02-draft-2.schema.json`, resolves its
+shared artifact envelopes from the exact retained shared-reference schema,
+compiles the draft 2020-12 validators once, and exposes generated Rust wire
+types plus vocabularies derived from those schemas. The catalog adapter converts pinned
 Quoin JSON into portable technique records. The planner constructs a validated
 acyclic task graph. The evidence module performs exact JCS-based matching and
 classification. The bounded-portfolio module composes those pure services and
@@ -58,6 +59,26 @@ typed envelope with stable codes.
 8. A failed portfolio technique becomes a failed result and a false comparison becomes a violated result, preserving the report in both cases.
 9. The Rust crate replaces the JavaScript prototype completely; no compatibility shim, dual execution mode, npm entry point, or JavaScript API is retained.
 10. Rust acceptance tests import the bare `#[trace(...)]` attribute from the pinned `ix-trace-rs` crate so Quire can discover compiler-checked trace bindings statically.
+11. E02 draft-2 replaces draft-1 as a breaking private transition. The planner
+    accepts only role-correct embedded envelopes that the selected strict reader
+    validated in the caller's context; it provides no legacy fallback.
+12. Native runner requests are closed transport values emitted only for
+    applicable, ready, qualified `native-producer` work. A property budget
+    replaces rather than merges with the plan budget, both dimensions must fit
+    the capability's declared ceilings, and the wall-clock value cannot exceed
+    NFR-006's ten-second process boundary. Manual work remains outside this
+    invocation boundary.
+13. Evidence assessment accepts the opaque validated-reference values produced
+    by the one strict reader. TechniqueResult owns only closed oracle-
+    contribution lineage over exact FS05 oracle/observation roles. The assessor
+    validates all contributions before matching, builds a deterministic graph
+    only over uniquely selected results, and traverses lineage and correlation
+    components iteratively within the existing input bounds. Closed structured
+    member pairs prevent identifier-concatenation ambiguity. The assessor
+    retains correlation/unknown findings and emits no evidence persistence,
+    numeric score, assurance aggregation, or human sufficiency decision.
+    Engineering Assurance and Quoin remain external owners across the versioned
+    JSON contract.
 
 The rejected alternative was retaining the JavaScript prototype. A TypeScript
 port was also rejected because the component is eligible for the qualified path.
@@ -69,4 +90,4 @@ across an established TypeScript CLI boundary without improving the core contrac
 - **Schema generation compatibility — owner: implementation owner; review by 2026-10-07.** The selected generator must support the schema's references and conditionals; runtime schema validation remains authoritative if generated typing is less restrictive.
 - **Behavioral migration drift — owner: verification owner; review before merge.** Every TC must be reimplemented as a traced Rust test and fixtures must remain semantically equivalent.
 - **Unmeasured production throughput — owner: architecture owner; review when production placement is proposed.** No latency or throughput claim is made in this slice; a MeasurementPlan and benchmark threshold are required before placement on a measured hot path.
-- **Provisional identity seam — owner: FS02/FS05 owners; review after their accepted decision.** Historical evidence must not be rewritten during a future migration.
+- **Shared-reference adoption drift — owner: verification owner; review before merge.** E02 must resolve the exact retained schema and reject any envelope not validated by the strict reader; copied shared definitions or legacy fallback would create a second identity model.

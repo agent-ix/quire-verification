@@ -2,7 +2,7 @@
 id: Task-015
 title: "VP02 qualification gate"
 type: Task
-status: blocked
+status: done
 track: Gate
 priority: P0
 relationships:
@@ -24,10 +24,10 @@ independent QUOIN gap analysis.
 
 ## Subtasks
 
-- [ ] Run formatting, Clippy, tests, dependency policy, fixtures, and integrations.
-- [ ] Reconcile every new `ix-trace-rs` binding.
-- [ ] Complete exact Rust review and resolve findings.
-- [ ] Mark the bundle done for independent gap analysis.
+- [x] Run formatting, Clippy, tests, dependency policy, fixtures, and integrations.
+- [x] Reconcile every new `ix-trace-rs` binding.
+- [x] Complete exact Rust review and resolve findings.
+- [x] Mark the bundle done for independent gap analysis.
 
 ## Deliverables
 
@@ -35,4 +35,9 @@ independent QUOIN gap analysis.
 
 ## Notes
 
-- Blocked until Tasks 011 through 014 are done.
+- Tasks 011 through 014 are done. Formatting, strict Clippy, 44 first-party Rust
+  tests, fixture validation, and dependency policy pass. Quire validates 182
+  specification documents and binds 47/47 Rust test candidates; exact Rust
+  review SR-128 has no unresolved finding. The done bundle is the input to the
+  independent gap-analysis audit and reopens if that audit reports a blocking
+  gap.

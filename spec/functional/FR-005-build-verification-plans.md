@@ -29,7 +29,7 @@ When a planning request selects techniques for inventoried properties, the plann
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-005-AC-1 | State, relational, trace, fault, and manual properties retain their distinct required input shapes. | Test (TC-009) |
-| FR-005-AC-2 | An applicable selection with a qualified compatible capability and all required prerequisites emits a ready invocable verification task. | Test (TC-009) |
+| FR-005-AC-2 | An applicable selection with a qualified compatible `native-producer` capability, all required prerequisites, and an in-limit selected budget emits a ready invocable verification task; other ready work remains non-invocable unless a requirement defines a separate invocation boundary. | Test (TC-009, TC-027) |
 | FR-005-AC-3 | Missing capability support emits an unsupported non-invocable verification task with an actionable gap. | Test (TC-010) |
 | FR-005-AC-4 | Missing bindings, tools, permissions, qualification, reviewer assignment, or policy freshness emit blocked work and explicit prerequisite tasks. | Test (TC-010) |
 | FR-005-AC-5 | A fault task lacks invocation permission until non-production authorization, injection binding, and independent observation binding are present. | Test (TC-010) |

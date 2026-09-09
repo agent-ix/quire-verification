@@ -2,7 +2,7 @@
 id: Task-018
 title: "Oracle correlation assessment"
 type: Task
-status: blocked
+status: done
 track: A
 priority: P0
 relationships:
@@ -20,10 +20,10 @@ aggregation.
 
 ## Subtasks
 
-- [ ] Detect shared oracle, observation, and declared dependence identities across exact results.
-- [ ] Retain derived source pairs and unknown relationships as explicit findings.
-- [ ] Prove result and contribution input order cannot change the assessment.
-- [ ] Preserve Quoin evidence ownership and `not-made` sufficiency.
+- [x] Detect shared oracle, observation, and declared dependence identities across uniquely selected results.
+- [x] Retain derived source pairs and unknown relationships as explicit findings.
+- [x] Prove obligation, result, contribution, and validated-reference input order cannot change the assessment.
+- [x] Preserve Quoin evidence ownership and `not-made` sufficiency.
 
 ## Deliverables
 
@@ -31,4 +31,5 @@ aggregation.
 
 ## Notes
 
-- This task consumes Task-017's schema-derived types and does not persist evidence.
+- This task consumes Task-017's schema-derived types, traverses graphs iteratively,
+  and does not persist evidence.

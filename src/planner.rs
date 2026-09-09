@@ -9,9 +9,10 @@ use chrono::{DateTime, FixedOffset};
 use serde_json::{Value, json};
 
 use crate::contracts::{
-    VerificationError, VerificationErrorCode, contract_version, jcs_equal, validate_contract,
-    validate_plan_value, validate_schema_definition,
+    VerificationError, VerificationErrorCode, contract_version, jcs_canonicalize, jcs_equal,
+    validate_contract, validate_plan_value, validate_schema_definition,
 };
+use crate::shared_reference::ValidatedSharedReference;
 use crate::value::{arrays_field, field, object, optional_array, string_field};
 
 const FAULT_SAFETY_PREREQUISITES: [(&str, &str); 3] = [
@@ -24,11 +25,15 @@ const FAULT_SAFETY_PREREQUISITES: [(&str, &str); 3] = [
 ///
 /// # Errors
 /// Returns an input, timestamp, schema, capability, or plan-graph error.
-pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationError> {
+pub fn build_verification_plan(
+    request: &Value,
+    validated_references: &[ValidatedSharedReference],
+) -> Result<Value, VerificationError> {
     object(request, "plan request")?;
-    let plan_id = string_field(request, "planId", "plan request")?;
     let policy = field(request, "policy", "plan request")?;
     validate_schema_definition("SelectionPolicy", policy)?;
+    validate_schema_definition("PlanRequest", request)?;
+    let plan_id = string_field(request, "planId", "plan request")?;
     let as_of = parse_timestamp(
         string_field(request, "asOf", "plan request")?,
         "plan request.asOf",
@@ -39,7 +44,8 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
         .map(|value| parse_timestamp(value, "policy.validUntil").map(|until| as_of > until))
         .transpose()?
         .unwrap_or(false);
-    let properties = collect_properties(request)?;
+    let reference_index = validated_reference_index(validated_references);
+    let properties = collect_properties(request, &reference_index)?;
     let inventory = normalized_inventory(&properties)?;
     let capabilities = collect_capabilities(request)?;
     let available = optional_array(request, "availablePrerequisites", "plan request")?
@@ -85,10 +91,21 @@ pub fn build_verification_plan(request: &Value) -> Result<Value, VerificationErr
     Ok(plan)
 }
 
-fn collect_properties(request: &Value) -> Result<BTreeMap<String, &Value>, VerificationError> {
+fn validated_reference_index(references: &[ValidatedSharedReference]) -> BTreeMap<&[u8], &str> {
+    references
+        .iter()
+        .filter_map(ValidatedSharedReference::reference_key)
+        .collect()
+}
+
+fn collect_properties<'a>(
+    request: &'a Value,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<BTreeMap<String, &'a Value>, VerificationError> {
     let mut properties = BTreeMap::new();
     for property in arrays_field(request, "properties", "plan request")? {
         validate_schema_definition("PropertyInventoryItem", property)?;
+        validate_property_input(property, validated_references)?;
         let property_id = string_field(property, "propertyId", "property")?.to_owned();
         if properties.insert(property_id.clone(), property).is_some() {
             return Err(VerificationError::new(
@@ -99,6 +116,76 @@ fn collect_properties(request: &Value) -> Result<BTreeMap<String, &Value>, Verif
         }
     }
     Ok(properties)
+}
+
+fn validate_property_input(
+    property: &Value,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<(), VerificationError> {
+    let input = field(property, "input", "property")?;
+    let kind = string_field(input, "kind", "property.input")?;
+    match kind {
+        "state" => validate_input_reference(input, "snapshotRef", "snapshot", validated_references),
+        "relational" => {
+            let left = string_field(input, "leftSubject", "property.input")?;
+            let right = string_field(input, "rightSubject", "property.input")?;
+            if left == right {
+                return Err(VerificationError::new(
+                    VerificationErrorCode::InvalidInput,
+                    "relational input subjects must be distinct",
+                )
+                .with_context(
+                    "property_id",
+                    string_field(property, "propertyId", "property")?,
+                ));
+            }
+            Ok(())
+        }
+        "trace" => validate_input_reference(input, "traceRef", "trace", validated_references),
+        "fault" => {
+            validate_input_reference(input, "faultModelRef", "fault-model", validated_references)?;
+            validate_input_reference(input, "mitigationOracleRef", "oracle", validated_references)
+        }
+        "manual" => validate_input_reference(
+            input,
+            "reviewProcedureRef",
+            "review-procedure",
+            validated_references,
+        ),
+        _ => Err(VerificationError::new(
+            VerificationErrorCode::SchemaViolation,
+            "unknown property input kind",
+        )
+        .with_context("input_kind", kind)),
+    }
+}
+
+fn validate_input_reference(
+    input: &Value,
+    field_name: &str,
+    expected_role: &str,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<(), VerificationError> {
+    let envelope = field(input, field_name, "property.input")?;
+    let canonical = jcs_canonicalize(envelope)?;
+    let Some(role) = validated_references.get(canonical.as_slice()) else {
+        return Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "property input reference was not accepted by the strict reader",
+        )
+        .with_context("field", field_name)
+        .with_context("expected_role", expected_role));
+    };
+    if *role != expected_role {
+        return Err(VerificationError::new(
+            VerificationErrorCode::IdentityMismatch,
+            "validated property input reference has the wrong role",
+        )
+        .with_context("actual_role", *role)
+        .with_context("expected_role", expected_role)
+        .with_context("field", field_name));
+    }
+    Ok(())
 }
 
 fn normalized_inventory(
@@ -156,14 +243,29 @@ fn build_selection_tasks(
         property,
         selection.get("capabilityId").and_then(Value::as_str),
     )?;
+    let selected_budget = property.get("budget").or_else(|| request.get("budget"));
     let (mut readiness, prerequisites, gaps) =
-        capability_prerequisites(capability, property, policy, policy_stale)?;
+        capability_prerequisites(capability, property, policy, policy_stale, selected_budget)?;
     let missing = missing_prerequisites(&prerequisites, available)?;
     if !missing.is_empty() {
         readiness = "blocked";
     }
     let verification_id = verification_task_id(property_id, technique_id);
     let (mut tasks, dependencies) = setup_tasks(&missing, &verification_id)?;
+    let invocation_allowed =
+        native_invocation_allowed(capability, readiness, applicability, selected_budget)?;
+    let runner_request = match (invocation_allowed, capability, selected_budget) {
+        (true, Some(capability), Some(budget)) => {
+            make_runner_request(capability, property, budget)?
+        }
+        (false, _, _) => Value::Null,
+        (true, _, _) => {
+            return Err(VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "invocable work requires a capability and selected budget",
+            ));
+        }
+    };
     tasks.push(json!({
         "taskId": verification_id, "kind": "verification",
         "propertyId": property_id, "techniqueId": technique_id,
@@ -171,8 +273,8 @@ fn build_selection_tasks(
         "readiness": readiness, "priority": priority,
         "reasons": selection.get("reasons").cloned().unwrap_or_else(|| json!([])),
         "dependencies": dependencies, "missingPrerequisites": missing, "gaps": gaps,
-        "runnerRequest": runner_request(capability, property, request),
-        "invocationAllowed": readiness == "ready" && applicability == "applicable",
+        "runnerRequest": runner_request,
+        "invocationAllowed": invocation_allowed,
     }));
     Ok(tasks)
 }
@@ -182,6 +284,7 @@ fn capability_prerequisites(
     property: &Value,
     policy: &Value,
     policy_stale: bool,
+    selected_budget: Option<&Value>,
 ) -> Result<(&'static str, Vec<Value>, Vec<Value>), VerificationError> {
     let Some(capability) = capability else {
         let input_kind = string_field(
@@ -199,6 +302,14 @@ fn capability_prerequisites(
         ));
     };
     let mut prerequisites = optional_array(capability, "prerequisites", "capability")?.to_vec();
+    let native = is_native_capability(capability)?;
+    if native && selected_budget.is_none() {
+        prerequisites.push(json!({
+            "kind": "resource-allocation",
+            "id": format!("budget:{}", string_field(capability, "capabilityId", "capability")?),
+            "required": true,
+        }));
+    }
     if string_field(
         field(property, "input", "property")?,
         "kind",
@@ -220,7 +331,33 @@ fn capability_prerequisites(
             "id": format!("{}@{}", string_field(policy, "policyId", "policy")?, string_field(policy, "version", "policy")?),
         }));
     }
-    Ok(("ready", merge_prerequisites(prerequisites)?, Vec::new()))
+    let over_budget = if native {
+        selected_budget
+            .map(|budget| budget_within_limits(budget, capability))
+            .transpose()?
+            .is_some_and(|within| !within)
+    } else {
+        false
+    };
+    let (readiness, gaps) = if over_budget {
+        let budget = selected_budget.ok_or_else(|| {
+            VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "over-budget work requires a selected budget",
+            )
+        })?;
+        (
+            "blocked",
+            vec![json!({
+                "kind": "budget-exceeded",
+                "requested": budget,
+                "limits": field(capability, "resourceLimits", "capability")?,
+            })],
+        )
+    } else {
+        ("ready", Vec::new())
+    };
+    Ok((readiness, merge_prerequisites(prerequisites)?, gaps))
 }
 
 fn missing_prerequisites(
@@ -230,9 +367,12 @@ fn missing_prerequisites(
     let mut missing = Vec::new();
     for prerequisite in prerequisites {
         let required = prerequisite.get("required").and_then(Value::as_bool) != Some(false);
-        let forced_stale =
-            prerequisite.get("kind").and_then(Value::as_str) == Some("policy-freshness");
-        if required && (forced_stale || !available.contains(&prerequisite_key(prerequisite)?)) {
+        let kind = prerequisite.get("kind").and_then(Value::as_str);
+        let id = prerequisite.get("id").and_then(Value::as_str);
+        let forced_missing = kind == Some("policy-freshness")
+            || (kind == Some("resource-allocation")
+                && id.is_some_and(|value| value.starts_with("budget:")));
+        if required && (forced_missing || !available.contains(&prerequisite_key(prerequisite)?)) {
             missing.push(prerequisite.clone());
         }
     }
@@ -253,9 +393,6 @@ fn setup_tasks(
         tasks.push(json!({
             "taskId": setup_id, "kind": "manual-prerequisite",
             "prerequisite": prerequisite, "requiredBy": [verification_id],
-            "input": {"kind": "manual", "action": "satisfy-prerequisite", "prerequisite": prerequisite,
-                "reviewProcedure": format!("Resolve {kind}:{id} and record its source and disposition."),
-                "requiredDisposition": ["satisfied", "deferred", "rejected"]},
             "readiness": "blocked",
             "dependencies": [], "missingPrerequisites": [prerequisite], "runnerRequest": null,
             "invocationAllowed": false,
@@ -311,15 +448,64 @@ fn coalesce_plan_tasks(tasks: Vec<Value>) -> Result<Vec<Value>, VerificationErro
     Ok(by_id.into_values().collect())
 }
 
-fn runner_request(capability: Option<&Value>, property: &Value, request: &Value) -> Value {
-    capability.map_or(Value::Null, |item| json!({
-        "kind": item.pointer("/runner/kind").cloned().unwrap_or(Value::Null),
-        "adapterId": item.pointer("/runner/adapterId").cloned().unwrap_or(Value::Null),
-        "adapterVersion": item.pointer("/runner/adapterVersion").cloned().unwrap_or(Value::Null),
-        "capabilityId": item.get("capabilityId").cloned().unwrap_or(Value::Null),
-        "environmentPermissions": item.get("environmentPermissions").cloned().unwrap_or_else(|| json!([])),
-        "budget": property.get("budget").or_else(|| request.get("budget")).cloned().unwrap_or(Value::Null),
-        "nativeArtifactInterface": item.get("nativeArtifactInterface").cloned().unwrap_or(Value::Null),
+fn native_invocation_allowed(
+    capability: Option<&Value>,
+    readiness: &str,
+    applicability: &str,
+    selected_budget: Option<&Value>,
+) -> Result<bool, VerificationError> {
+    let (Some(capability), Some(budget)) = (capability, selected_budget) else {
+        return Ok(false);
+    };
+    Ok(readiness == "ready"
+        && applicability == "applicable"
+        && string_field(capability, "qualification", "capability")? == "qualified"
+        && is_native_capability(capability)?
+        && budget_within_limits(budget, capability)?)
+}
+
+fn is_native_capability(capability: &Value) -> Result<bool, VerificationError> {
+    Ok(string_field(
+        field(capability, "runner", "capability")?,
+        "kind",
+        "capability.runner",
+    )? == "native-producer")
+}
+
+fn budget_within_limits(budget: &Value, capability: &Value) -> Result<bool, VerificationError> {
+    let limits = field(capability, "resourceLimits", "native capability")?;
+    Ok(
+        unsigned_field(budget, "wallClockSeconds", "selected budget")?
+            <= unsigned_field(limits, "maxWallClockSeconds", "capability limits")?
+            && unsigned_field(budget, "parallelism", "selected budget")?
+                <= unsigned_field(limits, "maxParallelism", "capability limits")?,
+    )
+}
+
+fn unsigned_field(value: &Value, name: &str, context: &str) -> Result<u64, VerificationError> {
+    field(value, name, context)?.as_u64().ok_or_else(|| {
+        VerificationError::new(
+            VerificationErrorCode::InvalidInput,
+            format!("{context}.{name} must be a positive integer"),
+        )
+    })
+}
+
+fn make_runner_request(
+    capability: &Value,
+    property: &Value,
+    budget: &Value,
+) -> Result<Value, VerificationError> {
+    let runner = field(capability, "runner", "capability")?;
+    Ok(json!({
+        "kind": string_field(runner, "kind", "capability.runner")?,
+        "adapterId": string_field(runner, "adapterId", "capability.runner")?,
+        "adapterVersion": string_field(runner, "adapterVersion", "capability.runner")?,
+        "capabilityId": string_field(capability, "capabilityId", "capability")?,
+        "environmentPermissions": field(capability, "environmentPermissions", "capability")?,
+        "budget": budget,
+        "nativeArtifactInterface": field(capability, "nativeArtifactInterface", "capability")?,
+        "input": field(property, "input", "property")?,
     }))
 }
 
@@ -389,7 +575,9 @@ fn setup_task_id(kind: &str, id: &str) -> String {
     composite_task_id("setup", kind, id)
 }
 
-pub(crate) fn verification_task_id(property_id: &str, technique_id: &str) -> String {
+/// Returns the deterministic verification task ID for a selected property and technique.
+#[must_use]
+pub fn verification_task_id(property_id: &str, technique_id: &str) -> String {
     composite_task_id("verify", property_id, technique_id)
 }
 

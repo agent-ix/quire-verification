@@ -26,7 +26,7 @@ whose components would collide under delimiter joining.
 Distinct missing needs produce one deterministic plan-level setup task each; all
 affected tasks depend on it; duplicates coalesce by exact identity; `requiredBy`
 lists the affected verification-task IDs in sorted order; no fake property or
-technique ID is attached. Required work stays blocked and near matches or caller
+technique ID or property input is attached. Required work stays blocked and near matches or caller
 claims cannot satisfy the need. Composite task identifiers remain distinct when a
 component contains the delimiter.
 Runtime budget exhaustion is outside this planning test and remains a result state.

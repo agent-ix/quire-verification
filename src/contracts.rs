@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex, OnceLock};
 
-use jsonschema::{Draft, Validator};
+use jsonschema::{Draft, Registry, Validator};
 use serde::Serialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -66,14 +66,70 @@ pub enum VerificationErrorCode {
     AmbiguousCapability,
     /// Evidence repeats a result identifier.
     DuplicateResultId,
+    /// A result repeats an oracle contribution identifier.
+    DuplicateOracleContributionId,
+    /// Derived oracle contribution lineage is absent, self-referential, or cyclic.
+    InvalidOracleLineage,
     /// A structured request uses an unsupported contract version.
     UnsupportedContractVersion,
+    /// A shared-reference envelope, artifact reference, or selected profile version is unsupported.
+    UnsupportedReferenceVersion,
+    /// A semantic reference requires a feature outside the selected reader profile.
+    UnknownRequiredFeature,
+    /// Shared-reference bytes are malformed or outside the selected wire schema.
+    InvalidWire,
+    /// A valid reference does not match the locally selected identity or content.
+    IdentityMismatch,
+    /// One immutable reference identity names conflicting content in an input set.
+    IdentityContentConflict,
+    /// A selected local artifact revision is unavailable.
+    Stale,
+    /// A source map does not preserve exact, ordered byte correspondence.
+    MalformedSourceMap,
+    /// A semantic reference selects an unsupported canonicalization profile.
+    UnsupportedCanonicalization,
+    /// More than one explicit migration applies to the selected reference pair.
+    AmbiguousEquivalence,
     /// A local or process I/O operation failed.
     IoFailure,
     /// A discovered JSON fixture has no registered validator.
     UnhandledFixture,
     /// External catalog output differs from the pinned baseline.
     CatalogParityMismatch,
+    /// A native execution request has no finite admitted deadline.
+    InvalidExecutionDeadline,
+    /// A native execution request has no single admitted numeric exit status.
+    InvalidExpectedExitStatus,
+    /// A native executable is not an exact regular file inside its selected root.
+    InvalidExecutablePath,
+    /// A native child remained live at its admitted deadline.
+    ExecutionTimeout,
+    /// A native child emitted the first byte beyond an admitted stream limit.
+    OutputLimitExceeded,
+    /// A native child terminated because of a signal.
+    ProcessSignaled,
+    /// A native child returned an unexpected nonzero exit status.
+    UnexpectedExitStatus,
+    /// A native child stream was not valid UTF-8.
+    InvalidProcessOutput,
+    /// A completed native child emitted a malformed method response.
+    MalformedMethodResponse,
+    /// A VP04 measurement series violates its fixed identity, order, or summary contract.
+    InvalidMeasurementSeries,
+    /// More than one human disposition was supplied for one report core.
+    DuplicateDisposition,
+    /// A disposition names another core, procedure, or reviewer.
+    ForeignDisposition,
+    /// A disposition or its exact shared-reference role is unsupported.
+    UnsupportedDisposition,
+    /// A report-core or disposition byte digest is invalid.
+    InvalidReportDigest,
+    /// The selected Linux descriptor or process-group profile is unavailable.
+    UnsupportedExecutionProfile,
+    /// A native descendant remained after its direct child completed.
+    UnexpectedProcessDescendant,
+    /// Native process-group signaling, reaping, or termination observation failed.
+    ProcessContainmentFailure,
 }
 
 impl VerificationErrorCode {
@@ -99,10 +155,38 @@ impl VerificationErrorCode {
             Self::UnknownProperty => "unknown_property",
             Self::AmbiguousCapability => "ambiguous_capability",
             Self::DuplicateResultId => "duplicate_result_id",
+            Self::DuplicateOracleContributionId => "duplicate_oracle_contribution_id",
+            Self::InvalidOracleLineage => "invalid_oracle_lineage",
             Self::UnsupportedContractVersion => "unsupported_contract_version",
+            Self::UnsupportedReferenceVersion => "unsupported_reference_version",
+            Self::UnknownRequiredFeature => "unknown_required_feature",
+            Self::InvalidWire => "invalid_wire",
+            Self::IdentityMismatch => "identity_mismatch",
+            Self::IdentityContentConflict => "identity_content_conflict",
+            Self::Stale => "stale",
+            Self::MalformedSourceMap => "malformed_source_map",
+            Self::UnsupportedCanonicalization => "unsupported_canonicalization",
+            Self::AmbiguousEquivalence => "ambiguous_equivalence",
             Self::IoFailure => "io_failure",
             Self::UnhandledFixture => "unhandled_fixture",
             Self::CatalogParityMismatch => "catalog_parity_mismatch",
+            Self::InvalidExecutionDeadline => "invalid_execution_deadline",
+            Self::InvalidExpectedExitStatus => "invalid_expected_exit_status",
+            Self::InvalidExecutablePath => "invalid_executable_path",
+            Self::ExecutionTimeout => "execution_timeout",
+            Self::OutputLimitExceeded => "output_limit_exceeded",
+            Self::ProcessSignaled => "process_signaled",
+            Self::UnexpectedExitStatus => "unexpected_exit_status",
+            Self::InvalidProcessOutput => "invalid_process_output",
+            Self::MalformedMethodResponse => "malformed_method_response",
+            Self::InvalidMeasurementSeries => "invalid_measurement_series",
+            Self::DuplicateDisposition => "duplicate_disposition",
+            Self::ForeignDisposition => "foreign_disposition",
+            Self::UnsupportedDisposition => "unsupported_disposition",
+            Self::InvalidReportDigest => "invalid_report_digest",
+            Self::UnsupportedExecutionProfile => "unsupported_execution_profile",
+            Self::UnexpectedProcessDescendant => "unexpected_process_descendant",
+            Self::ProcessContainmentFailure => "process_containment_failure",
         }
     }
 
@@ -128,10 +212,38 @@ impl VerificationErrorCode {
             Self::UnknownProperty,
             Self::AmbiguousCapability,
             Self::DuplicateResultId,
+            Self::DuplicateOracleContributionId,
+            Self::InvalidOracleLineage,
             Self::UnsupportedContractVersion,
+            Self::UnsupportedReferenceVersion,
+            Self::UnknownRequiredFeature,
+            Self::InvalidWire,
+            Self::IdentityMismatch,
+            Self::IdentityContentConflict,
+            Self::Stale,
+            Self::MalformedSourceMap,
+            Self::UnsupportedCanonicalization,
+            Self::AmbiguousEquivalence,
             Self::IoFailure,
             Self::UnhandledFixture,
             Self::CatalogParityMismatch,
+            Self::InvalidExecutionDeadline,
+            Self::InvalidExpectedExitStatus,
+            Self::InvalidExecutablePath,
+            Self::ExecutionTimeout,
+            Self::OutputLimitExceeded,
+            Self::ProcessSignaled,
+            Self::UnexpectedExitStatus,
+            Self::InvalidProcessOutput,
+            Self::MalformedMethodResponse,
+            Self::InvalidMeasurementSeries,
+            Self::DuplicateDisposition,
+            Self::ForeignDisposition,
+            Self::UnsupportedDisposition,
+            Self::InvalidReportDigest,
+            Self::UnsupportedExecutionProfile,
+            Self::UnexpectedProcessDescendant,
+            Self::ProcessContainmentFailure,
         ]
     }
 
@@ -199,9 +311,9 @@ static DEFINITION_VALIDATORS: OnceLock<Mutex<BTreeMap<String, Arc<Validator>>>> 
 #[derive(Clone, Debug)]
 pub enum PublicContract {
     /// A portable verification technique definition.
-    TechniqueDefinition(wire::TechniqueDefinition),
+    TechniqueDefinition(Box<wire::TechniqueDefinition>),
     /// A qualified producer capability.
-    ToolCapability(wire::ToolCapability),
+    ToolCapability(Box<wire::ToolCapability>),
     /// An authored selection policy.
     SelectionPolicy(Box<wire::SelectionPolicy>),
     /// A prerequisite-aware verification plan.
@@ -281,8 +393,12 @@ pub fn validate_contract(value: Value) -> Result<PublicContract, VerificationErr
         )
     })?;
     match kind {
-        "TechniqueDefinition" => decode(value).map(PublicContract::TechniqueDefinition),
-        "ToolCapability" => decode(value).map(PublicContract::ToolCapability),
+        "TechniqueDefinition" => decode(value)
+            .map(Box::new)
+            .map(PublicContract::TechniqueDefinition),
+        "ToolCapability" => decode(value)
+            .map(Box::new)
+            .map(PublicContract::ToolCapability),
         "SelectionPolicy" => decode(value)
             .map(Box::new)
             .map(PublicContract::SelectionPolicy),
@@ -355,12 +471,8 @@ fn definition_validator(name: &str) -> Result<Arc<Validator>, VerificationError>
         "$defs": definitions,
         "$ref": format!("#/$defs/{name}"),
     });
-    let validator = jsonschema::options()
-        .with_draft(Draft::Draft202012)
-        .build(&wrapper)
-        .map_err(|error| {
-            VerificationError::new(VerificationErrorCode::SchemaViolation, error.to_string())
-        })?;
+    let validator = build_contract_validator(&wrapper)
+        .map_err(|error| VerificationError::new(VerificationErrorCode::SchemaViolation, error))?;
     let validator = Arc::new(validator);
     let mut validators = cache.lock().map_err(|_| validator_cache_error())?;
     Ok(validators
@@ -541,7 +653,7 @@ fn decode<T: serde::de::DeserializeOwned>(value: Value) -> Result<T, Verificatio
 
 fn contract_schema() -> Result<&'static Value, VerificationError> {
     match CONTRACT_SCHEMA.get_or_init(|| {
-        serde_json::from_str(include_str!("../contracts/e02-draft-1.schema.json"))
+        serde_json::from_str(include_str!("../contracts/e02-draft-2.schema.json"))
             .map_err(|error| error.to_string())
     }) {
         Ok(schema) => Ok(schema),
@@ -555,12 +667,9 @@ fn contract_schema() -> Result<&'static Value, VerificationError> {
 fn contract_validator() -> Result<&'static Validator, VerificationError> {
     match CONTRACT_VALIDATOR.get_or_init(|| {
         let schema: Value =
-            serde_json::from_str(include_str!("../contracts/e02-draft-1.schema.json"))
+            serde_json::from_str(include_str!("../contracts/e02-draft-2.schema.json"))
                 .map_err(|error| error.to_string())?;
-        jsonschema::options()
-            .with_draft(Draft::Draft202012)
-            .build(&schema)
-            .map_err(|error| error.to_string())
+        build_contract_validator(&schema)
     }) {
         Ok(validator) => Ok(validator),
         Err(detail) => Err(VerificationError::new(
@@ -568,4 +677,21 @@ fn contract_validator() -> Result<&'static Validator, VerificationError> {
             detail.clone(),
         )),
     }
+}
+
+fn build_contract_validator(schema: &Value) -> Result<Validator, String> {
+    let shared: Value = serde_json::from_str(include_str!(
+        "../contracts/shared-reference-2-draft/schema.json"
+    ))
+    .map_err(|error| error.to_string())?;
+    let registry = Registry::new()
+        .add("urn:ix:shared-reference:2-draft", &shared)
+        .map_err(|error| error.to_string())?
+        .prepare()
+        .map_err(|error| error.to_string())?;
+    jsonschema::options()
+        .with_draft(Draft::Draft202012)
+        .with_registry(&registry)
+        .build(schema)
+        .map_err(|error| error.to_string())
 }

@@ -2,7 +2,7 @@
 id: Task-017
 title: "Oracle contribution contract"
 type: Task
-status: blocked
+status: done
 track: A
 priority: P0
 relationships:
@@ -19,9 +19,9 @@ contributions using the exact independently accepted FS05 roles.
 
 ## Subtasks
 
-- [ ] Consume the reviewed oracle and observation artifact kinds through Task-012's strict reader.
-- [ ] Define unique contribution identity, required relation, and exact derived-source pairs.
-- [ ] Reject missing, duplicate, wrong-role, conflicting, or unsupported contribution data.
+- [x] Consume the reviewed oracle and observation artifact kinds through Task-012's opaque strict-reader outputs.
+- [x] Define closed unique contribution identity, required relation, and exact structured derived-source pairs in the authoritative schema.
+- [x] Reject missing, duplicate, wrong-role, conflicting, or unsupported contribution data.
 
 ## Deliverables
 
@@ -29,4 +29,6 @@ contributions using the exact independently accepted FS05 roles.
 
 ## Notes
 
-- Blocked on Plan-003 Task-012 and the FS05 role amendment; no generic-kind fallback is allowed.
+- Plan-003 Task-012 and the pinned FS05 packet are complete. QUOIN review
+  `c2e99bbd-6105-4282-b8ec-4eb1f6161647` accepted the implementation contract;
+  no generic-kind fallback is allowed.

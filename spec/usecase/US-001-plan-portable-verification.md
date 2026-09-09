@@ -25,6 +25,8 @@ relationships:
     type: "traces_to"
   - target: "ix://agent-ix/quire-verification/FR-016"
     type: "traces_to"
+  - target: "ix://agent-ix/quire-verification/FR-019"
+    type: "traces_to"
 ---
 # US-001: Plan portable verification work
 
@@ -73,4 +75,4 @@ unsafe invocation path and conceal missing work.
 
 The story drives the public contract validation, schema-derived runtime,
 prerequisite-aware planning, qualified selection, native runner, role-specific
-input, and shared-reference requirements.
+input, shared-reference, and bounded parser-portfolio requirements.
