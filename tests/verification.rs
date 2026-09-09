@@ -1903,7 +1903,10 @@ fn tc_033_enforces_the_closed_contribution_contract() {
     shared["oracleContributions"][0]["relation"] = json!("shared");
     assert!(validate_contract(shared.clone()).is_err());
     shared["oracleContributions"][0]["dependenceGroupId"] = json!("GROUP-1");
-    validate_contract(shared).expect("closed shared contribution");
+    validate_contract(shared.clone()).expect("closed shared contribution");
+    shared["oracleContributions"][0]["derivedFrom"] =
+        json!({"resultId": "RESULT-SOURCE", "contributionId": "source"});
+    assert!(validate_contract(shared).is_err());
 
     let mut derived = evaluated.clone();
     derived["oracleContributions"][0]["relation"] = json!("derived");
@@ -1911,14 +1914,29 @@ fn tc_033_enforces_the_closed_contribution_contract() {
     derived["oracleContributions"][0]["derivedFrom"] =
         json!({"resultId": "RESULT-SOURCE", "contributionId": "source"});
     validate_contract(derived.clone()).expect("closed derived contribution");
+    let mut derived_with_group = derived.clone();
+    derived_with_group["oracleContributions"][0]["dependenceGroupId"] = json!("GROUP-1");
+    assert!(validate_contract(derived_with_group).is_err());
     derived["oracleContributions"][0]["derivedFrom"]["extra"] = json!(true);
     assert!(validate_contract(derived).is_err());
 
     for relation in ["independent", "unknown"] {
-        let mut conditional = evaluated.clone();
-        conditional["oracleContributions"][0]["relation"] = json!(relation);
-        conditional["oracleContributions"][0]["dependenceGroupId"] = json!("GROUP-1");
-        assert!(validate_contract(conditional).is_err(), "{relation}");
+        for forbidden in [
+            ("dependenceGroupId", json!("GROUP-1")),
+            (
+                "derivedFrom",
+                json!({"resultId": "RESULT-SOURCE", "contributionId": "source"}),
+            ),
+        ] {
+            let mut conditional = evaluated.clone();
+            conditional["oracleContributions"][0]["relation"] = json!(relation);
+            conditional["oracleContributions"][0][forbidden.0] = forbidden.1;
+            assert!(
+                validate_contract(conditional).is_err(),
+                "{relation} with {}",
+                forbidden.0
+            );
+        }
     }
 
     let mut extra = evaluated.clone();
@@ -1960,27 +1978,55 @@ fn tc_033_requires_exact_strict_reader_outputs() {
         ("wire identity", |v| v["wire"]["identity"] = json!("other")),
         ("wire version", |v| v["wire"]["version"] = json!("other")),
     ];
-    for (dimension, mutate) in mutations {
-        let mut changed = packet.clone();
-        mutate(&mut changed["results"][0]["oracleContributions"][0]["oracleRef"]["value"]);
+    for reference_field in ["oracleRef", "observationRef"] {
+        for (dimension, mutate) in mutations {
+            let mut changed = packet.clone();
+            mutate(&mut changed["results"][0]["oracleContributions"][0][reference_field]["value"]);
+            assert_eq!(
+                assess_evidence(&changed, &references)
+                    .expect_err("changed reference must fail")
+                    .code(),
+                VerificationErrorCode::IdentityMismatch,
+                "{reference_field} {dimension}"
+            );
+        }
+    }
+
+    for (target, source) in [
+        ("oracleRef", "observationRef"),
+        ("observationRef", "oracleRef"),
+    ] {
+        let mut wrong_role = packet.clone();
+        wrong_role["results"][0]["oracleContributions"][0][target] =
+            wrong_role["results"][0]["oracleContributions"][0][source].clone();
         assert_eq!(
-            assess_evidence(&changed, &references)
-                .expect_err("changed reference must fail")
+            assess_evidence(&wrong_role, &references)
+                .expect_err("wrong role must fail")
                 .code(),
-            VerificationErrorCode::IdentityMismatch,
-            "{dimension}"
+            VerificationErrorCode::SchemaViolation,
+            "{target}"
         );
     }
 
-    let mut wrong_role = packet.clone();
-    wrong_role["results"][0]["oracleContributions"][0]["oracleRef"] =
-        wrong_role["results"][0]["oracleContributions"][0]["observationRef"].clone();
-    assert_eq!(
-        assess_evidence(&wrong_role, &references)
-            .expect_err("wrong role must fail")
-            .code(),
-        VerificationErrorCode::SchemaViolation
-    );
+    for (field, value) in [
+        ("wireVersion", "ix.shared-reference/unknown"),
+        ("refVersion", "ix.artifact-ref/unknown"),
+    ] {
+        let mut unsupported = packet.clone();
+        if field == "wireVersion" {
+            unsupported["results"][0]["oracleContributions"][0]["oracleRef"][field] = json!(value);
+        } else {
+            unsupported["results"][0]["oracleContributions"][0]["oracleRef"]["value"][field] =
+                json!(value);
+        }
+        assert_eq!(
+            assess_evidence(&unsupported, &references)
+                .expect_err("unsupported contribution reference version must fail")
+                .code(),
+            VerificationErrorCode::SchemaViolation,
+            "{field}"
+        );
+    }
 }
 
 #[trace("TC-033", "FR-017-AC-3")]
@@ -2087,6 +2133,7 @@ fn assert_dependence_findings(report: &Value) {
     let findings = report["oracleDependenceFindings"]
         .as_array()
         .expect("finding array");
+    assert_eq!(findings.len(), 4);
     let correlated = findings
         .iter()
         .find(|finding| finding["kind"] == "correlated-oracle")
@@ -2095,16 +2142,40 @@ fn assert_dependence_findings(report: &Value) {
         correlated["bases"],
         json!(["declared-group", "derived", "observation", "oracle"])
     );
-    let reasons = findings
+    assert_eq!(
+        correlated["members"],
+        json!([
+            {"resultId": "RESULT-ASSUMPTION-UNMET", "contributionId": "primary"},
+            {"resultId": "RESULT-PARTIAL", "contributionId": "primary"},
+            {"resultId": "RESULT-PARTIAL", "contributionId": "secondary"},
+            {"resultId": "RESULT-STALE", "contributionId": "primary"},
+            {"resultId": "RESULT-SUPPORTED", "contributionId": "primary"},
+            {"resultId": "RESULT-UNTRIGGERED", "contributionId": "primary"},
+            {"resultId": "RESULT-VIOLATED", "contributionId": "primary"}
+        ])
+    );
+    let unknowns = findings
         .iter()
-        .filter_map(|finding| finding.get("reason").and_then(Value::as_str))
+        .filter_map(|finding| {
+            finding.get("reason").and_then(Value::as_str).map(|reason| {
+                (
+                    finding["member"]["resultId"]
+                        .as_str()
+                        .expect("unknown result id"),
+                    finding["member"]["contributionId"]
+                        .as_str()
+                        .expect("unknown contribution id"),
+                    reason,
+                )
+            })
+        })
         .collect::<BTreeSet<_>>();
     assert_eq!(
-        reasons,
+        unknowns,
         BTreeSet::from([
-            "declared-unknown",
-            "shared-group-unresolved",
-            "source-not-assessed"
+            ("RESULT-SUPPORTED", "primary", "declared-unknown"),
+            ("RESULT-UNTRIGGERED", "primary", "shared-group-unresolved"),
+            ("RESULT-VIOLATED", "primary", "source-not-assessed")
         ])
     );
     for finding in findings {
@@ -2202,14 +2273,38 @@ fn assert_dependence_selection_boundaries() {
     assert_eq!(ambiguous_report["obligations"][0]["status"], "ambiguous");
     assert_eq!(ambiguous_report["oracleDependenceFindings"], json!([]));
 
-    let mut reused = one_result_packet();
-    reused["asOf"] = json!("2026-09-08T00:00:00Z");
-    let mut second_obligation = reused["inventory"][0].clone();
-    second_obligation["propertyId"] = json!("OBL-REUSED");
-    reused["inventory"]
-        .as_array_mut()
-        .expect("inventory")
-        .push(second_obligation);
+    let source = fixture("results.json");
+    let supported_obligation = find_by(
+        source["inventory"].as_array().expect("inventory"),
+        "propertyId",
+        "OBL-STATE-PROPERTY",
+    )
+    .clone();
+    let mut repeated_obligation = supported_obligation.clone();
+    repeated_obligation["propertyId"] = json!("OBL-REUSED");
+    let partial_obligation = find_by(
+        source["inventory"].as_array().expect("inventory"),
+        "propertyId",
+        "OBL-PARTIAL",
+    )
+    .clone();
+    let supported_result = find_by(
+        source["results"].as_array().expect("results"),
+        "resultId",
+        "RESULT-SUPPORTED",
+    )
+    .clone();
+    let partial_result = find_by(
+        source["results"].as_array().expect("results"),
+        "resultId",
+        "RESULT-PARTIAL",
+    )
+    .clone();
+    let reused = json!({
+        "asOf": source["asOf"],
+        "inventory": [supported_obligation, repeated_obligation, partial_obligation],
+        "results": [supported_result, partial_result],
+    });
     let references = validate_fixture_result_references(&reused).expect("strict references");
     let reused_report = assess_evidence(&reused, &references).expect("reused result assessment");
     assert_eq!(
@@ -2217,9 +2312,15 @@ fn assert_dependence_selection_boundaries() {
             .as_array()
             .expect("obligations")
             .len(),
-        2
+        3
     );
-    assert_eq!(reused_report["oracleDependenceFindings"], json!([]));
+    assert_eq!(
+        reused_report["oracleDependenceFindings"][0]["members"],
+        json!([
+            {"resultId": "RESULT-PARTIAL", "contributionId": "primary"},
+            {"resultId": "RESULT-SUPPORTED", "contributionId": "primary"}
+        ])
+    );
 }
 
 #[trace("TC-033", "FR-017-AC-4", "FR-017-AC-5")]
