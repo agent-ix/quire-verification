@@ -116,6 +116,8 @@ pub enum VerificationErrorCode {
     MalformedMethodResponse,
     /// A VP04 measurement series violates its fixed identity, order, or summary contract.
     InvalidMeasurementSeries,
+    /// A qualification corpus violates its frozen population, retention, or lineage contract.
+    InvalidCorpusManifest,
     /// More than one human disposition was supplied for one report core.
     DuplicateDisposition,
     /// A disposition names another core, procedure, or reviewer.
@@ -180,6 +182,7 @@ impl VerificationErrorCode {
             Self::InvalidProcessOutput => "invalid_process_output",
             Self::MalformedMethodResponse => "malformed_method_response",
             Self::InvalidMeasurementSeries => "invalid_measurement_series",
+            Self::InvalidCorpusManifest => "invalid_corpus_manifest",
             Self::DuplicateDisposition => "duplicate_disposition",
             Self::ForeignDisposition => "foreign_disposition",
             Self::UnsupportedDisposition => "unsupported_disposition",
@@ -237,6 +240,7 @@ impl VerificationErrorCode {
             Self::InvalidProcessOutput,
             Self::MalformedMethodResponse,
             Self::InvalidMeasurementSeries,
+            Self::InvalidCorpusManifest,
             Self::DuplicateDisposition,
             Self::ForeignDisposition,
             Self::UnsupportedDisposition,

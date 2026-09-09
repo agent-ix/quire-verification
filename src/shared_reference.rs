@@ -165,6 +165,7 @@ pub struct ValidatedSharedReference {
     _wire: ValidatedReferenceWire,
     canonical_envelope: Box<[u8]>,
     reference_role: Option<Box<str>>,
+    artifact_bytes: Option<Box<[u8]>>,
 }
 
 impl ValidatedSharedReference {
@@ -178,12 +179,14 @@ impl ValidatedSharedReference {
             },
             canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
             reference_role: None,
+            artifact_bytes: None,
         })
     }
 
     fn version2(
         value: &Value,
         wire: wire_v2::SharedArtifactAndSemanticReferenceAmendmentStructuralValidationOnly,
+        artifact_bytes: Option<Vec<u8>>,
     ) -> Result<Self, VerificationError> {
         let reference_role = (value.get("kind").and_then(Value::as_str) == Some("artifact"))
             .then(|| value.pointer("/value/kind").and_then(Value::as_str))
@@ -195,6 +198,7 @@ impl ValidatedSharedReference {
             },
             canonical_envelope: jcs_canonicalize(value)?.into_boxed_slice(),
             reference_role,
+            artifact_bytes: artifact_bytes.map(Vec::into_boxed_slice),
         })
     }
 
@@ -202,6 +206,14 @@ impl ValidatedSharedReference {
         self.reference_role
             .as_deref()
             .map(|role| (self.canonical_envelope.as_ref(), role))
+    }
+
+    pub(crate) fn artifact_proof(&self) -> Option<(&[u8], &str, &[u8])> {
+        self.reference_key().and_then(|(reference, role)| {
+            self.artifact_bytes
+                .as_deref()
+                .map(|bytes| (reference, role, bytes))
+        })
     }
 }
 
@@ -242,13 +254,13 @@ impl SharedReferenceReader {
                     validate_schema(v2_validator()?, &value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_artifact(value_at(&value, "/value")?, expected)?;
-                    ValidatedSharedReference::version2(&value, generated)
+                    ValidatedSharedReference::version2(&value, generated, expected.bytes.clone())
                 }
                 (V2, "semantic", ReferenceExpectation::Semantic(expected)) => {
                     validate_schema(v2_validator()?, &value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_semantic(value_at(&value, "/value")?, expected)?;
-                    ValidatedSharedReference::version2(&value, generated)
+                    ValidatedSharedReference::version2(&value, generated, None)
                 }
                 (V1, "source-map", ReferenceExpectation::SourceMap(expected)) => {
                     validate_schema(v1_validator()?, &value)?;

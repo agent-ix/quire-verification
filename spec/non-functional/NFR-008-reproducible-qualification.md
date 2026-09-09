@@ -32,7 +32,7 @@ that reach beyond the report's JSON into every source artifact it claims.
 |--------|--------|-----------|--------|
 | Required identity dimensions with retained or retrievable exact bytes | 100% | 100% | Test (TC-044) |
 | Reproduced result classes matching or carrying explained environmental differences | 100% | 100% | Demonstration (IT-004) |
-| Self-consistent report reseals that bypass a changed source artifact | 0 | 0 | Mutation Test (TC-045) |
+| Self-consistent report reseals that bypass a changed source artifact | 0 | 0 | Test (TC-045) |
 
 ## Verification
 
@@ -47,11 +47,10 @@ environmental difference without rewriting the original report.
 |----|----------|--------------|
 | NFR-008-AC-1 | Every required source, binary, lockfile, corpus, oracle, environment, seed, command, and result identity resolves to exact retained or authorized retrievable bytes. | Test (TC-044) |
 | NFR-008-AC-2 | Deterministic evidence replays exactly; stochastic evidence retains seed, budget, distribution, and explained differences. | Demonstration (IT-004) |
-| NFR-008-AC-3 | Changing any retained source artifact invalidates the qualification core even when an attacker recomputes internal report digests. | Mutation Test (TC-045) |
+| NFR-008-AC-3 | Changing any retained source artifact invalidates the qualification core even when an attacker recomputes internal report digests. | Test (TC-045) |
 | NFR-008-AC-4 | A reproduction on an unclaimed environment is recorded as exploratory and cannot expand the accepted profile. | Test (TC-044) |
 
 ## Dependencies
 
 This requirement constrains [FR-027](../functional/FR-027-bind-qualification-disposition.md)
 and reuses the existing JCS and reference boundaries in FR-008 and FR-016.
-

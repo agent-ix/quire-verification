@@ -11,9 +11,10 @@ This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, VP04
 bounded-parser-portfolio, and proposed production-qualification slices to a
 concrete test case. The implemented TC-001 through TC-038 evidence runs in Rust
-through compiler-checked `ix-trace-rs` markers. TC-039 implements the qualification
-profile boundary; TC-040 through TC-045 define the remaining test-first qualification
-scope and remain unimplemented. The IT-003 automated
+through compiler-checked `ix-trace-rs` markers. TC-039 and TC-040 implement the
+qualification profile and corpus-validation boundaries; TC-041 through TC-045 define
+the remaining test-first qualification scope. The production profile and corpus remain
+externally blocked, so no production qualification is claimed. The IT-003 automated
 core is retained separately from the still-pending external disposition. The
 rejected JavaScript prototype is not evidence.
 
@@ -73,7 +74,7 @@ rejected JavaScript prototype is not evidence.
 | FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
 | FR-022 | FR-022-AC-1..4 | TC-039, IT-004 | 🚧 Planned |
-| FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | 🚧 Planned |
+| FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | ✅ Rust boundary implemented; production corpus blocked |
 | FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | 🚧 Planned |
 | FR-025 | FR-025-AC-1..5 | TC-042, IT-004 | 🚧 Planned |
 | FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
@@ -97,7 +98,7 @@ rejected JavaScript prototype is not evidence.
 | Constraint | Test Cases | Coverage Status |
 |------------|------------|-----------------|
 | FR-022-CON-1..2 | TC-039 | 🚧 Planned |
-| FR-023-CON-1 | TC-040 | 🚧 Planned |
+| FR-023-CON-1 | TC-040 | ✅ Complete |
 | FR-024-CON-1..2 | TC-041 | 🚧 Planned |
 | FR-025-CON-1..2 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
@@ -146,7 +147,7 @@ rejected JavaScript prototype is not evidence.
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 | TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | ✅ Passed |
-| TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | 🚧 Planned |
+| TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | ✅ Passed |
 | TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Planned |
 | TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004-AC-1..NFR-004-AC-3, NFR-006-AC-1..NFR-006-AC-8 | 🚧 Planned |
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |

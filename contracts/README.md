@@ -25,6 +25,12 @@ profile representation from this definition, computes its identity with RFC 8785
 and returns all unavailable interfaces as blocked prerequisites without copying
 producer-owned schemas.
 
+The schema also owns the internal `QualificationCorpusManifest` used to retain
+qualification inputs. It is not a public E02 root contract. Rust binds its exact
+population and class denominator to a frozen `QualificationProfile`, accepts input,
+generator, and replay bytes only through strict-reader proofs, checks mutation ancestry
+and replay output digests, and preserves each missing class as one owner-assigned gap.
+
 `PropertyInventoryItem.classification` is optional on planner input so an
 unclassified property can be represented. When present it must be non-empty;
 the planner emits `unknown` when it was omitted.
