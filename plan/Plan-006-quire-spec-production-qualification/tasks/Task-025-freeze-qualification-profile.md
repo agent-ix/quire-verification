@@ -22,7 +22,8 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
 - [x] Write TC-039 with one-axis omissions, open dimensions, changed identities, and unaccepted-revision cases using bare `ix-trace-rs` markers.
 - [x] Extend the authoritative schema and derive the Rust profile types and validation from it.
 - [x] Inventory the exact E02, FS02, FS05, parser/compiler, caller, Engineering Assurance, and Quoin handoff revisions needed by the selected profile.
-- [x] Return actionable blocked prerequisites for unavailable revisions without copying their definitions.
+- [x] Return actionable blocked prerequisites for unavailable external interfaces in a
+  structurally complete candidate without copying their definitions.
 
 ## Deliverables
 
@@ -32,6 +33,14 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
 
 - The verification owner supplies the claim dimensions and thresholds; implementation does not invent them.
 - The verification owner is the action owner for recording those selected values in issue 15; no implementation task may infer them from VP04 or a schema ceiling.
+- The profile candidate is an identity-bearing value, so its candidate,
+  dependency-closure, caller, and environment references are mandatory. Absence of
+  those intrinsic references prevents construction and remains an owner-recorded task
+  prerequisite. Typed planner blockers cover the six external interface acceptance
+  seams after those intrinsic inputs exist.
+- Task-025 exposes the profile gate as a library API. Task-026 is its first planned
+  in-crate consumer and remains blocked by this task; no qualification execution path
+  is wired early.
 - Stop this task as `blocked` if any selected producer revision is unavailable or unaccepted.
 - Unblocks Task-026.
 
@@ -50,5 +59,8 @@ excluded.
 | Engineering Assurance | `agent-ix/engineering-assurance@c47e176e5ef5d133c448171e25640b76d653a077` | provisional | Consume Agent C's accepted Rust-native handoff revision after its interface specification and review land. |
 | Quoin evidence ownership | `agent-ix/quoin@7072d65db7e236e819d99be42e094ba548e9496a` | accepted containment candidate | Bind the exact versioned evidence interface used by the selected profile without expanding Quoin. |
 
-Until the three non-accepted states are resolved, the planner returns their owned
-prerequisites and does not emit a frozen qualification profile.
+Until the three non-accepted states are resolved, the inventory retains their owning
+prerequisites and no frozen qualification profile is emitted. The missing executable,
+dependency closure, caller, and environment prevent candidate construction; once those
+intrinsic references exist, each remaining unaccepted external interface is returned as
+a typed planner blocker.

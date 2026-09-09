@@ -21,6 +21,12 @@
       },
       "additionalProperties": false
     },
+    "SourceReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "source" } }, "required": ["kind"] } } }
+      ]
+    },
     "ExecutableProjectionReference": {
       "allOf": [
         { "$ref": "#/$defs/SharedArtifactEnvelope" },
@@ -797,7 +803,7 @@
       "properties": {
         "budgetId": { "type": "string", "minLength": 1 },
         "phase": { "type": "string", "minLength": 1 },
-        "maximumWallClockNanoseconds": { "type": "integer", "minimum": 1, "maximum": 10000000000 },
+        "maximumWallClockNanoseconds": { "type": "integer", "minimum": 1 },
         "maximumParallelism": { "type": "integer", "minimum": 1, "maximum": 2 },
         "maximumStdoutBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 },
         "maximumStderrBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 }
@@ -861,6 +867,36 @@
               "reason": { "type": "string", "minLength": 1 }
             }
           }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": { "enum": ["portable-contracts", "shared-references", "engineering-assurance", "quoin-evidence"] },
+              "status": { "const": "accepted" }
+            },
+            "required": ["role", "status"]
+          },
+          "then": { "properties": { "interfaceRef": { "$ref": "#/$defs/SourceReference" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": { "const": "parser-compiler" },
+              "status": { "const": "accepted" }
+            },
+            "required": ["role", "status"]
+          },
+          "then": { "properties": { "interfaceRef": { "$ref": "#/$defs/ExecutableProjectionReference" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": { "const": "production-caller" },
+              "status": { "const": "accepted" }
+            },
+            "required": ["role", "status"]
+          },
+          "then": { "properties": { "interfaceRef": { "$ref": "#/$defs/InvocationReference" } } }
         }
       ],
       "additionalProperties": false

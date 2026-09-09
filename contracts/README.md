@@ -17,7 +17,10 @@ semantic-guarantee, environment, resource-budget, evidence, exclusion, and
 producer-interface dimensions. Every selected producer role carries either one
 exact accepted shared-reference envelope or one typed unavailable state with an
 owner and reason. Rust code requires every embedded artifact envelope to match an
-exact `ValidatedSharedReference` from the strict shared-reference reader, derives the
+exact `ValidatedSharedReference` from the strict shared-reference reader. The schema
+and Rust gate map portable contracts, shared references, Engineering Assurance, and
+Quoin evidence to `source`; parser/compiler to `executable-projection`; and the
+production caller to `invocation`. The implementation derives the
 profile representation from this definition, computes its identity with RFC 8785 JCS,
 and returns all unavailable interfaces as blocked prerequisites without copying
 producer-owned schemas.

@@ -205,11 +205,10 @@ fn ensure_strict_references(
         .ok_or_else(|| invalid_profile("profile interfaces are not an array", "interfaces"))?
     {
         if interface["status"] == "accepted" {
-            let expected_role = interface["interfaceRef"]["value"]["kind"]
-                .as_str()
-                .ok_or_else(|| {
-                    invalid_profile("accepted interface has no artifact role", "interfaceRef")
-                })?;
+            let interface_role = interface["role"].as_str().ok_or_else(|| {
+                invalid_profile("accepted interface has no semantic role", "interfaces.role")
+            })?;
+            let expected_role = expected_interface_artifact_kind(interface_role)?;
             validate_bound_reference(
                 &interface["interfaceRef"],
                 "interfaces.interfaceRef",
@@ -219,6 +218,20 @@ fn ensure_strict_references(
         }
     }
     Ok(())
+}
+
+fn expected_interface_artifact_kind(role: &str) -> Result<&'static str, VerificationError> {
+    match role {
+        "portable-contracts" | "shared-references" | "engineering-assurance" | "quoin-evidence" => {
+            Ok("source")
+        }
+        "parser-compiler" => Ok("executable-projection"),
+        "production-caller" => Ok("invocation"),
+        _ => Err(invalid_profile(
+            "qualification interface has an unsupported semantic role",
+            role,
+        )),
+    }
 }
 
 fn validate_bound_reference(

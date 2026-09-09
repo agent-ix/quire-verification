@@ -27,7 +27,8 @@ evidence, and explicit exclusions.
 ## Outputs
 
 - One immutable qualification-profile artifact with a JCS identity.
-- Actionable prerequisite records for every unresolved producer or owner decision.
+- Actionable prerequisite records for every unresolved external interface represented
+  by an otherwise structurally complete profile candidate.
 
 ## Behavior
 
@@ -36,6 +37,14 @@ evidence, and explicit exclusions.
 - If an external interface revision is missing, provisional, unsupported, or not
   accepted for the selected role, then the planner SHALL retain an exact blocked
   prerequisite and SHALL NOT substitute a local schema.
+- Candidate, dependency-closure, caller, and environment references are intrinsic
+  profile identity. Their absence refuses profile construction; the verification owner
+  records that prerequisite before invoking the planner rather than constructing a
+  partial identity or substituting bytes.
+- Accepted portable-contract, shared-reference, Engineering Assurance, and Quoin
+  interfaces SHALL name `source` artifacts.
+- The accepted parser/compiler interface SHALL name an `executable-projection`.
+- The accepted production-caller interface SHALL name an `invocation`.
 - The planner SHALL treat syntax, import resolution, model binding, type checking,
   evaluation, backend projection, and production integration as distinct claim
   dimensions.

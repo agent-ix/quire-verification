@@ -110,13 +110,24 @@ fn collect_artifacts<'a>(value: &'a Value, artifacts: &mut Vec<&'a Value>) {
     }
 }
 
+fn interface_kind(role: &str) -> &'static str {
+    match role {
+        "parser-compiler" => "executable-projection",
+        "production-caller" => "invocation",
+        "portable-contracts" | "shared-references" | "engineering-assurance" | "quoin-evidence" => {
+            "source"
+        }
+        _ => panic!("unsupported qualification interface role"),
+    }
+}
+
 fn interface(interface_id: &str, role: &str, owner: &str) -> Value {
     json!({
         "interfaceId": interface_id,
         "role": role,
         "owner": owner,
         "status": "accepted",
-        "interfaceRef": artifact("source", &format!("interface:{interface_id}")),
+        "interfaceRef": artifact(interface_kind(role), &format!("interface:{interface_id}")),
         "reason": null
     })
 }
@@ -307,6 +318,32 @@ fn assert_profile_reference_roles_are_typed() {
             "{pointer} admitted {wrong_kind}"
         );
     }
+
+    for (index, role) in [
+        "portable-contracts",
+        "shared-references",
+        "parser-compiler",
+        "production-caller",
+        "engineering-assurance",
+        "quoin-evidence",
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let expected = interface_kind(role);
+        let wrong_kind = if expected == "source" {
+            "run-artifact"
+        } else {
+            "source"
+        };
+        let mut wrong_role = profile();
+        wrong_role["interfaces"][index]["interfaceRef"]["value"]["kind"] = json!(wrong_kind);
+        assert!(
+            validate_qualification_profile(&wrong_role, &validated_references(&wrong_role))
+                .is_err(),
+            "{role} admitted {wrong_kind} instead of {expected}"
+        );
+    }
 }
 
 #[trace("TC-039", "FR-022-AC-1", "FR-022-AC-2")]
@@ -341,6 +378,61 @@ fn tc_039_freezes_only_a_complete_closed_schema_derived_profile() {
     );
 
     assert_profile_reference_roles_are_typed();
+}
+
+#[trace("TC-039", "FR-022-AC-2")]
+#[test]
+fn tc_039_does_not_infer_a_guarantee_from_commands_or_techniques() {
+    let mut command_only = profile();
+    command_only["semanticGuarantees"] = json!([]);
+    command_only["evidenceRequirements"] = json!([]);
+    assert!(
+        !command_only["commands"]
+            .as_array()
+            .expect("commands")
+            .is_empty()
+    );
+    assert!(
+        validate_qualification_profile(&command_only, &validated_references(&command_only))
+            .is_err()
+    );
+
+    let mut technique_without_guarantee = profile();
+    technique_without_guarantee["semanticGuarantees"] = json!([]);
+    assert!(
+        !technique_without_guarantee["evidenceRequirements"]
+            .as_array()
+            .expect("evidence requirements")
+            .is_empty()
+    );
+    assert!(
+        validate_qualification_profile(
+            &technique_without_guarantee,
+            &validated_references(&technique_without_guarantee)
+        )
+        .is_err()
+    );
+}
+
+#[trace("TC-039", "FR-022-AC-1")]
+#[test]
+fn tc_039_accepts_an_owner_supplied_phase_budget_above_ten_seconds() {
+    let mut value = profile();
+    value["resourceBudgets"][0]["maximumWallClockNanoseconds"] = json!(20_000_000_000_u64);
+    let references = validated_references(&value);
+    let frozen = match freeze_qualification_profile(value, &references)
+        .expect("owner-supplied phase budget is valid")
+    {
+        QualificationProfileOutcome::Frozen(profile) => profile,
+        QualificationProfileOutcome::Blocked(blockers) => {
+            panic!("owner-supplied phase budget blocked: {blockers:?}")
+        }
+    };
+    assert_eq!(
+        serde_json::to_value(frozen.profile()).expect("generated profile serialization")["resourceBudgets"]
+            [0]["maximumWallClockNanoseconds"],
+        json!(20_000_000_000_u64)
+    );
 }
 
 #[trace("TC-039", "FR-022-AC-3")]
