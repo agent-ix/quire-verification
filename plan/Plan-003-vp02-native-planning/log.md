@@ -7,6 +7,7 @@ description: "Chronological log of changes to the Plan-003 bundle."
 
 ## History
 
+* **2026-09-08** — Task-013 specification accepted at `c791101` after QUOIN `/specify` and owner-selected `/spec-review all` (SR-102 through SR-109). The plan now assigns the breaking draft-2 schema, retained shared-schema resolution, opaque reader outputs, keyed JCS membership, and five closed input variants to Task-013.
 * **2026-09-08** — QUOIN `spec-to-plan` created the VP02 bundle from reviewed revision `95d3f62`; Task-011 started, while Tasks 012 through 015 remain blocked by the recorded FS02/FS05 consumer finding.
 * **2026-09-08** — Task-011 completed at `250811e` after QUOIN `/specify` and `/spec-review all` added injective task identity, TC-026 bound FR-013 at 5/5, the exact Rust review passed, and all Rust/schema/dependency gates passed. Tasks 012 through 015 remain open.
 * **2026-09-08** — Merged Agent A revision `8ab058be` resolved the shared-reference representation blocker. QUOIN `/specify` adopted its exact version/JCS/role/snapshot boundary at `7b6c11d`, owner-selected `/spec-review all` is retained as SR-092 through SR-099 at `9fb29ff`, and Task-012 moved from blocked to active. Tasks 013 through 015 remain blocked on Task-012.
