@@ -24,15 +24,17 @@ before using the reference in planning or result identity comparison.
 
 ## Inputs
 
-- Bounded UTF-8 JSON containing an `ix.shared-reference/2-draft` envelope from
-  the exact `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
+- Bounded UTF-8 JSON containing either an `ix.shared-reference/2-draft`
+  artifact/semantic envelope or an `ix.shared-reference/1-draft`
+  source-map/migration envelope from the exact
+  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
   private data packet.
 - Locally supplied artifact bytes, supported versions/features, and qualified canonical derivations.
 
 ## Outputs
 
 - A validated role-specific reference or a stable refusal that does not enter planning or result selection.
-- Stable refusal codes: `unsupported_contract_version`, `unsupported_reference_version`, `unknown_required_feature`, `invalid_wire`, `identity_mismatch`, `identity_content_conflict`, `malformed_source_map`, `unsupported_canonicalization`, and `ambiguous_equivalence`.
+- Stable refusal codes: `unsupported_contract_version`, `unsupported_reference_version`, `unknown_required_feature`, `invalid_wire`, `identity_mismatch`, `identity_content_conflict`, `stale`, `malformed_source_map`, `unsupported_canonicalization`, and `ambiguous_equivalence`.
 
 ## Acceptance Criteria
 
@@ -40,11 +42,11 @@ before using the reference in planning or result identity comparison.
 |----|----------|--------------|
 | FR-016-AC-1 | A byte reference is accepted only when its version, kind, authority, identity, structured revision, exact byte digest, and wire identity/version are supported and match locally supplied bytes. | Test (TC-029) |
 | FR-016-AC-2 | A semantic reference is accepted only when its byte artifact, language, semantic-profile definition digest, duplicate-free required-feature set, and selected canonical identity are supported and internally consistent; a null semantic profile requires null language and canonical identity plus an empty feature set. | Test (TC-029) |
-| FR-016-AC-3 | Before materializing a JSON object, duplicate decoded member names, including escape-equivalent spellings, refuse as `invalid_wire`; unknown versions or required features, wrong role kinds, digest mismatch, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse with their corresponding stable code before planning or result matching. | Test (TC-029) |
+| FR-016-AC-3 | Before materializing a JSON object, duplicate decoded member names, including escape-equivalent spellings, refuse as `invalid_wire`; unknown versions or required features, wrong role kinds, digest mismatch, stale references, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse with their corresponding stable code before planning or result matching. | Test (TC-029) |
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
 | FR-016-AC-5 | The reader accepts only the selected `quire.verification.jcs` / `rfc8785-v1` / `sha256` canonical identity and exact `trace`, `fault-model`, `review-procedure`, `oracle`, `observation`, and `review-disposition` roles without placing `sha256-jcs:` semantic digests in `sha256:` byte-digest fields. | Test (TC-029, TC-031) |
-| FR-016-AC-6 | A breaking draft-1 to draft-2 transition does not reinterpret or rewrite retained draft-1 evidence, and no fallback reader treats an unknown draft as current. | Test (TC-029) |
-| FR-016-AC-7 | The independent consumer verifies a repository-retained digest manifest for the exact schema and all fourteen upstream fixture files, executes every selected positive and adverse case without producer code or network schema retrieval, and reports any snapshot drift before reference interpretation. | Integration Test (IT-002, TC-031) |
+| FR-016-AC-6 | Version 2 accepts only artifact/semantic envelopes with `ix.artifact-ref/3-draft`; retained version 1 accepts only source-map/migration envelopes under its exact schema. Draft-1 artifact/semantic evidence is not reinterpreted as current, no migration is inferred, and no fallback reader treats an unknown kind or version as supported. | Test (TC-029) |
+| FR-016-AC-7 | The independent consumer verifies a repository-retained digest manifest for the exact amendment schema, all fourteen amendment fixture files, and the retained version-1 schema; executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval; and reports snapshot drift before reference interpretation. | Test (TC-031) |
 
 ## Constraints
 

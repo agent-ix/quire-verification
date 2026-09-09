@@ -28,14 +28,15 @@ is the accepted schema and data-only fixture packet owned by
 
 ## Inputs
 
-- The exact shared-reference schema bytes and B-relevant positive/adverse vectors.
+- The exact version-2 amendment schema/fixtures, retained version-1 schema bytes,
+  and B-authored source-map/migration positive/adverse vectors.
 - Locally supplied referenced artifact bytes and B's declared supported versions/features.
 
 ## Test Procedure
 
-1. Verify the retained snapshot provenance, schema digest, and all fourteen fixture byte digests against the selected repository revision.
+1. Verify the retained snapshot provenance, both schema digests, and all fourteen amendment fixture byte digests against the selected repository revision.
 2. Reject duplicate decoded JSON members before object materialization, then validate every selected positive and adverse vector with B's Rust reader only.
-3. Run B's role-composition, immutable-identity, feature-set, exact-reference, and JCS-domain mutations.
+3. Run B's role-composition, immutable-identity, feature-set, exact-reference, JCS-domain, source-map, and explicit-migration mutations under their selected envelope versions.
 4. Verify the non-circular core digest over the validated automated core alone and refuse byte-digest substitution or a foreign core digest.
 5. Record accepted/refused counts and stable error categories without importing producer code or fetching a network schema.
 

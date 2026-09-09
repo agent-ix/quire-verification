@@ -25,6 +25,10 @@ wire identity/version. Add nested and top-level duplicate decoded member names,
 including `"a"` versus `"\u0061"`; changed bytes under a reused immutable
 identity; reordered and duplicate required features; null-profile coupling;
 unknown drafts; and a retained draft-1 value presented to the new reader.
+Exercise valid and malformed retained version-1 source maps over controlled
+original/body bytes, and zero, one, and conflicting exact migration mappings.
+Present version-1 artifact/semantic envelopes and version-2 source-map/migration
+envelopes to prove kind/version allocation cannot fall through to another decoder.
 
 ## Expected Results
 
@@ -34,8 +38,11 @@ shapes return `invalid_wire`; unknown envelope/ref/wire/profile versions return
 `unknown_required_feature`; unselected canonicalization returns
 `unsupported_canonicalization`; validly shaped digest, role, or one-axis
 reference mismatches return `identity_mismatch`; and reused immutable identity
-with different supplied bytes returns `identity_content_conflict`. Every refusal
-occurs before planning or matching. Feature reordering preserves set identity,
-duplicate features refuse, semantic/JCS identities never occupy byte-digest
-fields, and retained draft-1 evidence is neither rewritten nor accepted by a
-fallback.
+with a conflicting digest in one input set returns `identity_content_conflict`.
+An unavailable selected revision returns `stale`, malformed segment coverage or
+byte correspondence returns `malformed_source_map`, and multiple applicable
+mappings return `ambiguous_equivalence`. Every refusal occurs before planning or
+matching. One exact accepted mapping preserves only its stated byte-artifact
+correspondence. Feature reordering preserves set identity, duplicate features
+refuse, semantic/JCS identities never occupy byte-digest fields, and historical
+artifact/semantic evidence is neither rewritten nor accepted by a fallback.
