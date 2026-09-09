@@ -2,7 +2,7 @@
 id: Task-014
 title: "Exact native runner requests"
 type: Task
-status: active
+status: done
 track: A
 priority: P0
 relationships:
@@ -25,12 +25,12 @@ with one selected in-limit budget.
 
 ## Subtasks
 
-- [ ] Define closed positive budget and capability-limit contracts, including the ten-second wall ceiling.
-- [ ] Copy capability, adapter, permissions, selected allocation, native interface, and role input exactly.
-- [ ] Make a property budget replace the plan budget as one complete object.
-- [ ] Turn absent budget into a deterministic setup dependency and excessive budget into a typed value-retaining gap.
-- [ ] Keep manual, every other non-invocable state, and partially authorized fault work null and unauthorized.
-- [ ] Preserve Quoin evidence and authored-human sufficiency ownership.
+- [x] Define closed positive budget and capability-limit contracts, including the ten-second wall ceiling.
+- [x] Copy capability, adapter, permissions, selected allocation, native interface, and role input exactly.
+- [x] Make a property budget replace the plan budget as one complete object.
+- [x] Turn absent budget into a deterministic setup dependency and excessive budget into a typed value-retaining gap.
+- [x] Keep manual, every other non-invocable state, and partially authorized fault work null and unauthorized.
+- [x] Preserve Quoin evidence and authored-human sufficiency ownership.
 
 ## Deliverables
 
@@ -41,3 +41,7 @@ with one selected in-limit budget.
 - Tasks 011 and 013 are complete. The implementation is governed by accepted
   QUOIN review run `4a60dcc5-e3fc-4d46-b3f9-7806027dfd19` and SR-120 through
   SR-127 at `adaff03`.
+- Completed in `86ebb0b`; refreshed portfolio evidence is `96344bc`. Exact Rust
+  review SR-128 found no unresolved defect, all repository gates pass, affected
+  FR-005/FR-013/FR-014/FR-015 rows are backed, and Quire binds all 47 Rust test
+  candidates.

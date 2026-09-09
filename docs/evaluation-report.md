@@ -98,8 +98,8 @@ Agent B disposition: the bounded compatibility implementation in this pull
 request is complete and produces useful gaps without changing catalog or
 evidence ownership. This is not completion of parent E02 or its VP01–VP04
 track. VP01 still needs its acceptance dependencies and reviewed migration;
-VP02/VP03 still need the accepted shared identity/version seam and consumer
-integration; VP03 still lacks correlated-oracle evidence; and VP04 still needs
+VP02 implementation is complete but its acceptance remains gated on VP01; VP03
+still lacks correlated-oracle evidence; and VP04 still needs
 a reviewed native parser or aggregate producer portfolio, a seeded domain
 defect, agreed thresholds, and the recorded reviewer disposition. E01, FS02,
 FS05, and E04 remain open.

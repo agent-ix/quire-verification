@@ -112,10 +112,10 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-011 | Emit authored or unknown classification | Implemented; verified |
 | FR-012 | Preserve authored prioritization | Implemented; verified |
 | FR-013 | Emit an actionable prerequisite DAG | Implemented; verified |
-| FR-014 | Construct exact native runner requests | Specified; pending implementation |
-| FR-015 | Preserve role-specific verification inputs | Specified; pending implementation |
-| FR-016 | Read shared references strictly | Specified; shared packet accepted, implementation pending |
-| FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FR-016 implementation |
+| FR-014 | Construct exact native runner requests | Implemented; verified |
+| FR-015 | Preserve role-specific verification inputs | Implemented; verified |
+| FR-016 | Read shared references strictly | Implemented; verified |
+| FR-017 | Retain oracle dependence without aggregation | Specified; pending implementation |
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
 | FR-019 | Execute a bounded native parser portfolio | Specified; blocked on VP02/VP03 |
 | FR-020 | Record reproducible portfolio effort | Specified; blocked on FR-019 |
@@ -127,7 +127,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-005 | Bounded JSON ingestion | Implemented; verified |
 | NFR-006 | Bound native process execution | Implemented; verified |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
-| IT-002 | Independent shared-reference consumer qualification | Specified; implementation pending |
+| IT-002 | Independent shared-reference consumer qualification | Implemented; verified |
 | IT-003 | Native parser portfolio execution | Specified; blocked on VP02/VP03 |
 
 ## 6. Identification and Traceability
@@ -152,18 +152,19 @@ human disposition to a sealed automated core.
 ## 8. Lifecycle and Change Control
 
 This specification describes a private compatibility slice implemented and
-verified in Rust, the VP01 registry/policy qualification increment, the specified
-VP02 planning increment, and the specified VP03 evidence-assessment increment.
+verified in Rust, the VP01 registry/policy qualification increment, the
+implemented VP02 planning increment, and the specified VP03 evidence-assessment
+increment.
 VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
 VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
 E02 and FS05. VP04 acceptance remains gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
 Merged specification revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
-resolves B's recorded canonical-domain and reference-role findings. FR-016 and
-IT-002 may proceed after this amended specification completes the required
-review; FR-017 and FR-021 remain downstream of the one strict reader. The
-breaking draft-2 transition must update requirements, tests, fixtures, and
-retained reports without reinterpreting draft-1 evidence.
+resolved B's recorded canonical-domain and reference-role findings. FR-016 and
+IT-002 now use that accepted packet through the one strict reader; FR-017 and
+FR-021 remain downstream of it. The breaking draft-2 transition updated
+requirements, tests, fixtures, and retained reports without reinterpreting
+draft-1 evidence.
 
 ## 9. References
 
