@@ -33,29 +33,48 @@ disposition task over the same admitted subject and execution scope.
 
 - An exact reviewed `quire-spec-language` Rust candidate and `quire-spec` CLI binding.
 - A valid native source, one syntax-defect mutation derived from it, and their exact references.
+- Expected source SHA-256 digests, clause and import counts, and the exact
+  invalid-syntax diagnostic span selected before execution.
 - A reviewed plan, policy, capabilities, runner requests, evidence obligations, and freshness limits.
+- Exact expected exit code zero for successful parse and format invocations, and
+  exact expected exit code one for the declared syntax-refusal invocation.
 - An exact verification-owner procedure for the separate manual task.
 
 ## Outputs
 
-- An immutable automated execution record containing the exact plan, native
-  results, assessment, and native artifact references.
+- An immutable VP04 execution payload containing the exact plan, native
+  results, assessment, and native artifact references for a downstream
+  Engineering Assurance or Quoin host to retain.
 
 ## Behavior
 
 - For the direct technique, the executor SHALL classify a zero-exit parse of the
-  valid source as completed and satisfied.
+  valid source as completed and satisfied only when stdout is one exact JSON
+  object with `status: parsed`, the requested source identity and revision, the
+  SHA-256 byte digest of the admitted source, and the expected clause and import
+  counts, while stderr is empty.
 - For the metamorphic technique, the executor SHALL format the valid parsed unit,
-  parse the formatted bytes, and compare the second formatted output with the
-  first output under the reviewed relation.
+  retain the first format stdout as an exact native artifact in the fresh run
+  directory, parse those exact bytes under a new exact revision, format them a
+  second time, and compare the two format byte strings for equality.
 - When every metamorphic command completes but the reparse or second-format
   relation differs, the executor SHALL record completed execution with a violated
   logical outcome and retain the exact differing artifacts.
+- The executor SHALL decode successful parser stdout and expected diagnostic
+  stderr as exactly one bounded JSON value followed only by JSON whitespace.
+- If parser JSON is followed by a second value or any non-whitespace bytes, then
+  the executor SHALL reject the response as malformed.
 - When the seeded syntax mutation produces the expected located refusal, the
+  executor SHALL accept only exit status 1, empty stdout, and one exact JSON
+  diagnostic on stderr with `status: refused`, `phase: parse`, code
+  `invalid_syntax`, the requested source identity and revision, and the declared
+  byte, line, and column span.
+- When the seeded syntax mutation matches that exact expected diagnostic, the
   executor SHALL record completed execution with a violated logical outcome.
 - If the native process cannot start, exits outside the expected method protocol,
-  or emits an unreadable result, then the executor SHALL record failed execution
-  with a not-evaluated logical outcome.
+  emits output on the wrong stream, emits trailing non-whitespace bytes, returns
+  mismatched identity or digest fields, or emits an unreadable result, then the
+  executor SHALL record failed execution with a not-evaluated logical outcome.
 
 ## Constraints
 
@@ -69,8 +88,8 @@ disposition task over the same admitted subject and execution scope.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-019-AC-1 | The valid-source baseline contains completed, satisfied, fully participating direct-parse and parse-format-reparse results from the exact native candidate. | Test (TC-034) |
-| FR-019-AC-2 | A single declared syntax mutation yields its exact expected diagnostic code and source location as a completed, violated result, while an unexpected process or protocol failure remains failed and not-evaluated. | Test (TC-034) |
+| FR-019-AC-1 | The valid-source baseline contains completed, satisfied, fully participating direct-parse and parse-format-reparse results from the exact native candidate; each parser response has the prescribed exit status, stream, complete payload, source identity, revision, digest, and count or byte-equality relation. | Test (TC-034) |
+| FR-019-AC-2 | A single declared syntax mutation yields exit 1 and its exact expected diagnostic object and source span on stderr as a completed, violated result, while wrong-stream, trailing-data, identity, digest, count, process, or protocol failures remain failed and not-evaluated. | Test (TC-034) |
 | FR-019-AC-3 | Removing one required runner, binding, tool, or resource prerequisite leaves the affected task blocked, emits actionable setup work, and creates no fabricated execution result. | Test (TC-035) |
 | FR-019-AC-4 | Assessing an otherwise exact result after its earliest freshness bound reports stale and retains its logical, participation, assumption, adequacy, provenance, native-artifact, and dependence findings. | Test (TC-035) |
 | FR-019-AC-5 | Reused or unknown oracle and observation relationships remain explicit correlation findings; technique count does not imply independence or an aggregate score. | Test (TC-035) |

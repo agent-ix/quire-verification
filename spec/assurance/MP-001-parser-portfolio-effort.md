@@ -29,6 +29,9 @@ relationships:
 The observations establish a reproducible setup-versus-incremental baseline for
 the exact VP04 candidate and identify phases that deserve later investigation.
 They do not approve the candidate or establish a performance threshold.
+This repository implements only the VP04 observation producer and summary
+calculation. Engineering Assurance retains ownership of reusable measurement
+providers and generic evaluation-report orchestration.
 
 ## Population
 
@@ -49,6 +52,16 @@ an integer from 0 through 9007199254740991 nanoseconds and in collection order.
 Mark interrupted, out-of-domain, identity-mismatched, or
 otherwise invalid observations with a reason; never replace one with zero or
 silently drop it.
+
+The setup phase validates the selected references and admits the exact executable
+descriptor, valid fixture, mutation fixture, and execution profile. Each
+direct-parse phase invokes the valid source once. Each parse-format-reparse phase
+formats the valid source, parses the exact formatted bytes under the prescribed
+formatted revision, and formats those bytes again. Each complete-run phase runs
+the direct and metamorphic baselines, the seeded syntax-refusal case, and their
+portfolio assessment in that order. The five repetitions are sequential in
+increasing repetition order and use the host's naturally warmed filesystem
+cache; no cache is cleared or pre-warmed outside the recorded setup.
 
 ## Interpretation
 

@@ -19,7 +19,10 @@ than an unexpected execution failure.
 
 Run the real native parser and formatter over the exact valid source, then run
 the direct technique over its one declared syntax mutation. Separately substitute
-an unexpected process failure and an unreadable native response.
+an unexpected process failure and an unreadable native response. Mutate each
+required success and diagnostic field, move payloads to the wrong stream, append
+a second JSON value and non-whitespace trailing bytes, and change the expected
+exit status.
 
 ## Expected Results
 

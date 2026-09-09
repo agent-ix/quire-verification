@@ -2,7 +2,7 @@
 id: Task-020
 title: "Bounded native process executor"
 type: Task
-status: done
+status: in_progress
 track: P
 priority: P0
 relationships:
@@ -28,6 +28,8 @@ process/protocol failures, observed group termination, and direct-child reaping.
 - [x] Prepare concurrent test candidates as isolated immutable links to the completed Cargo-built fixture, leaving no writable executable handle.
 - [x] Return distinct typed failures for timeout, stream excess, signal, status, invalid UTF-8, malformed protocol, and failed containment observation while retaining the original trigger.
 - [x] Bind TC-038 and every NFR-006 criterion, including AC-8, through compiler-checked `ix-trace-rs` markers whose arguments are all discovered by Quire coverage.
+- [ ] Admit exactly one expected exit code from 0 through 255 per invocation, return the observed matching status with complete streams, and reject absent, out-of-range, signaled, or different statuses without weakening containment.
+- [ ] Extend TC-038 and its compiler-checked trace binding across expected statuses zero and one plus declaration and mismatch boundaries.
 
 ## Deliverables
 
@@ -43,4 +45,7 @@ process/protocol failures, observed group termination, and direct-child reaping.
   SR-088 governs this trace-only remediation.
 - Restored after implementation `760bbbd`, 109/159 coverage with all eight
   NFR-006 criteria backed, and exact Rust review SR-089.
+- Reopened by QUOIN all-lens review SR-141 through SR-148 because the real
+  parser's expected exit-1 syntax diagnostic could not pass through the original
+  success-only process output.
 - Unblocks Task-021.

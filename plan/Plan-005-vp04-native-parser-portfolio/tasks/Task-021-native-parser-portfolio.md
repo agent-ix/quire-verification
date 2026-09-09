@@ -35,6 +35,6 @@ and keep blocked, stale, correlated, manual, and infrastructure states distinct.
 
 ## Notes
 
-- Blocked on accepted Plan-003 and Plan-004 gates plus Task-020.
-- The exact qualified parser candidate and cleared fixtures are external entrance criteria.
+- Plan-003, Plan-004, the shared wire, and the exact qualified parser/fixture
+  entrance criteria are complete; only Task-020's expected-status extension remains.
 - Unblocks Task-022 and Task-023.

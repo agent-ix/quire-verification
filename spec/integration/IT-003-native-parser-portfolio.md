@@ -23,10 +23,11 @@ syntax checks into model or evaluator claims.
 ## Target Integration
 
 The system under test is the Rust `quire-verification` planner, native runner,
-evidence assessor, and report writer. The external producer is the real
+evidence assessor, VP04 measurement recorder, and domain report-core builder. The external producer is the real
 `quire-spec-language` Rust `quire-spec` CLI at an exact reviewed revision. The
-evidence handoff is a retained versioned report whose owner and sufficiency fields
-remain Quoin-owned.
+evidence handoff is a versioned VP04 payload whose owner and sufficiency fields
+remain Quoin-owned; external retention and generic assurance orchestration are
+outside this integration.
 
 ## Preconditions
 
@@ -52,11 +53,11 @@ remain Quoin-owned.
 2. Build the portfolio plan with direct-parse, parse-format-reparse, and manual-disposition work.
    - IT-003-SC-02: both automated tasks are ready, the manual task is separately represented, and no input variant is guessed or collapsed.
 3. Exercise the native process time, output, argument, environment, path, status, and protocol boundaries.
-   - IT-003-SC-03: each boundary produces the NFR-006 result and no shell, orphan process, partial success, or logical claim.
+   - IT-003-SC-03: expected statuses zero and one return complete captured streams; invalid declarations and every other boundary produce the NFR-006 result with no shell, orphan process, partial success, or logical claim.
 4. Execute the valid source through the real `quire-spec parse` command and the real parse-format-reparse sequence.
-   - IT-003-SC-04: both automated baseline results are completed and satisfied with exact native-artifact and observation references.
+   - IT-003-SC-04: both automated baseline results are completed and satisfied with exact status, stream, identity, revision, digest, count, format-byte, native-artifact, and observation references.
 5. Execute the one declared syntax mutation through the direct-parse technique.
-   - IT-003-SC-05: the expected located refusal becomes completed and violated; a crash or malformed protocol becomes failed and not-evaluated.
+   - IT-003-SC-05: only exit 1 with empty stdout and the expected single located JSON refusal on stderr becomes completed and violated; a crash, wrong stream, trailing data, mismatched field, or malformed protocol becomes failed and not-evaluated.
 6. Rerun the plan after removing one required native prerequisite.
    - IT-003-SC-06: the affected task is blocked with actionable setup work and no fabricated result.
 7. Assess an otherwise exact retained result at its expiry and one representable instant later.

@@ -26,6 +26,10 @@ redefine the parser CLI, operate a shell, invoke a network service, authorize
 production execution, or claim another operating-system profile.
 The declared child-execution deadline excludes the separate post-signal cleanup
 phase, which has its own at-most-one-second observation budget.
+Each invocation declares exactly one expected numeric exit code from 0 through
+255. The process executor returns that observed code with the complete captured
+streams when it matches; a signal or any other exit code remains a typed failed
+execution.
 
 ## Rationale
 
@@ -48,6 +52,7 @@ typed results.
 | Request-path resolutions after executable admission | 0 | 0 | Test (TC-038) |
 | Live process-group members when the executor reports successful containment | 0 | 0 | Test (TC-038) |
 | Post-signal containment observation budget | At most 1 second | 1 second | Test (TC-038) |
+| Expected exit-code declarations per invocation | Exactly 1 integer from 0 through 255 | 1 | Test (TC-038) |
 
 ## Verification
 
@@ -57,7 +62,8 @@ simultaneously, exit by code or signal, emit invalid UTF-8 or malformed protocol
 output, replace the admitted pathname, and leave descendants with both retained
 and closed pipes. It observes process-group disappearance after the direct child
 is reaped and runs fixture cases concurrently from immutable links to a completed
-Cargo-built fixture binary.
+Cargo-built fixture binary. It also admits expected status 0 and expected status
+1 separately, and crosses the expected-status range at both boundaries.
 
 ## Acceptance Criteria
 
@@ -67,7 +73,7 @@ Cargo-built fixture binary.
 | NFR-006-AC-2 | A request accepts a positive declared deadline no greater than 10 seconds and refuses an absent, zero, negative, non-finite, or larger deadline with `invalid_execution_deadline` before child launch. | Test (TC-038) |
 | NFR-006-AC-3 | A process group still live at its accepted declared deadline is signaled, the direct child is reaped, and group disappearance is observed before returning `execution_timeout`; failure to send the signal or observe disappearance returns `process_containment_failure` with trigger `execution_timeout` and never claims the group terminated. Neither result carries a logical outcome claim. | Test (TC-038) |
 | NFR-006-AC-4 | Standard output or error is accepted through exactly 16 MiB; the first excess byte signals the process group, reaps the direct child, and returns `output_limit_exceeded` with the stream name, count, and limit but not the excess bytes only after group disappearance is observed. Failed signaling or observation returns `process_containment_failure` with trigger `output_limit_exceeded`. | Test (TC-038) |
-| NFR-006-AC-5 | A signal, unexpected exit code, invalid UTF-8, malformed method response, or descendant surviving the direct child returns a distinct typed failed result without panic, unreported containment failure, partial success, or logical outcome claim. | Test (TC-038) |
+| NFR-006-AC-5 | A request admits exactly one integer expected exit code from 0 through 255; observing that code returns it with complete captured streams, while an absent or out-of-range declaration refuses before launch and a signal, different exit code, invalid UTF-8, malformed method response, or descendant surviving the direct child returns a distinct typed failed result without panic, unreported containment failure, partial success, or logical outcome claim. | Test (TC-038) |
 | NFR-006-AC-6 | A candidate path that is relative, outside the selected execution root, absent, non-regular, or resolves through a symbolic link is refused before child launch; lack of the selected Linux descriptor/process-group profile refuses with `unsupported_execution_profile`. | Test (TC-038) |
 | NFR-006-AC-7 | The executor opens the root and root-relative candidate with `openat2` using `RESOLVE_BENEATH`, `RESOLVE_NO_MAGICLINKS`, and `RESOLVE_NO_SYMLINKS`, retains the admitted descriptor through launch, and invokes only its trusted descriptor-backed `/proc/self/fd` path; replacing the request pathname after admission cannot substitute the executed bytes. | Test (TC-038) |
 | NFR-006-AC-8 | After requesting group termination, the executor reaps the direct child before waiting at most one second for process-group disappearance; it reports `process_group_terminated: true` only after observing disappearance, and otherwise returns `process_containment_failure` with the original failure code retained as `trigger`. | Test (TC-038) |

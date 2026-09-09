@@ -28,6 +28,8 @@ and closed output pipes. After every termination trigger, verify the direct chil
 is reaped and the process group has disappeared before a result can claim
 termination; inject a group-observation timeout and verify that it becomes
 `process_containment_failure` with the original error code retained as `trigger`.
+Admit expected exit codes zero and one, cross the declaration's zero and 255
+boundaries, and return a status different from the declared value.
 
 ## Expected Results
 
@@ -39,6 +41,7 @@ descriptor/process-group profile refuses with its stable code. An absent, zero,
 or above-cap deadline refuses. A group at its accepted deadline, one byte over
 either stream limit, or a descendant surviving its direct child is terminated;
 the direct child is reaped and group disappearance is observed before termination
-is claimed. Signals, unexpected codes, invalid UTF-8, malformed responses, and
-containment failures remain distinct failed results with no panic, partial
-success, or logical outcome.
+is claimed. Exact expected statuses return with complete captured streams.
+Out-of-range declarations, signals, unexpected codes, invalid UTF-8, malformed
+responses, and containment failures remain distinct failed results with no
+panic, partial success, or logical outcome.

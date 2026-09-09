@@ -21,12 +21,12 @@ relationships:
 
 ### Non-Functional Requirements
 
-- [x] **NFR-006**: Bound direct native process execution by executable, arguments, environment, directory, time, output, status, protocol, observed containment, and complete trace binding.
+- [ ] **NFR-006**: Preserve the qualified containment boundary while admitting one exact expected exit status per invocation.
 
 ## Dependency Graph
 
-- `NFR-006 -> Task-020`: the bounded process primitive is independently testable with controlled native child fixtures before the real parser is selected.
-- `Plan-003/Task-015 + Plan-004/Task-019 + Task-020 -> Task-021`: portfolio execution requires qualified VP02 planning, qualified VP03 assessment, and bounded process behavior.
+- `NFR-006 -> Task-020`: the bounded process primitive must return one exact admitted status with complete streams before the parser's expected exit-1 refusal can be interpreted.
+- `Plan-003/Task-015 + Plan-004/Task-019 + Task-020 -> Task-021`: qualified VP02 planning and VP03 assessment are complete; only the reopened expected-status process extension remains before portfolio execution.
 - `Task-021 -> Task-022`: effort observations measure the exact admitted parser-portfolio phases and identities.
 - `Plan-003/Task-012 + Task-021 + Task-022 -> Task-023`: the report needs the strict shared-reference reader, JCS identity domain, review-disposition role, execution records, and measurements.
 - `Task-023 -> Task-024`: integration and qualification consume the sealed report behavior and then obtain one externally authored disposition.
@@ -35,9 +35,10 @@ relationships:
 
 Plan-003 Task-012 remains the only shared-reference reader and the authoritative
 E02 schema remains the only source for public contracts and the internal VP04
-report shape. Agent A owns the qualified native parser and shared FS02/FS05 wire.
-Agent C owns the reusable Engineering Assurance provider; this plan only consumes
-the validated MP-001 artifact and emits its domain observations.
+payload shape. Agent A owns the qualified native parser and shared FS02/FS05 wire.
+Agent C owns reusable Engineering Assurance providers and generic report/chain
+hosting; this plan consumes the validated MP-001 artifact and returns only VP04
+domain observations and payloads.
 
 ### Cross-cutting constraints
 
@@ -48,10 +49,11 @@ controls rather than duplicated VP04 work.
 
 ### The seams
 
-Task-020 adds a bounded Linux child-process adapter beside the existing Rust
-runner request types. Tasks 021 through 023 extend the single schema-derived
-contract, planner, evidence assessor, and report boundary. Task-024 invokes the
-real reviewed `quire-spec` CLI and retains the report for external disposition.
+Task-020 extends the bounded Linux child-process adapter beside the existing
+Rust runner request types. Tasks 021 through 023 extend the single schema-derived
+contract, planner, evidence assessor, measurement recorder, and VP04 payload
+boundary. Task-024 invokes the real reviewed `quire-spec` CLI and binds the
+payload to an external disposition.
 
 ## Test Plan
 
@@ -77,9 +79,9 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 
 ## Remaining Work
 
-### Track P: Process primitive (complete)
+### Track P: Process primitive (reopened)
 
-- **P1 = Task-020** Bounded native process executor — Complete after process implementation `8d0aa4c` and trace remediation `760bbbd`; exact Rust reviews SR-079 and SR-089 pass and all eight NFR-006 criteria are bound.
+- **P1 = Task-020** Expected-status process extension — Medium; exit: one declared status from 0 through 255 returns with complete streams while invalid declarations, signals, and different statuses preserve every qualified containment guarantee.
 
 ### Track A: Critical Path (serial, dependency-gated)
 
@@ -91,8 +93,8 @@ real reviewed `quire-spec` CLI and retains the report for external disposition.
 ## Parallel Execution Summary
 
 ```text
-Task-020 -----------------------------------------------+
-Plan-003/Task-015 + Plan-004/Task-019 -----------------+-> Task-021 -> Task-022 -> Task-023 -> Task-024
+Task-020 expected-status extension ---------------------+
+Plan-003/Task-015 + Plan-004/Task-019 (complete) -------+-> Task-021 -> Task-022 -> Task-023 -> Task-024
 Plan-003/Task-012 + shared JCS/disposition roles ----------------------------+
 qualified parser + cleared fixtures -------------------------------------------> Task-024
 external owner disposition ----------------------------------------------------> Task-024
@@ -102,7 +104,7 @@ external owner disposition ---------------------------------------------------->
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-020 | P | NFR-006 | TC-038 | done |
+| Task-020 | P | NFR-006 | TC-038 | in_progress |
 | Task-021 | A | FR-019 | TC-034, TC-035 | blocked |
 | Task-022 | A | FR-020 | TC-036, TC-037 | blocked |
 | Task-023 | A | FR-021 | TC-037 | blocked |
@@ -110,10 +112,11 @@ external owner disposition ---------------------------------------------------->
 
 ## Coordination Rules
 
-Task-020 is complete against controlled Rust child fixtures after remediating the
-hosted containment failures. Tasks 021 through 024 remain blocked until their
-other predecessors and external candidate/role gates clear. B does not edit
-Agent A's parser or shared schema, Agent C's reusable Engineering Assurance
-implementation, Quoin, or Filament. Changes to behavior return through QUOIN
-`/specify` and the owner-selected all-lens `/spec-review` before implementation.
-Every acceptance test uses compiled `ix-trace-rs` markers.
+Task-020's established descriptor and process-group behavior stays frozen while
+the reviewed expected-status request/output slice is added. Tasks 021 through
+024 then proceed serially; the only human gate is the exact disposition obtained
+after the core digest exists. B does not edit Agent A's parser or shared schema,
+Agent C's reusable Engineering Assurance implementation, Quoin, or Filament.
+Changes to behavior return through QUOIN `/specify` and the owner-selected
+all-lens `/spec-review` before implementation. Every acceptance test uses
+compiled `ix-trace-rs` markers.
