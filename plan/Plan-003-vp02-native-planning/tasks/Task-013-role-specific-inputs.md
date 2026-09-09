@@ -2,7 +2,7 @@
 id: Task-013
 title: "Role-specific verification inputs"
 type: Task
-status: blocked
+status: active
 track: A
 priority: P0
 relationships:
@@ -29,4 +29,4 @@ Replace open input objects with five closed, shared-reference-aware variants.
 
 ## Notes
 
-- Blocked by Task-012.
+- Unblocked by Task-012 at exact Rust review `ce4e03e` / SR-100.
