@@ -10,7 +10,7 @@ relationships:
 
 ## Description
 
-When a public contract value enters the compatibility slice, the contract validator SHALL accept it only when it satisfies exactly one of the five definitions in `contracts/e02-draft-1.schema.json`.
+When a public contract value enters the compatibility slice, the contract validator SHALL accept it only when it satisfies exactly one of the five definitions in `contracts/e02-draft-2.schema.json`.
 
 ## Inputs
 
@@ -28,9 +28,9 @@ When a public contract value enters the compatibility slice, the contract valida
 | FR-001-AC-2 | Given an internal inventory object that is not one of the five public contracts, root contract validation rejects it. | Test (TC-001) |
 | FR-001-AC-3 | Given a result whose execution did not complete but whose logical outcome claims satisfied or violated, validation rejects it. | Test (TC-002) |
 | FR-001-AC-4 | Given a plan task with a missing required field, an unknown field, or a wrongly typed field, validation rejects it. | Test (TC-002) |
-| FR-001-AC-5 | Given a structured boundary value with an unknown `contractVersion`, validation rejects it without attempting compatibility inference. | Test (TC-002) |
+| FR-001-AC-5 | Given a structured boundary value whose `contractVersion` is not `quire-verification/e02-draft-2`, including the former draft-1 value, validation rejects it without compatibility inference or fallback. | Test (TC-002) |
 
 ## Dependencies
 
 - Driven by [US-001](../usecase/US-001-plan-portable-verification.md).
-- The schema remains provisional pending the out-of-scope shared identity decision.
+- Shared reference shapes come from the exact independently accepted packet governed by [FR-016](./FR-016-read-shared-references-strictly.md).

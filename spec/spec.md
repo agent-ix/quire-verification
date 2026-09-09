@@ -169,6 +169,6 @@ retained reports without reinterpreting draft-1 evidence.
 
 - RFC 8785, JSON Canonicalization Scheme.
 - ISO/IEC/IEEE 29148, Requirements Engineering.
-- `contracts/e02-draft-1.schema.json`, the private versioned contract packet.
+- `contracts/e02-draft-2.schema.json`, the private versioned contract packet.
 - `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, accepted private shared-reference packet.
 - `agent-ix/quire-spec-language`, the exact reviewed Rust parser candidate selected by IT-003.

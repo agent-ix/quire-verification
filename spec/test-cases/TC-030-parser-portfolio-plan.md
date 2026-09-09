@@ -19,10 +19,12 @@ manual-review work without pretending they share one unary input or readiness.
 
 ## Test Procedure
 
-Build a pinned parser plan with a state/property task requiring a generator and
-harness, a relational/differential task requiring two native parser bindings,
-and a manual artifact review requiring an assigned reviewer. Run ready, missing
-prerequisite, unsupported capability, and absent resource-allocation variants.
+Build a pinned parser plan with a state/property task carrying a validated
+`snapshot` envelope and requiring a generator and harness, a
+relational/differential task requiring two native parser bindings, and a manual
+artifact review carrying a validated `review-procedure` envelope and requiring
+an assigned reviewer. Run ready, missing-prerequisite, unsupported-capability,
+and absent-resource-allocation variants.
 
 ## Expected Results
 
