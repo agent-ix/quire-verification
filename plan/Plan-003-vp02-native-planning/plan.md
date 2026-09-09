@@ -30,7 +30,7 @@ relationships:
 ## Dependency Graph
 
 - `Plan-001/Task-003 -> Task-011`: prerequisite coalescing extends the existing Rust planner.
-- `FS02 + FS05 amendment -> Task-012`: the independent reader needs representable JCS and role identities.
+- `quire-specification@8ab058be -> Task-012`: the accepted FS02/FS05 packet supplies the selected JCS domain, roles, version split, and vectors.
 - `Task-012 -> Task-013`: closed role-specific inputs depend on the selected shared references.
 - `Task-011 + Task-013 -> Task-014`: runner requests require both prerequisite and input semantics.
 - `Task-011..Task-014 -> Task-015`: qualification covers the complete VP02 slice.
@@ -81,7 +81,7 @@ producers retain native artifacts and Agent A owns the shared schema.
 
 ```text
 Plan-001/Task-003 -> Task-011 -------------------+
-FS02 + FS05 ------> Task-012 -> Task-013 --------+-> Task-014 -> Task-015
+FS02/FS05@8ab058be -> Task-012 -> Task-013 ------+-> Task-014 -> Task-015
 ```
 
 ## Task File Mapping
@@ -89,15 +89,15 @@ FS02 + FS05 ------> Task-012 -> Task-013 --------+-> Task-014 -> Task-015
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
 | Task-011 | A | FR-013 | TC-026 | done |
-| Task-012 | A | FR-016 | TC-029, TC-031 | blocked |
+| Task-012 | A | FR-016 | TC-029, TC-031 | active |
 | Task-013 | A | FR-015 | TC-028, TC-030 | blocked |
 | Task-014 | A | FR-014 | TC-027, TC-030 | blocked |
 | Task-015 | Gate | NFR-004, NFR-005 | TC-022, TC-023 | blocked |
 
 ## Coordination Rules
 
-Task-011 may proceed against the reviewed existing planner. Tasks 012 through 015
-remain blocked until Agent A resolves the accepted shared-contract findings. B
-does not edit A's schema, C's Engineering Assurance implementation, Quoin, or
-Filament. New behavior that changes these requirements returns to `/specify` and
-`/spec-review` before implementation.
+Task-012 proceeds against exact merged specification revision `8ab058be` after
+the QUOIN-reviewed adoption at `9fb29ff`. Tasks 013 through 015 remain blocked
+until Task-012 passes. B does not edit A's schema, C's Engineering Assurance
+implementation, Quoin, or Filament. New behavior that changes these requirements
+returns to `/specify` and `/spec-review` before implementation.
