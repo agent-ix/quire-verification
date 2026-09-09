@@ -2,7 +2,7 @@
 id: Plan-004
 title: "VP03 evidence assessment"
 type: Plan
-status: active
+status: done
 relationships:
   - { target: "ix://agent-ix/quire-verification/FR-017", type: references }
   - { target: "ix://agent-ix/quire-verification/FR-018", type: references }
@@ -80,7 +80,7 @@ Plan-003/Task-012 + FS05 -> Task-017 -> Task-018 -------------+-> Task-019
 | Task-016 | A | FR-018 | TC-032 | done |
 | Task-017 | A | FR-017 | TC-033 | done |
 | Task-018 | A | FR-017 | TC-033 | done |
-| Task-019 | Gate | FR-017, FR-018 | TC-032, TC-033 | in_progress |
+| Task-019 | Gate | FR-017, FR-018 | TC-032, TC-033 | done |
 
 ## Coordination Rules
 
