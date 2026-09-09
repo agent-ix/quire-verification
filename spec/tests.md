@@ -11,8 +11,9 @@ This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, VP04
 bounded-parser-portfolio, and proposed production-qualification slices to a
 concrete test case. The implemented TC-001 through TC-038 evidence runs in Rust
-through compiler-checked `ix-trace-rs` markers. TC-039 through TC-045 define the
-next test-first qualification scope and remain unimplemented. The IT-003 automated
+through compiler-checked `ix-trace-rs` markers. TC-039 implements the qualification
+profile boundary; TC-040 through TC-045 define the remaining test-first qualification
+scope and remain unimplemented. The IT-003 automated
 core is retained separately from the still-pending external disposition. The
 rejected JavaScript prototype is not evidence.
 
@@ -144,7 +145,7 @@ rejected JavaScript prototype is not evidence.
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ✅ Passed |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
-| TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | 🚧 Planned |
+| TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | ✅ Passed |
 | TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | 🚧 Planned |
 | TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Planned |
 | TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004-AC-1..NFR-004-AC-3, NFR-006-AC-1..NFR-006-AC-8 | 🚧 Planned |
@@ -422,7 +423,7 @@ rejected JavaScript prototype is not evidence.
 |----------|-------|--------|--------|---------|----------|
 | Unit | 17 | 17 | 0 | 0 | 100% |
 | Integration | 11 | 8 | 0 | 3 | 73% |
-| Property | 13 | 10 | 0 | 3 | 77% |
+| Property | 13 | 11 | 0 | 2 | 85% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 45 | 38 | 0 | 7 | 84% |
+| Overall | 45 | 39 | 0 | 6 | 87% |

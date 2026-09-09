@@ -67,7 +67,7 @@ new requirements instead of creating qualification-only copies.
 
 ## Test Plan
 
-- [ ] **TC-039**: property-test complete profiles, omissions, open dimensions, changed identities, and unavailable producer revisions.
+- [x] **TC-039**: property-test complete profiles, omissions, open dimensions, changed identities, and unavailable producer revisions.
 - [ ] **TC-040**: property-test corpus population, exact bytes, provenance, rights, exclusions, generated lineage, and mutations.
 - [ ] **TC-041**: exercise independent, shared, derived, absent, changed, and disagreeing oracles through the bounded process boundary.
 - [ ] **TC-042**: execute and discriminate example, property, fuzz, metamorphic, differential, mutation, shrinking, budget, and replay behavior.
@@ -115,7 +115,7 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 
 | Task | Track | Owns (references) | Verified by (verifies) | Status |
 |------|-------|-------------------|------------------------|--------|
-| Task-025 | A | FR-022 | TC-039 | not_started |
+| Task-025 | A | FR-022 | TC-039 | blocked |
 | Task-026 | A | FR-023 | TC-040 | not_started |
 | Task-027 | A | FR-024 | TC-041 | not_started |
 | Task-028 | A | FR-025 enablement | Task-029 completion gate | not_started |
