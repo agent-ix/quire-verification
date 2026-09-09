@@ -122,7 +122,8 @@ not evidence.
 
 | Test Case | Dimension A | Dimension B | Dimension C | Expected Behavior |
 |-----------|-------------|-------------|-------------|-------------------|
-| TC-009 | applicable | ready | qualified capability | invocation allowed |
+| TC-009 | applicable | ready | qualified native capability | invocation allowed |
+| TC-009 | applicable | ready | qualified manual capability | native invocation refused |
 | TC-010 | unknown | ready | qualified capability | invocation refused; readiness unchanged |
 | TC-010 | not-applicable | ready | qualified capability | invocation refused; readiness unchanged |
 | TC-010 | applicable | unsupported | absent capability | unsupported gap retained |
@@ -233,7 +234,7 @@ not evidence.
 
 | State Model | Transition | Test Case | Expected |
 |-------------|------------|-----------|----------|
-| Plan readiness | prepared prerequisites → ready | TC-009 | invocable only when applicable |
+| Plan readiness | prepared prerequisites → ready | TC-009 | native-invocable only when applicable with a qualified native capability and in-limit budget |
 | Plan readiness | missing prerequisites → blocked | TC-010 | setup tasks emitted |
 | Plan readiness | missing capability → unsupported | TC-010 | unsupported gap emitted |
 | Evidence freshness | within age → beyond age | TC-014 | fresh status becomes stale |

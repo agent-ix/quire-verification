@@ -2949,11 +2949,12 @@
       "source": "acceptance-criterion",
       "id": "FR-005-AC-2",
       "document": "spec/functional/FR-005-build-verification-plans.md",
-      "statement": "An applicable selection with a qualified compatible capability and all required prerequisites emits a ready invocable verification task.",
-      "statement_hash": "b46622ff40568a9ba5dbc1bfc54e6f366257d6b550560cc3b3bfe692c44469f6",
+      "statement": "An applicable selection with a qualified compatible `native-producer` capability, all required prerequisites, and an in-limit selected budget emits a ready invocable verification task; other ready work remains non-invocable unless a requirement defines a separate invocation boundary.",
+      "statement_hash": "4f32880478d00aa845cfa0aab4bc4ad2ad5f7dd1d56e6c56c4c4567edca2fa74",
       "method": "Test",
       "target_ids": [
-        "TC-009"
+        "TC-009",
+        "TC-027"
       ]
     },
     {
