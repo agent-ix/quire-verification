@@ -24,7 +24,7 @@ independent QUOIN gap analysis and the required human disposition.
 
 - [x] Run formatting, Clippy, tests, dependency policy, fixtures, and integrations.
 - [x] Reconcile every new `ix-trace-rs` binding.
-- [ ] Complete exact Rust review and resolve findings.
+- [x] Complete exact Rust review and resolve findings.
 - [ ] Obtain the required reviewer disposition and run QUOIN gap analysis.
 
 ## Deliverables
