@@ -21,9 +21,10 @@ is the accepted schema and data-only fixture packet owned by
 
 ## Preconditions
 
-- FS02 and FS05 identify one accepted private revision and exact fixture digests.
-- B's consumer-specific JCS and role findings have an accepted disposition.
-- The packet's rights permit private qualification use.
+- FS02 and FS05 identify merged private revision
+  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
+- B's consumer-specific JCS and six role findings are resolved in that revision.
+- Private qualification use is accepted; public reusable-artifact terms remain unresolved.
 
 ## Inputs
 
@@ -32,10 +33,11 @@ is the accepted schema and data-only fixture packet owned by
 
 ## Test Procedure
 
-1. Verify the selected repository revision and fixture byte digests.
-2. Validate every selected positive and adverse vector with B's Rust reader only.
-3. Run B's role-composition and JCS-domain mutations.
-4. Record accepted/refused counts and stable error categories.
+1. Verify the retained snapshot provenance, schema digest, and all fourteen fixture byte digests against the selected repository revision.
+2. Reject duplicate decoded JSON members before object materialization, then validate every selected positive and adverse vector with B's Rust reader only.
+3. Run B's role-composition, immutable-identity, feature-set, exact-reference, and JCS-domain mutations.
+4. Verify the non-circular core digest over the validated automated core alone and refuse byte-digest substitution or a foreign core digest.
+5. Record accepted/refused counts and stable error categories without importing producer code or fetching a network schema.
 
 ## Expected Results
 
@@ -52,7 +54,8 @@ unmapped B role.
 ## Dependencies
 
 - Verifies [FR-016](../functional/FR-016-read-shared-references-strictly.md).
-- Blocked until the shared owner accepts B's recorded amendment findings.
+- The external representation dependency is satisfied at `8ab058be`; B's
+  independent reader implementation and qualification remain pending.
 
 ## Traceability
 

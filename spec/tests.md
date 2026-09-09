@@ -56,12 +56,12 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | FR-013 | FR-013-AC-1..5 | TC-026, TC-030 | ✅ Complete |
 | FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
 | FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Planned |
-| FR-016 | FR-016-AC-1..6 | TC-029, TC-031 | ⛔ Blocked on FS02/FS05 amendment |
-| FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FS05 role amendment |
+| FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | 🚧 Planned against accepted packet |
+| FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on FR-016 implementation |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
 | FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ⛔ Blocked on VP02/VP03 |
 | FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ⛔ Blocked on FR-019 |
-| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ⛔ Blocked on shared roles and FR-019/FR-020 |
+| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ⛔ Blocked on FR-016 and FR-019/FR-020 |
 
 ### Non-Functional Requirement Coverage
 
@@ -106,9 +106,9 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-5 | ✅ Passed |
 | TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
 | TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-015-AC-1..FR-015-AC-4 | 🚧 Planned |
-| TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
+| TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | 🚧 Planned |
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
-| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-6 | ⛔ Blocked |
+| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | 🚧 Planned |
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |
 | TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ⛔ Blocked |
@@ -289,7 +289,7 @@ dependencies are ready. The rejected JavaScript prototype is not evidence.
 | Integration ID | Purpose | Target Project | Type | Test Cases | Status |
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
-| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ⛔ Blocked |
+| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | 🚧 Planned against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ⛔ Blocked |
 
 ### Integration Test Details

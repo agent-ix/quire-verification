@@ -17,13 +17,21 @@ packet without using A's producer validation code.
 
 ## Test Procedure
 
-Pin the accepted specification revision, load its shared schema and B-relevant
-positive/adverse fixtures as data, and run the Rust reader against every case.
-Confirm the dependency revision and fixture digests before evaluation.
+Pin `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`,
+verify a repository-retained digest manifest for the byte-identical
+`proposals/shared-reference-2-draft/schema.json` and all fourteen JSON fixture
+files, and run the Rust reader against every case without importing or executing
+the producer test crate. Confirm the schema digest is
+`c277730c339c48c8cc789f2adb93dbbe1d48624a6df39a4043d20cd0cbeca46b`,
+then exercise the core-only JCS preimage, all six role payloads, structural and
+semantic mutations, pairwise wrong-role substitutions, exact-reference
+one-axis mutations, feature-set permutations, and raw duplicate-key control.
 
 ## Expected Results
 
-All selected positive cases pass, all adverse cases refuse in the expected
-category, and B-specific JCS, trace, fault-model, review-procedure, property,
-subject, binding, dependency-closure, environment, run, and native-output roles
-are exercised independently of the producer.
+All selected positive cases pass, every adverse case refuses in its specified
+category before planning or result matching, and B-specific JCS, trace,
+fault-model, review-procedure, oracle, observation, review-disposition,
+property, subject, binding, dependency-closure, environment, run, and
+native-output roles are exercised independently of the producer. Snapshot drift,
+producer-code coupling, or network schema retrieval fails the integration.

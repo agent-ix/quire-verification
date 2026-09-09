@@ -24,7 +24,9 @@ before using the reference in planning or result identity comparison.
 
 ## Inputs
 
-- Bounded UTF-8 JSON containing a selected shared `ArtifactRef` or `SemanticRef`.
+- Bounded UTF-8 JSON containing an `ix.shared-reference/2-draft` envelope from
+  the exact `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
+  private data packet.
 - Locally supplied artifact bytes, supported versions/features, and qualified canonical derivations.
 
 ## Outputs
@@ -37,19 +39,23 @@ before using the reference in planning or result identity comparison.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-016-AC-1 | A byte reference is accepted only when its version, kind, authority, identity, structured revision, exact byte digest, and wire identity/version are supported and match locally supplied bytes. | Test (TC-029) |
-| FR-016-AC-2 | A semantic reference is accepted only when its byte artifact, language, semantic-profile definition digest, duplicate-free required-feature set, and selected canonical identity are supported and internally consistent. | Test (TC-029) |
-| FR-016-AC-3 | Duplicate member names, unknown versions or required features, wrong role kinds, digest mismatch, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse with the corresponding stable code before planning or result matching. | Test (TC-029) |
+| FR-016-AC-2 | A semantic reference is accepted only when its byte artifact, language, semantic-profile definition digest, duplicate-free required-feature set, and selected canonical identity are supported and internally consistent; a null semantic profile requires null language and canonical identity plus an empty feature set. | Test (TC-029) |
+| FR-016-AC-3 | Before materializing a JSON object, duplicate decoded member names, including escape-equivalent spellings, refuse as `invalid_wire`; unknown versions or required features, wrong role kinds, digest mismatch, identity-content conflict, malformed source correspondence, and ambiguous equivalence refuse with their corresponding stable code before planning or result matching. | Test (TC-029) |
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
-| FR-016-AC-5 | The shared schema represents B's named JCS canonical-identity domain and exact trace, fault-model, review-procedure, oracle, observation, and review-disposition roles without placing semantic digests in byte-digest fields. | Test (TC-029, TC-031) |
+| FR-016-AC-5 | The reader accepts only the selected `quire.verification.jcs` / `rfc8785-v1` / `sha256` canonical identity and exact `trace`, `fault-model`, `review-procedure`, `oracle`, `observation`, and `review-disposition` roles without placing `sha256-jcs:` semantic digests in `sha256:` byte-digest fields. | Test (TC-029, TC-031) |
 | FR-016-AC-6 | A breaking draft-1 to draft-2 transition does not reinterpret or rewrite retained draft-1 evidence, and no fallback reader treats an unknown draft as current. | Test (TC-029) |
+| FR-016-AC-7 | The independent consumer verifies a repository-retained digest manifest for the exact schema and all fourteen upstream fixture files, executes every selected positive and adverse case without producer code or network schema retrieval, and reports any snapshot drift before reference interpretation. | Integration Test (IT-002, TC-031) |
 
 ## Constraints
 
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
-| FR-016-CON-1 | The reader SHALL consume the exact independently reviewed shared-reference schema revision selected by VP02. | Compatibility | Integration Test (IT-002) |
+| FR-016-CON-1 | The reader SHALL consume only the exact independently reviewed private shared-reference packet merged at `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. | Compatibility | Integration Test (IT-002) |
+| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, provenance-recorded, and excluded from public promotion until its reusable-artifact terms are selected. | Rights / containment | Inspection (TC-031) |
 
 ## Dependencies
 
 - Contract validation and JCS behavior come from [FR-001](./FR-001-validate-public-contracts.md) and [FR-008](./FR-008-use-jcs.md).
-- Acceptance is blocked on `ix://agent-ix/quire-specification/FS02` and `ix://agent-ix/quire-specification/FS05`; PR #8 head `609790e` remains conditional pending B's recorded amendment findings.
+- The FS02/FS05 representation dependency is satisfied by merged specification
+  revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. Independent B adoption and
+  qualification remain open until TC-029 and TC-031 pass.

@@ -111,15 +111,15 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-010 | Keep applicability and readiness independent | Implemented; verified |
 | FR-011 | Emit authored or unknown classification | Implemented; verified |
 | FR-012 | Preserve authored prioritization | Implemented; verified |
-| FR-013 | Emit an actionable prerequisite DAG | Specified; pending implementation |
+| FR-013 | Emit an actionable prerequisite DAG | Implemented; verified |
 | FR-014 | Construct exact native runner requests | Specified; pending implementation |
 | FR-015 | Preserve role-specific verification inputs | Specified; pending implementation |
-| FR-016 | Read shared references strictly | Specified; blocked on FS02/FS05 amendment |
-| FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FS05 role amendment |
+| FR-016 | Read shared references strictly | Specified; shared packet accepted, implementation pending |
+| FR-017 | Retain oracle dependence without aggregation | Specified; blocked on FR-016 implementation |
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
 | FR-019 | Execute a bounded native parser portfolio | Specified; blocked on VP02/VP03 |
 | FR-020 | Record reproducible portfolio effort | Specified; blocked on FR-019 |
-| FR-021 | Bind the portfolio report and human disposition | Specified; blocked on shared roles and FR-019/FR-020 |
+| FR-021 | Bind the portfolio report and human disposition | Specified; blocked on FR-016 and FR-019/FR-020 |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -127,7 +127,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-005 | Bounded JSON ingestion | Implemented; verified |
 | NFR-006 | Bound native process execution | Implemented; verified |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
-| IT-002 | Independent shared-reference consumer qualification | Specified; blocked on FS02/FS05 amendment |
+| IT-002 | Independent shared-reference consumer qualification | Specified; implementation pending |
 | IT-003 | Native parser portfolio execution | Specified; blocked on VP02/VP03 |
 
 ## 6. Identification and Traceability
@@ -158,15 +158,17 @@ VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
 VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
 E02 and FS05. VP04 acceptance remains gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
-FR-016, FR-017, FR-021, and IT-002 cannot proceed until the shared owner resolves
-B's recorded canonical-domain and reference-role findings. Any accepted breaking
-draft-2 transition must update requirements, tests, fixtures, and retained reports
-without reinterpreting draft-1 evidence.
+Merged specification revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
+resolves B's recorded canonical-domain and reference-role findings. FR-016 and
+IT-002 may proceed after this amended specification completes the required
+review; FR-017 and FR-021 remain downstream of the one strict reader. The
+breaking draft-2 transition must update requirements, tests, fixtures, and
+retained reports without reinterpreting draft-1 evidence.
 
 ## 9. References
 
 - RFC 8785, JSON Canonicalization Scheme.
 - ISO/IEC/IEEE 29148, Requirements Engineering.
 - `contracts/e02-draft-1.schema.json`, the private versioned contract packet.
-- `agent-ix/quire-specification` PR #8 at `609790e`, conditional shared-reference input.
+- `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, accepted private shared-reference packet.
 - `agent-ix/quire-spec-language`, the exact reviewed Rust parser candidate selected by IT-003.
