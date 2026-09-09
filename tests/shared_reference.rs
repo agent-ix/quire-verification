@@ -135,15 +135,12 @@ fn artifact_ref(
     })
 }
 
-#[trace(
-    "TC-029",
-    "FR-016-AC-1",
-    "FR-016-AC-2",
-    "FR-016-AC-3",
-    "FR-016-AC-4",
-    "FR-016-AC-5",
-    "FR-016-AC-6"
-)]
+#[trace("TC-029", "FR-016-AC-1")]
+#[trace("FR-016-AC-2")]
+#[trace("FR-016-AC-3")]
+#[trace("FR-016-AC-4")]
+#[trace("FR-016-AC-5")]
+#[trace("FR-016-AC-6")]
 #[test]
 fn tc_029_accepts_exact_v2_roles_and_refuses_each_selected_failure() {
     accepts_exact_roles_and_semantic_reference();
@@ -714,7 +711,7 @@ fn rejects_unaligned_source_map_spans() {
     );
 }
 
-#[trace("TC-031", "FR-016-AC-5", "FR-016-AC-7", "IT-002")]
+#[trace("TC-031", "FR-016-AC-5", "FR-016-AC-7")]
 #[test]
 fn tc_031_executes_the_byte_identical_data_only_snapshot_independently() {
     validates_snapshot_schema_and_canonical_vectors();
