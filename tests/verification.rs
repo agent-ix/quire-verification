@@ -144,6 +144,30 @@ fn indexed_by<'a>(values: &'a [Value], field: &str) -> BTreeMap<&'a str, &'a Val
         .collect()
 }
 
+fn verification_task<'a>(plan: &'a Value, property_id: &str, technique_id: &str) -> &'a Value {
+    plan["tasks"]
+        .as_array()
+        .expect("plan tasks")
+        .iter()
+        .find(|task| {
+            task["kind"] == "verification"
+                && task["propertyId"] == property_id
+                && task["techniqueId"] == technique_id
+        })
+        .expect("selected verification task")
+}
+
+fn focused_request(property_id: &str, technique_id: &str) -> Value {
+    let mut request = fixture("portfolio.json")["planRequest"].clone();
+    request["selections"]
+        .as_array_mut()
+        .expect("selections")
+        .retain(|selection| {
+            selection["propertyId"] == property_id && selection["techniqueId"] == technique_id
+        });
+    request
+}
+
 #[trace("TC-001", "FR-001-AC-1", "FR-001-AC-2")]
 #[test]
 fn tc_001_accepts_only_the_five_public_contracts() {
@@ -409,6 +433,23 @@ fn tc_009_builds_ready_tasks_across_all_input_kinds() {
     );
     assert_eq!(plan["evidenceOwner"], "Quoin");
     assert_eq!(plan["sufficiencyOwner"], "authored-human-decision");
+    let invocable = verification
+        .iter()
+        .filter(|task| task["invocationAllowed"] == true)
+        .collect::<Vec<_>>();
+    assert_eq!(invocable.len(), 2);
+    assert!(invocable.iter().all(|task| {
+        task["applicability"] == "applicable"
+            && task["readiness"] == "ready"
+            && task["runnerRequest"]["kind"] == "native-producer"
+    }));
+    let manual = verification
+        .iter()
+        .find(|task| task["input"]["kind"] == "manual")
+        .expect("manual task");
+    assert_eq!(manual["readiness"], "ready");
+    assert_eq!(manual["invocationAllowed"], false);
+    assert_eq!(manual.get("runnerRequest"), Some(&Value::Null));
 }
 
 #[trace("TC-010", "FR-005-AC-3", "FR-005-AC-4", "FR-005-AC-5", "FR-010-AC-2")]
@@ -471,6 +512,502 @@ fn tc_026_coalesces_plan_level_prerequisites() {
     assert_delimiter_bearing_selection_ids_remain_distinct(&source);
 }
 
+#[trace("TC-027", "FR-005-AC-2", "FR-013-AC-2")]
+#[trace("FR-014-AC-1", "FR-014-AC-2")]
+#[trace("FR-014-AC-3", "FR-014-AC-4")]
+#[test]
+fn tc_027_authorizes_only_exact_bounded_native_runner_requests() {
+    assert_exact_closed_runner_request();
+    assert_non_invocable_requests_are_null();
+    assert_budget_refusals_are_explicit();
+    assert_budget_contract_boundaries();
+    assert_fault_request_requires_all_safety_bindings();
+}
+
+fn assert_exact_closed_runner_request() {
+    let mut request = focused_request("PROP-STATE", "property-based-testing");
+    request["properties"][0]["budget"] = json!({"wallClockSeconds": 5, "parallelism": 1});
+    request["budget"] = json!({"wallClockSeconds": 10, "parallelism": 1});
+    let plan = build_fixture_plan(&request).expect("bounded native plan");
+    let task = verification_task(&plan, "PROP-STATE", "property-based-testing");
+    let capability = find_by(
+        request["capabilities"].as_array().expect("capabilities"),
+        "capabilityId",
+        "CAP-PROPERTY",
+    );
+    let property = find_by(
+        request["properties"].as_array().expect("properties"),
+        "propertyId",
+        "PROP-STATE",
+    );
+    let expected = json!({
+        "kind": "native-producer",
+        "adapterId": capability["runner"]["adapterId"],
+        "adapterVersion": capability["runner"]["adapterVersion"],
+        "capabilityId": capability["capabilityId"],
+        "environmentPermissions": capability["environmentPermissions"],
+        "budget": property["budget"],
+        "nativeArtifactInterface": capability["nativeArtifactInterface"],
+        "input": property["input"],
+    });
+    assert_eq!(task["invocationAllowed"], true);
+    assert!(jcs_equal(&task["runnerRequest"], &expected).expect("exact runner JCS"));
+    assert_eq!(task["runnerRequest"]["budget"]["wallClockSeconds"], 5);
+    assert_eq!(plan["evidenceOwner"], "Quoin");
+    assert_eq!(plan["sufficiencyOwner"], "authored-human-decision");
+
+    let task_index = plan["tasks"]
+        .as_array()
+        .expect("tasks")
+        .iter()
+        .position(|candidate| candidate["taskId"] == task["taskId"])
+        .expect("runner task index");
+    for field_name in [
+        "kind",
+        "adapterId",
+        "adapterVersion",
+        "capabilityId",
+        "environmentPermissions",
+        "budget",
+        "nativeArtifactInterface",
+        "input",
+    ] {
+        let mut invalid = plan.clone();
+        invalid["tasks"][task_index]["runnerRequest"]
+            .as_object_mut()
+            .expect("runner request")
+            .remove(field_name);
+        assert_eq!(
+            validate_plan_value(&invalid)
+                .expect_err("missing runner field")
+                .code(),
+            VerificationErrorCode::SchemaViolation,
+            "{field_name}"
+        );
+    }
+    let mut unknown = plan.clone();
+    unknown["tasks"][task_index]["runnerRequest"]["evidenceStore"] = json!("invented");
+    assert_eq!(
+        validate_plan_value(&unknown)
+            .expect_err("unknown runner field")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+    let mut wrong_type = plan.clone();
+    wrong_type["tasks"][task_index]["runnerRequest"]["budget"]["parallelism"] = json!("one");
+    assert_eq!(
+        validate_plan_value(&wrong_type)
+            .expect_err("wrong runner field type")
+            .code(),
+        VerificationErrorCode::SchemaViolation
+    );
+}
+
+fn assert_non_invocable_requests_are_null() {
+    for applicability in ["not-applicable", "unknown"] {
+        let mut request = focused_request("PROP-STATE", "property-based-testing");
+        request["selections"][0]["applicability"] = json!(applicability);
+        assert_native_request_is_null(&request, "PROP-STATE", "property-based-testing");
+    }
+
+    let mut blocked = focused_request("PROP-STATE", "property-based-testing");
+    blocked["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .retain(|item| item["kind"] != "harness");
+    assert_native_request_is_null(&blocked, "PROP-STATE", "property-based-testing");
+
+    let mut unsupported = focused_request("PROP-STATE", "property-based-testing");
+    unsupported["capabilities"]
+        .as_array_mut()
+        .expect("capabilities")
+        .retain(|item| item["techniqueId"] != "property-based-testing");
+    assert_native_request_is_null(&unsupported, "PROP-STATE", "property-based-testing");
+
+    let mut stale = focused_request("PROP-STATE", "property-based-testing");
+    stale["policy"]["validUntil"] = json!("2026-09-01T00:00:00Z");
+    assert_native_request_is_null(&stale, "PROP-STATE", "property-based-testing");
+
+    let mut unqualified = focused_request("PROP-STATE", "property-based-testing");
+    find_by_mut(
+        unqualified["capabilities"]
+            .as_array_mut()
+            .expect("capabilities"),
+        "capabilityId",
+        "CAP-PROPERTY",
+    )["qualification"] = json!("unqualified");
+    assert_native_request_is_null(&unqualified, "PROP-STATE", "property-based-testing");
+
+    let manual = focused_request("PROP-MANUAL", "inspection");
+    let manual_plan = build_fixture_plan(&manual).expect("ready manual plan");
+    let manual_task = verification_task(&manual_plan, "PROP-MANUAL", "inspection");
+    assert_eq!(manual_task["readiness"], "ready");
+    assert_eq!(manual_task["invocationAllowed"], false);
+    assert_eq!(manual_task.get("runnerRequest"), Some(&Value::Null));
+}
+
+fn assert_native_request_is_null(request: &Value, property_id: &str, technique_id: &str) {
+    let plan = build_fixture_plan(request).expect("non-invocable plan");
+    let task = verification_task(&plan, property_id, technique_id);
+    assert_eq!(task["invocationAllowed"], false);
+    assert_eq!(task.get("runnerRequest"), Some(&Value::Null));
+}
+
+fn find_by_mut<'a>(values: &'a mut [Value], key: &str, expected: &str) -> &'a mut Value {
+    values
+        .iter_mut()
+        .find(|value| value.get(key).and_then(Value::as_str) == Some(expected))
+        .expect("expected mutable fixture member")
+}
+
+fn assert_budget_refusals_are_explicit() {
+    let mut absent = focused_request("PROP-STATE", "property-based-testing");
+    absent
+        .as_object_mut()
+        .expect("plan request")
+        .remove("budget");
+    let absent_plan = build_fixture_plan(&absent).expect("absent-budget plan");
+    let absent_task = verification_task(&absent_plan, "PROP-STATE", "property-based-testing");
+    let missing = json!({
+        "kind": "resource-allocation",
+        "id": "budget:CAP-PROPERTY",
+        "required": true,
+    });
+    assert_eq!(absent_task["readiness"], "blocked");
+    assert_eq!(absent_task["missingPrerequisites"], json!([missing]));
+    assert_eq!(absent_task["invocationAllowed"], false);
+    assert_eq!(absent_task.get("runnerRequest"), Some(&Value::Null));
+    let setup = find_by(
+        absent_plan["tasks"].as_array().expect("tasks"),
+        "taskId",
+        "setup:19:resource-allocation:19:budget:CAP-PROPERTY",
+    );
+    assert_eq!(setup["prerequisite"], missing);
+
+    for (budget, limits) in [
+        (
+            json!({"wallClockSeconds": 6, "parallelism": 1}),
+            json!({"maxWallClockSeconds": 5, "maxParallelism": 1}),
+        ),
+        (
+            json!({"wallClockSeconds": 5, "parallelism": 2}),
+            json!({"maxWallClockSeconds": 5, "maxParallelism": 1}),
+        ),
+    ] {
+        let mut request = focused_request("PROP-STATE", "property-based-testing");
+        request["budget"] = budget.clone();
+        find_by_mut(
+            request["capabilities"]
+                .as_array_mut()
+                .expect("capabilities"),
+            "capabilityId",
+            "CAP-PROPERTY",
+        )["resourceLimits"] = limits.clone();
+        let plan = build_fixture_plan(&request).expect("over-limit plan");
+        let task = verification_task(&plan, "PROP-STATE", "property-based-testing");
+        assert_eq!(task["readiness"], "blocked");
+        assert_eq!(
+            task["gaps"],
+            json!([{"kind": "budget-exceeded", "requested": budget, "limits": limits}])
+        );
+        assert_eq!(task["invocationAllowed"], false);
+        assert_eq!(task.get("runnerRequest"), Some(&Value::Null));
+    }
+}
+
+fn assert_budget_contract_boundaries() {
+    assert_budget_input_boundaries();
+    assert_budget_refusal_record_boundaries();
+}
+
+fn assert_budget_input_boundaries() {
+    let native = focused_request("PROP-STATE", "property-based-testing");
+    let native_capability_index = native["capabilities"]
+        .as_array()
+        .expect("capabilities")
+        .iter()
+        .position(|item| item["capabilityId"] == "CAP-PROPERTY")
+        .expect("native capability index");
+
+    let mut missing_limits = native.clone();
+    missing_limits["capabilities"][native_capability_index]
+        .as_object_mut()
+        .expect("native capability")
+        .remove("resourceLimits");
+    assert_schema_violation(&missing_limits, "native capability without limits");
+
+    for (field, invalid_value) in [
+        ("maxWallClockSeconds", json!(0)),
+        ("maxWallClockSeconds", json!(11)),
+        ("maxParallelism", json!(0)),
+    ] {
+        let mut invalid = native.clone();
+        invalid["capabilities"][native_capability_index]["resourceLimits"][field] = invalid_value;
+        assert_schema_violation(&invalid, "invalid native resource limit");
+    }
+
+    let mut manual_with_limits = focused_request("PROP-MANUAL", "inspection");
+    let manual_capability = find_by_mut(
+        manual_with_limits["capabilities"]
+            .as_array_mut()
+            .expect("capabilities"),
+        "capabilityId",
+        "CAP-MANUAL",
+    );
+    manual_capability["resourceLimits"] = json!({"maxWallClockSeconds": 10, "maxParallelism": 1});
+    assert_schema_violation(&manual_with_limits, "manual capability with limits");
+
+    for (field, invalid_value) in [
+        ("wallClockSeconds", json!(0)),
+        ("wallClockSeconds", json!(11)),
+        ("parallelism", json!(0)),
+    ] {
+        let mut invalid = native.clone();
+        invalid["budget"][field] = invalid_value;
+        assert_schema_violation(&invalid, "invalid plan budget");
+    }
+    let mut unknown_budget_field = native.clone();
+    unknown_budget_field["budget"]["cpuSeconds"] = json!(1);
+    assert_schema_violation(&unknown_budget_field, "unknown plan budget field");
+
+    let mut incomplete_property_budget = native.clone();
+    incomplete_property_budget["properties"][0]["budget"] =
+        json!({"wallClockSeconds": 5, "parallelism": 1});
+    incomplete_property_budget["properties"][0]["budget"]
+        .as_object_mut()
+        .expect("property budget")
+        .remove("parallelism");
+    assert_schema_violation(&incomplete_property_budget, "incomplete property budget");
+    let mut unknown_property_budget_field = native.clone();
+    unknown_property_budget_field["properties"][0]["budget"] =
+        json!({"wallClockSeconds": 5, "parallelism": 1});
+    unknown_property_budget_field["properties"][0]["budget"]["cpuSeconds"] = json!(1);
+    assert_schema_violation(
+        &unknown_property_budget_field,
+        "unknown property budget field",
+    );
+}
+
+fn assert_budget_refusal_record_boundaries() {
+    let native = focused_request("PROP-STATE", "property-based-testing");
+    let native_capability_index = native["capabilities"]
+        .as_array()
+        .expect("capabilities")
+        .iter()
+        .position(|item| item["capabilityId"] == "CAP-PROPERTY")
+        .expect("native capability index");
+    let mut over_limit = native.clone();
+    over_limit["budget"] = json!({"wallClockSeconds": 6, "parallelism": 1});
+    over_limit["capabilities"][native_capability_index]["resourceLimits"] =
+        json!({"maxWallClockSeconds": 5, "maxParallelism": 1});
+    let over_limit_plan = build_fixture_plan(&over_limit).expect("over-limit plan");
+    let over_limit_task =
+        verification_task(&over_limit_plan, "PROP-STATE", "property-based-testing");
+    let over_limit_task_index = over_limit_plan["tasks"]
+        .as_array()
+        .expect("tasks")
+        .iter()
+        .position(|item| item["taskId"] == over_limit_task["taskId"])
+        .expect("over-limit task index");
+    for field in ["requested", "limits"] {
+        let mut invalid = over_limit_plan.clone();
+        invalid["tasks"][over_limit_task_index]["gaps"][0]
+            .as_object_mut()
+            .expect("budget gap")
+            .remove(field);
+        assert_invalid_plan(&invalid, "incomplete budget gap");
+    }
+    let mut unknown_gap_field = over_limit_plan.clone();
+    unknown_gap_field["tasks"][over_limit_task_index]["gaps"][0]["available"] = json!(true);
+    assert_invalid_plan(&unknown_gap_field, "unknown budget gap field");
+    let mut wrong_gap_type = over_limit_plan.clone();
+    wrong_gap_type["tasks"][over_limit_task_index]["gaps"][0]["requested"]["parallelism"] =
+        json!("one");
+    assert_invalid_plan(&wrong_gap_type, "wrong budget gap field type");
+
+    let mut absent = native;
+    absent
+        .as_object_mut()
+        .expect("plan request")
+        .remove("budget");
+    let absent_plan = build_fixture_plan(&absent).expect("absent-budget plan");
+    let absent_task = verification_task(&absent_plan, "PROP-STATE", "property-based-testing");
+    let absent_task_index = absent_plan["tasks"]
+        .as_array()
+        .expect("tasks")
+        .iter()
+        .position(|item| item["taskId"] == absent_task["taskId"])
+        .expect("absent-budget task index");
+    let mut missing_required = absent_plan.clone();
+    missing_required["tasks"][absent_task_index]["missingPrerequisites"][0]
+        .as_object_mut()
+        .expect("budget prerequisite")
+        .remove("required");
+    assert_invalid_plan(&missing_required, "incomplete budget prerequisite");
+    let mut false_required = absent_plan.clone();
+    false_required["tasks"][absent_task_index]["missingPrerequisites"][0]["required"] =
+        json!(false);
+    assert_invalid_plan(&false_required, "optional budget prerequisite");
+    let mut unknown_prerequisite_field = absent_plan;
+    unknown_prerequisite_field["tasks"][absent_task_index]["missingPrerequisites"][0]["description"] =
+        json!("invented");
+    assert_invalid_plan(
+        &unknown_prerequisite_field,
+        "unknown budget prerequisite field",
+    );
+}
+
+fn assert_schema_violation(request: &Value, context: &str) {
+    assert_eq!(
+        build_fixture_plan(request).expect_err(context).code(),
+        VerificationErrorCode::SchemaViolation,
+        "{context}"
+    );
+}
+
+fn assert_invalid_plan(plan: &Value, context: &str) {
+    assert_eq!(
+        validate_plan_value(plan).expect_err(context).code(),
+        VerificationErrorCode::SchemaViolation,
+        "{context}"
+    );
+}
+
+fn assert_fault_request_requires_all_safety_bindings() {
+    let mut request = focused_request("PROP-FAULT", "fault-injection");
+    let safety = [
+        ("environment-authorization", "non-production-fault-scope"),
+        ("injection-binding", "confirmed-injection-site"),
+        ("observation-binding", "independent-effect-observation"),
+    ];
+    request["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .extend(
+            safety
+                .iter()
+                .map(|(kind, id)| json!({"kind": kind, "id": id})),
+        );
+    let complete = build_fixture_plan(&request).expect("authorized fault plan");
+    let complete_task = verification_task(&complete, "PROP-FAULT", "fault-injection");
+    assert_eq!(complete_task["readiness"], "ready");
+    assert_eq!(complete_task["invocationAllowed"], true);
+    assert_eq!(
+        complete_task["runnerRequest"]["input"],
+        request["properties"][3]["input"]
+    );
+
+    for (missing_kind, missing_id) in safety {
+        let mut incomplete = request.clone();
+        incomplete["availablePrerequisites"]
+            .as_array_mut()
+            .expect("available prerequisites")
+            .retain(|item| item["kind"] != missing_kind || item["id"] != missing_id);
+        assert_native_request_is_null(&incomplete, "PROP-FAULT", "fault-injection");
+    }
+}
+
+#[trace("TC-030", "FR-013-AC-2", "FR-015-AC-3")]
+#[trace("FR-014-AC-1", "FR-014-AC-2")]
+#[trace("FR-015-AC-5")]
+#[test]
+fn tc_030_keeps_parser_portfolio_roles_and_runner_eligibility_separate() {
+    let request = prepared_parser_portfolio_request();
+    let plan = build_fixture_plan(&request).expect("prepared parser portfolio");
+    let state = verification_task(&plan, "PROP-STATE", "property-based-testing");
+    let relational = verification_task(&plan, "PROP-RELATION", "metamorphic-testing");
+    let manual = verification_task(&plan, "PROP-MANUAL", "inspection");
+    for task in [state, relational] {
+        assert_eq!(task["readiness"], "ready");
+        assert_eq!(task["invocationAllowed"], true);
+        assert_eq!(task["runnerRequest"]["kind"], "native-producer");
+        assert!(
+            jcs_equal(&task["input"], &task["runnerRequest"]["input"]).expect("role input JCS")
+        );
+    }
+    assert_eq!(manual["readiness"], "ready");
+    assert_eq!(manual["invocationAllowed"], false);
+    assert_eq!(manual.get("runnerRequest"), Some(&Value::Null));
+
+    let mut missing_harness = request.clone();
+    missing_harness["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .retain(|item| item["kind"] != "harness");
+    let missing_plan = build_fixture_plan(&missing_harness).expect("missing harness plan");
+    assert_eq!(
+        verification_task(&missing_plan, "PROP-STATE", "property-based-testing")["readiness"],
+        "blocked"
+    );
+    assert_eq!(
+        verification_task(&missing_plan, "PROP-RELATION", "metamorphic-testing")["invocationAllowed"],
+        true
+    );
+
+    let mut unsupported = request.clone();
+    unsupported["capabilities"]
+        .as_array_mut()
+        .expect("capabilities")
+        .retain(|item| item["capabilityId"] != "CAP-RELATION");
+    let unsupported_plan = build_fixture_plan(&unsupported).expect("unsupported relation plan");
+    assert_eq!(
+        verification_task(&unsupported_plan, "PROP-RELATION", "metamorphic-testing")["readiness"],
+        "unsupported"
+    );
+
+    let mut absent_budget = request.clone();
+    absent_budget
+        .as_object_mut()
+        .expect("plan request")
+        .remove("budget");
+    let absent_plan = build_fixture_plan(&absent_budget).expect("absent portfolio budget");
+    for (property, technique) in [
+        ("PROP-STATE", "property-based-testing"),
+        ("PROP-RELATION", "metamorphic-testing"),
+    ] {
+        let task = verification_task(&absent_plan, property, technique);
+        assert_eq!(task["readiness"], "blocked");
+        assert_eq!(task["invocationAllowed"], false);
+        assert_eq!(task.get("runnerRequest"), Some(&Value::Null));
+    }
+    let absent_manual = verification_task(&absent_plan, "PROP-MANUAL", "inspection");
+    assert_eq!(absent_manual["readiness"], "ready");
+    assert_eq!(absent_manual["invocationAllowed"], false);
+}
+
+fn prepared_parser_portfolio_request() -> Value {
+    let mut request = fixture("portfolio.json")["planRequest"].clone();
+    request["selections"]
+        .as_array_mut()
+        .expect("selections")
+        .retain(|selection| {
+            matches!(
+                (
+                    selection["propertyId"].as_str(),
+                    selection["techniqueId"].as_str()
+                ),
+                (Some("PROP-STATE"), Some("property-based-testing"))
+                    | (Some("PROP-RELATION"), Some("metamorphic-testing"))
+                    | (Some("PROP-MANUAL"), Some("inspection"))
+            )
+        });
+    find_by_mut(
+        request["capabilities"]
+            .as_array_mut()
+            .expect("capabilities"),
+        "capabilityId",
+        "CAP-RELATION",
+    )["qualification"] = json!("qualified");
+    request["availablePrerequisites"]
+        .as_array_mut()
+        .expect("available prerequisites")
+        .extend([
+            json!({"kind": "common-domain", "id": "parser-roundtrip-domain"}),
+            json!({"kind": "relation-binding", "id": "roundtrip-equivalence"}),
+        ]);
+    request
+}
+
 #[trace("TC-028", "FR-002-AC-4", "NFR-002-AC-3")]
 #[trace("FR-015-AC-1", "FR-015-AC-2")]
 #[trace("FR-015-AC-3", "FR-015-AC-4")]
@@ -506,7 +1043,8 @@ fn assert_role_inputs_round_trip(request: &Value, references: &[ValidatedSharedR
         manual["input"]["requiredDisposition"],
         json!(["accept", "revise", "reject"])
     );
-    assert_eq!(manual["runnerRequest"]["kind"], "manual");
+    assert_eq!(manual["invocationAllowed"], false);
+    assert_eq!(manual.get("runnerRequest"), Some(&Value::Null));
 }
 
 fn assert_shared_definition_is_external() {

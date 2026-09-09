@@ -59,6 +59,67 @@
         "id": { "type": "string", "minLength": 1 },
         "required": { "type": "boolean" }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": { "const": "resource-allocation" },
+              "id": { "type": "string", "pattern": "^budget:" }
+            },
+            "required": ["kind", "id"]
+          },
+          "then": {
+            "required": ["kind", "id", "required"],
+            "properties": {
+              "kind": { "const": "resource-allocation" },
+              "id": { "type": "string", "pattern": "^budget:.+" },
+              "required": { "const": true }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "ExecutionBudget": {
+      "type": "object",
+      "required": ["wallClockSeconds", "parallelism"],
+      "properties": {
+        "wallClockSeconds": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "parallelism": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+      },
+      "additionalProperties": false
+    },
+    "ResourceLimits": {
+      "type": "object",
+      "required": ["maxWallClockSeconds", "maxParallelism"],
+      "properties": {
+        "maxWallClockSeconds": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "maxParallelism": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 }
+      },
+      "additionalProperties": false
+    },
+    "Gap": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": { "kind": { "type": "string", "minLength": 1 } },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "budget-exceeded" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["kind", "requested", "limits"],
+            "properties": {
+              "kind": { "const": "budget-exceeded" },
+              "requested": { "$ref": "#/$defs/ExecutionBudget" },
+              "limits": { "$ref": "#/$defs/ResourceLimits" }
+            },
+            "additionalProperties": false
+          }
+        }
+      ],
       "additionalProperties": true
     },
     "Input": {
@@ -155,6 +216,7 @@
         "executionScope": { "type": "object" },
         "freshness": { "$ref": "#/$defs/Freshness" },
         "resultBinding": { "$ref": "#/$defs/ResultBinding" },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" },
         "input": { "$ref": "#/$defs/Input" }
       },
       "additionalProperties": true
@@ -218,15 +280,31 @@
           "type": "object",
           "required": ["kind", "adapterId", "adapterVersion"],
           "properties": {
-            "kind": { "type": "string", "minLength": 1 },
+            "kind": { "enum": ["native-producer", "manual"] },
             "adapterId": { "type": "string", "minLength": 1 },
             "adapterVersion": { "type": "string", "minLength": 1 }
           },
-          "additionalProperties": true
+          "additionalProperties": false
         },
         "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-        "nativeArtifactInterface": { "type": "object" }
+        "nativeArtifactInterface": { "type": "object" },
+        "resourceLimits": { "$ref": "#/$defs/ResourceLimits" }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "runner": {
+                "properties": { "kind": { "const": "native-producer" } },
+                "required": ["kind"]
+              }
+            },
+            "required": ["runner"]
+          },
+          "then": { "required": ["resourceLimits"] },
+          "else": { "properties": { "resourceLimits": false } }
+        }
+      ],
       "additionalProperties": true
     },
     "SelectionPolicy": {
@@ -288,6 +366,21 @@
       },
       "additionalProperties": true
     },
+    "RunnerRequest": {
+      "type": "object",
+      "required": ["kind", "adapterId", "adapterVersion", "capabilityId", "environmentPermissions", "budget", "nativeArtifactInterface", "input"],
+      "properties": {
+        "kind": { "const": "native-producer" },
+        "adapterId": { "type": "string", "minLength": 1 },
+        "adapterVersion": { "type": "string", "minLength": 1 },
+        "capabilityId": { "type": "string", "minLength": 1 },
+        "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" },
+        "nativeArtifactInterface": { "type": "object" },
+        "input": { "$ref": "#/$defs/Input" }
+      },
+      "additionalProperties": false
+    },
     "VerificationPlan": {
       "type": "object",
       "required": ["contractVersion", "kind", "planId", "policyRef", "inventory", "tasks", "evidenceOwner", "sufficiencyOwner"],
@@ -332,19 +425,12 @@
               },
               "dependencies": { "type": "array", "items": { "type": "string", "minLength": 1 } },
               "missingPrerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
-              "gaps": { "type": "array", "items": { "type": "object" } },
+              "gaps": { "type": "array", "items": { "$ref": "#/$defs/Gap" } },
               "runnerRequest": {
-                "type": ["object", "null"],
-                "properties": {
-                  "kind": { "type": "string", "minLength": 1 },
-                  "adapterId": { "type": "string", "minLength": 1 },
-                  "adapterVersion": { "type": "string", "minLength": 1 },
-                  "capabilityId": { "type": "string", "minLength": 1 },
-                  "environmentPermissions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
-                  "budget": { "type": ["object", "null"] },
-                  "nativeArtifactInterface": { "type": "object" }
-                },
-                "additionalProperties": true
+                "oneOf": [
+                  { "$ref": "#/$defs/RunnerRequest" },
+                  { "type": "null" }
+                ]
               },
               "invocationAllowed": { "type": "boolean" }
             },
@@ -397,13 +483,24 @@
                   "type": "object",
                   "properties": {
                     "applicability": { "const": "applicable" },
-                    "readiness": { "const": "ready" }
+                    "readiness": { "const": "ready" },
+                    "runnerRequest": { "$ref": "#/$defs/RunnerRequest" }
                   }
+                },
+                "else": {
+                  "type": "object",
+                  "properties": { "runnerRequest": { "type": "null" } }
                 }
               }
             ],
             "additionalProperties": false
           }
+        },
+        "budget": {
+          "oneOf": [
+            { "$ref": "#/$defs/ExecutionBudget" },
+            { "type": "null" }
+          ]
         },
         "evidenceOwner": { "const": "Quoin" },
         "sufficiencyOwner": { "const": "authored-human-decision" }
@@ -523,26 +620,27 @@
       ],
       "additionalProperties": true
     },
+    "PlanRequest": {
+      "type": "object",
+      "required": ["planId", "asOf", "policy", "properties", "capabilities", "selections", "availablePrerequisites"],
+      "properties": {
+        "planId": { "type": "string", "minLength": 1 },
+        "asOf": { "type": "string", "format": "date-time" },
+        "policy": { "$ref": "#/$defs/SelectionPolicy" },
+        "properties": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
+        "capabilities": { "type": "array", "items": { "$ref": "#/$defs/ToolCapability" } },
+        "selections": { "type": "array", "items": { "type": "object" } },
+        "availablePrerequisites": { "type": "array", "items": { "$ref": "#/$defs/Prerequisite" } },
+        "budget": { "$ref": "#/$defs/ExecutionBudget" }
+      },
+      "additionalProperties": true
+    },
     "PortfolioFixture": {
       "type": "object",
       "required": ["schemaVersion", "planRequest"],
       "properties": {
         "schemaVersion": { "type": "string", "minLength": 1 },
-        "planRequest": {
-          "type": "object",
-          "required": ["planId", "asOf", "policy", "properties", "capabilities", "selections", "availablePrerequisites", "budget"],
-          "properties": {
-            "planId": { "type": "string", "minLength": 1 },
-            "asOf": { "type": "string", "format": "date-time" },
-            "policy": { "$ref": "#/$defs/SelectionPolicy" },
-            "properties": { "type": "array", "items": { "$ref": "#/$defs/PropertyInventoryItem" } },
-            "capabilities": { "type": "array", "items": { "$ref": "#/$defs/ToolCapability" } },
-            "selections": { "type": "array", "items": { "type": "object" } },
-            "availablePrerequisites": { "type": "array" },
-            "budget": { "type": "object" }
-          },
-          "additionalProperties": true
-        }
+        "planRequest": { "$ref": "#/$defs/PlanRequest" }
       },
       "additionalProperties": true
     },

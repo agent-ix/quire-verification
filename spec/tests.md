@@ -9,9 +9,9 @@ type: TestMatrix
 
 This matrix maps every normative acceptance criterion in the E02 compatibility,
 VP01 qualification, VP02 native-planning, VP03 evidence-assessment, and VP04
-bounded-parser-portfolio slices to a concrete test case. The 31 implemented cases
-run in Rust through compiler-checked `ix-trace-rs` markers; TC-027, TC-030, and
-TC-033 through TC-037 remain pending until their reviewed
+bounded-parser-portfolio slices to a concrete test case. The 33 implemented cases
+run in Rust through compiler-checked `ix-trace-rs` markers; TC-033 through TC-037
+remain pending until their reviewed
 implementation and dependencies are ready. The rejected JavaScript prototype is
 not evidence.
 
@@ -34,7 +34,7 @@ not evidence.
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
 | US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
-| US-001 | Actionable native planning and strict references | TC-026..TC-031 | 🚧 Planned |
+| US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | 🚧 Partial |
 | US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | ⛔ Blocked on VP02/VP03 |
 
@@ -55,8 +55,8 @@ not evidence.
 | FR-011 | FR-011-AC-1..2 | TC-024 | ✅ Complete |
 | FR-012 | FR-012-AC-1..2 | TC-025 | ✅ Complete |
 | FR-013 | FR-013-AC-1..5 | TC-026, TC-030 | ✅ Complete |
-| FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | 🚧 Planned |
-| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | 🚧 Partial |
+| FR-014 | FR-014-AC-1..4 | TC-027, TC-030 | ✅ Complete |
+| FR-015 | FR-015-AC-1..5 | TC-028, TC-030 | ✅ Complete |
 | FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
 | FR-017 | FR-017-AC-1..5 | TC-033 | ⛔ Blocked on the Plan-003 gate |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
@@ -105,10 +105,10 @@ not evidence.
 | TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
 | TC-025 | Retain authored policy and reject ordinal scoring | Unit | P0 | FR-012-AC-1..FR-012-AC-2 | ✅ Passed |
 | TC-026 | Retain every actionable prerequisite | Property | P0 | FR-013-AC-1..FR-013-AC-5 | ✅ Passed |
-| TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-014-AC-1..FR-014-AC-4 | 🚧 Planned |
+| TC-027 | Authorize only bounded native runner requests | Property | P0 | FR-005-AC-2, FR-013-AC-2, FR-014-AC-1..FR-014-AC-4 | ✅ Passed |
 | TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-002-AC-4, FR-015-AC-1..FR-015-AC-4, NFR-002-AC-3 | ✅ Passed |
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ✅ Implemented |
-| TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-1..FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-5 | 🚧 Planned |
+| TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-3, FR-015-AC-5 | ✅ Passed |
 | TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-5 | ⛔ Blocked |

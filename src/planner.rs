@@ -30,9 +30,10 @@ pub fn build_verification_plan(
     validated_references: &[ValidatedSharedReference],
 ) -> Result<Value, VerificationError> {
     object(request, "plan request")?;
-    let plan_id = string_field(request, "planId", "plan request")?;
     let policy = field(request, "policy", "plan request")?;
     validate_schema_definition("SelectionPolicy", policy)?;
+    validate_schema_definition("PlanRequest", request)?;
+    let plan_id = string_field(request, "planId", "plan request")?;
     let as_of = parse_timestamp(
         string_field(request, "asOf", "plan request")?,
         "plan request.asOf",
@@ -242,14 +243,29 @@ fn build_selection_tasks(
         property,
         selection.get("capabilityId").and_then(Value::as_str),
     )?;
+    let selected_budget = property.get("budget").or_else(|| request.get("budget"));
     let (mut readiness, prerequisites, gaps) =
-        capability_prerequisites(capability, property, policy, policy_stale)?;
+        capability_prerequisites(capability, property, policy, policy_stale, selected_budget)?;
     let missing = missing_prerequisites(&prerequisites, available)?;
     if !missing.is_empty() {
         readiness = "blocked";
     }
     let verification_id = verification_task_id(property_id, technique_id);
     let (mut tasks, dependencies) = setup_tasks(&missing, &verification_id)?;
+    let invocation_allowed =
+        native_invocation_allowed(capability, readiness, applicability, selected_budget)?;
+    let runner_request = match (invocation_allowed, capability, selected_budget) {
+        (true, Some(capability), Some(budget)) => {
+            make_runner_request(capability, property, budget)?
+        }
+        (false, _, _) => Value::Null,
+        (true, _, _) => {
+            return Err(VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "invocable work requires a capability and selected budget",
+            ));
+        }
+    };
     tasks.push(json!({
         "taskId": verification_id, "kind": "verification",
         "propertyId": property_id, "techniqueId": technique_id,
@@ -257,8 +273,8 @@ fn build_selection_tasks(
         "readiness": readiness, "priority": priority,
         "reasons": selection.get("reasons").cloned().unwrap_or_else(|| json!([])),
         "dependencies": dependencies, "missingPrerequisites": missing, "gaps": gaps,
-        "runnerRequest": runner_request(capability, property, request),
-        "invocationAllowed": readiness == "ready" && applicability == "applicable",
+        "runnerRequest": runner_request,
+        "invocationAllowed": invocation_allowed,
     }));
     Ok(tasks)
 }
@@ -268,6 +284,7 @@ fn capability_prerequisites(
     property: &Value,
     policy: &Value,
     policy_stale: bool,
+    selected_budget: Option<&Value>,
 ) -> Result<(&'static str, Vec<Value>, Vec<Value>), VerificationError> {
     let Some(capability) = capability else {
         let input_kind = string_field(
@@ -285,6 +302,14 @@ fn capability_prerequisites(
         ));
     };
     let mut prerequisites = optional_array(capability, "prerequisites", "capability")?.to_vec();
+    let native = is_native_capability(capability)?;
+    if native && selected_budget.is_none() {
+        prerequisites.push(json!({
+            "kind": "resource-allocation",
+            "id": format!("budget:{}", string_field(capability, "capabilityId", "capability")?),
+            "required": true,
+        }));
+    }
     if string_field(
         field(property, "input", "property")?,
         "kind",
@@ -306,7 +331,33 @@ fn capability_prerequisites(
             "id": format!("{}@{}", string_field(policy, "policyId", "policy")?, string_field(policy, "version", "policy")?),
         }));
     }
-    Ok(("ready", merge_prerequisites(prerequisites)?, Vec::new()))
+    let over_budget = if native {
+        selected_budget
+            .map(|budget| budget_within_limits(budget, capability))
+            .transpose()?
+            .is_some_and(|within| !within)
+    } else {
+        false
+    };
+    let (readiness, gaps) = if over_budget {
+        let budget = selected_budget.ok_or_else(|| {
+            VerificationError::new(
+                VerificationErrorCode::InvalidInput,
+                "over-budget work requires a selected budget",
+            )
+        })?;
+        (
+            "blocked",
+            vec![json!({
+                "kind": "budget-exceeded",
+                "requested": budget,
+                "limits": field(capability, "resourceLimits", "capability")?,
+            })],
+        )
+    } else {
+        ("ready", Vec::new())
+    };
+    Ok((readiness, merge_prerequisites(prerequisites)?, gaps))
 }
 
 fn missing_prerequisites(
@@ -316,9 +367,12 @@ fn missing_prerequisites(
     let mut missing = Vec::new();
     for prerequisite in prerequisites {
         let required = prerequisite.get("required").and_then(Value::as_bool) != Some(false);
-        let forced_stale =
-            prerequisite.get("kind").and_then(Value::as_str) == Some("policy-freshness");
-        if required && (forced_stale || !available.contains(&prerequisite_key(prerequisite)?)) {
+        let kind = prerequisite.get("kind").and_then(Value::as_str);
+        let id = prerequisite.get("id").and_then(Value::as_str);
+        let forced_missing = kind == Some("policy-freshness")
+            || (kind == Some("resource-allocation")
+                && id.is_some_and(|value| value.starts_with("budget:")));
+        if required && (forced_missing || !available.contains(&prerequisite_key(prerequisite)?)) {
             missing.push(prerequisite.clone());
         }
     }
@@ -394,15 +448,64 @@ fn coalesce_plan_tasks(tasks: Vec<Value>) -> Result<Vec<Value>, VerificationErro
     Ok(by_id.into_values().collect())
 }
 
-fn runner_request(capability: Option<&Value>, property: &Value, request: &Value) -> Value {
-    capability.map_or(Value::Null, |item| json!({
-        "kind": item.pointer("/runner/kind").cloned().unwrap_or(Value::Null),
-        "adapterId": item.pointer("/runner/adapterId").cloned().unwrap_or(Value::Null),
-        "adapterVersion": item.pointer("/runner/adapterVersion").cloned().unwrap_or(Value::Null),
-        "capabilityId": item.get("capabilityId").cloned().unwrap_or(Value::Null),
-        "environmentPermissions": item.get("environmentPermissions").cloned().unwrap_or_else(|| json!([])),
-        "budget": property.get("budget").or_else(|| request.get("budget")).cloned().unwrap_or(Value::Null),
-        "nativeArtifactInterface": item.get("nativeArtifactInterface").cloned().unwrap_or(Value::Null),
+fn native_invocation_allowed(
+    capability: Option<&Value>,
+    readiness: &str,
+    applicability: &str,
+    selected_budget: Option<&Value>,
+) -> Result<bool, VerificationError> {
+    let (Some(capability), Some(budget)) = (capability, selected_budget) else {
+        return Ok(false);
+    };
+    Ok(readiness == "ready"
+        && applicability == "applicable"
+        && string_field(capability, "qualification", "capability")? == "qualified"
+        && is_native_capability(capability)?
+        && budget_within_limits(budget, capability)?)
+}
+
+fn is_native_capability(capability: &Value) -> Result<bool, VerificationError> {
+    Ok(string_field(
+        field(capability, "runner", "capability")?,
+        "kind",
+        "capability.runner",
+    )? == "native-producer")
+}
+
+fn budget_within_limits(budget: &Value, capability: &Value) -> Result<bool, VerificationError> {
+    let limits = field(capability, "resourceLimits", "native capability")?;
+    Ok(
+        unsigned_field(budget, "wallClockSeconds", "selected budget")?
+            <= unsigned_field(limits, "maxWallClockSeconds", "capability limits")?
+            && unsigned_field(budget, "parallelism", "selected budget")?
+                <= unsigned_field(limits, "maxParallelism", "capability limits")?,
+    )
+}
+
+fn unsigned_field(value: &Value, name: &str, context: &str) -> Result<u64, VerificationError> {
+    field(value, name, context)?.as_u64().ok_or_else(|| {
+        VerificationError::new(
+            VerificationErrorCode::InvalidInput,
+            format!("{context}.{name} must be a positive integer"),
+        )
+    })
+}
+
+fn make_runner_request(
+    capability: &Value,
+    property: &Value,
+    budget: &Value,
+) -> Result<Value, VerificationError> {
+    let runner = field(capability, "runner", "capability")?;
+    Ok(json!({
+        "kind": string_field(runner, "kind", "capability.runner")?,
+        "adapterId": string_field(runner, "adapterId", "capability.runner")?,
+        "adapterVersion": string_field(runner, "adapterVersion", "capability.runner")?,
+        "capabilityId": string_field(capability, "capabilityId", "capability")?,
+        "environmentPermissions": field(capability, "environmentPermissions", "capability")?,
+        "budget": budget,
+        "nativeArtifactInterface": field(capability, "nativeArtifactInterface", "capability")?,
+        "input": field(property, "input", "property")?,
     }))
 }
 

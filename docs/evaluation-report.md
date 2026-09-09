@@ -9,7 +9,7 @@ ran.
 
 The admitted subject is a synthetic parser at revision `parser-r1`. The packet
 uses pinned Quoin/catalog sources, private provisional identity/profile names,
-synthetic bindings and native artifact references, a 60-second fixture budget,
+synthetic bindings and native artifact references, a 10-second fixture budget,
 and no credentials or retained user data. The acceptance threshold for this
 slice was deterministic parity for every pinned method ID plus explicit plans
 and result states for the required positive, adverse, missing-input, stale,
@@ -36,7 +36,8 @@ an adapted field corruption, and an adapter exception.
 - The retained plan contains 14 tasks: six verification tasks and eight visible
   prerequisite tasks. It distinguishes all five input shapes. State property,
   fuzz, and manual tasks are ready; relational, trace, and fault tasks are
-  blocked. The fault task cannot be invoked.
+  blocked. Only the ready native state-property and fuzz tasks receive closed
+  runner requests; manual and blocked work cannot be invoked.
 - Applicability remains independent from readiness. Property classification is
   either preserved as a non-empty authored value or emitted as `unknown`; empty
   classification and ordinal policy scores are rejected, while authored

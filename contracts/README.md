@@ -38,6 +38,13 @@ The fixture packet deliberately includes state, relational, trace, fault, and
 manual inputs. The schema keeps their required inputs distinct rather than
 placing them in one universal predicate type.
 
+Native capabilities declare closed positive `resourceLimits`, and plan or
+property budgets use the corresponding closed two-dimensional budget. A
+property budget replaces the plan budget for its task. Only applicable, ready,
+qualified `native-producer` work within both limits receives a closed runner
+request; manual and all other work retain `runnerRequest: null` and
+`invocationAllowed: false`.
+
 `cargo run --locked --bin validate-fixtures` discovers every JSON file in `fixtures/`, validates
 each complete fixture with a schema definition, and validates every embedded or
 adapted instance of the five public contracts. An unhandled new fixture fails

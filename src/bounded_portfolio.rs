@@ -460,14 +460,21 @@ where
 }
 
 fn capability(capability_id: &str, technique_id: &str, input_kind: &str, manual: bool) -> Value {
-    json!({
+    let mut capability = json!({
         "contractVersion": contract_version(), "kind": "ToolCapability", "capabilityId": capability_id, "techniqueId": technique_id,
         "qualification": "qualified", "inputKinds": [input_kind], "profiles": [PROFILE],
         "prerequisites": if manual { json!([{"kind": "reviewer", "id": "verification-owner", "required": true}]) } else { json!([]) },
         "runner": {"kind": if manual { "manual" } else { "native-producer" }, "adapterId": if manual { "human-review-record" } else { "quire-verification-local-portfolio" }, "adapterVersion": "1"},
         "environmentPermissions": if manual { json!([]) } else { json!(["read-repository-fixtures"]) },
         "nativeArtifactInterface": {"mode": "stdout-json", "mediaTypes": ["application/json"]}, "limits": {"subject": "catalog adapter at one source revision"},
-    })
+    });
+    if !manual && let Some(fields) = capability.as_object_mut() {
+        fields.insert(
+            "resourceLimits".to_owned(),
+            json!({"maxWallClockSeconds": 10, "maxParallelism": 1}),
+        );
+    }
+    capability
 }
 
 fn observed_result(
