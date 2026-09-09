@@ -7,6 +7,12 @@ description: "Chronological log of changes to the Plan-003 bundle."
 
 ## History
 
+* **2026-09-08** — Task-013 completed at exact Rust review SR-118 (`70f9d6b`)
+  and QUOIN gap analysis SR-119 (`a72d1dc`). The draft-2 schema, generated Rust
+  types, strict-reader opacity, keyed JCS membership, five closed role variants,
+  migrated fixtures, and TC-028 pass. Task-014 moved to active for the remaining
+  FR-015-AC-5/TC-030 runner-eligibility integration; Task-015 remains blocked.
+
 * **2026-09-08** — Task-013 specification accepted at `c791101` after QUOIN `/specify` and owner-selected `/spec-review all` (SR-102 through SR-109). The plan now assigns the breaking draft-2 schema, retained shared-schema resolution, opaque reader outputs, keyed JCS membership, and five closed input variants to Task-013.
 * **2026-09-08** — QUOIN `spec-to-plan` created the VP02 bundle from reviewed revision `95d3f62`; Task-011 started, while Tasks 012 through 015 remain blocked by the recorded FS02/FS05 consumer finding.
 * **2026-09-08** — Task-011 completed at `250811e` after QUOIN `/specify` and `/spec-review all` added injective task identity, TC-026 bound FR-013 at 5/5, the exact Rust review passed, and all Rust/schema/dependency gates passed. Tasks 012 through 015 remain open.

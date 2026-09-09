@@ -26,13 +26,13 @@ relationships:
 
 ### Non-Functional Requirements
 
-- [ ] **NFR-002-AC-3**: Resolve shared artifact envelopes from the retained schema without copying their definition.
+- [x] **NFR-002-AC-3**: Resolve shared artifact envelopes from the retained schema without copying their definition.
 - [ ] **NFR-004**: Keep all first-party executable and test paths in Rust.
 - [ ] **NFR-005**: Apply the existing bounded JSON envelope before strict reading.
 
 ### Contract Enablement
 
-- [ ] **FR-002-AC-4**: Generate draft-2 input types through the exact retained shared-reference schema.
+- [x] **FR-002-AC-4**: Generate draft-2 input types through the exact retained shared-reference schema.
 
 ## Dependency Graph
 
@@ -61,7 +61,7 @@ producers retain native artifacts and Agent A owns the shared schema.
 ### Native request and input variants
 
 - [ ] **TC-027**: Emit complete runner requests only for invocable work.
-- [ ] **TC-028**: Accept complete role-specific inputs and reject cross-variant fields.
+- [x] **TC-028**: Accept complete role-specific inputs and reject cross-variant fields.
 - [ ] **TC-030**: Build a heterogeneous parser portfolio plan.
 
 ### Shared reference integration
@@ -80,8 +80,8 @@ producers retain native artifacts and Agent A owns the shared schema.
 
 - **A1 = Task-011** Actionable prerequisite DAG — done.
 - **A2 = Task-012** Strict shared-reference reader — done at `ce4e03e`; the independent Rust reader accepts exact vectors and refuses every selected adverse case.
-- **A3 = Task-013** Role-specific inputs — Medium; exit: the breaking draft-2 schema resolves the retained shared definition and all five closed variants retain exact validated roles and reject cross-variant data.
-- **A4 = Task-014** Native runner requests — Medium; exit: only individually authorized work receives an exact invocation envelope.
+- **A3 = Task-013** Role-specific inputs — done at `70f9d6b`; the breaking draft-2 schema resolves the retained shared definition and all five closed variants retain exact validated roles and reject cross-variant data.
+- **A4 = Task-014** Native runner requests — active; exit: only individually authorized work receives an exact invocation envelope.
 - **Gate = Task-015** VP02 qualification — Hard; pass: Rust review and QUOIN gap analysis have no unresolved high finding.
 
 ## Parallel Execution Summary
@@ -97,8 +97,8 @@ FS02/FS05@8ab058be -> Task-012 -> Task-013 ------+-> Task-014 -> Task-015
 |------|-------|-------------------|------------------------|--------|
 | Task-011 | A | FR-013 | TC-026 | done |
 | Task-012 | A | FR-016 | TC-029, TC-031 | done |
-| Task-013 | A | FR-002, FR-015, NFR-002 | TC-028, TC-030 | active |
-| Task-014 | A | FR-014 | TC-027, TC-030 | blocked |
+| Task-013 | A | FR-002, FR-015, NFR-002 | TC-028, TC-030 | done |
+| Task-014 | A | FR-014 | TC-027, TC-030 | active |
 | Task-015 | Gate | NFR-004, NFR-005 | TC-022, TC-023 | blocked |
 
 ## Coordination Rules
@@ -111,5 +111,7 @@ Filament. New behavior that changes these requirements returns to `/specify` and
 `/spec-review` before implementation.
 
 Task-013 implements the QUOIN-reviewed draft-2 amendment at `c791101`
-(SR-102 through SR-109). Its schema may reference the exact retained shared
-packet but may not copy that packet's artifact-reference field definitions.
+(SR-102 through SR-109), passed exact Rust review SR-118, and closed at gap
+analysis SR-119. Its schema references the exact retained shared packet without
+copying that packet's artifact-reference field definitions. Task-014 is active;
+Task-015 remains blocked.
