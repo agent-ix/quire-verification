@@ -68,6 +68,24 @@ pub enum VerificationErrorCode {
     DuplicateResultId,
     /// A structured request uses an unsupported contract version.
     UnsupportedContractVersion,
+    /// A shared-reference envelope, artifact reference, or selected profile version is unsupported.
+    UnsupportedReferenceVersion,
+    /// A semantic reference requires a feature outside the selected reader profile.
+    UnknownRequiredFeature,
+    /// Shared-reference bytes are malformed or outside the selected wire schema.
+    InvalidWire,
+    /// A valid reference does not match the locally selected identity or content.
+    IdentityMismatch,
+    /// One immutable reference identity names conflicting content in an input set.
+    IdentityContentConflict,
+    /// A selected local artifact revision is unavailable.
+    Stale,
+    /// A source map does not preserve exact, ordered byte correspondence.
+    MalformedSourceMap,
+    /// A semantic reference selects an unsupported canonicalization profile.
+    UnsupportedCanonicalization,
+    /// More than one explicit migration applies to the selected reference pair.
+    AmbiguousEquivalence,
     /// A local or process I/O operation failed.
     IoFailure,
     /// A discovered JSON fixture has no registered validator.
@@ -122,6 +140,15 @@ impl VerificationErrorCode {
             Self::AmbiguousCapability => "ambiguous_capability",
             Self::DuplicateResultId => "duplicate_result_id",
             Self::UnsupportedContractVersion => "unsupported_contract_version",
+            Self::UnsupportedReferenceVersion => "unsupported_reference_version",
+            Self::UnknownRequiredFeature => "unknown_required_feature",
+            Self::InvalidWire => "invalid_wire",
+            Self::IdentityMismatch => "identity_mismatch",
+            Self::IdentityContentConflict => "identity_content_conflict",
+            Self::Stale => "stale",
+            Self::MalformedSourceMap => "malformed_source_map",
+            Self::UnsupportedCanonicalization => "unsupported_canonicalization",
+            Self::AmbiguousEquivalence => "ambiguous_equivalence",
             Self::IoFailure => "io_failure",
             Self::UnhandledFixture => "unhandled_fixture",
             Self::CatalogParityMismatch => "catalog_parity_mismatch",
@@ -162,6 +189,15 @@ impl VerificationErrorCode {
             Self::AmbiguousCapability,
             Self::DuplicateResultId,
             Self::UnsupportedContractVersion,
+            Self::UnsupportedReferenceVersion,
+            Self::UnknownRequiredFeature,
+            Self::InvalidWire,
+            Self::IdentityMismatch,
+            Self::IdentityContentConflict,
+            Self::Stale,
+            Self::MalformedSourceMap,
+            Self::UnsupportedCanonicalization,
+            Self::AmbiguousEquivalence,
             Self::IoFailure,
             Self::UnhandledFixture,
             Self::CatalogParityMismatch,

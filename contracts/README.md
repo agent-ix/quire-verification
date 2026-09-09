@@ -13,6 +13,21 @@ normative schema or an accepted replacement for FS02/FS05 identities.
 unclassified property can be represented. When present it must be non-empty;
 the planner emits `unknown` when it was omitted.
 
+The shared-reference reader separately derives Rust wire types from the exact
+retained `shared-reference-1-draft.schema.json` and
+`shared-reference-2-draft/schema.json` files. Version 2 is selected only for
+artifact and semantic envelopes; version 1 is retained only for source-map and
+migration envelopes. Runtime validation compiles the complete schemas locally,
+then applies authority, identity, byte-digest, JCS, feature-set, source-map, and
+explicit-migration checks. No unknown version or kind falls through to another
+decoder.
+
+`shared-reference-snapshot.sha256` covers both schemas and all fourteen selected
+amendment fixtures. `shared-reference-UPSTREAM.md` records their exact private
+upstream revision and containment terms. These files are independent input data
+for the Rust consumer; no producer validation code or network schema retrieval
+is part of the reader.
+
 The fixture packet deliberately includes state, relational, trace, fault, and
 manual inputs. The schema keeps their required inputs distinct rather than
 placing them in one universal predicate type.

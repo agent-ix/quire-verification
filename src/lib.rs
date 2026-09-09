@@ -14,5 +14,6 @@ pub mod evidence;
 pub mod fixtures;
 pub mod native_process;
 pub mod planner;
+pub mod shared_reference;
 
 mod value;

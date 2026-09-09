@@ -510,6 +510,7 @@ dependencies = [
  "chrono",
  "ix-trace-rs",
  "jsonschema",
+ "regress",
  "rustix",
  "schemars",
  "serde",
