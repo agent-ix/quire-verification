@@ -3,7 +3,7 @@
 
 //! Schema-owned public contracts, RFC 8785 canonicalization, and bounded JSON ingestion.
 //!
-//! Governing requirements: FR-001, FR-002, FR-008, FR-022, NFR-002, and NFR-005.
+//! Governing requirements: FR-001, FR-002, FR-008, FR-022, FR-024, NFR-002, and NFR-005.
 
 use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex, OnceLock};
@@ -118,6 +118,10 @@ pub enum VerificationErrorCode {
     InvalidMeasurementSeries,
     /// A qualification corpus violates its frozen population, retention, or lineage contract.
     InvalidCorpusManifest,
+    /// A qualification oracle manifest violates its frozen coverage or dependence contract.
+    InvalidQualificationOracleManifest,
+    /// A qualification oracle binding carries an invalid exact reference or reuse identity.
+    InvalidQualificationOracleBinding,
     /// More than one human disposition was supplied for one report core.
     DuplicateDisposition,
     /// A disposition names another core, procedure, or reviewer.
@@ -183,6 +187,8 @@ impl VerificationErrorCode {
             Self::MalformedMethodResponse => "malformed_method_response",
             Self::InvalidMeasurementSeries => "invalid_measurement_series",
             Self::InvalidCorpusManifest => "invalid_corpus_manifest",
+            Self::InvalidQualificationOracleManifest => "invalid_qualification_oracle_manifest",
+            Self::InvalidQualificationOracleBinding => "invalid_qualification_oracle_binding",
             Self::DuplicateDisposition => "duplicate_disposition",
             Self::ForeignDisposition => "foreign_disposition",
             Self::UnsupportedDisposition => "unsupported_disposition",
@@ -241,6 +247,8 @@ impl VerificationErrorCode {
             Self::MalformedMethodResponse,
             Self::InvalidMeasurementSeries,
             Self::InvalidCorpusManifest,
+            Self::InvalidQualificationOracleManifest,
+            Self::InvalidQualificationOracleBinding,
             Self::DuplicateDisposition,
             Self::ForeignDisposition,
             Self::UnsupportedDisposition,

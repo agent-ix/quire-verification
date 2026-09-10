@@ -60,11 +60,13 @@ limitations, bounded invocation, and disagreement procedure before execution.
   under the accepted Engineering Assurance protocol.
 - `inputProjection` SHALL carry `mode` `each-entry` or `ordered-batch` and a nonempty
   unique ordered `entryIds` array.
-- `expectedRelation` SHALL carry nonempty `relationId`, `description`, and
-  `expectedOutcome` `agreed`; the exact `comparisonProcedureRef` owns the predicate
-  semantics.
+- `expectedRelation` SHALL carry nonempty `relationId`, `description`,
+  `expectedOutcome` `agreed`, and `origin` `oracle`, `independent-third-party`,
+  `candidate`, `shared`, or `unknown`; the exact `comparisonProcedureRef` owns the
+  predicate semantics.
 - `dependence` SHALL be exactly one closed tagged form: `independent` with a nonempty
-  unique array of strict-reader-proved source `evidenceRefs`; `shared` with nonempty
+  unique array of strict-reader-proved source `evidenceRefs` plus nonempty unique and
+  disjoint `candidateAncestryRefs` and `oracleAncestryRefs`; `shared` with nonempty
   `groupId` and nonempty unique `bases`; `derived` with one `sourceBindingId`; or
   `unknown` with one nonempty `reason`.
 - A shared `basis` SHALL be one of `candidate`, `oracle`, `executable`,
@@ -86,10 +88,14 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - The planner SHALL reject self-derived, absent-source, or cyclic binding ancestry by an
   iterative traversal within the repository input bounds.
 - The planner SHALL forbid fields from another dependence form.
+- The planner SHALL refuse `independent` when the candidate and oracle ancestry sets
+  intersect or the expected-value origin is `candidate`, `shared`, or `unknown`.
+- A `candidate` or `shared` expected-value origin SHALL require `shared` dependence with
+  basis `expected-value`.
 - An oracle definition, executable, comparison procedure, observation, or expected value
   produced from the candidate or sharing an exact reference SHALL NOT be classified as
-  independent. An `independent` declaration without positive exact evidence SHALL remain
-  unknown; q-v SHALL NOT infer undisclosed causal independence from unequal identifiers.
+  independent. An `independent` declaration without positive exact evidence SHALL be
+  refused; q-v SHALL NOT infer undisclosed causal independence from unequal identifiers.
 - `quire-verification` SHALL NOT execute the oracle, spawn a process, materialize an
   evidence store, or interpret arbitrary process output.
 - The caller SHALL submit the exact invocation through the accepted Rust Engineering
@@ -129,7 +135,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
 | ID | Criteria | Verification |
 |----|----------|--------------|
 | FR-024-AC-1 | The frozen manifest binds the exact profile and corpus identities and covers every frozen guarantee with one or more closed oracle bindings or exactly one owned no-oracle gap with nonempty limitations; missing, duplicate, unknown, simultaneously bound-and-gapped, or unowned guarantees refuse the manifest. | Test (TC-041) |
-| FR-024-AC-2 | Independent, shared, derived, and unknown bindings retain exactly their tagged dependence data; a self-produced expected value, shared exact reference, absent shared group/basis, missing independence evidence, absent/self/cyclic derived source, foreign tagged field, or caller-only independence assertion cannot produce an independent contribution. | Test (TC-041) |
+| FR-024-AC-2 | Independent, shared, derived, and unknown bindings retain exactly their tagged dependence data; a self-produced or unknown-origin expected value, intersecting ancestry, shared exact reference, absent shared group/basis, missing independence evidence, absent/self/cyclic derived source, foreign tagged field, or caller-only independence assertion cannot produce an independent contribution. | Test (TC-041) |
 | FR-024-AC-3 | An execution or comparison result contributes only after the accepted Engineering Assurance interface revision, request identity, strict-reader-proved executable, and retained corpus projection match. Agreement supports only the declared relation; an Engineering Assurance failure yields a typed execution finding, and disagreement retains both exact observations with an unresolved outcome while only the exact disagreement procedure may add attribution or bounds. | Test (TC-041) |
 | FR-024-AC-4 | Changing any profile, corpus, guarantee, oracle, executable, Engineering Assurance interface/request/result, comparison procedure, disagreement procedure, projection, input entry, expected relation, dependence, limitation, observation, or prior manifest identity refuses reuse; permuting set-like inputs leaves the JCS manifest or comparison identity unchanged. | Test (TC-041) |
 

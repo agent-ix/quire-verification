@@ -34,6 +34,14 @@ When rights permit only a reference or prohibit retention, the gap retains the c
 reference and rights decision while the Rust corpus retains no candidate bytes and grants
 no class coverage.
 
+The same schema owns the internal `QualificationOracleManifest`. Rust binds it to
+the exact frozen profile and corpus, validates every reference through the strict
+shared-reference reader, classifies declared implementation dependence, checks the
+derived-binding graph, and preserves every uncovered guarantee as an owned gap. Host
+and process execution remain in the accepted Rust Engineering Assurance interface;
+this repository does not add a local runner, evidence store, fixture script, or
+arbitrary process-output parser.
+
 `PropertyInventoryItem.classification` is optional on planner input so an
 unclassified property can be represented. When present it must be non-empty;
 the planner emits `unknown` when it was omitted.

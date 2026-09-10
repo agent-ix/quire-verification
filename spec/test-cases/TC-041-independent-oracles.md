@@ -24,10 +24,10 @@ agreement, disagreement, execution failure, and reuse drift as distinct outcomes
    name an unknown guarantee, an unretained corpus entry, empty limitations, or a changed
    profile/corpus identity.
 3. Exercise every closed independent, shared, derived, and unknown dependence form.
-   Remove independence evidence; reuse the candidate executable, oracle, comparison
-   procedure, or generated expected value while declaring independence; remove each
-   shared field; inject a foreign tagged field; and build absent, self, and cyclic
-   derivations.
+   Remove independence evidence; intersect exact candidate/oracle ancestry; reuse the
+   candidate executable, oracle, comparison procedure, or candidate-origin expected
+   value while declaring independence; remove each shared field; inject a foreign tagged
+   field; and build absent, self, and cyclic derivations.
 4. Submit the exact oracle and comparison invocation references through the real Rust
    Engineering Assurance producer-execution interface, bind its result to the retained
    corpus projection, and consume one agreeing and one disagreeing observation. Change
