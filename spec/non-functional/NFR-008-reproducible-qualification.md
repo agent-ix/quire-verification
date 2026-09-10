@@ -54,4 +54,3 @@ environmental difference without rewriting the original report.
 
 This requirement constrains [FR-027](../functional/FR-027-bind-qualification-disposition.md)
 and reuses the existing JCS and reference boundaries in FR-008 and FR-016.
-

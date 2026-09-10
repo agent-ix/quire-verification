@@ -8,6 +8,7 @@ priority: P0
 relationships:
   - { target: "ix://agent-ix/quire-verification/Task-030", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/NFR-007", type: references }
+  - { target: "ix://agent-ix/quire-verification/TC-044", type: references }
 ---
 # Task-031: Measure the Production Performance Budget
 

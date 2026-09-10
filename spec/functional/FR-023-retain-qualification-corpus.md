@@ -22,20 +22,33 @@ rationale.
 - The frozen qualification profile.
 - Candidate corpus artifacts and their provenance and rights records.
 - A coverage taxonomy for the declared command and grammar surface.
+- Exact bounded replay-run reference and output bytes for each generated or mutated candidate.
 
 ## Outputs
 
 - One versioned corpus manifest and byte inventory.
 - Coverage and exclusion records for every declared input class.
+- Reproducible lineage records bound to exact retained derived bytes.
 
 ## Behavior
 
 - The builder SHALL distinguish real repository inputs, independently authored
   conformance cases, generated cases, and mutations.
+- The manifest SHALL bind the frozen profile identity, population identity, and exact
+  required-class set without adding or removing a profile class.
+- Every included byte artifact SHALL match an exact strict-reader proof produced from
+  its locally supplied bytes.
 - The builder SHALL reject a missing byte artifact, digest mismatch, duplicate
   identity, unclassified input, absent rights disposition, or unexplained exclusion.
-- Generated or mutated inputs SHALL name their generator or parent, seed or
-  transformation, and reproducible lineage.
+- An included artifact's rights disposition SHALL explicitly authorize local retention.
+  A reference-only or unauthorized candidate SHALL appear only as an owned class gap
+  carrying its artifact reference and rights decision; the builder SHALL retain none of
+  its bytes and SHALL NOT count it as class coverage.
+- Generated inputs SHALL name an exact generator reference, seed, invocation, and
+  strict-reader-proved `run-artifact` whose retained output equals their retained bytes.
+- Mutated inputs SHALL name an existing parent entry, seed, transformation, and replay
+  `run-artifact` whose retained output equals their retained bytes.
+- Mutation parent relationships SHALL form an acyclic graph with no self-parent.
 - Corpus counts SHALL NOT be presented as representativeness without a declared
   population and selection rationale.
 
@@ -49,10 +62,10 @@ rationale.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-023-AC-1 | Every included input has exact bytes, identity, class, provenance, rights, and a population-selection reason. | Test (TC-040) |
-| FR-023-AC-2 | The manifest covers every required profile class or records that class as an unresolved gap; an empty class cannot silently disappear from the denominator. | Test (TC-040) |
-| FR-023-AC-3 | Missing bytes, changed bytes, duplicate identity, unclassified lineage, missing rights, or unexplained exclusion refuses corpus qualification. | Test (TC-040) |
-| FR-023-AC-4 | Generated and mutated cases reproduce from their retained lineage and do not claim independent origin. | Test (TC-040) |
+| FR-023-AC-1 | Every included input has strict-reader-proved exact bytes, identity, class, provenance, retention authorization, and a population-selection reason under the exact frozen profile and population identities. | Test (TC-040) |
+| FR-023-AC-2 | The manifest covers every required profile class with at least one retained input or exactly one unresolved owned gap; an empty class cannot silently disappear from the denominator. | Test (TC-040) |
+| FR-023-AC-3 | A missing or changed byte artifact, duplicate identity, unknown class, missing retention authorization, unexplained exclusion, invalid parent graph, missing replay-run proof, or replay mismatch refuses corpus qualification. | Test (TC-040) |
+| FR-023-AC-4 | Every generated and mutated case has a strict-reader-proved replay run whose retained output reproduces the case byte-for-byte from its generator or parent lineage, and the case remains classified as derived. | Test (TC-040) |
 
 ## Dependencies
 

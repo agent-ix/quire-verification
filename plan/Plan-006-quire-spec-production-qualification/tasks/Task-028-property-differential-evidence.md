@@ -9,6 +9,7 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/Task-026", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/Task-027", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/FR-025", type: references }
+  - { target: "ix://agent-ix/quire-verification/TC-042", type: references }
 ---
 # Task-028: Build Property and Differential Qualification Evidence
 

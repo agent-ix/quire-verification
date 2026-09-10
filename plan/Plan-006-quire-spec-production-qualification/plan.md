@@ -27,7 +27,7 @@ relationships:
 - [ ] **FR-022**: Freeze the exact candidate, caller, commands, population, guarantees, environment, budgets, evidence, exclusions, and producer revisions.
 - [ ] **FR-023**: Retain a rights-cleared corpus with exact bytes, population classes, provenance, and reproducible lineage.
 - [ ] **FR-024**: Bind exact independent, shared, derived, absent, and disagreeing oracle contributions.
-- [ ] **FR-025**: Run bounded example, property, fuzz, metamorphic, mutation, and differential techniques without erasing adverse results.
+- [ ] **FR-025**: Produce one exact discriminating TechniqueResult for each selected evidence obligation and technique.
 - [ ] **FR-026**: Execute the real production caller, candidate, portable result, and assurance handoff at accepted revisions.
 - [ ] **FR-027**: Seal one reproducible evidence core and bind exactly one external owner disposition.
 
@@ -68,7 +68,7 @@ new requirements instead of creating qualification-only copies.
 ## Test Plan
 
 - [x] **TC-039**: property-test complete profiles, omissions, open dimensions, changed identities, and unavailable producer revisions.
-- [ ] **TC-040**: property-test corpus population, exact bytes, provenance, rights, exclusions, generated lineage, and mutations.
+- [x] **TC-040**: property-test corpus population, exact bytes, provenance, rights, exclusions, generated lineage, and mutations.
 - [ ] **TC-041**: exercise independent, shared, derived, absent, changed, and disagreeing oracles through the bounded process boundary.
 - [ ] **TC-042**: execute and discriminate example, property, fuzz, metamorphic, differential, mutation, shrinking, budget, and replay behavior.
 - [ ] **TC-043**: execute the real caller-to-candidate-to-result-to-assurance chain and refuse every one-seam substitution.
@@ -98,6 +98,10 @@ seeds, budgets, commands, stopping rules, and raw artifacts.
 
 - **Gate = Task-034** Qualification review — Hard; pass: IT-004, exact Rust review, QUOIN gap analysis, and the external disposition leave no unresolved in-scope blocker.
 
+Until the upstream TestMatrix status-header contract and coverage reader agree, every
+task that changes a test status or adds a test case manually recounts the Test Execution
+Summary by category and overall before review.
+
 ## Parallel Execution Summary
 
 The logical graph contains opportunities to prepare corpus candidates and oracle
@@ -113,18 +117,18 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 
 ## Task File Mapping
 
-| Task | Track | Owns (references) | Verified by (verifies) | Status |
-|------|-------|-------------------|------------------------|--------|
+| Task | Track | Owns (references) | Test relationship | Status |
+|------|-------|-------------------|-------------------|--------|
 | Task-025 | A | FR-022 | TC-039 | blocked |
-| Task-026 | A | FR-023 | TC-040 | not_started |
+| Task-026 | A | FR-023 | TC-040 | blocked |
 | Task-027 | A | FR-024 | TC-041 | not_started |
-| Task-028 | A | FR-025 enablement | Task-029 completion gate | not_started |
+| Task-028 | A | FR-025 enablement | references TC-042 | not_started |
 | Task-029 | A | FR-025 completion | TC-042 | not_started |
 | Task-030 | A | FR-026 | TC-043 | not_started |
-| Task-031 | A | NFR-007 evidence | Task-032 completion gate | not_started |
-| Task-032 | A | NFR-008 and TC-044 completion | TC-044 | not_started |
+| Task-031 | A | NFR-007 evidence | references TC-044 | not_started |
+| Task-032 | A | NFR-008 | verifies TC-044 | not_started |
 | Task-033 | A | FR-027 | TC-045 | not_started |
-| Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | IT-004, TC-039..TC-045 | not_started |
+| Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | verifies IT-004 and TC-039..TC-045 | not_started |
 
 ## Coordination Rules
 

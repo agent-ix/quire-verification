@@ -980,6 +980,205 @@
       },
       "additionalProperties": false
     },
+    "RunArtifactReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "run-artifact" } }, "required": ["kind"] } } }
+      ]
+    },
+    "QualificationCorpusProvenance": {
+      "type": "object",
+      "required": ["authority", "revision", "path"],
+      "properties": {
+        "authority": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusRights": {
+      "type": "object",
+      "required": ["owner", "disposition", "basis"],
+      "properties": {
+        "owner": { "type": "string", "minLength": 1 },
+        "disposition": { "enum": ["retained-private", "redistributable", "reference-only", "unauthorized"] },
+        "basis": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusGeneratedLineage": {
+      "type": "object",
+      "required": ["kind", "generatorRef", "seed", "invocation", "replayRunRef"],
+      "properties": {
+        "kind": { "const": "generated" },
+        "generatorRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+        "seed": { "type": "string", "minLength": 1 },
+        "invocation": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "replayRunRef": { "$ref": "#/$defs/RunArtifactReference" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusMutationLineage": {
+      "type": "object",
+      "required": ["kind", "parentEntryId", "seed", "transformation", "replayRunRef"],
+      "properties": {
+        "kind": { "const": "mutation" },
+        "parentEntryId": { "type": "string", "minLength": 1 },
+        "seed": { "type": "string", "minLength": 1 },
+        "transformation": { "type": "string", "minLength": 1 },
+        "replayRunRef": { "$ref": "#/$defs/RunArtifactReference" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusEntry": {
+      "type": "object",
+      "required": ["entryId", "artifactRef", "classes", "origin", "provenance", "rights", "selectionReason", "lineage"],
+      "properties": {
+        "entryId": { "type": "string", "minLength": 1 },
+        "artifactRef": { "$ref": "#/$defs/SourceReference" },
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "origin": { "enum": ["repository", "conformance", "generated", "mutation"] },
+        "provenance": { "$ref": "#/$defs/QualificationCorpusProvenance" },
+        "rights": { "$ref": "#/$defs/QualificationCorpusRights" },
+        "selectionReason": { "type": "string", "minLength": 1 },
+        "lineage": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/QualificationCorpusGeneratedLineage" },
+            { "$ref": "#/$defs/QualificationCorpusMutationLineage" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "properties": {
+            "rights": {
+              "properties": { "disposition": { "enum": ["retained-private", "redistributable"] } },
+              "required": ["disposition"]
+            }
+          }
+        },
+        {
+          "if": { "properties": { "origin": { "enum": ["repository", "conformance"] } }, "required": ["origin"] },
+          "then": { "properties": { "lineage": { "type": "null" } } }
+        },
+        {
+          "if": { "properties": { "origin": { "const": "generated" } }, "required": ["origin"] },
+          "then": { "properties": { "lineage": { "$ref": "#/$defs/QualificationCorpusGeneratedLineage" } } }
+        },
+        {
+          "if": { "properties": { "origin": { "const": "mutation" } }, "required": ["origin"] },
+          "then": { "properties": { "lineage": { "$ref": "#/$defs/QualificationCorpusMutationLineage" } } }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "QualificationCorpusGap": {
+      "type": "object",
+      "required": ["classId", "owner", "reason", "candidateRef", "rights"],
+      "properties": {
+        "classId": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "candidateRef": {
+          "oneOf": [
+            { "$ref": "#/$defs/SourceReference" },
+            { "type": "null" }
+          ]
+        },
+        "rights": {
+          "oneOf": [
+            { "$ref": "#/$defs/QualificationCorpusRights" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "candidateRef": { "type": "null" } }, "required": ["candidateRef"] },
+          "then": { "properties": { "rights": { "type": "null" } } },
+          "else": {
+            "properties": {
+              "rights": {
+                "allOf": [
+                  { "$ref": "#/$defs/QualificationCorpusRights" },
+                  { "properties": { "disposition": { "enum": ["reference-only", "unauthorized"] } }, "required": ["disposition"] }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "QualificationCorpusExclusion": {
+      "type": "object",
+      "required": ["exclusionId", "classId", "owner", "reason"],
+      "properties": {
+        "exclusionId": { "type": "string", "minLength": 1 },
+        "classId": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusReplayRun": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "status", "entryId", "lineageIdentity", "outputDigest"],
+      "properties": {
+        "schemaVersion": { "const": "quire-verification.qualification-corpus-replay/v1" },
+        "kind": { "const": "QualificationCorpusReplayRun" },
+        "status": { "const": "completed" },
+        "entryId": { "type": "string", "minLength": 1 },
+        "lineageIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "outputDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCorpusManifest": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "manifestId", "manifestRevision", "profileIdentity", "populationId", "requiredClasses", "entries", "gaps", "exclusions"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-corpus/v1" },
+        "kind": { "const": "QualificationCorpusManifest" },
+        "manifestId": { "type": "string", "minLength": 1 },
+        "manifestRevision": { "type": "string", "minLength": 1 },
+        "profileIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "populationId": { "type": "string", "minLength": 1 },
+        "requiredClasses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "entries": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationCorpusEntry" }
+        },
+        "gaps": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationCorpusGap" }
+        },
+        "exclusions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationCorpusExclusion" }
+        }
+      },
+      "additionalProperties": false
+    },
     "Vp04NativeCommand": {
       "type": "object",
       "required": ["commandId", "arguments", "expectedExitCode", "responseKind"],

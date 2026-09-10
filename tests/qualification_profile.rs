@@ -363,7 +363,6 @@ fn tc_039_freezes_only_a_complete_closed_schema_derived_profile() {
         original
     );
     assert!(frozen.identity().starts_with("sha256-jcs:"));
-
     assert_required_dimensions_are_closed(&original);
     assert_profile_identities_are_unique();
 

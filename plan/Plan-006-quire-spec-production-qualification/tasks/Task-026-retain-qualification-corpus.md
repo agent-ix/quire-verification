@@ -2,7 +2,7 @@
 id: Task-026
 title: "Retain the qualification corpus"
 type: Task
-status: not_started
+status: blocked
 track: A
 priority: P0
 relationships:
@@ -20,10 +20,15 @@ reproducible generator or mutation lineage.
 
 ## Subtasks
 
-- [ ] Write TC-040 properties for complete classes, empty classes, digest drift, duplicate identities, missing rights, and broken lineage.
-- [ ] Define the closed corpus manifest in the authoritative schema and derive Rust types.
+- [x] Write TC-040 properties first for profile/population drift, complete and empty
+  classes, digest and replay drift, duplicate identities, missing retention rights,
+  unknown classes, and missing, self-referential, or cyclic lineage.
+- [x] Define the closed corpus manifest in the authoritative schema and derive Rust types.
 - [ ] Inventory representative, boundary, malformed, generated, and mutated inputs without importing artifacts whose rights do not permit retention.
-- [ ] Preserve an explicit gap for every unpopulated required class.
+- [x] Require strict-reader proofs for retained bytes and exact replay evidence for every
+  generated or mutated input.
+- [x] Preserve an explicit gap for every unpopulated required class.
+- [x] Recount the Test Execution Summary by category and status after adding TC-040.
 
 ## Deliverables
 
@@ -33,3 +38,7 @@ reproducible generator or mutation lineage.
 
 - Corpus size never substitutes for a population and selection rationale.
 - Unblocks Task-027.
+- The schema-derived Rust boundary and TC-040 are complete. Production corpus inventory
+  remains blocked on Task-025's owner-supplied exact executable, dependency, caller,
+  environment, and accepted interface inputs; synthetic tests are not presented as a
+  production corpus.
