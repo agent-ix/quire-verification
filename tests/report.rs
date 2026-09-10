@@ -621,11 +621,13 @@ fn tc_037_refuses_core_task_binding_drift() {
     let validated_procedure = validate_reference(&procedure, procedure_bytes);
     let mut changed = core(&procedure);
     changed["taskIds"][0] = json!("detached-task");
-    assert_eq!(
+    let error =
         assemble_portfolio_report(&changed, &procedure, &validated_procedure, REVIEWER, &[])
-            .expect_err("detached task binding")
-            .code(),
-        VerificationErrorCode::SchemaViolation
+            .expect_err("detached task binding");
+    assert_eq!(error.code(), VerificationErrorCode::SchemaViolation);
+    assert_eq!(
+        error.to_string(),
+        "schema_violation: report core task IDs differ from its plan"
     );
 }
 

@@ -7,15 +7,15 @@ edition = "2024"
 [package.metadata]
 cargo-fuzz = true
 
-[workspace]
-members = ["."]
-
 [dependencies]
 libfuzzer-sys = "0.4"
 ix-trace-rs = { path = "../vendor/ix-trace-rs", version = "=0.1.0" }
 
 [dependencies.quire-verification]
 path = ".."
+
+[lints]
+workspace = true
 
 [[bin]]
 name = "fuzz_fr_016_ac_3_strict_shared_reference"

@@ -17,14 +17,15 @@ describes the current Rust implementation.
 ## Test Procedure
 
 Inspect governed paths for JavaScript or TypeScript executable files, then run
-`cargo fmt --check`, `cargo clippy --workspace --all-targets --all-features --
--D warnings`, `cargo test --workspace --all-features`, and `cargo deny check`.
+`cargo fmt --all -- --check`, `cargo clippy --workspace --all-targets --all-features --
+-D warnings`, `cargo test --workspace --all-features`,
+`cargo fuzz build -D --sanitizer none`, and `cargo deny check`.
 Run `quire coverage --scope . --json` and confirm acceptance-evidence tests use
 the imported bare `#[trace(...)]` attribute from `ix-trace-rs`, and confirm each
 TC/AC argument in those attributes is discovered and bound. A marker that
 compiles but hides one or more continuation-line arguments from the configured
 Quire Rust trace reader fails this check. Report the first-party population as
-repository-owned Rust under `src/` and `tests/`; classify any symbols discovered
+repository-owned Rust under `src/`, `tests/`, and `fuzz/`; classify any symbols discovered
 under `vendor/` as dependency-owned and governed by that dependency's matrix
 rather than silently including them in the first-party denominator. On a clean CI
 runner with no cross-repository credential, resolve the repository-contained
@@ -37,7 +38,7 @@ JavaScript package remains current implementation evidence.
 ## Expected Results
 
 No JavaScript or TypeScript executable source remains, no unsafe code compiles,
-all four Rust gates exit successfully, and compiler-checked trace markers back
+all five Rust gates exit successfully, and compiler-checked trace markers back
 every claimed matrix row and each named acceptance criterion. The coverage claim
 states its first-party population and separately identifies vendored dependency
 symbols as outside that population. The clean runner obtains the exact reviewed trace

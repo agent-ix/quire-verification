@@ -21,9 +21,10 @@ Run the complete Rust checks with:
 
 ```sh
 cargo run --locked --bin validate-fixtures
-cargo fmt --check
+cargo fmt --all -- --check
 cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
 cargo test --workspace --all-features --locked
+cargo fuzz build -D --sanitizer none
 cargo deny check
 cargo run --locked --bin render-fixtures
 ```

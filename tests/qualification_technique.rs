@@ -221,6 +221,33 @@ fn tc_042_freezes_the_eight_named_mutation_guards_and_case_bound() {
 #[trace("TC-042", "FR-025-AC-6")]
 #[test]
 fn tc_042_freezes_fuzz_inputs_and_refuses_unretained_seeds() {
+    let guidance = include_str!("../fuzz/README.md");
+    for (target, seed) in [
+        (
+            "fuzz_fr_016_ac_3_strict_shared_reference",
+            include_bytes!(
+                "../fuzz/seeds/fuzz_fr_016_ac_3_strict_shared_reference/duplicate-member.json"
+            )
+            .as_slice(),
+        ),
+        (
+            "fuzz_nfr_005_ac_1_bounded_json",
+            include_bytes!("../fuzz/seeds/fuzz_nfr_005_ac_1_bounded_json/empty-array.json")
+                .as_slice(),
+        ),
+        (
+            "fuzz_nfr_006_ac_5_native_response",
+            include_bytes!("../fuzz/seeds/fuzz_nfr_006_ac_5_native_response/completed-object.json")
+                .as_slice(),
+        ),
+    ] {
+        assert!(!seed.is_empty(), "retained seed for {target}");
+        assert!(
+            guidance.contains(&format!("cargo fuzz run {target} fuzz/seeds/{target}")),
+            "explicit seed path for {target}"
+        );
+    }
+
     let fuzz = fixture_with(
         "fuzzing",
         "execute exactly 64 inputs or stop at the first crash or hang",
