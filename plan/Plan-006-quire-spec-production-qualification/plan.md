@@ -66,12 +66,13 @@ binary/caller, production-chain evidence, measurements, reproduction, sealing, a
 disposition remain open at their existing owners.
 
 Quire Specification PR 21 is integrated into draft composed-baseline revision
-`d7b4cdee12c259324061a2b15199d3d3c960eedf`. Its reviewed FR-062 projection keeps the
-canonical protocol result distinct from E02, but that draft is not a promoted native
-profile or executable admission artifact. Existing protocol candidate revision
-`1-draft.3` predates the integrated FR-061/FR-062 bytes, so A must mint a new immutable
-candidate. F-owned FR-115/TC-145 and the composed full review remain open before the
-shared baseline can be accepted.
+`9b8df841d24bc68adea9873ecce1da1ca9707b9d`. Its reviewed FR-062 projection keeps the
+canonical protocol result distinct from E02. A has now published immutable candidate
+`quire.protocol.finite-global/v1` revision `1-draft.4`, which pins the integrated
+FR-061/FR-062 bytes while preserving earlier candidates, but it remains proposed rather
+than adopted and the composed full review has not run. F-owned FR-115/TC-145 still omit
+subject progress/closure, settlement basis, and exact decision-support identities, so
+the shared baseline remains unaccepted and supplies no executable admission artifact.
 
 ### Shared dependencies
 
