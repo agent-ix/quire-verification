@@ -27,7 +27,7 @@ dependence, limitation, and disagreement procedure.
   Assurance producer-execution interface; add no local runner, store, or script.
 - [ ] Bind every oracle to corpus inputs and exact tool bytes before execution.
 - [ ] Preserve both observations and an unresolved result when an oracle disagrees.
-- [ ] Recount the Test Execution Summary by category and status after changing TC-041.
+- [x] Recount the Test Execution Summary by category and status after changing TC-041.
 
 ## Deliverables
 
