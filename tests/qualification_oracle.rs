@@ -824,7 +824,7 @@ fn tc_041_reaches_and_discriminates_the_derived_graph_gate() {
     );
 }
 
-#[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
+#[trace("TC-041", "FR-024-AC-4")]
 #[test]
 fn tc_041_requires_exact_strict_reader_proofs_and_frozen_identities() {
     let (profile, corpus, manifest) = fixture();
