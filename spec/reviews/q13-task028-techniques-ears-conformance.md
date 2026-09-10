@@ -3,14 +3,14 @@ id: SR-195
 title: "EARS review of Task-028 qualification techniques"
 type: SpecReview
 analysis: ears-conformance
-scope: "quire-verification@80627b6; FR-022, FR-025, NFR-005"
+scope: "quire-verification@6adbbc2; FR-022, FR-025, NFR-005"
 review_set: all
 ---
 # EARS review of Task-028 qualification techniques
 
 ## Summary
 
-Quire 0.31.0 reports 249 of 249 specification documents grammar-clean with zero EARS
+Quire 0.31.0 reports 257 of 257 specification documents grammar-clean with zero EARS
 findings. Manual review confirms named subjects, concrete refusal outcomes, correct
 event/state forms, and separately observable normative clauses in the changed scope.
 

@@ -3,7 +3,7 @@ id: SR-191
 title: "Dependency review of Task-028 qualification techniques"
 type: SpecReview
 analysis: dependency
-scope: "quire-verification@80627b6; FR-022..FR-025, NFR-004..NFR-005, Task-025..Task-029"
+scope: "quire-verification@6adbbc2; FR-022..FR-025, NFR-004..NFR-005, Task-025..Task-029"
 review_set: all
 ---
 # Dependency review of Task-028 qualification techniques
@@ -22,6 +22,7 @@ Three external enablement dependencies are explicit and have no local fallback.
 | FND-002 | medium | Open external dependency: Engineering Assurance #34 must publish the accepted Rust producer-execution interface before FR-024 AC-3 or FR-025 result adaptation can complete. | FR-024, FR-025, Task-027..Task-028 |
 | FND-003 | medium | Open external dependency: spec-artifacts-process #86 must publish `differential-testing` before a differential configuration can freeze; the planner cannot mint it privately. | FR-025, Task-028 |
 | FND-004 | medium | Open external dependency: FS01 and its qualification follow-up must publish the native source-profile identity and admission evidence before any formal-clause configuration contributes. | FR-025, Task-028 |
+| FND-005 | high | Resolved: the local consumer contract now has a closed place to bind future native admission and export loss-report artifacts; it does not copy producer semantics or wait for prose interpretation. | FR-022, TC-039 |
 
 ## Dependency Order
 

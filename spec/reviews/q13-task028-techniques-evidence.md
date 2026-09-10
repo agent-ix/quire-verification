@@ -3,7 +3,7 @@ id: SR-192
 title: "Evidence review of Task-028 qualification techniques"
 type: SpecReview
 analysis: evidence
-scope: "quire-verification@80627b6; FR-025, TC-042; q13-task028-techniques-advice.json; q13-task028-techniques-properties.json"
+scope: "quire-verification@6adbbc2; FR-022, FR-025, TC-039, TC-042; q13-task028-techniques-advice.json; q13-task028-techniques-properties.json"
 review_set: all
 ---
 # Evidence review of Task-028 qualification techniques
@@ -23,3 +23,4 @@ matrix intentionally remains example-shaped.
 | FND-002 | medium | Differential evidence is unavailable because `differential-testing` is absent from the accepted catalog. spec-artifacts-process#86 owns the reusable method; a private local identifier is forbidden. | FR-025-AC-1..4 |
 | FND-003 | medium | Producer execution, replay observations, and failure-state discrimination need real typed results from Engineering Assurance #34. Synthetic manifest tests can back portable semantics but cannot mark TC-042 complete. | FR-025-AC-3..4, TC-042 |
 | FND-004 | low | QUOIN initially treated concessive `while` in AC-5 as temporal and recommended model checking/runtime monitoring. Rewording removed the false hit, and quoin#359 retains the exact regression for the shared advisor rather than adding local filtering. | FR-025-AC-5 |
+| FND-005 | high | The first spec-correctness intake found no Rust generator library and therefore emitted no property tests. The owner-accepted Task-028 scope now adds `proptest`; the skill must rerun only after public symbols exist and must retain any remaining grounding refusal. | FR-025-AC-1..5, Task-028 |

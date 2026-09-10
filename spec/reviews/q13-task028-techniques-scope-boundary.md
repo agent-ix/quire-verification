@@ -3,7 +3,7 @@ id: SR-194
 title: "Scope-boundary review of Task-028 qualification techniques"
 type: SpecReview
 analysis: scope-boundary
-scope: "quire-verification@80627b6; AD-002, FR-025, TC-042, Task-028"
+scope: "quire-verification@6adbbc2; AD-002, FR-022, FR-025, TC-039, TC-042, Task-028"
 review_set: all
 ---
 # Scope-boundary review of Task-028 qualification techniques
@@ -22,6 +22,7 @@ evidence store, source language, or qualification decision enters this repositor
 | FND-002 | medium | Quoin owns specification-derived test/fuzz generation, orchestration, evidence retention, and sufficiency; missing QUOIN grounding stays a finding rather than authorizing bespoke tooling. | FR-025-CON-3, Task-028 |
 | FND-003 | medium | Engineering Assurance owns all candidate/oracle/harness/tool process execution and evidence production through #34; its behavior is assumed until the real cross-repository contract test runs. | FR-025-CON-2, TC-042 step 5 |
 | FND-004 | medium | Agent A/FS01 owns the native source profile and admission evidence. OCL, SysML v2, and FRETish owners supply export mappings/loss reports only; none becomes an editable authority or qualification runtime here. | FR-025, TC-042 steps 6..7 |
+| FND-005 | high | Resolved: q-v owns only the portable claim-authority envelope and strict reference join. The native admission observations and export loss-report substance remain producer-owned artifacts. | FR-022, TC-039 |
 
 ## Responsibility Allocation
 
