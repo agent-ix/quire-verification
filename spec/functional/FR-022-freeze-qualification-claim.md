@@ -22,7 +22,8 @@ evidence, and explicit exclusions.
 - Exact candidate and dependency-closure references.
 - Owner-authored command, caller, population, guarantee, environment, and budget definitions.
 - Accepted FS02/FS05 reference versions for every used role.
-- Required evidence techniques and decision procedure.
+- Required evidence techniques, budget assignments, stopping rules, and decision
+  procedure.
 
 ## Outputs
 
@@ -48,6 +49,10 @@ evidence, and explicit exclusions.
 - The planner SHALL treat syntax, import resolution, model binding, type checking,
   evaluation, backend projection, and production integration as distinct claim
   dimensions.
+- Each evidence requirement SHALL bind exactly one declared `budgetId` and one
+  `guaranteeId` to its exact technique and stopping rule.
+- The planner SHALL refuse an evidence requirement whose budget or guarantee is absent
+  from the same profile.
 - The JCS profile identity SHALL change when any identity-bearing claim dimension changes.
 
 ## Constraints
@@ -61,8 +66,8 @@ evidence, and explicit exclusions.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-022-AC-1 | A complete exact profile retains every declared claim dimension, selected external revision, evidence obligation, and exclusion under one reproducible JCS identity. | Test (TC-039) |
-| FR-022-AC-2 | Omitting or opening any command, caller, population, guarantee, environment, budget, evidence, or exclusion dimension refuses profile emission. | Test (TC-039) |
+| FR-022-AC-1 | A complete exact profile retains every declared claim dimension, selected external revision, evidence obligation with its exact guarantee and budget assignment, and exclusion under one reproducible JCS identity. | Test (TC-039) |
+| FR-022-AC-2 | Omitting or opening any command, caller, population, guarantee, environment, budget, evidence, evidence-to-budget assignment, or exclusion dimension refuses profile emission. | Test (TC-039) |
 | FR-022-AC-3 | An unavailable or unaccepted external interface becomes a named blocked prerequisite without a copied local replacement. | Test (TC-039) |
 | FR-022-AC-4 | Changing one identity-bearing dimension changes the profile identity while the previous profile remains immutable. | Test (TC-039) |
 

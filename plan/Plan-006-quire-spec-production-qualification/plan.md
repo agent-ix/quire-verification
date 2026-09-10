@@ -27,7 +27,7 @@ relationships:
 - [ ] **FR-022**: Freeze the exact candidate, caller, commands, population, guarantees, environment, budgets, evidence, exclusions, and producer revisions.
 - [ ] **FR-023**: Retain a rights-cleared corpus with exact bytes, population classes, provenance, and reproducible lineage.
 - [ ] **FR-024**: Bind exact independent, shared, derived, absent, and disagreeing oracle contributions.
-- [ ] **FR-025**: Produce one exact discriminating TechniqueResult for each selected evidence obligation and technique.
+- [ ] **FR-025**: Freeze one closed technique configuration or owned gap for every evidence obligation and produce exact discriminating results from accepted typed observations.
 - [ ] **FR-026**: Execute the real production caller, candidate, portable result, and assurance handoff at accepted revisions.
 - [ ] **FR-027**: Seal one reproducible evidence core and bind exactly one external owner disposition.
 

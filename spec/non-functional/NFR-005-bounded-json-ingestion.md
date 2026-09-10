@@ -12,6 +12,14 @@ relationships:
     type: "constrains"
   - target: "ix://agent-ix/quire-verification/FR-006"
     type: "constrains"
+  - target: "ix://agent-ix/quire-verification/FR-022"
+    type: "constrains"
+  - target: "ix://agent-ix/quire-verification/FR-023"
+    type: "constrains"
+  - target: "ix://agent-ix/quire-verification/FR-024"
+    type: "constrains"
+  - target: "ix://agent-ix/quire-verification/FR-025"
+    type: "constrains"
 ---
 # NFR-005: Bounded JSON ingestion
 
@@ -22,7 +30,8 @@ When JSON enters through a public command or library boundary, the compatibility
 ## Scope
 
 This requirement applies to schemas, fixtures, Quoin catalog and advice input,
-planning requests, result intake, and bounded portfolio snapshots.
+planning requests, result intake, bounded portfolio snapshots, and production-
+qualification profiles, corpora, oracle manifests, technique manifests, and results.
 
 ## Rationale
 
@@ -52,5 +61,4 @@ including a deeply nested adversarial document and an oversized collection.
 
 ## Dependencies
 
-- Constrains public and external-input boundaries in [FR-001](../functional/FR-001-validate-public-contracts.md), [FR-003](../functional/FR-003-validate-all-fixtures.md), [FR-004](../functional/FR-004-adapt-quoin-catalog.md), and [FR-006](../functional/FR-006-match-evidence-exactly.md).
-
+- Constrains public and external-input boundaries in [FR-001](../functional/FR-001-validate-public-contracts.md), [FR-003](../functional/FR-003-validate-all-fixtures.md), [FR-004](../functional/FR-004-adapt-quoin-catalog.md), [FR-006](../functional/FR-006-match-evidence-exactly.md), and [FR-022](../functional/FR-022-freeze-qualification-claim.md) through [FR-025](../functional/FR-025-run-qualification-techniques.md).
