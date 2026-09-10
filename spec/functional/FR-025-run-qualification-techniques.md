@@ -77,8 +77,9 @@ pass.
   `property-based-testing` to `property`, `metamorphic-testing` to `metamorphic`,
   `differential-testing` to `differential`, `fuzzing` to `fuzz`, and
   `mutation-testing` to `mutation`.
-- An `example` technique SHALL carry only its `family` tag and SHALL derive its case
-  limit from the number of entries in the configuration's ordered input projection.
+- An `example` technique SHALL carry only its `family` tag.
+- The planner SHALL derive an example technique's case limit from the number of entries
+  in the configuration's ordered input projection.
 - A `property` technique SHALL carry `generatorRef`, `shrinkerRef`, one unsigned
   decimal `seed`, positive `maximumCases`, and positive `maximumShrinks`.
 - A `metamorphic` technique SHALL carry `relationProcedureRef`, `transformRef`, one
