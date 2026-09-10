@@ -2,7 +2,7 @@
 id: Task-027
 title: "Bind qualification oracle obligations"
 type: Task
-status: not_started
+status: in_progress
 track: A
 priority: P0
 relationships:
