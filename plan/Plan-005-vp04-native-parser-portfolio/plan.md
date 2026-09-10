@@ -2,7 +2,7 @@
 id: Plan-005
 title: "VP04 native parser portfolio"
 type: Plan
-status: active
+status: done
 relationships:
   - { target: "ix://agent-ix/quire-verification/FR-019", type: references }
   - { target: "ix://agent-ix/quire-verification/FR-020", type: references }
@@ -73,11 +73,11 @@ payload to an external disposition.
 
 ### Integration and qualification
 
-- [ ] **IT-003-SC-01..09**: execute the exact qualified Rust parser from portable plan through bounded results, assessment, measurements, sealed report core, and external owner disposition.
+- [x] **IT-003-SC-01..09**: execute the exact qualified Rust parser from portable plan through bounded results, assessment, measurements, sealed report core, and external owner disposition.
 - [x] **TC-022**: retain the Rust-only qualified path and compile every acceptance binding through `ix-trace-rs`.
 - [x] **TC-023**: retain bounded JSON ingestion for every new public entry point.
 
-## Remaining Work
+## Completed Work
 
 ### Track P: Process primitive (reopened)
 
@@ -108,7 +108,7 @@ external owner disposition ---------------------------------------------------->
 | Task-021 | A | FR-019 | TC-034, TC-035 | done |
 | Task-022 | A | FR-020 | TC-036, TC-037 | done |
 | Task-023 | A | FR-021 | TC-037 | done |
-| Task-024 | Gate | FR-019, FR-020, FR-021, NFR-006 | IT-003, TC-022, TC-023, TC-034..TC-038 | in_progress |
+| Task-024 | Gate | FR-019, FR-020, FR-021, NFR-006 | IT-003, TC-022, TC-023, TC-034..TC-038 | done |
 
 ## Coordination Rules
 
