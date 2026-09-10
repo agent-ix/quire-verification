@@ -12,6 +12,8 @@ relationships:
     type: "constrains"
   - target: "ix://agent-ix/quire-verification/FR-009"
     type: "constrains"
+  - target: "ix://agent-ix/quire-verification/FR-025"
+    type: "constrains"
 ---
 # NFR-004: Rust implementation for the qualified path
 
@@ -28,8 +30,8 @@ evidence.
 
 ## Scope
 
-This requirement applies to all executable code in `src/`, `tests/`, and
-repository-owned command-line targets. JSON Schema, JSON fixtures, Markdown
+This requirement applies to all executable code in `src/`, `tests/`, `fuzz/`, and
+repository-owned command-line targets. JSON Schema, JSON fixtures, fuzz seed inputs, Markdown
 specification artifacts, and CI workflow files remain data or configuration.
 Vendored dependency sources under `vendor/` remain outside this repository's
 first-party traceability population because their owning dependency retains its
@@ -47,7 +49,7 @@ joining its runtime.
 
 | Metric | Target | Threshold | Method |
 |--------|--------|-----------|--------|
-| Non-Rust executable source files under `src/`, `tests/`, and repository CLI targets | 0 | 0 | Inspection (TC-022) |
+| Non-Rust executable source files under `src/`, `tests/`, `fuzz/`, and repository CLI targets | 0 | 0 | Inspection (TC-022) |
 | Unsafe Rust blocks | 0 | 0 | Test (TC-022) |
 | Rust quality gates passing | 4 of 4 | 4 of 4 | Test (TC-022) |
 | Rust test trace markers compiled through `ix-trace-rs` and bound by Quire | Every test and every named TC/AC argument that verifies a matrix row | 100% | Coverage inspection (TC-022) |
@@ -72,13 +74,13 @@ packages remain current.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| NFR-004-AC-1 | Governed executable paths contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
+| NFR-004-AC-1 | Governed executable paths, including every qualification fuzz target, contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, and dependency policy checks all exit successfully. | Test (TC-022) |
-| NFR-004-AC-3 | Every Rust test used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
+| NFR-004-AC-3 | Every Rust test or fuzz target used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
 | NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from a repository-contained snapshot with recorded upstream revision and no cross-repository credential. | Test (TC-022) |
 | NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` plus `docs/artifact-rights.md` as the current dependency and rights records without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
 | NFR-004-AC-6 | Trace coverage claims state that the first-party population covers repository-owned Rust under `src/` and `tests/` while vendored dependency sources under `vendor/` remain governed by their owning dependency's matrix. | Inspection (TC-022) |
 
 ## Dependencies
 
-- Constrains the full qualified path defined by [FR-001](../functional/FR-001-validate-public-contracts.md), [FR-005](../functional/FR-005-build-verification-plans.md), [FR-006](../functional/FR-006-match-evidence-exactly.md), and [FR-009](../functional/FR-009-retain-portfolio-failures.md).
+- Constrains the full qualified path defined by [FR-001](../functional/FR-001-validate-public-contracts.md), [FR-005](../functional/FR-005-build-verification-plans.md), [FR-006](../functional/FR-006-match-evidence-exactly.md), [FR-009](../functional/FR-009-retain-portfolio-failures.md), and [FR-025](../functional/FR-025-run-qualification-techniques.md).
