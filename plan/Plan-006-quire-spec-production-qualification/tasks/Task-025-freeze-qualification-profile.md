@@ -57,14 +57,16 @@ excluded.
 
 | Role | Observed revision | State | Exact prerequisite |
 |---|---|---|---|
-| E02 portable contracts | `agent-ix/quire-verification@a57a88d9b259d7c48e95d375da0a8b01b3be7c0d` | provisional | Merge and accept the reviewed qualification-profile contract; the main revision does not contain it. |
-| FS02/FS05 shared references | `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78` | accepted input candidate | Bind the exact role/profile versions actually used when the executable projection is created. |
-| parser/compiler and direct CLI caller | `agent-ix/quire-spec-language@3bc1b3890f72f91873022ac807d74d047349baa8` | missing executable projection | Retain an accepted release binary, dependency closure, command invocation, and environment reference for this revision. |
-| Engineering Assurance | `agent-ix/engineering-assurance@c47e176e5ef5d133c448171e25640b76d653a077` | provisional | Consume Agent C's accepted Rust-native handoff revision after its interface specification and review land. |
+| E02 portable contracts | `agent-ix/quire-verification@4a5e1961d353db45aa227f8c6ef964d9f67eae29` | accepted portable checkpoint | Bind this merged and independently re-reviewed contract revision, or an explicitly reviewed successor, in the selected profile. |
+| FS02/FS05 shared references and composed profile | `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`; draft PR 15 at `9b8df841d24bc68adea9873ecce1da1ca9707b9d` | redesign in review | A's proposed immutable candidate `quire.protocol.finite-global/v1` revision `1-draft.4` pins the integrated FR-061/FR-062 bytes and preserves earlier candidates, but it is not adopted. F-owned FR-115/TC-145 still omit required canonical result facts and the composed full review has not run. Wait for the shared baseline to be reviewed and accepted, then bind the exact role and profile versions used by the executable projection. The proposed candidate is inventory evidence, not qualification admission. |
+| parser/compiler and direct CLI caller | `agent-ix/quire-spec-language@3bc1b3890f72f91873022ac807d74d047349baa8` | missing selected-v1 executable projection | After the composed profile is accepted, retain its selected release binary, dependency closure, command invocation, and environment reference. The historical state-profile candidate does not establish the composed product boundary. |
+| Engineering Assurance | `agent-ix/engineering-assurance@c47e176e5ef5d133c448171e25640b76d653a077`; issue 34 open with no producer PR | provisional | Consume Agent C's accepted Rust producer-execution/result revision after issue 34's specification, implementation, cross-repository contract test, and reviews land. |
 | Quoin evidence ownership | `agent-ix/quoin@7072d65db7e236e819d99be42e094ba548e9496a` | accepted containment candidate | Bind the exact versioned evidence interface used by the selected profile without expanding Quoin. |
 
-Until the three non-accepted states are resolved, the inventory retains their owning
-prerequisites and no frozen qualification profile is emitted. The missing executable,
-dependency closure, caller, and environment prevent candidate construction; once those
-intrinsic references exist, each remaining unaccepted external interface is returned as
-a typed planner blocker.
+The E02 merge closes one former prerequisite but does not freeze the profile. The
+composed native source profile, its selected executable projection and caller, and the
+Engineering Assurance producer interface remain unaccepted. The inventory retains those
+owned prerequisites and emits no frozen qualification profile. Missing executable,
+dependency-closure, caller, and environment references prevent candidate construction;
+after those intrinsic references exist, every remaining unaccepted interface is returned
+as a typed planner blocker.
