@@ -19,12 +19,24 @@ changed claim dimension is refused or retained as a prerequisite.
 Build one complete profile, permute non-semantic input order, and recompute its
 identity. Delete each command, caller, population, guarantee, environment, budget,
 evidence, exclusion, and external-version field independently. Substitute an
-unaccepted FS02/FS05 revision and mutate each identity-bearing value.
+unaccepted FS02/FS05 revision, name an absent guarantee or budget from one evidence
+requirement, and mutate each identity-bearing value. Keep a nonempty authored guarantee
+set while adding unrelated commands and catalog techniques.
+
+Exercise all three `claimAuthority` forms. For `native-formal-clause`, freeze all ten
+accepted results, then change each one in turn to a closed owned gap. Delete, duplicate,
+wrong-role, cross-tag, and rename each rule and change the exact source-profile reference.
+For `export-mapping`, change the mapping-profile and loss-report references,
+remove the strict-reader proof for the exact loss-report reference, and attempt to use
+the mapping as source authority. For `non-formal`, remove the exclusion reason.
 
 ## Expected Results
 
 The complete and semantically equivalent profiles have one identity. Every omitted
 or open dimension refuses emission, every unaccepted producer revision yields an
 exact blocked prerequisite without a local schema, and every semantic mutation
-changes identity while leaving the original bytes unchanged.
-
+changes identity while leaving the original bytes unchanged. Commands and catalog
+techniques do not augment the authored guarantee set. Each native admission rule remains
+an accepted observation or an owned gap; a supplied reference alone never establishes
+coverage. Non-formal and export-mapping forms remain explicit and cannot be promoted to
+native formal-clause authority.

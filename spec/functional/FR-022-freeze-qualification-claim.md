@@ -20,9 +20,11 @@ evidence, and explicit exclusions.
 ## Inputs
 
 - Exact candidate and dependency-closure references.
-- Owner-authored command, caller, population, guarantee, environment, and budget definitions.
+- Owner-authored command, caller, population, guarantee, claim-authority, environment,
+  and budget definitions.
 - Accepted FS02/FS05 reference versions for every used role.
-- Required evidence techniques and decision procedure.
+- Required evidence techniques, budget assignments, stopping rules, and decision
+  procedure.
 
 ## Outputs
 
@@ -48,6 +50,34 @@ evidence, and explicit exclusions.
 - The planner SHALL treat syntax, import resolution, model binding, type checking,
   evaluation, backend projection, and production integration as distinct claim
   dimensions.
+- Each semantic guarantee SHALL carry exactly one closed `claimAuthority` form:
+  `non-formal`, `native-formal-clause`, or `export-mapping`.
+- A `non-formal` authority SHALL carry only its tag and a nonempty reason why the
+  guarantee makes no formal-clause claim.
+- A `native-formal-clause` authority SHALL carry only its tag, the exact accepted native
+  Quire `sourceProfileRef`, and exactly one closed admission result for each required
+  rule. An `accepted` result SHALL carry only the rule, status, and one strict-reader-
+  proved `observation` reference. A `gap` result SHALL carry only the rule, status,
+  owner, nonempty reason, and nonempty unique limitations.
+- The required native admission rules SHALL be `numeric-domain`,
+  `presence-null-invalid`, `containment-references`, `collections`, `calls-result`,
+  `source-authority`, `evaluation-instants`, `reference-design-gate`,
+  `temporal-boundary`, and `runtime-dependency`.
+- An `export-mapping` authority SHALL carry only its tag, an exact `mappingProfileRef`,
+  and an exact `lossReportRef` whose artifact roles are respectively `source` and
+  `observation`.
+- The planner SHALL refuse a missing, duplicate, unknown, open, or wrong-role authority,
+  admission result, source-profile, mapping-profile, or loss-report value. It SHALL
+  preserve every admission gap and SHALL NOT infer acceptance from the presence of an
+  evidence reference.
+- The planner SHALL NOT infer native-profile admission from the candidate's first-party
+  origin, parser/compiler interface, or executable reference.
+- The planner SHALL NOT treat an export mapping as an editable clause authority or as
+  evidence that source-clause semantics are preserved beyond its exact loss report.
+- Each evidence requirement SHALL bind exactly one declared `budgetId` and one
+  `guaranteeId` to its exact technique and stopping rule.
+- The planner SHALL refuse an evidence requirement whose budget or guarantee is absent
+  from the same profile.
 - The JCS profile identity SHALL change when any identity-bearing claim dimension changes.
 
 ## Constraints
@@ -61,10 +91,11 @@ evidence, and explicit exclusions.
 
 | ID | Criteria | Verification |
 |----|----------|--------------|
-| FR-022-AC-1 | A complete exact profile retains every declared claim dimension, selected external revision, evidence obligation, and exclusion under one reproducible JCS identity. | Test (TC-039) |
-| FR-022-AC-2 | Omitting or opening any command, caller, population, guarantee, environment, budget, evidence, or exclusion dimension refuses profile emission. | Test (TC-039) |
+| FR-022-AC-1 | A complete exact profile retains every declared claim dimension, closed claim authority, selected external revision, evidence obligation with its exact guarantee and budget assignment, and exclusion under one reproducible JCS identity. | Test (TC-039) |
+| FR-022-AC-2 | Omitting or opening any command, caller, population, guarantee, claim authority, native admission, mapping loss report, environment, budget, evidence, evidence-to-budget assignment, or exclusion dimension refuses profile emission. | Test (TC-039) |
 | FR-022-AC-3 | An unavailable or unaccepted external interface becomes a named blocked prerequisite without a copied local replacement. | Test (TC-039) |
 | FR-022-AC-4 | Changing one identity-bearing dimension changes the profile identity while the previous profile remains immutable. | Test (TC-039) |
+| FR-022-AC-5 | A non-formal guarantee records its exclusion reason; a native formal-clause guarantee binds every exact admission rule as accepted evidence or an owned gap without inferring coverage; and an export-mapping guarantee binds its exact mapping profile and complete loss report without becoming source authority. | Test (TC-039) |
 
 ## Dependencies
 

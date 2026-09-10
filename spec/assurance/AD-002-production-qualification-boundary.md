@@ -22,16 +22,17 @@ relationships:
 ## System Boundary
 
 `quire-verification` owns the qualification profile, corpus/oracle manifests,
-portable plan and result semantics, bounded qualification runners, claim checks,
-and report-core assembly. Agent A-owned repositories own shared identity/version
-schemas and the parser/compiler. Agent C-owned Engineering Assurance owns shared
-assurance-chain orchestration. Quoin owns catalog orchestration, evidence retention,
-and authored sufficiency. The production caller remains with its current owner.
+portable plan and result contracts, deterministic contract validation and assessment,
+claim checks, and report-core assembly. Agent A-owned repositories own shared
+identity/version schemas and the parser/compiler. Rust Engineering Assurance owns the
+reusable producer-execution boundary, host/process execution, and assurance evidence
+production. Quoin owns catalog orchestration, evidence retention, and authored
+sufficiency. The production caller remains with its current owner.
 
 All interactions cross exact versioned structured interfaces. The qualification
-repository consumes immutable producer artifacts and never copies their semantic
-implementation as a shortcut. Filament producers and unrelated contract-agent work
-remain out of scope.
+repository consumes immutable producer artifacts and typed Engineering Assurance
+results and never copies their execution, storage, or semantic implementation as a
+shortcut. Filament producers and unrelated contract-agent work remain out of scope.
 
 ## Views
 
@@ -56,8 +57,9 @@ candidate, dependency, corpus, oracle, and result artifacts.
    domains remain visible gaps or require an owner-approved alternative method.
 4. Example, property, fuzz, metamorphic, mutation, differential, performance, and
    integration evidence remain separate contributions rather than one score.
-5. The real production caller and assurance handoff must execute; test-only
-   substitution cannot qualify the integration.
+5. The real production caller and assurance handoff must execute through the accepted
+   Rust Engineering Assurance producer-execution interface; test-only substitution
+   cannot qualify the integration.
 6. All new first-party executable paths are Rust and all acceptance bindings use
    bare compiler-checked `ix-trace-rs` markers.
 7. Local execution uses at most two Cargo jobs and serializes high-load phases.
@@ -70,6 +72,9 @@ candidate, dependency, corpus, oracle, and result artifacts.
 - **Boundary volatility — owner: verification owner; review before Task-026.** Agent
   A/C interfaces may change while active. Pin only accepted revisions and keep
   dependent tasks blocked until compatibility cases pass.
+- **Assurance-interface availability — owner: Engineering Assurance; review before each
+  execution task.** A missing accepted producer-execution revision blocks its consumer;
+  it never authorizes a repository-local runner, evidence store, or output parser.
 - **Corpus bias — owner: corpus owner; review before technique execution.** A large
   convenient corpus may omit important production classes. Require a population and
   selection rationale with explicit empty classes.
@@ -80,4 +85,3 @@ candidate, dependency, corpus, oracle, and result artifacts.
 - **Premature qualification — owner: verification owner; review at every gate.** The
   report remains incomplete until every required task, review, measure, and external
   decision is present.
-

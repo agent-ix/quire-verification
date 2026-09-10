@@ -24,6 +24,10 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
 - [x] Inventory the exact E02, FS02, FS05, parser/compiler, caller, Engineering Assurance, and Quoin handoff revisions needed by the selected profile.
 - [x] Return actionable blocked prerequisites for unavailable external interfaces in a
   structurally complete candidate without copying their definitions.
+- [x] Bind each evidence obligation to one exact declared resource budget and reject an
+  absent or foreign assignment before Task-028 consumes the profile.
+- [x] Add the closed non-formal/native-formal-clause/export-mapping authority union and
+  reject incomplete native admission or mapping loss-report bindings.
 
 ## Deliverables
 

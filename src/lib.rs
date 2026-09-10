@@ -17,7 +17,9 @@ pub mod native_process;
 pub mod parser_portfolio;
 pub mod planner;
 pub mod qualification_corpus;
+pub mod qualification_oracle;
 pub mod qualification_profile;
+pub mod qualification_technique;
 pub mod report;
 pub mod shared_reference;
 

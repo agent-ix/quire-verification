@@ -23,7 +23,11 @@ Quoin evidence to `source`; parser/compiler to `executable-projection`; and the
 production caller to `invocation`. The implementation derives the
 profile representation from this definition, computes its identity with RFC 8785 JCS,
 and returns all unavailable interfaces as blocked prerequisites without copying
-producer-owned schemas.
+producer-owned schemas. Each guarantee has a closed claim-authority form. Native formal
+clauses name the sole native Quire source profile and carry one `accepted` observation or
+owned `gap` for every carried-forward admission rule; the presence of a reference does
+not imply admission. OCL 2.4, SysML v2, and FRETish remain export mappings bound to an
+exact loss report.
 
 The schema also owns the internal `QualificationCorpusManifest` used to retain
 qualification inputs. It is not a public E02 root contract. Rust binds its exact
@@ -33,6 +37,24 @@ and replay output digests, and preserves each missing class as one owner-assigne
 When rights permit only a reference or prohibit retention, the gap retains the candidate
 reference and rights decision while the Rust corpus retains no candidate bytes and grants
 no class coverage.
+
+The same schema owns the internal `QualificationOracleManifest`. Rust binds it to
+the exact frozen profile and corpus, validates every reference through the strict
+shared-reference reader, classifies declared implementation dependence, checks the
+derived-binding graph, and preserves every uncovered guarantee as an owned gap. Host
+and process execution remain in the accepted Rust Engineering Assurance interface;
+this repository does not add a local runner, evidence store, fixture script, or
+arbitrary process-output parser.
+
+The schema also owns the internal `QualificationTechniqueManifest`. Rust binds every
+profile evidence obligation to exactly one closed catalog-backed configuration or owned
+gap, checks exact profile, corpus, oracle, catalog, budget, stopping-rule, and strict
+artifact references, and freezes a normalized RFC 8785 identity. Native formal-clause
+gaps reproduce the exact unadmitted rule set from the profile. Case identities use
+canonical unsigned decimal ordinals, normalize only set-like prior observations, and
+return a closed schema-derived `QualificationCaseRequest`; ordered input projections and
+shrink paths remain ordered. The planner makes no process call,
+stores no evidence, invents no catalog method, and emits no qualification disposition.
 
 `PropertyInventoryItem.classification` is optional on planner input so an
 unclassified property can be represented. When present it must be non-empty;

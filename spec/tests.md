@@ -73,7 +73,7 @@ rejected JavaScript prototype is not evidence.
 | FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ✅ Implemented; automated core retained |
 | FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
-| FR-022 | FR-022-AC-1..4 | TC-039, IT-004 | 🚧 Planned |
+| FR-022 | FR-022-AC-1..5 | TC-039, IT-004 | 🚧 Planned |
 | FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | ✅ Rust boundary implemented; production corpus blocked |
 | FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | 🚧 Planned |
 | FR-025 | FR-025-AC-1..5 | TC-042, IT-004 | 🚧 Planned |
@@ -100,7 +100,7 @@ rejected JavaScript prototype is not evidence.
 | FR-022-CON-1..2 | TC-039 | 🚧 Planned |
 | FR-023-CON-1 | TC-040 | ✅ Complete |
 | FR-024-CON-1..2 | TC-041 | 🚧 Planned |
-| FR-025-CON-1..2 | TC-042 | 🚧 Planned |
+| FR-025-CON-1..4 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |
 
@@ -146,10 +146,10 @@ rejected JavaScript prototype is not evidence.
 | TC-036 | Record reproducible effort observations | Benchmark | P0 | FR-020-AC-1..FR-020-AC-5, FR-020-AC-8..FR-020-AC-9 | ✅ Passed |
 | TC-037 | Bind portfolio disposition and claim limits | Integration | P0 | FR-020-AC-6..FR-020-AC-7, FR-021-AC-1..FR-021-AC-5, NFR-003-AC-2 | ✅ Passed |
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
-| TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-4 | ✅ Passed |
+| TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-5 | 🚧 In progress |
 | TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | ✅ Passed |
 | TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Planned |
-| TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, NFR-004-AC-1..NFR-004-AC-3, NFR-006-AC-1..NFR-006-AC-8 | 🚧 Planned |
+| TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-5, FR-025-CON-1..FR-025-CON-4, NFR-004-AC-1..NFR-004-AC-3 | 🚧 Planned |
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
 | TC-045 | Seal and bind the qualification disposition | Integration | P0 | FR-027-AC-1..FR-027-AC-5, NFR-008-AC-3 | 🚧 Planned |
@@ -368,6 +368,7 @@ rejected JavaScript prototype is not evidence.
 | EC-027 | A multiline `#[trace(...)]` compiles while the configured Quire reader sees only its first line | NFR-004 | TC-022 | Claimed acceptance criteria remain unbacked despite a green Rust test |
 | EC-033 | A large convenient corpus omits a declared production class | FR-023 | TC-040 | Sample count can masquerade as population coverage |
 | EC-034 | Candidate and oracle share the same parser or generator | FR-024 | TC-041 | Correlated agreement can masquerade as independent confirmation |
+| EC-039 | One artifact is retained under authorizing rights and also cited as a reference-only or unauthorized gap candidate | FR-023 | TC-040 | Contradictory rights decisions for one immutable identity can enter one corpus manifest |
 | EC-035 | An unfinished fuzz run finds no counterexample | FR-025 | TC-042 | Budget exhaustion can be reported as a pass |
 | EC-036 | A test adapter bypasses the real production caller or assurance handoff | FR-026 | TC-043 | Component success can masquerade as production-chain qualification |
 | EC-037 | A favorable aggregate hides one hot-path phase over budget | NFR-007 | TC-044 | Production latency breach can disappear in the summary |
@@ -424,7 +425,7 @@ rejected JavaScript prototype is not evidence.
 |----------|-------|--------|--------|---------|----------|
 | Unit | 17 | 17 | 0 | 0 | 100% |
 | Integration | 11 | 8 | 0 | 3 | 73% |
-| Property | 13 | 12 | 0 | 1 | 92% |
+| Property | 13 | 11 | 0 | 2 | 85% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 45 | 40 | 0 | 5 | 89% |
+| Overall | 45 | 39 | 0 | 6 | 87% |
