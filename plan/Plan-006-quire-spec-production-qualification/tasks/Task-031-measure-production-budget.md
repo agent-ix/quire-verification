@@ -23,6 +23,8 @@ cleanup observations and evaluating each owner threshold independently.
 - [ ] Capture five repetitions with exact environment, cache, command, corpus, concurrency, and timer identities.
 - [ ] Retain every observation, invalid sample, exclusion, estimator, uncertainty source, and comparison.
 - [ ] Enforce at most two Cargo jobs and serialize high-load phases on the shared workstation.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 

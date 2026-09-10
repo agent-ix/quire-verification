@@ -29,6 +29,8 @@ parsing, identity, oracle, containment, result, and claim guards.
 - [ ] Keep an unfinished fuzz budget incomplete even when it finds no counterexample.
 - [x] Seed named guard-removal mutants and prove the assigned traced test fails for the intended reason.
 - [ ] Retain surviving mutants, crashes, hangs, and minimized inputs as blocking results.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 

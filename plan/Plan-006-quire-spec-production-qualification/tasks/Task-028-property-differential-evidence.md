@@ -38,6 +38,8 @@ Assurance.
   unfinished-budget, and minimized-counterexample results separately.
 - [ ] Verify every counterexample replays against the exact candidate and applicable
   oracle revisions.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 
@@ -68,7 +70,8 @@ Assurance.
   planner therefore continues to refuse that family instead of minting a private method.
 - Native formal-clause evidence remains gapped rule by rule until the selected native
   Quire source profile publishes accepted admission observations. Composed-baseline PR 15
-  at `9b8df841d24bc68adea9873ecce1da1ca9707b9d` contains proposed protocol candidate
-  `1-draft.4` but remains a draft, and temporal bridge PR 65 does not itself establish
-  profile admission. The portable contract preserves those gaps and does not infer
-  coverage from first-party origin.
+  at `a6c73093d6a6399f67a7047d96859c5f1736fc62` contains proposed protocol candidate
+  `1-draft.4` and corrected shared successors, but the protocol successor and composed
+  acceptance remain pending; temporal bridge PR 65 does not itself establish profile
+  admission. The portable contract preserves those gaps and does not infer coverage from
+  first-party origin.

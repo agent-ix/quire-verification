@@ -29,6 +29,8 @@ reproducible generator or mutation lineage.
   generated or mutated input.
 - [x] Preserve an explicit gap for every unpopulated required class.
 - [x] Recount the Test Execution Summary by category and status after adding TC-040.
+- [ ] Recount the Test Execution Summary again by category and overall whenever this
+  task changes another test row or status, and record the exact totals before review.
 
 ## Deliverables
 

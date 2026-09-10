@@ -41,6 +41,8 @@ sealed report for its required external disposition.
 - [ ] Run QUOIN `/gap-analysis` with semantic review and resolve every in-scope requirement, matrix, code, and evidence gap.
 - [ ] Verify hosted workflows remain manual-dispatch only; do not trigger CI.
 - [ ] Confirm the final owner disposition and claim bind the same unchanged core.
+- [ ] Recount the Test Execution Summary by category and overall after every final row
+  or status change, and record the exact totals in the gate evidence.
 
 ## Deliverables
 

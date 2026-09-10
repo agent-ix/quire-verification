@@ -25,6 +25,8 @@ typed seam failures.
 - [ ] Verify interface versions and artifact bytes before invoking each boundary.
 - [ ] Exercise the production caller rather than a test adapter and retain the semantic stages actually reached.
 - [ ] Attribute every blocked or failed seam to its existing owner without editing the producer repository.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 

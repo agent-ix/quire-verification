@@ -37,6 +37,8 @@ dependence, limitation, and disagreement procedure.
 - [x] Confirm the portable checkpoint adds no local runner, evidence store, fixture
   script, or arbitrary stdout parser.
 - [x] Recount the Test Execution Summary by category and status after changing TC-041.
+- [ ] Recount the Test Execution Summary again by category and overall whenever this
+  task changes another test row or status, and record the exact totals before review.
 
 ## Deliverables
 
