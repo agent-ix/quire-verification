@@ -115,6 +115,8 @@ pass.
   semantics, presence/null/invalid semantics, containment/references, collections,
   calls/results, source authority, evaluation instants, the recorded reference-design
   gate, and the temporal boundary.
+- The planner SHALL determine formal-clause and export-mapping scope only from the frozen
+  guarantee's closed `claimAuthority` tag.
 - The planner SHALL retain one owner-attributed gap for every applicable formal-clause
   admission rule lacking accepted evidence.
 - The planner SHALL NOT treat a first-party parser, compiler, executable, or source
@@ -126,6 +128,9 @@ pass.
   a production or qualification dependency without a separate explicit owner decision.
 - Acceptance by an upstream export-format tool SHALL NOT serve as differential evidence
   for source-clause correctness.
+- A configuration for an `export-mapping` guarantee SHALL use only first-party semantic
+  evidence bound to the exact loss report and SHALL NOT use the upstream format tool as
+  a differential oracle.
 - Property-test source generation SHALL use the installed QUOIN `spec-correctness`
   workflow. An ungrounded criterion SHALL remain a validated SpecReview finding and
   blocker rather than authorizing a parallel generator or weaker hand-written property.

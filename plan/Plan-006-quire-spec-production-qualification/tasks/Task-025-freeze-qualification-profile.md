@@ -26,6 +26,8 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
   structurally complete candidate without copying their definitions.
 - [ ] Bind each evidence obligation to one exact declared resource budget and reject an
   absent or foreign assignment before Task-028 consumes the profile.
+- [ ] Add the closed non-formal/native-formal-clause/export-mapping authority union and
+  reject incomplete native admission or mapping loss-report bindings.
 
 ## Deliverables
 

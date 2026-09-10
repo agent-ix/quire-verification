@@ -23,10 +23,18 @@ unaccepted FS02/FS05 revision, name an absent guarantee or budget from one evide
 requirement, and mutate each identity-bearing value. Keep a nonempty authored guarantee
 set while adding unrelated commands and catalog techniques.
 
+Exercise all three `claimAuthority` forms. For `native-formal-clause`, delete, duplicate,
+wrong-role, and rename each of the ten admission rules and change the exact source-profile
+reference. For `export-mapping`, change the mapping-profile and loss-report references,
+remove the strict-reader proof for the exact loss-report reference, and attempt to use
+the mapping as source authority. For `non-formal`, remove the exclusion reason.
+
 ## Expected Results
 
 The complete and semantically equivalent profiles have one identity. Every omitted
 or open dimension refuses emission, every unaccepted producer revision yields an
 exact blocked prerequisite without a local schema, and every semantic mutation
 changes identity while leaving the original bytes unchanged. Commands and catalog
-techniques do not augment the authored guarantee set.
+techniques do not augment the authored guarantee set. Native admission is accepted only
+with all ten exact observations. Non-formal and export-mapping forms remain explicit and
+cannot be promoted to native formal-clause authority.

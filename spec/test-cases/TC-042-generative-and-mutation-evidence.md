@@ -78,7 +78,8 @@ Every seeded guard-removal mutant fails the assigned traced test for the intende
 survivors, crashes, hangs, and unfinished fuzz budgets block their exact obligations.
 Formal-clause evidence contributes only when every applicable native-profile admission
 record is present. A missing record remains an owned gap; first-party origin does not
-close it. Export-only mappings retain a complete loss report and neither their emitted
+close it. The planner reads the closed claim-authority tag rather than inferring scope
+from prose. Export-only mappings retain a complete loss report and neither their emitted
 text nor an upstream tool's acceptance becomes source-clause evidence.
 Static inspection finds no local execution/evidence framework or private catalog method,
 forbidden foreign runtime, or adapter shim. The output makes no sufficiency,
