@@ -28,6 +28,8 @@ budget, evidence set, exclusions, and accepted producer revisions under one JCS 
   absent or foreign assignment before Task-028 consumes the profile.
 - [x] Add the closed non-formal/native-formal-clause/export-mapping authority union and
   reject incomplete native admission or mapping loss-report bindings.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 
@@ -58,7 +60,7 @@ excluded.
 | Role | Observed revision | State | Exact prerequisite |
 |---|---|---|---|
 | E02 portable contracts | `agent-ix/quire-verification@4a5e1961d353db45aa227f8c6ef964d9f67eae29` | accepted portable checkpoint | Bind this merged and independently re-reviewed contract revision, or an explicitly reviewed successor, in the selected profile. |
-| FS02/FS05 shared references and composed profile | `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`; draft PR 15 at `9b8df841d24bc68adea9873ecce1da1ca9707b9d` | redesign in review | A's proposed immutable candidate `quire.protocol.finite-global/v1` revision `1-draft.4` pins the integrated FR-061/FR-062 bytes and preserves earlier candidates, but it is not adopted. F-owned FR-115/TC-145 still omit required canonical result facts and the composed full review has not run. Wait for the shared baseline to be reviewed and accepted, then bind the exact role and profile versions used by the executable projection. The proposed candidate is inventory evidence, not qualification admission. |
+| FS02/FS05 shared references and composed profile | `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`; draft PR 15 at `a6c73093d6a6399f67a7047d96859c5f1736fc62` | redesign in review | A has published corrected edition/state/package successors. Proposed protocol candidate `quire.protocol.finite-global/v1` revision `1-draft.4` pins the integrated FR-061/FR-062 bytes but still selects the earlier edition closure; A records its corrected protocol successor as pending. F-owned FR-116/TC-146 still collapse the independent decision-scope, surrounding-execution, and complete-global-conformance progress/closure axes, and the composed full review has not run. Wait for the shared baseline to be reviewed and accepted, then bind the exact role and profile versions used by the executable projection. Proposed candidates remain inventory evidence, not qualification admission. |
 | parser/compiler and direct CLI caller | `agent-ix/quire-spec-language@3bc1b3890f72f91873022ac807d74d047349baa8` | missing selected-v1 executable projection | After the composed profile is accepted, retain its selected release binary, dependency closure, command invocation, and environment reference. The historical state-profile candidate does not establish the composed product boundary. |
 | Engineering Assurance | `agent-ix/engineering-assurance@c47e176e5ef5d133c448171e25640b76d653a077`; issue 34 open with no producer PR | provisional | Consume Agent C's accepted Rust producer-execution/result revision after issue 34's specification, implementation, cross-repository contract test, and reviews land. |
 | Quoin evidence ownership | `agent-ix/quoin@7072d65db7e236e819d99be42e094ba548e9496a` | accepted containment candidate | Bind the exact versioned evidence interface used by the selected profile without expanding Quoin. |

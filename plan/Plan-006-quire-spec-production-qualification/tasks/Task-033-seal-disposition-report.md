@@ -24,6 +24,8 @@ excludes disposition bytes, and bind exactly one external `accept`, `revise`, or
 - [ ] Recompute profile, corpus, oracle, technique, production-chain, measurement, review, and reproduction identities before sealing.
 - [ ] Keep the report incomplete while any evidence, interface, threshold, finding, or gap is unresolved.
 - [ ] Obtain one external verification-owner disposition over the unchanged core and exact bounded claim.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 

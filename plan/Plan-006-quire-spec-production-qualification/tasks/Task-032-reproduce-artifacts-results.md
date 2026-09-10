@@ -26,6 +26,8 @@ profile, corpus, oracle, environment, seed, command, observation, and result ide
 - [ ] Rebuild the exact candidate and replay deterministic cases and minimized counterexamples.
 - [ ] Repeat MP-002 without sharing mutable build or evidence state with the original run.
 - [ ] Preserve stochastic or environmental differences with explanations and prevent exploratory environments from expanding the profile.
+- [ ] Recount the Test Execution Summary by category and overall whenever this task
+  changes a test row or status, and record the exact totals before review.
 
 ## Deliverables
 
