@@ -2,7 +2,7 @@
 id: Task-024
 title: "VP04 integration and qualification gate"
 type: Task
-status: in_progress
+status: done
 track: Gate
 priority: P0
 relationships:
@@ -31,11 +31,11 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 ## Subtasks
 
 - [x] Record the exact parser revision, qualification evidence, dependency closure, CLI commands, Linux profile, and fixture rights.
-- [ ] Execute IT-003-SC-01 through IT-003-SC-09 and retain the complete report; SC-01 through SC-08 are retained in the sealed automated core and SC-09 awaits the external disposition.
-- [ ] Obtain one external owner disposition bound to the sealed automated core.
+- [x] Execute IT-003-SC-01 through IT-003-SC-09 and retain the complete report; SC-01 through SC-08 are retained in the sealed automated core and SC-09 is retained in the bound external disposition.
+- [x] Obtain one external owner disposition bound to the sealed automated core.
 - [x] Run formatting, strict Clippy, all Rust tests, dependency policy, fixture validation, integrations, and trace reconciliation.
 - [x] Apply `/home/peter/dev/agent-skills/rust-review/SKILL.md` and resolve every in-scope finding.
-- [ ] Run QUOIN `/gap-analysis` and resolve every in-scope gap before changing this task and Plan-005 to done.
+- [x] Run QUOIN `/gap-analysis` and resolve every in-scope gap before changing this task and Plan-005 to done.
 
 ## Deliverables
 
@@ -43,8 +43,9 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 
 ## Notes
 
-- Task-023 and all transitive implementation gates are complete; the external
-  disposition and final qualification review remain.
+- Task-023 and all transitive implementation gates are complete. The retained
+  owner disposition accepts the unchanged sealed core, and final gap analysis
+  records no remaining Plan-005 gap.
 - The bounded LC01 syntax candidate and fixture entrance criterion is retained in
   `evidence/vp04-parser-candidate.md`; it does not clear the shared wire or
   predecessor gates.

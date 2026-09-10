@@ -382,7 +382,7 @@ rejected JavaScript prototype is not evidence.
 |----------------|---------|----------------|------|------------|--------|
 | IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
-| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | 🚧 Automated core retained; external disposition pending |
+| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
 
 ### Integration Test Details
