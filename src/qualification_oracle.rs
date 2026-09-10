@@ -237,6 +237,7 @@ fn validate_bindings(
         .iter()
         .map(binding_identities)
         .collect::<Result<Vec<_>, _>>()?;
+    let identity_counts = BindingIdentityCounts::new(&identities);
 
     for (index, binding) in bindings.iter().enumerate() {
         let binding_id = string(binding, "bindingId")?;
@@ -256,7 +257,14 @@ fn validate_bindings(
             }
         }
         validate_binding_references(binding, proofs)?;
-        validate_binding_dependence(binding, binding_id, index, &identities, &candidate, proofs)?;
+        validate_binding_dependence(
+            binding,
+            binding_id,
+            &identities[index],
+            &identity_counts,
+            &candidate,
+            proofs,
+        )?;
     }
     Ok(())
 }
@@ -281,8 +289,8 @@ fn validate_binding_references(
 fn validate_binding_dependence(
     binding: &Value,
     binding_id: &str,
-    index: usize,
-    identities: &[BindingIdentities],
+    identities: &BindingIdentities,
+    identity_counts: &BindingIdentityCounts<'_>,
     candidate: &[u8],
     proofs: &ProofIndex<'_>,
 ) -> Result<(), VerificationError> {
@@ -298,12 +306,9 @@ fn validate_binding_dependence(
             &binding["dependence"]["oracleAncestryRefs"],
             "oracleAncestryRefs",
         )?;
-        let shares_exact_reference = identities.iter().enumerate().any(|(other_index, other)| {
-            other_index != index && identities[index].shares_implementation_with(other)
-        });
-        if identities[index].executable == candidate
+        if identities.executable == candidate
             || !candidate_ancestry.is_disjoint(&oracle_ancestry)
-            || shares_exact_reference
+            || identity_counts.is_shared(identities)
             || !matches!(expected_origin, "oracle" | "independent-third-party")
         {
             return Err(invalid_binding(
@@ -347,12 +352,43 @@ struct BindingIdentities {
     comparison_procedure: Vec<u8>,
 }
 
-impl BindingIdentities {
-    fn shares_implementation_with(&self, other: &Self) -> bool {
-        self.oracle == other.oracle
-            || self.executable == other.executable
-            || self.comparison_procedure == other.comparison_procedure
+struct BindingIdentityCounts<'a> {
+    oracle: BTreeMap<&'a [u8], usize>,
+    executable: BTreeMap<&'a [u8], usize>,
+    comparison_procedure: BTreeMap<&'a [u8], usize>,
+}
+
+impl<'a> BindingIdentityCounts<'a> {
+    fn new(identities: &'a [BindingIdentities]) -> Self {
+        let mut counts = Self {
+            oracle: BTreeMap::new(),
+            executable: BTreeMap::new(),
+            comparison_procedure: BTreeMap::new(),
+        };
+        for identity in identities {
+            increment(&mut counts.oracle, &identity.oracle);
+            increment(&mut counts.executable, &identity.executable);
+            increment(
+                &mut counts.comparison_procedure,
+                &identity.comparison_procedure,
+            );
+        }
+        counts
     }
+
+    fn is_shared(&self, identity: &BindingIdentities) -> bool {
+        repeated(&self.oracle, &identity.oracle)
+            || repeated(&self.executable, &identity.executable)
+            || repeated(&self.comparison_procedure, &identity.comparison_procedure)
+    }
+}
+
+fn increment<'a>(counts: &mut BTreeMap<&'a [u8], usize>, identity: &'a [u8]) {
+    *counts.entry(identity).or_default() += 1;
+}
+
+fn repeated(counts: &BTreeMap<&[u8], usize>, identity: &[u8]) -> bool {
+    counts.get(identity).copied().unwrap_or_default() > 1
 }
 
 fn binding_identities(binding: &Value) -> Result<BindingIdentities, VerificationError> {

@@ -380,14 +380,16 @@ fn assert_manifest_refused(
     corpus: &FrozenQualificationCorpus,
     changed: &Value,
 ) {
-    assert!(
+    assert_eq!(
         qualify_oracle_manifest(
             changed.clone(),
             profile,
             corpus,
             &proofs(changed, &BTreeMap::new())
         )
-        .is_err()
+        .expect_err("invalid oracle manifest")
+        .code(),
+        VerificationErrorCode::InvalidQualificationOracleManifest
     );
 }
 
@@ -408,6 +410,34 @@ fn assert_binding_refused(
         .code(),
         VerificationErrorCode::InvalidQualificationOracleBinding
     );
+}
+
+fn frozen_manifest_json(
+    profile: &FrozenQualificationProfile,
+    corpus: &FrozenQualificationCorpus,
+    manifest: &Value,
+) -> Value {
+    let frozen = match qualify_oracle_manifest(
+        manifest.clone(),
+        profile,
+        corpus,
+        &proofs(manifest, &BTreeMap::new()),
+    )
+    .expect("valid oracle manifest")
+    {
+        QualificationOracleOutcome::Complete(manifest)
+        | QualificationOracleOutcome::Incomplete { manifest, .. } => manifest,
+    };
+    serde_json::to_value(frozen.manifest()).expect("frozen manifest serialization")
+}
+
+fn frozen_binding<'a>(manifest: &'a Value, binding_id: &str) -> &'a Value {
+    manifest["bindings"]
+        .as_array()
+        .expect("frozen bindings")
+        .iter()
+        .find(|binding| binding["bindingId"] == binding_id)
+        .expect("frozen binding identifier")
 }
 
 #[trace("TC-041", "FR-024-AC-1", "FR-024-AC-4")]
@@ -478,7 +508,7 @@ fn tc_041_freezes_closed_manifest_and_normalizes_only_set_like_members() {
 
 #[trace("TC-041", "FR-024-AC-1")]
 #[test]
-fn tc_041_refuses_missing_duplicate_unknown_and_conflicting_coverage() {
+fn tc_041_refuses_missing_fields() {
     let (profile, corpus, manifest) = fixture();
     for pointer in [
         "/contractVersion",
@@ -532,6 +562,12 @@ fn tc_041_refuses_missing_duplicate_unknown_and_conflicting_coverage() {
             "missing field {pointer} used the wrong refusal"
         );
     }
+}
+
+#[trace("TC-041", "FR-024-AC-1")]
+#[test]
+fn tc_041_refuses_duplicate_unknown_and_conflicting_coverage() {
+    let (profile, corpus, manifest) = fixture();
 
     let mut extra = manifest.clone();
     extra["bindings"][0]["unknown"] = json!(true);
@@ -549,6 +585,26 @@ fn tc_041_refuses_missing_duplicate_unknown_and_conflicting_coverage() {
         .expect("gaps")
         .push(second_gap);
     assert_manifest_refused(&profile, &corpus, &duplicate_gap);
+
+    for changed in [
+        {
+            let mut changed = manifest.clone();
+            changed["bindings"][0]["limitations"] = json!([]);
+            changed
+        },
+        {
+            let mut changed = manifest.clone();
+            changed["gaps"][0]["owner"] = json!("");
+            changed
+        },
+        {
+            let mut changed = manifest.clone();
+            changed["bindings"][0]["inputProjection"]["entryIds"] = json!("valid");
+            changed
+        },
+    ] {
+        assert_manifest_refused(&profile, &corpus, &changed);
+    }
 
     for changed in [
         {
@@ -593,53 +649,43 @@ fn tc_041_accepts_each_dependence_form() {
             "bases": ["oracle"]
         });
     }
+    let frozen = frozen_manifest_json(&profile, &corpus, &shared);
     assert!(
-        qualify_oracle_manifest(
-            shared.clone(),
-            &profile,
-            &corpus,
-            &proofs(&shared, &BTreeMap::new())
-        )
-        .is_ok()
+        frozen["bindings"]
+            .as_array()
+            .expect("shared bindings")
+            .iter()
+            .all(|binding| binding["dependence"]
+                == json!({"class": "shared", "groupId": "shared-oracle", "bases": ["oracle"]}))
     );
 
     let mut shared_expected = shared.clone();
     shared_expected["bindings"][0]["expectedRelation"]["origin"] = json!("shared");
     shared_expected["bindings"][0]["dependence"]["bases"] = json!(["oracle", "expected-value"]);
-    assert!(
-        qualify_oracle_manifest(
-            shared_expected.clone(),
-            &profile,
-            &corpus,
-            &proofs(&shared_expected, &BTreeMap::new())
-        )
-        .is_ok()
+    let frozen = frozen_manifest_json(&profile, &corpus, &shared_expected);
+    let binding = frozen_binding(&frozen, "binding-b");
+    assert_eq!(binding["expectedRelation"]["origin"], "shared");
+    assert_eq!(
+        binding["dependence"]["bases"],
+        json!(["expected-value", "oracle"])
     );
 
     let mut derived = manifest.clone();
     derived["bindings"][1]["dependence"] =
         json!({"class": "derived", "sourceBindingId": "binding-b"});
-    assert!(
-        qualify_oracle_manifest(
-            derived.clone(),
-            &profile,
-            &corpus,
-            &proofs(&derived, &BTreeMap::new())
-        )
-        .is_ok()
+    let frozen = frozen_manifest_json(&profile, &corpus, &derived);
+    assert_eq!(
+        frozen_binding(&frozen, "binding-a")["dependence"],
+        json!({"class": "derived", "sourceBindingId": "binding-b"})
     );
 
     let mut unknown = manifest.clone();
     unknown["bindings"][0]["dependence"] =
         json!({"class": "unknown", "reason": "ancestry has not been established"});
-    assert!(
-        qualify_oracle_manifest(
-            unknown.clone(),
-            &profile,
-            &corpus,
-            &proofs(&unknown, &BTreeMap::new())
-        )
-        .is_ok()
+    let frozen = frozen_manifest_json(&profile, &corpus, &unknown);
+    assert_eq!(
+        frozen_binding(&frozen, "binding-b")["dependence"],
+        json!({"class": "unknown", "reason": "ancestry has not been established"})
     );
 }
 
@@ -814,6 +860,82 @@ fn tc_041_requires_exact_strict_reader_proofs_and_frozen_identities() {
             .code(),
             VerificationErrorCode::InvalidQualificationOracleManifest
         );
+    }
+}
+
+#[trace("TC-041", "FR-024-AC-4")]
+#[test]
+fn tc_041_changes_identity_for_each_portable_manifest_dimension() {
+    let (profile, corpus, manifest) = fixture();
+    let baseline = jcs_sha256(&frozen_manifest_json(&profile, &corpus, &manifest))
+        .expect("baseline manifest identity");
+
+    for (pointer, replacement) in [
+        ("/manifestId", json!("QO-002")),
+        ("/bindings/0/bindingId", json!("binding-b-2")),
+        (
+            "/bindings/0/oracleRef",
+            reference("oracle", "oracle:changed"),
+        ),
+        (
+            "/bindings/0/executableRef",
+            reference("executable-projection", "executable:changed"),
+        ),
+        (
+            "/bindings/0/comparisonProcedureRef",
+            reference("review-procedure", "comparison:changed"),
+        ),
+        (
+            "/bindings/0/disagreementProcedureRef",
+            reference("review-procedure", "disagreement:changed"),
+        ),
+        (
+            "/bindings/0/executionRequestRef",
+            reference("invocation", "execution:changed"),
+        ),
+        (
+            "/bindings/0/comparisonRequestRef",
+            reference("invocation", "comparison-request:changed"),
+        ),
+        ("/bindings/0/inputProjection/mode", json!("each-entry")),
+        ("/bindings/0/inputProjection/entryIds", json!(["valid"])),
+        (
+            "/bindings/0/expectedRelation/relationId",
+            json!("changed-relation"),
+        ),
+        (
+            "/bindings/0/expectedRelation/description",
+            json!("Changed exact comparison relation"),
+        ),
+        (
+            "/bindings/0/expectedRelation/origin",
+            json!("independent-third-party"),
+        ),
+        (
+            "/bindings/0/dependence/evidenceRefs/0",
+            reference("source", "independence:changed"),
+        ),
+        (
+            "/bindings/0/dependence/candidateAncestryRefs/0",
+            reference("source", "candidate-ancestry:changed"),
+        ),
+        (
+            "/bindings/0/dependence/oracleAncestryRefs/0",
+            reference("source", "oracle-ancestry:changed"),
+        ),
+        ("/bindings/0/limitations/0", json!("Changed limitation")),
+        ("/gaps/0/gapId", json!("gap-span-2")),
+        ("/gaps/0/owner", json!("changed-owner")),
+        ("/gaps/0/reason", json!("Changed no-oracle reason")),
+        ("/gaps/0/limitations/0", json!("Changed gap limitation")),
+    ] {
+        let mut changed = manifest.clone();
+        *changed
+            .pointer_mut(pointer)
+            .expect("identity mutation path") = replacement;
+        let identity = jcs_sha256(&frozen_manifest_json(&profile, &corpus, &changed))
+            .expect("changed manifest identity");
+        assert_ne!(baseline, identity, "identity ignored {pointer}");
     }
 }
 
