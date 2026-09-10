@@ -9,7 +9,7 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/Task-026", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/Task-027", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/FR-025", type: references }
-  - { target: "ix://agent-ix/quire-verification/TC-042", type: references }
+  - { target: "ix://agent-ix/quire-verification/TC-042", type: verifies }
 ---
 # Task-028: Build Property and Differential Qualification Evidence
 
@@ -62,8 +62,12 @@ Assurance.
 
 - `agent-ix/engineering-assurance#34` has not yet published the accepted Rust typed
   producer-execution/result interface needed by the last three subtasks.
-- `agent-ix/spec-artifacts-process#86` has not yet published `differential-testing`, so
-  the implemented planner refuses that family instead of minting a private method.
+- `agent-ix/spec-artifacts-process#86` has a locally reviewed declaration checkpoint and
+  an explicit three-task QUOIN plan, but it has not published the real Quoin
+  catalog/advice conformance evidence or promoted `differential-testing`. The implemented
+  planner therefore continues to refuse that family instead of minting a private method.
 - Native formal-clause evidence remains gapped rule by rule until the selected native
-  Quire source profile publishes accepted admission observations. The portable contract
-  now preserves those gaps and does not infer coverage from first-party origin.
+  Quire source profile publishes accepted admission observations. Composed-baseline PR 15
+  at `d104cf9b4dcf29515f9d4a830108dc86e9b11ea0` remains a draft, and temporal bridge
+  PR 65 does not itself establish profile admission. The portable contract preserves
+  those gaps and does not infer coverage from first-party origin.

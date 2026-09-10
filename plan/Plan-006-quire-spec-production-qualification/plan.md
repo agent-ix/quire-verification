@@ -58,6 +58,13 @@ Merging this planning artifact does not unblock issue 13 execution. Plan-006 is 
 as active planning, while Task-025 and all dependent implementation remain gated on the
 owner-authored profile dimensions, phase thresholds, and accepted exact producer inputs.
 
+The merged `quire-verification` revision
+`4a5e1961d353db45aa227f8c6ef964d9f67eae29` closes reviewed portable checkpoints in
+Tasks 027 through 029. It does not complete any Plan-006 task: execution observations,
+the promoted differential method, native-profile admission, the selected production
+binary/caller, production-chain evidence, measurements, reproduction, sealing, and
+disposition remain open at their existing owners.
+
 ### Shared dependencies
 
 The existing schema-derived Rust contracts, RFC 8785 JCS implementation, strict
@@ -117,15 +124,15 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 
 ## Task File Mapping
 
-| Task | Track | Owns (references) | Test relationship | Status |
-|------|-------|-------------------|-------------------|--------|
+| Task | Track | Owns (references) | Verified by (verifies) | Status |
+|------|-------|-------------------|------------------------|--------|
 | Task-025 | A | FR-022 | TC-039 | blocked |
 | Task-026 | A | FR-023 | TC-040 | blocked |
 | Task-027 | A | FR-024 | TC-041 | in_progress |
-| Task-028 | A | FR-025 enablement | references TC-042 | blocked |
+| Task-028 | A | FR-025 enablement | TC-042 portable checkpoint | blocked |
 | Task-029 | A | FR-025 completion | TC-042 | blocked |
 | Task-030 | A | FR-026 | TC-043 | not_started |
-| Task-031 | A | NFR-007 evidence | references TC-044 | not_started |
+| Task-031 | A | NFR-007 evidence | TC-044 benchmark portion | not_started |
 | Task-032 | A | NFR-008 | verifies TC-044 | not_started |
 | Task-033 | A | FR-027 | TC-045 | not_started |
 | Task-034 | Gate | StR-002, FR-022..FR-027, NFR-007..NFR-008 | verifies IT-004 and TC-039..TC-045 | not_started |

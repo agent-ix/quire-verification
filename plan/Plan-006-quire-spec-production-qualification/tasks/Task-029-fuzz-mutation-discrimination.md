@@ -19,8 +19,13 @@ parsing, identity, oracle, containment, result, and claim guards.
 
 ## Subtasks
 
-- [ ] Write the remaining TC-042 fuzz, mutation, budget, and replay cases first, then reconcile the Task-028 property/differential cases into the complete TC-042 gate.
-- [x] Define corpus seeds, fuzz targets, budgets, stopping rules, artifact retention, and minimization.
+- [x] Establish the owner-selected Rust cargo-fuzz workspace, run QUOIN `spec-fuzz`,
+  retain its method-fit finding, and compile the three grounded targets without claiming
+  that source creation or compilation is a completed campaign.
+- [x] Freeze bounded fuzz and mutation configuration forms, exact seed and mutant
+  identities, stopping rules, replay bindings, and artifact-reference requirements.
+- [ ] Write the remaining TC-042 campaign-result, budget, minimization, and replay cases,
+  then reconcile the Task-028 property/differential cases into the complete TC-042 gate.
 - [ ] Keep an unfinished fuzz budget incomplete even when it finds no counterexample.
 - [x] Seed named guard-removal mutants and prove the assigned traced test fails for the intended reason.
 - [ ] Retain surviving mutants, crashes, hangs, and minimized inputs as blocking results.
@@ -40,12 +45,13 @@ parsing, identity, oracle, containment, result, and claim guards.
 
 ## Blocking Dependencies
 
-- Task-028 remains blocked on `agent-ix/engineering-assurance#34` and
-  `agent-ix/spec-artifacts-process#86`, so its typed results cannot yet be reconciled
-  into the complete TC-042 gate.
+- Task-028 remains blocked on `agent-ix/engineering-assurance#34` and the unpromoted
+  `agent-ix/spec-artifacts-process#86` catalogue work, so its typed results cannot yet be
+  reconciled into the complete TC-042 gate.
 - `agent-ix/engineering-assurance#34` has not published the accepted Rust
   producer-execution/result interface needed for fuzz campaigns, mutation observations,
   replay, and retained blocking results.
-- Native formal-clause evidence remains gapped against all ten carried admission rules
-  while `agent-ix/quire-specification#10` and `agent-ix/quire-contract-ir#64` redesign the
-  composed profile and temporal bridge.
+- Native formal-clause evidence remains gapped against all ten carried admission rules.
+  `agent-ix/quire-specification` PR 15 is still a draft composed baseline and
+  `agent-ix/quire-contract-ir` PR 65 is a temporal bridge specification; neither is an
+  accepted admission-evidence producer.

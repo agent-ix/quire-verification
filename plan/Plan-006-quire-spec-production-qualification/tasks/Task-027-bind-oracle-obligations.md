@@ -22,11 +22,20 @@ dependence, limitation, and disagreement procedure.
 
 ## Subtasks
 
-- [ ] Write TC-041 for independent, shared, derived, self-produced, absent, changed, and disagreeing observations.
-- [ ] Reuse the existing oracle-contribution graph and the accepted Rust Engineering
-  Assurance producer-execution interface; add no local runner, store, or script.
-- [ ] Bind every oracle to corpus inputs and exact tool bytes before execution.
-- [ ] Preserve both observations and an unresolved result when an oracle disagrees.
+- [x] Write the portable TC-041 manifest cases for independent, shared, derived,
+  self-produced, absent, changed, and cyclic oracle bindings.
+- [x] Derive the closed oracle-manifest representation from E02 and reuse the existing
+  oracle-contribution dependence graph.
+- [x] Bind every portable oracle declaration to the exact frozen profile, corpus
+  projection, executable, procedures, requests, limitations, and strict-reader proofs.
+- [ ] Submit the exact oracle and comparison requests through the accepted Rust
+  Engineering Assurance producer-execution interface from issue 34.
+- [ ] Consume typed agreeing and disagreeing observations, retaining both exact
+  observations and an unresolved result for disagreement.
+- [ ] Preserve unavailable, refused, failed, timed-out, malformed-response, and
+  containment-failure producer states without fabricating observations.
+- [x] Confirm the portable checkpoint adds no local runner, evidence store, fixture
+  script, or arbitrary stdout parser.
 - [x] Recount the Test Execution Summary by category and status after changing TC-041.
 
 ## Deliverables
@@ -36,6 +45,10 @@ dependence, limitation, and disagreement procedure.
 ## Notes
 
 - No self-consistency check may be relabeled as independent evidence.
-- Engineering Assurance issue `agent-ix/engineering-assurance#11` owns the reusable
-  producer-execution seam. Its absence blocks integration without authorizing a substitute.
+- Merged revision `4a5e1961d353db45aa227f8c6ef964d9f67eae29` contains the
+  independently re-reviewed portable manifest and dependence checkpoint. It does not
+  contain execution observations or complete TC-041.
+- Engineering Assurance issue `agent-ix/engineering-assurance#34` owns the reusable
+  producer-execution/result seam and currently has no producer PR. Its absence blocks
+  integration without authorizing a substitute.
 - Unblocks Task-028.
