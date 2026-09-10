@@ -368,6 +368,7 @@ rejected JavaScript prototype is not evidence.
 | EC-027 | A multiline `#[trace(...)]` compiles while the configured Quire reader sees only its first line | NFR-004 | TC-022 | Claimed acceptance criteria remain unbacked despite a green Rust test |
 | EC-033 | A large convenient corpus omits a declared production class | FR-023 | TC-040 | Sample count can masquerade as population coverage |
 | EC-034 | Candidate and oracle share the same parser or generator | FR-024 | TC-041 | Correlated agreement can masquerade as independent confirmation |
+| EC-039 | One artifact is retained under authorizing rights and also cited as a reference-only or unauthorized gap candidate | FR-023 | TC-040 | Contradictory rights decisions for one immutable identity can enter one corpus manifest |
 | EC-035 | An unfinished fuzz run finds no counterexample | FR-025 | TC-042 | Budget exhaustion can be reported as a pass |
 | EC-036 | A test adapter bypasses the real production caller or assurance handoff | FR-026 | TC-043 | Component success can masquerade as production-chain qualification |
 | EC-037 | A favorable aggregate hides one hot-path phase over budget | NFR-007 | TC-044 | Production latency breach can disappear in the summary |
