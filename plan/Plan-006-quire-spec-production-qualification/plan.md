@@ -65,17 +65,15 @@ the promoted differential method, native-profile admission, the selected product
 binary/caller, production-chain evidence, measurements, reproduction, sealing, and
 disposition remain open at their existing owners.
 
-Quire Specification PR 21 is integrated into draft composed-baseline PR 15 at
-`a6c73093d6a6399f67a7047d96859c5f1736fc62`. Its reviewed FR-062 projection keeps the
-canonical protocol result distinct from E02. A has published corrected
-edition/state/package successor definitions, while protocol candidate
-`quire.protocol.finite-global/v1` revision `1-draft.4` still selects the earlier edition
-closure and remains proposed rather than adopted. A records a protocol successor as
-pending, the composed full review has not run, and F-owned FR-116/TC-146 still compress
-decision-scope progress/closure, surrounding-execution progress/closure, and
-complete-global-conformance closure into generic `subject-progress/closure` mutations.
-The shared baseline therefore remains unaccepted and supplies no executable admission
-artifact.
+Quire Specification PR 21 and F's observation contribution are integrated into
+composed-baseline PR 15 at `39727832958803814d40843ab01ca69e0f3d7d09`. Its reviewed
+FR-062 projection keeps the canonical protocol result distinct from E02. A has replaced
+per-edit candidate/version churn with one current prototype draft and an exact coherent
+freeze at acceptance. The correction set is ready for composed review but remains
+unaccepted. F-owned FR-116/TC-146 still compress decision-scope progress/closure,
+surrounding-execution progress/closure, and complete-global-conformance closure into
+generic `subject-progress/closure` mutations. The working baseline therefore supplies
+no accepted executable admission artifact.
 
 ### Shared dependencies
 

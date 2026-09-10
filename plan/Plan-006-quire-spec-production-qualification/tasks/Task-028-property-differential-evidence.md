@@ -70,8 +70,8 @@ Assurance.
   planner therefore continues to refuse that family instead of minting a private method.
 - Native formal-clause evidence remains gapped rule by rule until the selected native
   Quire source profile publishes accepted admission observations. Composed-baseline PR 15
-  at `a6c73093d6a6399f67a7047d96859c5f1736fc62` contains proposed protocol candidate
-  `1-draft.4` and corrected shared successors, but the protocol successor and composed
-  acceptance remain pending; temporal bridge PR 65 does not itself establish profile
-  admission. The portable contract preserves those gaps and does not infer coverage from
-  first-party origin.
+  at `39727832958803814d40843ab01ca69e0f3d7d09` now maintains one coherent working
+  draft and defers exact profile/rule/dependency/source identity freeze to acceptance;
+  composed review and acceptance remain pending, and temporal bridge PR 65 does not
+  itself establish profile admission. The portable contract preserves those gaps and
+  does not infer coverage from first-party origin.
