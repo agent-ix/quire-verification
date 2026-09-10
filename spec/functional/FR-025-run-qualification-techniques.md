@@ -125,7 +125,7 @@ pass.
   exact accepted native Quire source-profile identity and admission evidence for numeric
   semantics, presence/null/invalid semantics, containment/references, collections,
   calls/results, source authority, evaluation instants, the recorded reference-design
-  gate, and the temporal boundary.
+  gate, the temporal boundary, and the runtime-dependency boundary.
 - The planner SHALL determine formal-clause and export-mapping scope only from the frozen
   guarantee's closed `claimAuthority` tag.
 - The planner SHALL retain every applicable formal-clause rule lacking accepted evidence

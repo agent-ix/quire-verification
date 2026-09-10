@@ -2576,6 +2576,12 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
 #[trace("TC-023", "NFR-005-AC-1", "NFR-005-AC-2", "NFR-005-AC-3")]
 #[test]
 fn tc_023_enforces_json_resource_limits() {
+    let mut at_limit = vec![b' '; MAX_JSON_BYTES - 4];
+    at_limit.extend_from_slice(b"null");
+    assert_eq!(
+        parse_bounded_json(&at_limit).expect("exact byte limit must be accepted"),
+        Value::Null
+    );
     let oversized = vec![b' '; MAX_JSON_BYTES + 1];
     assert_eq!(
         parse_bounded_json(&oversized)

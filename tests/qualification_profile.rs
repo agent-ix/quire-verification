@@ -442,6 +442,18 @@ fn tc_039_closes_nonformal_native_and_export_claim_authorities() {
     native["semanticGuarantees"][0]["claimAuthority"] = native_claim_authority();
     assert!(validate_qualification_profile(&native, &validated_references(&native)).is_ok());
 
+    let mut references_without_native_source = native.clone();
+    references_without_native_source["semanticGuarantees"][0]["claimAuthority"]["sourceProfileRef"] =
+        artifact("source", "unrelated-native-source-profile");
+    assert!(
+        validate_qualification_profile(
+            &native,
+            &validated_references(&references_without_native_source)
+        )
+        .is_err(),
+        "native claim authority must be bound to its exact strict-reader proof"
+    );
+
     for index in 0..10 {
         let mut missing = native.clone();
         missing["semanticGuarantees"][0]["claimAuthority"]["admissionResults"]

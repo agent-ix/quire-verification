@@ -87,8 +87,23 @@ fn tc_042_reports_carried_native_admission_gaps_without_assuming_coverage() {
     assert_eq!(gaps.len(), 1);
     assert_eq!(gaps[0].obligation_id(), "syntax-property");
     assert_eq!(
-        gaps[0].admission_rules(),
-        [Box::<str>::from("numeric-domain")]
+        gaps[0]
+            .admission_rules()
+            .iter()
+            .map(AsRef::as_ref)
+            .collect::<Vec<_>>(),
+        [
+            "calls-result",
+            "collections",
+            "containment-references",
+            "evaluation-instants",
+            "numeric-domain",
+            "presence-null-invalid",
+            "reference-design-gate",
+            "runtime-dependency",
+            "source-authority",
+            "temporal-boundary",
+        ]
     );
 
     let mut missing = gapped_fixture.manifest.clone();
@@ -108,6 +123,126 @@ fn tc_042_reports_carried_native_admission_gaps_without_assuming_coverage() {
         error.code(),
         VerificationErrorCode::InvalidQualificationTechniqueManifest
     );
+}
+
+#[trace("TC-042", "FR-025-AC-5")]
+#[test]
+fn tc_042_freezes_the_eight_named_mutation_guards_and_case_bound() {
+    let mutants = [
+        (
+            "jcs-equality",
+            "contracts::jcs_equal",
+            "TC-016",
+            "unequal canonical values must remain unequal",
+        ),
+        (
+            "bounded-json",
+            "contracts::parse_bounded_json",
+            "TC-023",
+            "an exact 16 MiB valid document must be accepted",
+        ),
+        (
+            "strict-reference-json",
+            "shared_reference::parse_strict_bounded_json",
+            "TC-029",
+            "an exact 16 MiB strict document must be accepted",
+        ),
+        (
+            "native-response",
+            "native_process::parse_native_json_output",
+            "TC-038",
+            "a malformed native response must retain its protocol failure",
+        ),
+        (
+            "lineage",
+            "evidence::validate_lineage",
+            "TC-033",
+            "invalid lineage must reach the parent-graph refusal",
+        ),
+        (
+            "claim-authority",
+            "qualification_profile::validate_claim_authority",
+            "TC-039",
+            "a missing exact source-profile proof must be refused",
+        ),
+        (
+            "technique-coverage",
+            "qualification_technique::validate_coverage",
+            "TC-042",
+            "conflicting or absent obligation coverage must be refused",
+        ),
+        (
+            "report-bindings",
+            "report::validate_core_bindings",
+            "TC-037",
+            "a detached report task identifier must be refused",
+        ),
+    ]
+    .map(|(mutant_id, guard_id, test_id, expected_failure)| {
+        json!({
+            "mutantId": mutant_id,
+            "guardId": guard_id,
+            "mutantRef": reference("fault-model", &format!("mutant:{mutant_id}")),
+            "assignedTestRef": reference("trace", &format!("trace:{test_id}")),
+            "expectedFailure": expected_failure
+        })
+    });
+    let mutation = fixture_with(
+        "mutation-testing",
+        "execute each of the eight named mutants exactly once",
+        &json!({"family": "mutation", "mutants": mutants}),
+    );
+    let frozen = match freeze(mutation.manifest.clone(), &mutation).expect("mutation manifest") {
+        QualificationTechniqueOutcome::Complete(manifest) => manifest,
+        QualificationTechniqueOutcome::Incomplete { .. } => panic!("mutation manifest incomplete"),
+    };
+    for ordinal in 0..8 {
+        assert!(
+            plan_qualification_case(
+                &frozen,
+                "property-syntax",
+                &ordinal.to_string(),
+                &[],
+                &[],
+                &[]
+            )
+            .is_ok()
+        );
+    }
+    assert!(plan_qualification_case(&frozen, "property-syntax", "8", &[], &[], &[]).is_err());
+
+    let mut duplicate = mutation.manifest.clone();
+    let first_mutant_id =
+        duplicate["configurations"][0]["technique"]["mutants"][0]["mutantId"].clone();
+    duplicate["configurations"][0]["technique"]["mutants"][1]["mutantId"] = first_mutant_id;
+    assert!(freeze(duplicate, &mutation).is_err());
+}
+
+#[trace("TC-042", "FR-025-AC-6")]
+#[test]
+fn tc_042_freezes_fuzz_inputs_and_refuses_unretained_seeds() {
+    let fuzz = fixture_with(
+        "fuzzing",
+        "execute exactly 64 inputs or stop at the first crash or hang",
+        &json!({
+            "family": "fuzz",
+            "targetRef": reference("executable-projection", "fuzz-target:bounded-json"),
+            "seedCorpusEntryIds": ["valid"],
+            "minimizerRef": reference("executable-projection", "fuzz-minimizer:libfuzzer"),
+            "seed": "53",
+            "maximumExecutions": 64
+        }),
+    );
+    let frozen = match freeze(fuzz.manifest.clone(), &fuzz).expect("fuzz manifest") {
+        QualificationTechniqueOutcome::Complete(manifest) => manifest,
+        QualificationTechniqueOutcome::Incomplete { .. } => panic!("fuzz manifest incomplete"),
+    };
+    assert!(plan_qualification_case(&frozen, "property-syntax", "63", &[], &[], &[]).is_ok());
+    assert!(plan_qualification_case(&frozen, "property-syntax", "64", &[], &[], &[]).is_err());
+
+    let mut unretained = fuzz.manifest.clone();
+    unretained["configurations"][0]["technique"]["seedCorpusEntryIds"] = json!(["absent"]);
+    assert!(freeze(unretained, &fuzz).is_err());
 }
 
 #[trace("TC-042", "FR-025-AC-1")]
