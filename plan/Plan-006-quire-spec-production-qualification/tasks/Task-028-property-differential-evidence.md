@@ -30,7 +30,7 @@ Assurance.
 - [ ] Define deterministic seeds, partitions, relations, budgets, stopping rules, case
   identities, and shrinking behavior before execution.
 - [ ] Require exact native Quire source-profile admission evidence for formal-clause
-  obligations, retain every undis­charged admission rule as an owned gap, and refuse
+  obligations, retain every undischarged admission rule as an owned gap, and refuse
   export-only mappings or forbidden foreign runtimes as source authorities/oracles.
 - [ ] Submit exact requests only through the accepted Engineering Assurance Rust interface
   from #34 and consume its typed results; add no local process runner or stdout parser.
