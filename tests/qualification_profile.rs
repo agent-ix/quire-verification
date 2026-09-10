@@ -132,6 +132,38 @@ fn interface(interface_id: &str, role: &str, owner: &str) -> Value {
     })
 }
 
+fn native_claim_authority() -> Value {
+    let rules = [
+        "numeric-domain",
+        "presence-null-invalid",
+        "containment-references",
+        "collections",
+        "calls-result",
+        "source-authority",
+        "evaluation-instants",
+        "reference-design-gate",
+        "temporal-boundary",
+        "runtime-dependency",
+    ];
+    json!({
+        "kind": "native-formal-clause",
+        "sourceProfileRef": artifact("source", "native-source-profile"),
+        "admissionResults": rules.map(|rule| json!({
+            "rule": rule,
+            "status": "accepted",
+            "evidenceRef": artifact("observation", &format!("admission:{rule}"))
+        }))
+    })
+}
+
+fn export_claim_authority() -> Value {
+    json!({
+        "kind": "export-mapping",
+        "mappingProfileRef": artifact("source", "export-mapping-profile"),
+        "lossReportRef": artifact("observation", "export-loss-report")
+    })
+}
+
 fn profile() -> Value {
     json!({
         "contractVersion": "quire-verification/e02-draft-2",
@@ -160,7 +192,11 @@ fn profile() -> Value {
         "semanticGuarantees": [{
             "guaranteeId": "syntax-outcome",
             "stage": "syntax",
-            "claim": "Return parsed, refused, incomplete, or usage outcomes for the selected population"
+            "claim": "Return parsed, refused, incomplete, or usage outcomes for the selected population",
+            "claimAuthority": {
+                "kind": "non-formal",
+                "reason": "This bounded profile claims syntax outcomes, not formal-clause semantics"
+            }
         }],
         "environmentRef": artifact("environment", "linux:x86_64:rust-1.98.1"),
         "resourceBudgets": [{
@@ -175,6 +211,7 @@ fn profile() -> Value {
             "obligationId": "syntax-examples",
             "guaranteeId": "syntax-outcome",
             "techniqueId": "native-parser-direct",
+            "budgetId": "parse-hot-path",
             "stoppingRule": "every retained corpus item executes once with its expected outcome",
             "required": true
         }],
@@ -376,7 +413,86 @@ fn tc_039_freezes_only_a_complete_closed_schema_derived_profile() {
         .is_err()
     );
 
+    let mut unknown_budget = profile();
+    unknown_budget["evidenceRequirements"][0]["budgetId"] = json!("absent");
+    assert!(
+        validate_qualification_profile(&unknown_budget, &validated_references(&unknown_budget))
+            .is_err()
+    );
+
     assert_profile_reference_roles_are_typed();
+}
+
+#[trace("TC-039", "FR-022-AC-1", "FR-022-AC-2", "FR-022-AC-5")]
+#[test]
+fn tc_039_closes_nonformal_native_and_export_claim_authorities() {
+    let nonformal = profile();
+    assert!(validate_qualification_profile(&nonformal, &validated_references(&nonformal)).is_ok());
+
+    let mut missing_reason = profile();
+    missing_reason["semanticGuarantees"][0]["claimAuthority"] = json!({
+        "kind": "non-formal"
+    });
+    assert!(
+        validate_qualification_profile(&missing_reason, &validated_references(&missing_reason))
+            .is_err()
+    );
+
+    let mut native = profile();
+    native["semanticGuarantees"][0]["claimAuthority"] = native_claim_authority();
+    assert!(validate_qualification_profile(&native, &validated_references(&native)).is_ok());
+
+    for index in 0..10 {
+        let mut missing = native.clone();
+        missing["semanticGuarantees"][0]["claimAuthority"]["admissionResults"]
+            .as_array_mut()
+            .expect("admission evidence")
+            .remove(index);
+        assert!(
+            validate_qualification_profile(&missing, &validated_references(&missing)).is_err(),
+            "native authority accepted with admission index {index} absent"
+        );
+    }
+
+    let mut duplicate = native.clone();
+    duplicate["semanticGuarantees"][0]["claimAuthority"]["admissionResults"][1]["rule"] =
+        json!("numeric-domain");
+    assert!(validate_qualification_profile(&duplicate, &validated_references(&duplicate)).is_err());
+
+    let mut gapped = native.clone();
+    gapped["semanticGuarantees"][0]["claimAuthority"]["admissionResults"][0] = json!({
+        "rule": "numeric-domain",
+        "status": "gap",
+        "owner": "quire-spec-language",
+        "reason": "The native numeric profile has not yet been admitted",
+        "limitations": ["No accepted bounded-rational evidence is retained"]
+    });
+    assert!(validate_qualification_profile(&gapped, &validated_references(&gapped)).is_ok());
+
+    let mut wrong_source_role = native.clone();
+    wrong_source_role["semanticGuarantees"][0]["claimAuthority"]["sourceProfileRef"]["value"]["kind"] =
+        json!("observation");
+    assert!(
+        validate_qualification_profile(
+            &wrong_source_role,
+            &validated_references(&wrong_source_role)
+        )
+        .is_err()
+    );
+
+    let mut export = profile();
+    export["semanticGuarantees"][0]["claimAuthority"] = export_claim_authority();
+    assert!(validate_qualification_profile(&export, &validated_references(&export)).is_ok());
+
+    let mut wrong_loss_role = export.clone();
+    wrong_loss_role["semanticGuarantees"][0]["claimAuthority"]["lossReportRef"]["value"]["kind"] =
+        json!("source");
+    assert!(
+        validate_qualification_profile(&wrong_loss_role, &validated_references(&wrong_loss_role))
+            .is_err()
+    );
+
+    assert!(validate_qualification_profile(&export, &[]).is_err());
 }
 
 #[trace("TC-039", "FR-022-AC-2")]
@@ -529,6 +645,11 @@ fn tc_039_changes_identity_for_every_bound_claim_dimension() {
             "guarantee",
             "/semanticGuarantees/0/claim",
             json!("Return exact syntax outcomes and locations"),
+        ),
+        (
+            "claim authority",
+            "/semanticGuarantees/0/claimAuthority/reason",
+            json!("This profile still excludes formal clauses for another exact reason"),
         ),
         (
             "environment",

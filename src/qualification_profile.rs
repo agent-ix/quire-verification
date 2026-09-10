@@ -103,7 +103,7 @@ pub fn validate_qualification_profile(
     ensure_unique_ids(value, "resourceBudgets", "budgetId")?;
     ensure_unique_ids(value, "evidenceRequirements", "obligationId")?;
     ensure_unique_ids(value, "interfaces", "interfaceId")?;
-    ensure_known_guarantees(value)
+    ensure_known_guarantees_and_budgets(value)
 }
 
 /// Freezes a complete profile or returns every unresolved producer interface.
@@ -200,6 +200,11 @@ fn ensure_strict_references(
             &reference_index,
         )?;
     }
+    for guarantee in profile["semanticGuarantees"].as_array().ok_or_else(|| {
+        invalid_profile("semantic guarantees are not an array", "semanticGuarantees")
+    })? {
+        validate_claim_authority(&guarantee["claimAuthority"], &reference_index)?;
+    }
     for interface in profile["interfaces"]
         .as_array()
         .ok_or_else(|| invalid_profile("profile interfaces are not an array", "interfaces"))?
@@ -218,6 +223,61 @@ fn ensure_strict_references(
         }
     }
     Ok(())
+}
+
+fn validate_claim_authority(
+    authority: &Value,
+    validated_references: &BTreeMap<&[u8], &str>,
+) -> Result<(), VerificationError> {
+    match authority["kind"].as_str() {
+        Some("non-formal") => Ok(()),
+        Some("native-formal-clause") => {
+            validate_bound_reference(
+                &authority["sourceProfileRef"],
+                "semanticGuarantees.claimAuthority.sourceProfileRef",
+                "source",
+                validated_references,
+            )?;
+            for admission in authority["admissionResults"].as_array().ok_or_else(|| {
+                invalid_profile(
+                    "native admission results are not an array",
+                    "claimAuthority.admissionResults",
+                )
+            })? {
+                if admission["status"] == "accepted" {
+                    validate_bound_reference(
+                        &admission["evidenceRef"],
+                        "semanticGuarantees.claimAuthority.admissionResults.evidenceRef",
+                        "observation",
+                        validated_references,
+                    )?;
+                }
+            }
+            Ok(())
+        }
+        Some("export-mapping") => {
+            validate_bound_reference(
+                &authority["mappingProfileRef"],
+                "semanticGuarantees.claimAuthority.mappingProfileRef",
+                "source",
+                validated_references,
+            )?;
+            validate_bound_reference(
+                &authority["lossReportRef"],
+                "semanticGuarantees.claimAuthority.lossReportRef",
+                "observation",
+                validated_references,
+            )
+        }
+        Some(other) => Err(invalid_profile(
+            "qualification guarantee has an unsupported claim authority",
+            other,
+        )),
+        None => Err(invalid_profile(
+            "qualification guarantee has no claim authority",
+            "claimAuthority",
+        )),
+    }
 }
 
 fn expected_interface_artifact_kind(role: &str) -> Result<&'static str, VerificationError> {
@@ -303,7 +363,7 @@ fn ensure_unique_ids(
     Ok(())
 }
 
-fn ensure_known_guarantees(profile: &Value) -> Result<(), VerificationError> {
+fn ensure_known_guarantees_and_budgets(profile: &Value) -> Result<(), VerificationError> {
     let guarantee_ids = profile["semanticGuarantees"]
         .as_array()
         .ok_or_else(|| {
@@ -311,6 +371,12 @@ fn ensure_known_guarantees(profile: &Value) -> Result<(), VerificationError> {
         })?
         .iter()
         .filter_map(|guarantee| guarantee["guaranteeId"].as_str())
+        .collect::<BTreeSet<_>>();
+    let budget_ids = profile["resourceBudgets"]
+        .as_array()
+        .ok_or_else(|| invalid_profile("resource budgets are not an array", "resourceBudgets"))?
+        .iter()
+        .filter_map(|budget| budget["budgetId"].as_str())
         .collect::<BTreeSet<_>>();
     for requirement in profile["evidenceRequirements"].as_array().ok_or_else(|| {
         invalid_profile(
@@ -325,6 +391,15 @@ fn ensure_known_guarantees(profile: &Value) -> Result<(), VerificationError> {
             return Err(invalid_profile(
                 "evidence requirement names no semantic guarantee",
                 guarantee_id,
+            ));
+        }
+        let budget_id = requirement["budgetId"].as_str().ok_or_else(|| {
+            invalid_profile("evidence budget identity is not a string", "budgetId")
+        })?;
+        if !budget_ids.contains(budget_id) {
+            return Err(invalid_profile(
+                "evidence requirement names no resource budget",
+                budget_id,
             ));
         }
     }

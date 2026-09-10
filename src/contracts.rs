@@ -122,6 +122,12 @@ pub enum VerificationErrorCode {
     InvalidQualificationOracleManifest,
     /// A qualification oracle binding carries an invalid exact reference or reuse identity.
     InvalidQualificationOracleBinding,
+    /// A qualification technique manifest violates its frozen coverage or configuration contract.
+    InvalidQualificationTechniqueManifest,
+    /// A qualification case or replay differs from its frozen technique configuration.
+    InvalidQualificationCase,
+    /// A required qualification technique or accepted producer capability is unavailable.
+    QualificationTechniqueUnavailable,
     /// More than one human disposition was supplied for one report core.
     DuplicateDisposition,
     /// A disposition names another core, procedure, or reviewer.
@@ -189,6 +195,11 @@ impl VerificationErrorCode {
             Self::InvalidCorpusManifest => "invalid_corpus_manifest",
             Self::InvalidQualificationOracleManifest => "invalid_qualification_oracle_manifest",
             Self::InvalidQualificationOracleBinding => "invalid_qualification_oracle_binding",
+            Self::InvalidQualificationTechniqueManifest => {
+                "invalid_qualification_technique_manifest"
+            }
+            Self::InvalidQualificationCase => "invalid_qualification_case",
+            Self::QualificationTechniqueUnavailable => "qualification_technique_unavailable",
             Self::DuplicateDisposition => "duplicate_disposition",
             Self::ForeignDisposition => "foreign_disposition",
             Self::UnsupportedDisposition => "unsupported_disposition",
@@ -249,6 +260,9 @@ impl VerificationErrorCode {
             Self::InvalidCorpusManifest,
             Self::InvalidQualificationOracleManifest,
             Self::InvalidQualificationOracleBinding,
+            Self::InvalidQualificationTechniqueManifest,
+            Self::InvalidQualificationCase,
+            Self::QualificationTechniqueUnavailable,
             Self::DuplicateDisposition,
             Self::ForeignDisposition,
             Self::UnsupportedDisposition,

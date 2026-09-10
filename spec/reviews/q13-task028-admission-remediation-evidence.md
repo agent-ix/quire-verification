@@ -22,4 +22,4 @@ profile marks all applicable rules accepted.
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
 | FND-001 | high | Resolved: the prior oracle was merely presence of an observation reference; the new oracle separately checks admission status, strict reference proof for accepted results, and exact preservation of gap rules. | FR-022-AC-5, FR-025-AC-1, TC-039, TC-042 |
-
+| FND-002 | medium | Resolved during Rust review: the example-family ordinal ceiling is now specified as the ordered projection length, matching the implemented zero-based case identity gate. | FR-025 behavior, TC-042 step 4 |

@@ -81,6 +81,18 @@
         { "properties": { "value": { "properties": { "kind": { "const": "observation" } }, "required": ["kind"] } } }
       ]
     },
+    "GeneratedArtifactReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "generated-artifact" } }, "required": ["kind"] } } }
+      ]
+    },
+    "PropertyReference": {
+      "allOf": [
+        { "$ref": "#/$defs/SharedArtifactEnvelope" },
+        { "properties": { "value": { "properties": { "kind": { "const": "property" } }, "required": ["kind"] } } }
+      ]
+    },
     "OracleContributionRef": {
       "type": "object",
       "required": ["resultId", "contributionId"],
@@ -777,9 +789,106 @@
       },
       "additionalProperties": false
     },
+    "QualificationAdmissionRule": {
+      "enum": [
+        "numeric-domain",
+        "presence-null-invalid",
+        "containment-references",
+        "collections",
+        "calls-result",
+        "source-authority",
+        "evaluation-instants",
+        "reference-design-gate",
+        "temporal-boundary",
+        "runtime-dependency"
+      ]
+    },
+    "QualificationAdmissionResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["rule", "status", "evidenceRef"],
+          "properties": {
+            "rule": { "$ref": "#/$defs/QualificationAdmissionRule" },
+            "status": { "const": "accepted" },
+            "evidenceRef": { "$ref": "#/$defs/ObservationReference" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["rule", "status", "owner", "reason", "limitations"],
+          "properties": {
+            "rule": { "$ref": "#/$defs/QualificationAdmissionRule" },
+            "status": { "const": "gap" },
+            "owner": { "type": "string", "minLength": 1 },
+            "reason": { "type": "string", "minLength": 1 },
+            "limitations": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100000,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QualificationClaimAuthority": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "reason"],
+          "properties": {
+            "kind": { "const": "non-formal" },
+            "reason": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "sourceProfileRef", "admissionResults"],
+          "properties": {
+            "kind": { "const": "native-formal-clause" },
+            "sourceProfileRef": { "$ref": "#/$defs/SourceReference" },
+            "admissionResults": {
+              "type": "array",
+              "minItems": 10,
+              "maxItems": 10,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/QualificationAdmissionResult" },
+              "allOf": [
+                { "contains": { "properties": { "rule": { "const": "numeric-domain" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "presence-null-invalid" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "containment-references" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "collections" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "calls-result" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "source-authority" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "evaluation-instants" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "reference-design-gate" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "temporal-boundary" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 },
+                { "contains": { "properties": { "rule": { "const": "runtime-dependency" } }, "required": ["rule"] }, "minContains": 1, "maxContains": 1 }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "mappingProfileRef", "lossReportRef"],
+          "properties": {
+            "kind": { "const": "export-mapping" },
+            "mappingProfileRef": { "$ref": "#/$defs/SourceReference" },
+            "lossReportRef": { "$ref": "#/$defs/ObservationReference" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
     "QualificationGuarantee": {
       "type": "object",
-      "required": ["guaranteeId", "stage", "claim"],
+      "required": ["guaranteeId", "stage", "claim", "claimAuthority"],
       "properties": {
         "guaranteeId": { "type": "string", "minLength": 1 },
         "stage": {
@@ -793,7 +902,8 @@
             "production-integration"
           ]
         },
-        "claim": { "type": "string", "minLength": 1 }
+        "claim": { "type": "string", "minLength": 1 },
+        "claimAuthority": { "$ref": "#/$defs/QualificationClaimAuthority" }
       },
       "additionalProperties": false
     },
@@ -812,11 +922,12 @@
     },
     "QualificationEvidenceRequirement": {
       "type": "object",
-      "required": ["obligationId", "guaranteeId", "techniqueId", "stoppingRule", "required"],
+      "required": ["obligationId", "guaranteeId", "techniqueId", "budgetId", "stoppingRule", "required"],
       "properties": {
         "obligationId": { "type": "string", "minLength": 1 },
         "guaranteeId": { "type": "string", "minLength": 1 },
         "techniqueId": { "type": "string", "minLength": 1 },
+        "budgetId": { "type": "string", "minLength": 1 },
         "stoppingRule": { "type": "string", "minLength": 1 },
         "required": { "const": true }
       },
@@ -1360,6 +1471,242 @@
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/QualificationOracleGap" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "QualificationTechniqueSettings": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["family"],
+          "properties": { "family": { "const": "example" } },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["family", "generatorRef", "shrinkerRef", "seed", "maximumCases", "maximumShrinks"],
+          "properties": {
+            "family": { "const": "property" },
+            "generatorRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "shrinkerRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "seed": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+            "maximumCases": { "type": "integer", "minimum": 1, "maximum": 100000 },
+            "maximumShrinks": { "type": "integer", "minimum": 1, "maximum": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["family", "relationProcedureRef", "transformRef", "seed", "maximumCases", "maximumShrinks"],
+          "properties": {
+            "family": { "const": "metamorphic" },
+            "relationProcedureRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "transformRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "seed": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+            "maximumCases": { "type": "integer", "minimum": 1, "maximum": 100000 },
+            "maximumShrinks": { "type": "integer", "minimum": 1, "maximum": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["family", "oracleBindingIds", "comparisonProcedureRef", "seed", "maximumCases", "maximumShrinks"],
+          "properties": {
+            "family": { "const": "differential" },
+            "oracleBindingIds": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100000,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "comparisonProcedureRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "seed": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+            "maximumCases": { "type": "integer", "minimum": 1, "maximum": 100000 },
+            "maximumShrinks": { "type": "integer", "minimum": 1, "maximum": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["family", "targetRef", "seedCorpusEntryIds", "minimizerRef", "seed", "maximumExecutions"],
+          "properties": {
+            "family": { "const": "fuzz" },
+            "targetRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "seedCorpusEntryIds": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100000,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "minimizerRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+            "seed": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+            "maximumExecutions": { "type": "integer", "minimum": 1, "maximum": 100000 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["family", "mutants"],
+          "properties": {
+            "family": { "const": "mutation" },
+            "mutants": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 100000,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/QualificationTechniqueMutant" }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QualificationTechniqueMutant": {
+      "type": "object",
+      "required": ["mutantId", "guardId", "mutantRef", "assignedTestRef", "expectedFailure"],
+      "properties": {
+        "mutantId": { "type": "string", "minLength": 1 },
+        "guardId": { "type": "string", "minLength": 1 },
+        "mutantRef": { "$ref": "#/$defs/FaultModelReference" },
+        "assignedTestRef": { "$ref": "#/$defs/TraceReference" },
+        "expectedFailure": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "QualificationTechniqueConfiguration": {
+      "type": "object",
+      "required": [
+        "configurationId",
+        "obligationId",
+        "guaranteeId",
+        "techniqueId",
+        "propertyRef",
+        "inputProjection",
+        "budgetId",
+        "stoppingRule",
+        "harnessRef",
+        "requestTemplateRef",
+        "limitations",
+        "technique"
+      ],
+      "properties": {
+        "configurationId": { "type": "string", "minLength": 1 },
+        "obligationId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "techniqueId": { "type": "string", "minLength": 1 },
+        "propertyRef": { "$ref": "#/$defs/PropertyReference" },
+        "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
+        "budgetId": { "type": "string", "minLength": 1 },
+        "stoppingRule": { "type": "string", "minLength": 1 },
+        "harnessRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
+        "requestTemplateRef": { "$ref": "#/$defs/InvocationReference" },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "technique": { "$ref": "#/$defs/QualificationTechniqueSettings" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationTechniqueGap": {
+      "type": "object",
+      "required": ["gapId", "obligationId", "owner", "reason", "limitations", "admissionRules"],
+      "properties": {
+        "gapId": { "type": "string", "minLength": 1 },
+        "obligationId": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "admissionRules": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationAdmissionRule" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "QualificationTechniqueManifest": {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "schemaVersion",
+        "kind",
+        "manifestId",
+        "profileIdentity",
+        "corpusIdentity",
+        "oracleManifestIdentity",
+        "catalogIdentity",
+        "configurations",
+        "gaps"
+      ],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-techniques/v1" },
+        "kind": { "const": "QualificationTechniqueManifest" },
+        "manifestId": { "type": "string", "minLength": 1 },
+        "profileIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "corpusIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "oracleManifestIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "catalogIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "configurations": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationTechniqueConfiguration" }
+        },
+        "gaps": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/QualificationTechniqueGap" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "QualificationCaseRequest": {
+      "type": "object",
+      "required": [
+        "contractVersion",
+        "schemaVersion",
+        "kind",
+        "manifestIdentity",
+        "configurationId",
+        "configurationIdentity",
+        "caseOrdinal",
+        "priorObservationRefs",
+        "shrinkPath"
+      ],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-case-request/v1" },
+        "kind": { "const": "QualificationCaseRequest" },
+        "manifestIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "configurationId": { "type": "string", "minLength": 1 },
+        "configurationIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "caseOrdinal": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" },
+        "priorObservationRefs": {
+          "type": "array",
+          "maxItems": 100000,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/ObservationReference" }
+        },
+        "shrinkPath": {
+          "type": "array",
+          "maxItems": 100000,
+          "items": { "$ref": "#/$defs/GeneratedArtifactReference" }
         }
       },
       "additionalProperties": false

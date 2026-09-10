@@ -77,7 +77,8 @@ pass.
   `property-based-testing` to `property`, `metamorphic-testing` to `metamorphic`,
   `differential-testing` to `differential`, `fuzzing` to `fuzz`, and
   `mutation-testing` to `mutation`.
-- An `example` technique SHALL carry only its `family` tag.
+- An `example` technique SHALL carry only its `family` tag and SHALL derive its case
+  limit from the number of entries in the configuration's ordered input projection.
 - A `property` technique SHALL carry `generatorRef`, `shrinkerRef`, one unsigned
   decimal `seed`, positive `maximumCases`, and positive `maximumShrinks`.
 - A `metamorphic` technique SHALL carry `relationProcedureRef`, `transformRef`, one
@@ -153,6 +154,10 @@ pass.
 - Every next-case identity SHALL bind the exact configuration, seed, case ordinal,
   corpus inputs, and any prior shrink path. Reordering set-like inputs SHALL NOT change
   the identity; ordered input projections and shrink paths SHALL retain their order.
+- Each next-case or shrink request SHALL be a closed schema-derived
+  `QualificationCaseRequest` carrying the manifest identity, configuration identifier
+  and identity, canonical case ordinal, normalized prior-observation references, and
+  ordered generated-artifact shrink path under its own RFC 8785 identity.
 - A completed result SHALL bind the exact manifest, configuration, request, Engineering
   Assurance result, candidate, dependency closure, corpus inputs, property, harness,
   catalog method, oracle contributions, observations, stopping state, and artifacts.

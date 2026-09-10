@@ -51,6 +51,7 @@ typify = "0.7.0"
 
 [dev-dependencies]
 ix-trace-rs = { path = "vendor/ix-trace-rs", version = "=0.1.0" }
+proptest = "1.11.0"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

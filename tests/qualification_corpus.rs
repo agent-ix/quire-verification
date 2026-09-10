@@ -89,7 +89,11 @@ fn profile() -> Value {
         "semanticGuarantees": [{
             "guaranteeId": "authored-syntax",
             "stage": "syntax",
-            "claim": "Return an authored syntax outcome"
+            "claim": "Return an authored syntax outcome",
+            "claimAuthority": {
+                "kind": "non-formal",
+                "reason": "The fixture exercises syntax outcomes only"
+            }
         }],
         "environmentRef": reference("environment", "environment"),
         "resourceBudgets": [{
@@ -104,6 +108,7 @@ fn profile() -> Value {
             "obligationId": "syntax",
             "guaranteeId": "authored-syntax",
             "techniqueId": "native-parser",
+            "budgetId": "parse",
             "stoppingRule": "each retained input once",
             "required": true
         }],

@@ -100,12 +100,20 @@ fn profile_value() -> Value {
             {
                 "guaranteeId": "syntax-outcome",
                 "stage": "syntax",
-                "claim": "Return the authored syntax outcome"
+                "claim": "Return the authored syntax outcome",
+                "claimAuthority": {
+                    "kind": "non-formal",
+                    "reason": "The fixture exercises syntax outcomes only"
+                }
             },
             {
                 "guaranteeId": "diagnostic-span",
                 "stage": "syntax",
-                "claim": "Return an exact diagnostic span"
+                "claim": "Return an exact diagnostic span",
+                "claimAuthority": {
+                    "kind": "non-formal",
+                    "reason": "The fixture exercises diagnostic spans only"
+                }
             }
         ],
         "environmentRef": reference("environment", "environment"),
@@ -122,6 +130,7 @@ fn profile_value() -> Value {
                 "obligationId": "syntax",
                 "guaranteeId": "syntax-outcome",
                 "techniqueId": "oracle-comparison",
+                "budgetId": "parse",
                 "stoppingRule": "every retained input once",
                 "required": true
             },
@@ -129,6 +138,7 @@ fn profile_value() -> Value {
                 "obligationId": "span",
                 "guaranteeId": "diagnostic-span",
                 "techniqueId": "oracle-comparison",
+                "budgetId": "parse",
                 "stoppingRule": "every malformed input once",
                 "required": true
             }
