@@ -1,2 +1,4 @@
 node_modules/
 /.vp04-build/
+/.fuzz-target/
+/.mutants-target/

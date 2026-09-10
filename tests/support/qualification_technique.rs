@@ -376,21 +376,13 @@ pub fn native_gapped_fixture() -> TechniqueFixture {
         "runtime-dependency",
     ];
     let results = rules.map(|rule| {
-        if rule == "numeric-domain" {
-            json!({
-                "rule": rule,
-                "status": "gap",
-                "owner": "quire-spec-language",
-                "reason": "Native numeric admission has not been accepted",
-                "limitations": ["No accepted numeric-domain observation is retained"]
-            })
-        } else {
-            json!({
-                "rule": rule,
-                "status": "accepted",
-                "evidenceRef": reference("observation", &format!("admission:{rule}"))
-            })
-        }
+        json!({
+            "rule": rule,
+            "status": "gap",
+            "owner": "quire-spec-language",
+            "reason": format!("Native {rule} admission has not been accepted"),
+            "limitations": [format!("No accepted {rule} observation is retained")]
+        })
     });
     let stopping_rule = "execute exactly 32 generated cases or stop at the first counterexample";
     let profile = freeze_profile(
@@ -427,8 +419,8 @@ pub fn native_gapped_fixture() -> TechniqueFixture {
         "obligationId": "syntax-property",
         "owner": "quire-spec-language",
         "reason": "The formal property is blocked by native-profile admission",
-        "limitations": ["Numeric semantics remain unadmitted"],
-        "admissionRules": ["numeric-domain"]
+        "limitations": ["All carried admission rules lack affirmative evidence"],
+        "admissionRules": rules
     }]);
     TechniqueFixture {
         profile,

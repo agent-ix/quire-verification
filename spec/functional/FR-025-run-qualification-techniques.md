@@ -39,6 +39,8 @@ pass.
   evidence obligation.
 - Exact Rust harness, property, generator, relation, shrinker, oracle-binding, and
   Engineering Assurance request references selected before execution.
+- Exact accepted verification-catalog advice and method records used to select fuzz and
+  mutation producers, plus the consumer-owned Rust harness manifest when one exists.
 - Typed results and observation references produced through the exact accepted Rust
   Engineering Assurance producer-execution interface.
 
@@ -53,6 +55,9 @@ pass.
 - Explicit owned unavailable-technique, execution, unfinished-budget, counterexample,
   surviving-mutant, and replay findings; none is an evidence-sufficiency or qualification
   disposition.
+- One validated QUOIN fuzz-generation report that distinguishes emitted targets,
+  semantically unsuitable selections, ungrounded entry points, and an absent repository
+  harness without treating an emitted source file as executed evidence.
 
 ## Behavior
 
@@ -120,7 +125,7 @@ pass.
   exact accepted native Quire source-profile identity and admission evidence for numeric
   semantics, presence/null/invalid semantics, containment/references, collections,
   calls/results, source authority, evaluation instants, the recorded reference-design
-  gate, and the temporal boundary.
+  gate, the temporal boundary, and the runtime-dependency boundary.
 - The planner SHALL determine formal-clause and export-mapping scope only from the frozen
   guarantee's closed `claimAuthority` tag.
 - The planner SHALL retain every applicable formal-clause rule lacking accepted evidence
@@ -144,6 +149,36 @@ pass.
   blocker rather than authorizing a parallel generator or weaker hand-written property.
 - Task-029 fuzz-target generation SHALL use the installed QUOIN `spec-fuzz` workflow.
   An ungrounded fuzz obligation SHALL remain a validated finding and blocker.
+- The repository owner SHALL establish a consumer-owned Rust harness selected from the
+  accepted catalog before fuzz-target generation.
+- When an installed host executable has no repository harness, the planner SHALL retain an
+  absent-harness finding without authorizing a target file that cannot compile or run.
+- The `spec-fuzz` selection SHALL come from the exact retained advisor and catalog records.
+  A selected obligation that does not describe an input surface SHALL remain a method-fit
+  finding and SHALL NOT be converted into a token target.
+- Each emitted fuzz target SHALL call the grounded public Rust input surface directly,
+  carry both workflow-required trace carriers and a bare compiler-checked `ix-trace-rs`
+  marker, and perform no file, network, process, correctness-assertion, panic, or unchecked
+  result-unwrapping work of its own.
+- Emitting or compiling a fuzz target SHALL NOT count as fuzz evidence. A fuzz obligation
+  remains unfinished until the exact accepted producer-execution result records the
+  selected target, seed corpus, seed, execution count, stopping state, tool and harness
+  identities, candidate identity, budget, and retained observations.
+- A fuzz crash or hang SHALL retain the original input as a blocking candidate
+  counterexample until replay of the declared minimizer's exact output through the accepted
+  execution boundary reproduces the same declared violation.
+- When replay of the declared minimizer's output does not reproduce the violation, the
+  planner SHALL refuse that output without discarding the original counterexample.
+- Mutation execution SHALL use an accepted catalog-declared Rust mutation producer. The
+  repository SHALL NOT add a source rewriter, test runner, transcript parser, or mutation
+  evidence store.
+- Each seeded mutant observation SHALL bind the exact manifest mutant, source revision,
+  generated fault identity, assigned bare-traced test, producer and configuration
+  identities, execution result, and expected failure. `killed`, `survived`, `timed-out`,
+  `crashed`, and `unfinished-budget` SHALL remain distinct.
+- A mutant SHALL count as killed only when its assigned test fails for the declared reason.
+  Another test failing, setup failure, compilation failure outside the declared fault, or
+  an unclassified producer result SHALL NOT satisfy the mutant obligation.
 - First-party property, generator, transform, shrinker, comparator, mutator, assertion,
   and result-adapter logic SHALL be Rust and traced with bare `ix-trace-rs` attributes.
 - `quire-verification` SHALL produce pure deterministic case, shrink, and comparison
@@ -189,6 +224,7 @@ pass.
 | FR-025-CON-2 | The accepted versioned Rust Engineering Assurance producer-execution interface SHALL be the sole candidate, oracle, harness, and external-tool execution boundary and exclude forbidden foreign runtimes from the production or qualification dependency closure. | Security | Test (TC-042) |
 | FR-025-CON-3 | Quoin SHALL own evidence retention and authored sufficiency while technique-planner output excludes aggregate scores, qualification decisions, and human dispositions. | Ownership | Inspection (TC-042) |
 | FR-025-CON-4 | Case generation, shrinking, comparison, and result construction SHALL be deterministic for the same exact inputs. | Reproducibility | Test (TC-042) |
+| FR-025-CON-5 | Fuzz and mutation execution SHALL use accepted catalog-declared common Rust producers through the Engineering Assurance boundary; repository-local producer drivers, source rewriters, transcript parsers, and evidence stores are prohibited. | Ownership | Test (TC-042) |
 
 ## Acceptance Criteria
 
@@ -198,7 +234,8 @@ pass.
 | FR-025-AC-2 | Every example, property, metamorphic, and differential configuration produces the same case identity from the same seed, ordinal, projection, and ordered shrink path; changing any bound input changes identity or refuses reuse, and set-only permutations do not. | Test (TC-042) |
 | FR-025-AC-3 | Completed satisfaction, completed violation, unavailable, refused, failed, timed-out, malformed-response, containment-failure, unsupported method, and unfinished-budget states remain distinct `TechniqueResult` or finding outcomes. Independent arrival order cannot erase a result. | Test (TC-042) |
 | FR-025-AC-4 | A minimized counterexample retains the original case and shrink path and contributes only after exact candidate and applicable oracle replay reproduces the same violation; changed or non-reproducing replay is refused. | Test (TC-042) |
-| FR-025-AC-5 | Each Task-029 seeded mutant records one exact qualification-critical guard and assigned bare-traced Rust test; removing the guard makes that test fail for the intended reason. Surviving mutants, crashes, hangs, and unfinished fuzz budgets remain blocking results. | Test (TC-042) |
+| FR-025-AC-5 | Each Task-029 seeded mutant records one exact qualification-critical guard, generated fault identity, accepted producer configuration, and assigned bare-traced Rust test. The mutant is killed only when that test fails for the declared reason; survived, timed-out, crashed, unrelated-failure, and unfinished-budget results remain distinct blockers. | Test (TC-042) |
+| FR-025-AC-6 | The exact QUOIN-selected fuzz obligations produce either runnable grounded Rust targets or validated per-obligation findings. Target creation alone remains undischarged; an unfinished budget remains incomplete, and every crash or hang retains its original input and contributes a violation only after exact minimized replay reproduces it. | Test (TC-042) |
 
 ## Error Conditions
 

@@ -53,6 +53,11 @@ typify = "0.7.0"
 ix-trace-rs = { path = "vendor/ix-trace-rs", version = "=0.1.0" }
 proptest = "1.11.0"
 
+[workspace]
+members = ["fuzz"]
+default-members = ["."]
+resolver = "3"
+
 [workspace.lints.rust]
 unsafe_code = "forbid"
 missing_docs = "warn"

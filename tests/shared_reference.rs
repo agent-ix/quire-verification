@@ -9,7 +9,9 @@ use std::path::{Path, PathBuf};
 
 use ix_trace_rs::trace;
 use jsonschema::Draft;
-use quire_verification::contracts::{VerificationError, VerificationErrorCode, jcs_canonicalize};
+use quire_verification::contracts::{
+    MAX_JSON_BYTES, VerificationError, VerificationErrorCode, jcs_canonicalize,
+};
 use quire_verification::shared_reference::{
     ArtifactExpectation, LanguageExpectation, MigrationExpectation, ReferenceExpectation,
     ReferenceSupport, SemanticExpectation, SemanticProfileExpectation, SharedReferenceReader,
@@ -143,6 +145,12 @@ fn artifact_ref(
 #[trace("FR-016-AC-6")]
 #[test]
 fn tc_029_accepts_exact_v2_roles_and_refuses_each_selected_failure() {
+    let mut at_limit = vec![b' '; MAX_JSON_BYTES - 4];
+    at_limit.extend_from_slice(b"null");
+    assert_eq!(
+        parse_strict_bounded_json(&at_limit).expect("exact byte limit must be accepted"),
+        Value::Null
+    );
     accepts_exact_roles_and_semantic_reference();
     rejects_duplicate_keys_and_inexact_roles();
     rejects_artifact_identity_failures();

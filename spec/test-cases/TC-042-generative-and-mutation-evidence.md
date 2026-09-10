@@ -29,9 +29,12 @@ deterministic cases and shrinking decisions, and preserves every non-success sta
    artifact role. Cross every seed, case, shrink, execution, array, and document bound at
    its exact limit and one value beyond it.
 3. Run QUOIN `spec-correctness` against the property obligations and `spec-fuzz` against
-   the fuzz obligations. Retain each emitted Rust target or its validated ungrounded
-   finding. Attempt to replace an ungrounded finding with a hand-written weaker property
-   or private fuzz target.
+   the fuzz obligations using retained exact advisor and catalog records. Begin without a
+   repository fuzz harness, then establish the owner-selected catalog-declared Rust
+   harness and rerun. Retain each runnable grounded Rust target, method-fit finding,
+   ungrounded finding, or absent-harness finding. Attempt to replace a finding with a
+   hand-written weaker property, private target, or target file absent from the harness
+   manifest.
 4. Generate cases for example, property, metamorphic, and differential configurations.
    Repeat with the same seed and ordinal, permute every set-like input, change each bound
    dimension separately, and permute an ordered projection and shrink path. Exercise
@@ -56,10 +59,17 @@ deterministic cases and shrinking decisions, and preserves every non-success sta
    minimized cases against the exact candidate and applicable oracle. Change the
    candidate, oracle, request, observation, shrink order, and replay outcome one at a
    time.
-9. In Task-029, exhaust an unfinished fuzz budget, retain a crash and hang, retain a
-   surviving mutant, then remove each named qualification-critical guard and execute its
-   assigned bare-`ix-trace-rs` Rust test.
-10. Permute independent result arrival order and inspect the repository for a Task-028/029
+9. In Task-029, compile every generated target and confirm that source creation records no
+   completed run. Through the accepted Engineering Assurance boundary, exhaust an
+   unfinished fuzz budget, retain a crash and hang with their original inputs, minimize
+   each input, and replay it against the exact candidate and oracle revisions. Change one
+   candidate, seed-corpus, harness, tool, budget, stopping, or replay identity at a time.
+10. Run each seeded mutant through the accepted catalog-declared Rust mutation producer.
+    Retain killed, surviving, timed-out, crashed, unrelated-test-failure, and unfinished
+    results separately. For every killed mutant, confirm that the exact assigned
+    bare-`ix-trace-rs` Rust test fails for the declared reason; remove that test and change
+    the expected failure independently.
+11. Permute independent result arrival order and inspect the repository for a Task-028/029
    process runner, arbitrary stdout parser, evidence store, private technique catalog,
    aggregate score, qualification decision, human disposition, or forbidden foreign
    runtime dependency.
@@ -77,9 +87,12 @@ satisfaction and violation remain separate, every producer failure remains its e
 finding, and an unfinished stopping rule remains incomplete. A minimized counterexample
 retains its original and ordered shrink path and contributes only after exact replay.
 
-QUOIN-generated property/fuzz source or its validated grounding finding remains visible.
-Every seeded guard-removal mutant fails the assigned traced test for the intended reason;
-survivors, crashes, hangs, and unfinished fuzz budgets block their exact obligations.
+QUOIN-generated property/fuzz source or its validated harness, method-fit, or grounding
+finding remains visible. Target creation is undischarged. Every seeded guard-removal
+mutant fails the assigned traced test for the intended reason; survivors, unrelated test
+failures, producer crashes or timeouts, hangs, and unfinished budgets block their exact
+obligations. Original crash/hang inputs are retained, and minimized inputs contribute only
+after exact replay.
 Formal-clause evidence contributes only when every applicable native-profile admission
 record is present. A missing record remains an owned gap; first-party origin does not
 close it. The planner reads the closed claim-authority tag rather than inferring scope

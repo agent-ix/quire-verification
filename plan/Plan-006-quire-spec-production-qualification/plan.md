@@ -122,8 +122,8 @@ mutable worktree, evidence store, Cargo target directory, or generated artifact 
 | Task-025 | A | FR-022 | TC-039 | blocked |
 | Task-026 | A | FR-023 | TC-040 | blocked |
 | Task-027 | A | FR-024 | TC-041 | in_progress |
-| Task-028 | A | FR-025 enablement | references TC-042 | not_started |
-| Task-029 | A | FR-025 completion | TC-042 | not_started |
+| Task-028 | A | FR-025 enablement | references TC-042 | blocked |
+| Task-029 | A | FR-025 completion | TC-042 | blocked |
 | Task-030 | A | FR-026 | TC-043 | not_started |
 | Task-031 | A | NFR-007 evidence | references TC-044 | not_started |
 | Task-032 | A | NFR-008 | verifies TC-044 | not_started |

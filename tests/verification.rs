@@ -2497,7 +2497,7 @@ fn tc_021_baseline_checker_accepts_the_pinned_quoin_contract() {
 #[test]
 fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let mut pending = ["src", "tests", "test", "scripts"]
+    let mut pending = ["src", "tests", "test", "scripts", "fuzz"]
         .into_iter()
         .map(|path| root.join(path))
         .filter(|path| path.exists())
@@ -2521,7 +2521,10 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let manifest = include_str!("../Cargo.toml");
     assert!(manifest.contains("path = \"vendor/ix-trace-rs\""));
     assert!(manifest.contains("version = \"=0.1.0\""));
-    assert!(!include_str!("../Cargo.lock").contains("git+https://github.com/agent-ix/ix-trace-rs"));
+    let workspace_lock = include_str!("../Cargo.lock");
+    assert!(!workspace_lock.contains("git+https://github.com/agent-ix/ix-trace-rs"));
+    assert!(workspace_lock.contains("name = \"quire-verification-fuzz\""));
+    assert_eq!(workspace_lock.matches("name = \"jsonschema\"\n").count(), 1);
     let upstream = include_str!("../vendor/ix-trace-rs/UPSTREAM.md");
     assert!(upstream.contains("2ce4ebf47f726b9d76388220545cd0abda8a5cfb"));
     assert!(
@@ -2531,8 +2534,9 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let rust_requirement = include_str!("../spec/non-functional/NFR-004-rust-qualified-path.md");
     assert!(rust_requirement.contains("first-party traceability population"));
     assert!(rust_requirement.contains("Vendored dependency sources under `vendor/`"));
+    assert!(rust_requirement.contains("| Rust quality gates passing | 5 of 5 | 5 of 5 |"));
     let trace_test = include_str!("../spec/test-cases/TC-022-rust-qualified-path.md");
-    assert!(trace_test.contains("repository-owned Rust under `src/` and `tests/`"));
+    assert!(trace_test.contains("repository-owned Rust under `src/`, `tests/`, and `fuzz/`"));
     assert!(trace_test.contains("governed by that dependency's matrix"));
     assert_eq!(
         format!(
@@ -2543,13 +2547,18 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     );
     let workflow = include_str!("../.github/workflows/ci.yml");
     for gate in [
-        "cargo fmt --check",
+        "cargo fmt --all -- --check",
         "cargo clippy",
         "cargo test",
         "cargo deny check",
+        "cargo fuzz build",
     ] {
         assert!(workflow.contains(gate), "{gate}");
     }
+    assert!(manifest.contains("members = [\"fuzz\"]"));
+    let fuzz_manifest = include_str!("../fuzz/Cargo.toml");
+    assert!(fuzz_manifest.contains("[lints]\nworkspace = true"));
+    assert!(!root.join("fuzz/Cargo.lock").exists());
     let contributor_guidance = include_str!("../AGENTS.md");
     assert!(contributor_guidance.contains("cargo test --workspace --all-features --locked"));
     assert!(!contributor_guidance.contains("There is no compiler build/test command yet"));
@@ -2576,6 +2585,12 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
 #[trace("TC-023", "NFR-005-AC-1", "NFR-005-AC-2", "NFR-005-AC-3")]
 #[test]
 fn tc_023_enforces_json_resource_limits() {
+    let mut at_limit = vec![b' '; MAX_JSON_BYTES - 4];
+    at_limit.extend_from_slice(b"null");
+    assert_eq!(
+        parse_bounded_json(&at_limit).expect("exact byte limit must be accepted"),
+        Value::Null
+    );
     let oversized = vec![b' '; MAX_JSON_BYTES + 1];
     assert_eq!(
         parse_bounded_json(&oversized)

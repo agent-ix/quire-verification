@@ -610,6 +610,29 @@ fn tc_037_refuses_measurement_identity_detached_from_core_references() {
 
 #[trace("TC-037", "FR-021-AC-2")]
 #[test]
+fn tc_037_refuses_core_task_binding_drift() {
+    let procedure_bytes = b"VP04 external review procedure";
+    let procedure = artifact_reference(
+        "review-procedure",
+        "procedure:vp04",
+        "text/plain",
+        procedure_bytes,
+    );
+    let validated_procedure = validate_reference(&procedure, procedure_bytes);
+    let mut changed = core(&procedure);
+    changed["taskIds"][0] = json!("detached-task");
+    let error =
+        assemble_portfolio_report(&changed, &procedure, &validated_procedure, REVIEWER, &[])
+            .expect_err("detached task binding");
+    assert_eq!(error.code(), VerificationErrorCode::SchemaViolation);
+    assert_eq!(
+        error.to_string(),
+        "schema_violation: report core task IDs differ from its plan"
+    );
+}
+
+#[trace("TC-037", "FR-021-AC-2")]
+#[test]
 fn tc_037_refuses_reproduction_identity_drift_inside_the_core() {
     let procedure_bytes = b"VP04 external review procedure";
     let procedure = artifact_reference(
