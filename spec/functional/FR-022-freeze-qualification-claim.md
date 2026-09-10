@@ -55,8 +55,10 @@ evidence, and explicit exclusions.
 - A `non-formal` authority SHALL carry only its tag and a nonempty reason why the
   guarantee makes no formal-clause claim.
 - A `native-formal-clause` authority SHALL carry only its tag, the exact accepted native
-  Quire `sourceProfileRef`, and exactly one strict-reader-proved `observation` reference
-  for each required admission rule.
+  Quire `sourceProfileRef`, and exactly one closed admission result for each required
+  rule. An `accepted` result SHALL carry only the rule, status, and one strict-reader-
+  proved `observation` reference. A `gap` result SHALL carry only the rule, status,
+  owner, nonempty reason, and nonempty unique limitations.
 - The required native admission rules SHALL be `numeric-domain`,
   `presence-null-invalid`, `containment-references`, `collections`, `calls-result`,
   `source-authority`, `evaluation-instants`, `reference-design-gate`,
@@ -64,8 +66,10 @@ evidence, and explicit exclusions.
 - An `export-mapping` authority SHALL carry only its tag, an exact `mappingProfileRef`,
   and an exact `lossReportRef` whose artifact roles are respectively `source` and
   `observation`.
-- The planner SHALL refuse a missing, duplicate, unknown, or wrong-role authority,
-  admission, source-profile, mapping-profile, or loss-report value.
+- The planner SHALL refuse a missing, duplicate, unknown, open, or wrong-role authority,
+  admission result, source-profile, mapping-profile, or loss-report value. It SHALL
+  preserve every admission gap and SHALL NOT infer acceptance from the presence of an
+  evidence reference.
 - The planner SHALL NOT infer native-profile admission from the candidate's first-party
   origin, parser/compiler interface, or executable reference.
 - The planner SHALL NOT treat an export mapping as an editable clause authority or as
@@ -91,7 +95,7 @@ evidence, and explicit exclusions.
 | FR-022-AC-2 | Omitting or opening any command, caller, population, guarantee, claim authority, native admission, mapping loss report, environment, budget, evidence, evidence-to-budget assignment, or exclusion dimension refuses profile emission. | Test (TC-039) |
 | FR-022-AC-3 | An unavailable or unaccepted external interface becomes a named blocked prerequisite without a copied local replacement. | Test (TC-039) |
 | FR-022-AC-4 | Changing one identity-bearing dimension changes the profile identity while the previous profile remains immutable. | Test (TC-039) |
-| FR-022-AC-5 | A non-formal guarantee records its exclusion reason; a native formal-clause guarantee binds every exact admission rule; and an export-mapping guarantee binds its exact mapping profile and complete loss report without becoming source authority. | Test (TC-039) |
+| FR-022-AC-5 | A non-formal guarantee records its exclusion reason; a native formal-clause guarantee binds every exact admission rule as accepted evidence or an owned gap without inferring coverage; and an export-mapping guarantee binds its exact mapping profile and complete loss report without becoming source authority. | Test (TC-039) |
 
 ## Dependencies
 

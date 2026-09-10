@@ -91,8 +91,9 @@ pass.
 - A `mutation` technique SHALL carry nonempty unique closed mutant records. Each
   mutant SHALL bind `mutantId`, `guardId`, `mutantRef`, `assignedTestRef`, and
   `expectedFailure`; Task-029 owns this form's implementation and completion evidence.
-- A manifest gap SHALL carry `gapId`, `obligationId`, `owner`, nonempty `reason`, and
-  nonempty unique `limitations`.
+- A manifest gap SHALL carry `gapId`, `obligationId`, `owner`, nonempty `reason`,
+  nonempty unique `limitations`, and the exact set-like `admissionRules` list, empty when
+  the gap is unrelated to source-profile admission.
 - The caller SHALL supply every seed, case or shrink limit, executable reference, and
   procedure reference before the planner freezes the manifest.
 - The planner SHALL NOT invent a technique parameter, reference, budget assignment, or
@@ -100,6 +101,9 @@ pass.
 - Every decimal seed SHALL use the canonical unsigned 64-bit representation `0` or a
   nonzero digit followed by at most nineteen decimal digits, with values above
   `18446744073709551615` refused.
+- Every case ordinal SHALL use the same canonical unsigned 64-bit representation, begin
+  at zero, and remain strictly below the selected technique's declared case or execution
+  limit.
 - Every case, shrink, and execution count SHALL be a positive integer no greater than
   100,000.
 - Every manifest array SHALL remain within the NFR-005 100,000-item boundary.
@@ -117,8 +121,10 @@ pass.
   gate, and the temporal boundary.
 - The planner SHALL determine formal-clause and export-mapping scope only from the frozen
   guarantee's closed `claimAuthority` tag.
-- The planner SHALL retain one owner-attributed gap for every applicable formal-clause
-  admission rule lacking accepted evidence.
+- The planner SHALL retain every applicable formal-clause rule lacking accepted evidence
+  in the owning obligation gap's exact `admissionRules` set. It SHALL refuse a
+  configuration while that set is nonempty and SHALL refuse a gap that omits, adds, or
+  misstates any rule carried by the frozen profile.
 - The planner SHALL NOT treat a first-party parser, compiler, executable, or source
   repository as evidence that the native source profile passed an admission rule.
 - An OCL 2.4, SysML v2, or FRETish mapping profile SHALL remain an export-only target with

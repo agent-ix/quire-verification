@@ -34,15 +34,19 @@ deterministic cases and shrinking decisions, and preserves every non-success sta
    or private fuzz target.
 4. Generate cases for example, property, metamorphic, and differential configurations.
    Repeat with the same seed and ordinal, permute every set-like input, change each bound
-   dimension separately, and permute an ordered projection and shrink path.
+   dimension separately, and permute an ordered projection and shrink path. Exercise
+   zero as the first case ordinal, the last ordinal below each declared limit, the limit
+   itself, a leading-zero ordinal, and an unsigned 64-bit overflow.
 5. Submit exact candidate, oracle, harness, and comparison requests through the real
    accepted Rust Engineering Assurance producer-execution interface. Consume typed
    completed satisfaction and violation results, then force unavailable, refused,
    failed, timed-out, malformed-response, containment-failure, and unsupported-method
    states separately.
 6. For a formal-clause obligation, supply the exact accepted native Quire source-profile
-   identity and separate evidence for every carried-forward admission rule. Remove each
-   admission record in turn. Repeat using only a first-party parser identity, and repeat
+   identity and a separate accepted-or-gap result for every carried-forward admission
+   rule. Turn each result into an owned gap in turn and confirm the technique obligation
+   carries the same exact rule set. Remove each result in turn. Repeat using only a
+   first-party parser identity, and repeat
    with OCL 2.4, SysML v2, and FRETish export targets or their upstream foreign-runtime
    tools as claimed source authorities or differential oracles.
 7. For each export-only mapping profile, bind an exact loss report that classifies every
