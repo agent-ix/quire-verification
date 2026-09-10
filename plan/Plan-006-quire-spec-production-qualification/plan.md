@@ -65,6 +65,13 @@ the promoted differential method, native-profile admission, the selected product
 binary/caller, production-chain evidence, measurements, reproduction, sealing, and
 disposition remain open at their existing owners.
 
+Quire Specification PR 21 is integrated into draft composed-baseline revision
+`d7b4cdee12c259324061a2b15199d3d3c960eedf`. Its reviewed FR-062 projection keeps the
+canonical protocol result distinct from E02, but that draft is not a promoted native
+profile or executable admission artifact. Candidate protocol revision `1-draft.3` now
+selects B's corrected result rules; F-owned FR-115/TC-145 and the composed full review
+remain open before the shared baseline can be accepted.
+
 ### Shared dependencies
 
 The existing schema-derived Rust contracts, RFC 8785 JCS implementation, strict

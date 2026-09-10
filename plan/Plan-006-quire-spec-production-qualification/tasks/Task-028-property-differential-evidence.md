@@ -68,6 +68,6 @@ Assurance.
   planner therefore continues to refuse that family instead of minting a private method.
 - Native formal-clause evidence remains gapped rule by rule until the selected native
   Quire source profile publishes accepted admission observations. Composed-baseline PR 15
-  at `d104cf9b4dcf29515f9d4a830108dc86e9b11ea0` remains a draft, and temporal bridge
+  at `d7b4cdee12c259324061a2b15199d3d3c960eedf` remains a draft, and temporal bridge
   PR 65 does not itself establish profile admission. The portable contract preserves
   those gaps and does not infer coverage from first-party origin.
