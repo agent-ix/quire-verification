@@ -1,0 +1,39 @@
+[package]
+name = "quire-verification-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[workspace]
+members = ["."]
+
+[dependencies]
+libfuzzer-sys = "0.4"
+ix-trace-rs = { path = "../vendor/ix-trace-rs", version = "=0.1.0" }
+
+[dependencies.quire-verification]
+path = ".."
+
+[[bin]]
+name = "fuzz_fr_016_ac_3_strict_shared_reference"
+path = "fuzz_targets/fuzz_fr_016_ac_3_strict_shared_reference.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_nfr_005_ac_1_bounded_json"
+path = "fuzz_targets/fuzz_nfr_005_ac_1_bounded_json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_nfr_006_ac_5_native_response"
+path = "fuzz_targets/fuzz_nfr_006_ac_5_native_response.rs"
+test = false
+doc = false
+bench = false
