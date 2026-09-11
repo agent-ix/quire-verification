@@ -225,11 +225,6 @@ pub fn record_qualification_oracle_execution(
             )?;
             let response = serde_json::to_value(observation).map_err(encoding_refusal)?;
             validate_response(&context, &response, evidence.validated_references)?;
-            require_reference_bytes(
-                &response["observationRef"],
-                "observation",
-                evidence.validated_references,
-            )?;
             json!({"kind": "completed", "observationRef": response["observationRef"]})
         }
         state => noncompleted_state(state)?,
@@ -260,13 +255,6 @@ pub fn record_qualification_comparison_execution(
     )?;
     let response = serde_json::to_value(observation).map_err(encoding_refusal)?;
     validate_response(&context, &response, evidence.validated_references)?;
-    for field in ["candidateObservationRef", "oracleObservationRef"] {
-        require_reference_bytes(
-            &response[field],
-            "observation",
-            evidence.validated_references,
-        )?;
-    }
     let outcome = response["outcome"].clone();
     let value = json!({
         "contractVersion": wire::CONTRACT_VERSION,
