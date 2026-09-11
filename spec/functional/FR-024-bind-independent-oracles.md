@@ -110,6 +110,11 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - The planner SHALL consume only typed result values defined and validated by the
   accepted Rust Engineering Assurance library interface; it SHALL NOT parse a producer's
   stdout as an assurance result.
+- The caller-owned response adapter SHALL accept only a schema-derived
+  `QualificationOracleProducerResponse` or `QualificationComparisonProducerResponse`
+  whose manifest, binding, guarantee, corpus projection, relation, and observation
+  references match the selected binding; every foreign or missing field SHALL produce
+  the Engineering Assurance `malformed_response` state.
 - The Engineering Assurance interface revision selected by the frozen profile SHALL
   equal the exact revision compiled into the consumer; the interface, request, result,
   executable, and retained observation references SHALL all pass the strict reader
@@ -120,10 +125,20 @@ limitations, bounded invocation, and disagreement procedure before execution.
   malformed-response, containment-failure, and cancelled Engineering Assurance states,
   including their closed reason categories where present, as typed execution findings
   rather than fabricated observations.
+- A schema-derived `QualificationOracleExecutionRecord` SHALL bind `contractVersion`,
+  `schemaVersion`, `kind`, `manifestIdentity`, `bindingId`, `guaranteeId`, the exact
+  executed corpus projection, `engineeringAssuranceRevision`, `executionProtocol`,
+  `requestIdentity`, `resultIdentity`, `resultRef`, and one closed execution state.
+- A completed execution record SHALL carry exactly one strict-reader-proved
+  `observationRef`.
+- A non-completed execution record SHALL carry no observation reference and preserve
+  the exact Engineering Assurance state and refusal or failure reason.
 - A comparison record SHALL bind the manifest, binding, guarantee, corpus projection,
-  expected relation, candidate observation reference, oracle observation reference, and
-  outcome `agreed`, `disagreed`, or `unresolved`.
-- A `disagreed` comparison SHALL retain both exact observations and remain unresolved.
+  Engineering Assurance revision, comparison request and result identities, result
+  reference, expected relation, candidate observation reference, oracle observation
+  reference, and outcome `agreed`, `disagreed`, or `unresolved`.
+- A `disagreed` comparison SHALL retain both exact observations and carry resolution
+  `unresolved`.
 - A separate result from the exact declared disagreement procedure MAY attribute or
   bound the difference, but SHALL NOT issue the qualification disposition owned by
   FR-027.
