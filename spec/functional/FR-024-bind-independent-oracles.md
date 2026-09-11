@@ -112,9 +112,12 @@ limitations, bounded invocation, and disagreement procedure before execution.
   stdout as an assurance result.
 - The caller-owned response adapter SHALL accept only a schema-derived
   `QualificationOracleProducerResponse` or `QualificationComparisonProducerResponse`
-  whose manifest, binding, guarantee, corpus projection, relation, and observation
-  references match the selected binding; every foreign or missing field SHALL produce
-  the Engineering Assurance `malformed_response` state.
+  whose binding, guarantee, corpus projection, relation, and observation references
+  match the selected binding; every foreign or missing field SHALL produce the
+  Engineering Assurance `malformed_response` state.
+- A producer response SHALL NOT carry the frozen manifest identity because the manifest
+  already binds the canonical execution request; the consumer SHALL add the manifest
+  identity only after validating that request reference, avoiding a recursive identity.
 - The Engineering Assurance interface revision selected by the frozen profile SHALL
   equal the exact revision compiled into the consumer; the interface, request, result,
   executable, and retained observation references SHALL all pass the strict reader
