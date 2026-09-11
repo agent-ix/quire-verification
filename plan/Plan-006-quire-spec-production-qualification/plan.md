@@ -67,14 +67,14 @@ disposition remain open at their existing owners.
 
 Quire Specification's B-owned result/projection correction and F's observation
 contribution are integrated into composed-baseline PR 15 at
-`d7483f3d0abe7e71614f73ee18eb51a677ebe3d8`. Its reviewed FR-062 projection keeps the
+`d8d984b542fe30f65b6e07f4a07b2d1f81d3962b`. Its reviewed FR-062 projection keeps the
 canonical protocol result distinct from E02. A has replaced per-edit candidate/version
 churn with one current prototype draft and an exact coherent freeze at acceptance.
 FR-059/FR-061 now define complete-global-conformance closure as an explicit fifth axis,
-and F-owned FR-115/TC-145/IT-051 plus the mapping contract carry it with exact premises.
-F-owned FR-116/TC-146 still compress all five axes into generic
-`subject-progress/closure` mutations at the executable/export consumer. The working
-baseline remains unaccepted and supplies no accepted executable admission artifact.
+and F-owned FR-115/FR-116, TC-145/TC-146, IT-051 plus the mapping contract carry it
+through the executable/export consumer with exact premises and discriminating controls.
+This closes the B-facing composed content gap. The working baseline remains unaccepted
+and supplies no accepted executable admission artifact.
 
 ### Shared dependencies
 
