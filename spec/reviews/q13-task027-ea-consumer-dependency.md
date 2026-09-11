@@ -3,7 +3,7 @@ id: SR-227
 title: "Dependency review of the Task-027 Engineering Assurance consumer boundary"
 type: SpecReview
 analysis: dependency
-scope: "quire-verification@b68b2cbd4d97425693da551e7c3b1a1d0e97438a; FR-017, FR-022..FR-025, Task-025..Task-029"
+scope: "quire-verification@065f7ed853fa790aa5e89e1163ccb3100ce4790c; FR-017, FR-022..FR-025, Task-025..Task-029"
 review_set: all
 ---
 # Dependency review of the Task-027 Engineering Assurance consumer boundary

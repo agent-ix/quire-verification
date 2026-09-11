@@ -3,7 +3,7 @@ id: SR-231
 title: "EARS conformance review of the Task-027 Engineering Assurance consumer boundary"
 type: SpecReview
 analysis: ears-conformance
-scope: "quire-verification@b68b2cbd4d97425693da551e7c3b1a1d0e97438a; FR-024"
+scope: "quire-verification@065f7ed853fa790aa5e89e1163ccb3100ce4790c; FR-024"
 review_set: all
 ---
 # EARS conformance review of the Task-027 Engineering Assurance consumer boundary

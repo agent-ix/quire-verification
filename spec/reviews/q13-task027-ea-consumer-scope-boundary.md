@@ -3,7 +3,7 @@ id: SR-230
 title: "Scope and boundary review of the Task-027 Engineering Assurance consumer boundary"
 type: SpecReview
 analysis: scope-boundary
-scope: "quire-verification@b68b2cbd4d97425693da551e7c3b1a1d0e97438a; AD-002, FR-024, Task-027"
+scope: "quire-verification@065f7ed853fa790aa5e89e1163ccb3100ce4790c; AD-002, FR-024, Task-027"
 review_set: all
 ---
 # Scope and boundary review of the Task-027 Engineering Assurance consumer boundary
