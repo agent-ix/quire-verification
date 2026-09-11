@@ -41,7 +41,8 @@ agreement, disagreement, execution failure, and reuse drift as distinct outcomes
    failed, timed-out, malformed-response, containment-failure, cancelled, and completed
    states. Assert that every non-completed state retains its exact closed category and
    supplies no observation. Supply a disagreement procedure record for a different
-   procedure and then for the exact declared procedure.
+   procedure and then for the exact declared procedure; require its retained result
+   bytes, attribution or bound, and absence of any qualification disposition.
 
 ## Expected Results
 

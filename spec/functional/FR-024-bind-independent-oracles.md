@@ -145,6 +145,11 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - A separate result from the exact declared disagreement procedure MAY attribute or
   bound the difference, but SHALL NOT issue the qualification disposition owned by
   FR-027.
+- When supplied, a schema-derived `QualificationOracleDisagreementRecord` SHALL bind
+  the manifest, binding, guarantee, exact comparison identity, declared disagreement
+  procedure reference, strict-reader-proved procedure-result reference, and nonempty
+  attribution or bound. A foreign procedure reference or a disposition field SHALL be
+  refused.
 - Agreement SHALL support only the exact relation named by the binding.
 - Agreement SHALL NOT imply broader semantic correctness, oracle independence, evidence
   sufficiency, or qualification acceptance.
