@@ -65,15 +65,16 @@ the promoted differential method, native-profile admission, the selected product
 binary/caller, production-chain evidence, measurements, reproduction, sealing, and
 disposition remain open at their existing owners.
 
-Quire Specification PR 21 and F's observation contribution are integrated into
-composed-baseline PR 15 at `39727832958803814d40843ab01ca69e0f3d7d09`. Its reviewed
-FR-062 projection keeps the canonical protocol result distinct from E02. A has replaced
-per-edit candidate/version churn with one current prototype draft and an exact coherent
-freeze at acceptance. The correction set is ready for composed review but remains
-unaccepted. F-owned FR-116/TC-146 still compress decision-scope progress/closure,
-surrounding-execution progress/closure, and complete-global-conformance closure into
-generic `subject-progress/closure` mutations. The working baseline therefore supplies
-no accepted executable admission artifact.
+Quire Specification's B-owned result/projection correction and F's observation
+contribution are integrated into composed-baseline PR 15 at
+`d7483f3d0abe7e71614f73ee18eb51a677ebe3d8`. Its reviewed FR-062 projection keeps the
+canonical protocol result distinct from E02. A has replaced per-edit candidate/version
+churn with one current prototype draft and an exact coherent freeze at acceptance.
+FR-059/FR-061 now define complete-global-conformance closure as an explicit fifth axis,
+and F-owned FR-115/TC-145/IT-051 plus the mapping contract carry it with exact premises.
+F-owned FR-116/TC-146 still compress all five axes into generic
+`subject-progress/closure` mutations at the executable/export consumer. The working
+baseline remains unaccepted and supplies no accepted executable admission artifact.
 
 ### Shared dependencies
 
