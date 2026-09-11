@@ -48,7 +48,7 @@ path = "src/lib.rs"
 
 [dependencies]
 chrono = { version = "0.4.42", default-features = false, features = ["serde"] }
-engineering-assurance = { version = "=0.1.0", git = "https://github.com/agent-ix/engineering-assurance", rev = "f640f4c1af95e8657bef04207758091fc938658a", default-features = false, features = ["producer-execution"] }
+engineering-assurance = { version = "=0.1.0", git = "https://github.com/agent-ix/engineering-assurance", rev = "1d9686a4790a25dc8f1fc3d95fa90ead1a138b3b", default-features = false, features = ["producer-execution"] }
 jsonschema = { version = "0.55.0", default-features = false }
 regress = "=0.11.1"
 rustix = { version = "1.1.2", features = ["fs", "process"] }

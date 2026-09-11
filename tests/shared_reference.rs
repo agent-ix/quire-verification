@@ -964,7 +964,12 @@ fn detects_snapshot_drift_and_producer_coupling() {
     assert_eq!(build.matches("TypeSpace::new").count(), 1);
     let cargo = include_str!("../Cargo.toml");
     assert!(!cargo.contains("quire-specification"));
-    assert!(!cargo.lines().any(|line| line.contains("git =")));
+    let git_sources = cargo
+        .lines()
+        .filter(|line| line.contains("git ="))
+        .collect::<Vec<_>>();
+    assert_eq!(git_sources.len(), 1);
+    assert!(git_sources[0].contains("https://github.com/agent-ix/engineering-assurance"));
     assert!(snapshot_is_data_only(
         &root().join("fixtures/shared-reference-2-draft")
     ));
