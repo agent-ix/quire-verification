@@ -308,6 +308,10 @@ fn binding(id: &str, suffix: &str, mode: &str, entries: &Value) -> Value {
             "review-procedure",
             &format!("comparison:{suffix}")
         ),
+        "comparisonExecutableRef": reference(
+            "executable-projection",
+            &format!("comparison-executable:{suffix}")
+        ),
         "inputProjection": {"mode": mode, "entryIds": entries},
         "expectedRelation": {
             "relationId": "same-syntax-outcome",
@@ -534,6 +538,7 @@ fn tc_041_refuses_missing_fields() {
         "/bindings/0/oracleRef",
         "/bindings/0/executableRef",
         "/bindings/0/comparisonProcedureRef",
+        "/bindings/0/comparisonExecutableRef",
         "/bindings/0/inputProjection",
         "/bindings/0/inputProjection/mode",
         "/bindings/0/inputProjection/entryIds",
@@ -704,7 +709,12 @@ fn tc_041_accepts_each_dependence_form() {
 fn tc_041_refuses_false_independence() {
     let (profile, corpus, manifest) = fixture();
 
-    for field in ["oracleRef", "executableRef", "comparisonProcedureRef"] {
+    for field in [
+        "oracleRef",
+        "executableRef",
+        "comparisonProcedureRef",
+        "comparisonExecutableRef",
+    ] {
         let mut shared_as_independent = manifest.clone();
         shared_as_independent["bindings"][1][field] =
             shared_as_independent["bindings"][0][field].clone();
@@ -894,6 +904,10 @@ fn tc_041_changes_identity_for_each_portable_manifest_dimension() {
         (
             "/bindings/0/comparisonProcedureRef",
             reference("review-procedure", "comparison:changed"),
+        ),
+        (
+            "/bindings/0/comparisonExecutableRef",
+            reference("executable-projection", "comparison-executable:changed"),
         ),
         (
             "/bindings/0/disagreementProcedureRef",
