@@ -62,6 +62,7 @@ tempfile = "3.23.0"
 [build-dependencies]
 schemars = "0.8.22"
 serde_json = "1.0.145"
+toml = { version = "=0.9.12", default-features = false, features = ["parse", "serde", "std"] }
 typify = "0.7.0"
 
 [dev-dependencies]

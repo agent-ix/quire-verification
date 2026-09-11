@@ -62,15 +62,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn engineering_assurance_revision() -> Result<String, Box<dyn Error>> {
     let manifest = fs::read_to_string("Cargo.toml")?;
-    let dependency = manifest
-        .lines()
-        .find(|line| line.trim_start().starts_with("engineering-assurance ="))
-        .ok_or("Engineering Assurance dependency is missing")?;
-    let revision = dependency
-        .split("rev = \"")
-        .nth(1)
-        .and_then(|tail| tail.split('"').next())
-        .ok_or("Engineering Assurance dependency revision is missing")?;
+    let manifest = manifest.parse::<toml::Table>()?;
+    let revision = manifest
+        .get("dependencies")
+        .and_then(toml::Value::as_table)
+        .and_then(|dependencies| dependencies.get("engineering-assurance"))
+        .and_then(toml::Value::as_table)
+        .and_then(|dependency| dependency.get("rev"))
+        .and_then(toml::Value::as_str)
+        .ok_or("Engineering Assurance dependency must declare a revision")?;
     if revision.len() != 40
         || !revision
             .bytes()

@@ -686,7 +686,7 @@ fn oracle_execution_state(mode: ProducerMode) -> Value {
 }
 
 #[test]
-#[trace("TC-041", "TC-126", "FR-024-AC-3", "FR-024-CON-1")]
+#[trace("TC-041", "FR-024-AC-3")]
 fn tc_041_tc_126_preserve_every_engineering_assurance_execution_state() {
     let cases = [
         (ProducerMode::Unavailable, json!({"kind": "unavailable"})),
@@ -765,7 +765,7 @@ fn comparison_record(outcome: &str) -> Value {
 }
 
 #[test]
-#[trace("TC-041", "TC-126", "FR-024-AC-3", "FR-024-CON-1")]
+#[trace("TC-041", "FR-024-AC-3")]
 fn tc_041_tc_126_consume_agreement_and_retain_unresolved_disagreement() {
     let agreed = comparison_record("agreed");
     assert_eq!(agreed["outcome"], "agreed");
@@ -829,7 +829,7 @@ fn record_disagreement(
 }
 
 #[test]
-#[trace("TC-041", "FR-024-AC-3", "FR-024-CON-2")]
+#[trace("TC-041", "FR-024-AC-3")]
 fn tc_041_binds_only_the_exact_disagreement_procedure_without_a_disposition() {
     let scenario = Scenario::new(
         Operation::Comparison,
@@ -874,7 +874,7 @@ fn tc_041_binds_only_the_exact_disagreement_procedure_without_a_disposition() {
 }
 
 #[test]
-#[trace("TC-041", "TC-126", "FR-024-AC-3", "FR-024-AC-4")]
+#[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_foreign_engineering_assurance_revision() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
     let foreign_interface = Scenario::new(
@@ -905,7 +905,7 @@ fn tc_041_tc_126_refuse_foreign_engineering_assurance_revision() {
 }
 
 #[test]
-#[trace("TC-041", "TC-126", "FR-024-AC-3", "FR-024-AC-4")]
+#[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_request_identity_drift() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
     let exact = Scenario::new(
@@ -941,7 +941,7 @@ fn tc_041_tc_126_refuse_request_identity_drift() {
 }
 
 #[test]
-#[trace("TC-041", "TC-126", "FR-024-AC-3", "FR-024-AC-4")]
+#[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_result_and_retained_observation_drift() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
     let exact = Scenario::new(
