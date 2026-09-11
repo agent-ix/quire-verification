@@ -28,15 +28,20 @@ agreement, disagreement, execution failure, and reuse drift as distinct outcomes
    candidate executable, oracle, comparison procedure, or candidate-origin expected
    value while declaring independence; remove each shared field; inject a foreign tagged
    field; and build absent, self, and cyclic derivations.
-4. Submit the exact oracle and comparison invocation references through the real Rust
-   Engineering Assurance producer-execution interface, bind its result to the retained
-   corpus projection, and consume one agreeing and one disagreeing observation. Change
-   each binding and reuse dimension one at a time, including Engineering Assurance
-   interface/request/result identity, executable digest, projection, expected relation,
-   limitation, observations, and manifest identity.
-5. Make the Engineering Assurance test producer return unavailable, refused, failed,
-   timed-out, malformed-response, and containment-failure states. Supply a disagreement
-   procedure record for a different procedure and then for the exact declared procedure.
+4. Compile against the exact Engineering Assurance producer-execution revision selected
+   by the frozen profile. Through that Rust interface, submit the exact oracle and
+   comparison invocation references, bind each canonical result and retained output to
+   the retained corpus projection, and consume one agreeing and one disagreeing
+   observation. This real downstream execution also supplies Engineering Assurance
+   TC-126 consumer evidence. Change each binding and reuse dimension one at a time,
+   including Engineering Assurance interface/request/result identity, oracle and
+   comparison executable digest, projection, expected relation, limitation,
+   observations, and manifest identity.
+5. Make the Rust Engineering Assurance test producer return unavailable, refused,
+   failed, timed-out, malformed-response, containment-failure, cancelled, and completed
+   states. Assert that every non-completed state retains its exact closed category and
+   supplies no observation. Supply a disagreement procedure record for a different
+   procedure and then for the exact declared procedure.
 
 ## Expected Results
 
@@ -46,8 +51,10 @@ guarantee, unretained input, empty limitation, changed identity, or invalid depe
 refuses with `invalid_qualification_oracle_manifest`.
 
 Only typed results from the exact accepted Rust Engineering Assurance library interface
-and strict-reader-bound request contribute. Producer failures retain their typed state
-and create no observation. Agreement supports only the declared relation. Disagreement
+whose compiled revision matches the frozen profile, canonical request and result
+references, strict-reader-bound executable, and retained projection contribute.
+Non-completed producer states retain their typed state and create no observation.
+Agreement supports only the declared relation. Disagreement
 retains both exact observations and stays unresolved; its exact disagreement procedure
 may attribute or bound the difference without issuing a qualification disposition. A
 no-oracle guarantee remains an owned gap, and
