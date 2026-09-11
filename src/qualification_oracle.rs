@@ -277,6 +277,7 @@ fn validate_binding_references(
         ("oracleRef", "oracle"),
         ("executableRef", "executable-projection"),
         ("comparisonProcedureRef", "review-procedure"),
+        ("comparisonExecutableRef", "executable-projection"),
         ("disagreementProcedureRef", "review-procedure"),
         ("executionRequestRef", "invocation"),
         ("comparisonRequestRef", "invocation"),
@@ -350,12 +351,14 @@ struct BindingIdentities {
     oracle: Vec<u8>,
     executable: Vec<u8>,
     comparison_procedure: Vec<u8>,
+    comparison_executable: Vec<u8>,
 }
 
 struct BindingIdentityCounts<'a> {
     oracle: BTreeMap<&'a [u8], usize>,
     executable: BTreeMap<&'a [u8], usize>,
     comparison_procedure: BTreeMap<&'a [u8], usize>,
+    comparison_executable: BTreeMap<&'a [u8], usize>,
 }
 
 impl<'a> BindingIdentityCounts<'a> {
@@ -364,6 +367,7 @@ impl<'a> BindingIdentityCounts<'a> {
             oracle: BTreeMap::new(),
             executable: BTreeMap::new(),
             comparison_procedure: BTreeMap::new(),
+            comparison_executable: BTreeMap::new(),
         };
         for identity in identities {
             increment(&mut counts.oracle, &identity.oracle);
@@ -371,6 +375,10 @@ impl<'a> BindingIdentityCounts<'a> {
             increment(
                 &mut counts.comparison_procedure,
                 &identity.comparison_procedure,
+            );
+            increment(
+                &mut counts.comparison_executable,
+                &identity.comparison_executable,
             );
         }
         counts
@@ -380,6 +388,7 @@ impl<'a> BindingIdentityCounts<'a> {
         repeated(&self.oracle, &identity.oracle)
             || repeated(&self.executable, &identity.executable)
             || repeated(&self.comparison_procedure, &identity.comparison_procedure)
+            || repeated(&self.comparison_executable, &identity.comparison_executable)
     }
 }
 
@@ -396,6 +405,7 @@ fn binding_identities(binding: &Value) -> Result<BindingIdentities, Verification
         oracle: jcs_canonicalize(&binding["oracleRef"])?,
         executable: jcs_canonicalize(&binding["executableRef"])?,
         comparison_procedure: jcs_canonicalize(&binding["comparisonProcedureRef"])?,
+        comparison_executable: jcs_canonicalize(&binding["comparisonExecutableRef"])?,
     })
 }
 

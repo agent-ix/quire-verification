@@ -31,9 +31,9 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - One frozen `QualificationProfile` and its identity.
 - One frozen `QualificationCorpusManifest`, its identity, and its retained entry bytes.
 - A candidate `QualificationOracleManifest` containing closed binding and gap records.
-- Opaque strict-reader outputs for every oracle definition, executable projection,
-  Engineering Assurance execution request, comparison request, disagreement procedure,
-  run, and retained observation reference.
+- Opaque strict-reader outputs for every oracle definition, oracle executable projection,
+  comparison executable projection, Engineering Assurance execution request, comparison
+  request, disagreement procedure, run, and retained observation reference.
 - An accepted Rust Engineering Assurance interface in the frozen profile and structured
   results produced by that exact interface revision.
 
@@ -54,10 +54,10 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - The planner SHALL require every frozen guarantee identifier to occur in at least one
   binding or exactly one gap, never both.
 - Each binding SHALL carry `bindingId`, `guaranteeId`, `oracleRef`, `executableRef`,
-  `comparisonProcedureRef`, a closed `inputProjection`, a closed `expectedRelation`, a
-  closed `dependence`, nonempty unique `limitations`, `disagreementProcedureRef`, and
-  exact `executionRequestRef` and `comparisonRequestRef` invocation references produced
-  under the accepted Engineering Assurance protocol.
+  `comparisonProcedureRef`, `comparisonExecutableRef`, a closed `inputProjection`, a
+  closed `expectedRelation`, a closed `dependence`, nonempty unique `limitations`,
+  `disagreementProcedureRef`, and exact `executionRequestRef` and `comparisonRequestRef`
+  invocation references produced under the accepted Engineering Assurance protocol.
 - `inputProjection` SHALL carry `mode` `each-entry` or `ordered-batch` and a nonempty
   unique ordered `entryIds` array.
 - `expectedRelation` SHALL carry nonempty `relationId`, `description`,
@@ -76,6 +76,11 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - The planner SHALL refuse a guarantee that has both a gap and an executable binding.
 - The planner SHALL require every projected `entryId` to name a retained corpus entry.
 - The planner SHALL bind the exact ordered entry identifiers into the projection.
+- An `ordered-batch` execution request SHALL bind one input role `entry:<entryId>` for
+  every projected entry in declared order. An `each-entry` request SHALL bind exactly
+  one such role naming a member of the declared projection.
+- The planner SHALL require every bound input digest to identify the
+  strict-reader-retained bytes for that corpus entry.
 - The planner SHALL refuse a rights-limited or empty corpus gap as an oracle input.
 - The planner SHALL validate every artifact reference through the strict shared-reference
   reader with its declared role.
@@ -96,26 +101,55 @@ limitations, bounded invocation, and disagreement procedure before execution.
   produced from the candidate or sharing an exact reference SHALL NOT be classified as
   independent. An `independent` declaration without positive exact evidence SHALL be
   refused; q-v SHALL NOT infer undisclosed causal independence from unequal identifiers.
-- `quire-verification` SHALL NOT execute the oracle, spawn a process, materialize an
-  evidence store, or interpret arbitrary process output.
-- The caller SHALL submit the exact invocation through the accepted Rust Engineering
-  Assurance producer-execution interface, which owns bounded host execution and evidence
-  production.
+- `quire-verification` SHALL NOT implement process supervision, spawn a process outside
+  the Engineering Assurance interface, materialize an evidence store, or interpret
+  arbitrary process output.
+- The `quire-verification` consumer SHALL submit the exact invocation through the
+  accepted Rust Engineering Assurance producer-execution interface, which owns bounded
+  host execution and evidence production.
 - The planner SHALL consume only typed result values defined and validated by the
   accepted Rust Engineering Assurance library interface; it SHALL NOT parse a producer's
   stdout as an assurance result.
+- The caller-owned response adapter SHALL accept only a schema-derived
+  `QualificationOracleProducerResponse` or `QualificationComparisonProducerResponse`
+  whose binding, guarantee, corpus projection, relation, and observation references
+  match the selected binding; every foreign or missing field SHALL produce the
+  Engineering Assurance `malformed_response` state.
+- A producer response SHALL NOT carry the frozen manifest identity because the manifest
+  already binds the canonical execution request; the consumer SHALL add the manifest
+  identity only after validating that request reference, avoiding a recursive identity.
+- The Engineering Assurance interface revision selected by the frozen profile SHALL
+  equal the exact revision compiled into the consumer; the interface, request, result,
+  executable, and retained observation references SHALL all pass the strict reader
+  before a completed result contributes.
 - The accepted Engineering Assurance result SHALL prove direct bounded execution with no
   shell, inherited environment, unbounded stream/deadline, or lost containment failure.
-- The planner SHALL preserve unavailable, refused, failed, timed-out, and
-  malformed-response Engineering Assurance states as typed execution findings rather than
-  fabricated observations.
+- The planner SHALL preserve unavailable, refused, failed, timed-out,
+  malformed-response, containment-failure, and cancelled Engineering Assurance states,
+  including their closed reason categories where present, as typed execution findings
+  rather than fabricated observations.
+- A schema-derived `QualificationOracleExecutionRecord` SHALL bind `contractVersion`,
+  `schemaVersion`, `kind`, `manifestIdentity`, `bindingId`, `guaranteeId`, the exact
+  executed corpus projection, `engineeringAssuranceRevision`, `executionProtocol`,
+  `requestIdentity`, `resultIdentity`, `resultRef`, and one closed execution state.
+- A completed execution record SHALL carry exactly one strict-reader-proved
+  `observationRef`.
+- A non-completed execution record SHALL carry no observation reference and preserve
+  the exact Engineering Assurance state and refusal or failure reason.
 - A comparison record SHALL bind the manifest, binding, guarantee, corpus projection,
-  expected relation, candidate observation reference, oracle observation reference, and
-  outcome `agreed`, `disagreed`, or `unresolved`.
-- A `disagreed` comparison SHALL retain both exact observations and remain unresolved.
+  Engineering Assurance revision, comparison request and result identities, result
+  reference, expected relation, candidate observation reference, oracle observation
+  reference, and outcome `agreed`, `disagreed`, or `unresolved`.
+- A `disagreed` comparison SHALL retain both exact observations and carry resolution
+  `unresolved`.
 - A separate result from the exact declared disagreement procedure MAY attribute or
   bound the difference, but SHALL NOT issue the qualification disposition owned by
   FR-027.
+- When supplied, a schema-derived `QualificationOracleDisagreementRecord` SHALL bind
+  the manifest, binding, guarantee, exact comparison identity, declared disagreement
+  procedure reference, strict-reader-proved procedure-result reference, and nonempty
+  attribution or bound. A foreign procedure reference or a disposition field SHALL be
+  refused.
 - Agreement SHALL support only the exact relation named by the binding.
 - Agreement SHALL NOT imply broader semantic correctness, oracle independence, evidence
   sufficiency, or qualification acceptance.
@@ -136,7 +170,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
 |----|----------|--------------|
 | FR-024-AC-1 | The frozen manifest binds the exact profile and corpus identities and covers every frozen guarantee with one or more closed oracle bindings or exactly one owned no-oracle gap with nonempty limitations; missing, duplicate, unknown, simultaneously bound-and-gapped, or unowned guarantees refuse the manifest. | Test (TC-041) |
 | FR-024-AC-2 | Independent, shared, derived, and unknown bindings retain exactly their tagged dependence data; a self-produced or unknown-origin expected value, intersecting ancestry, shared exact reference, absent shared group/basis, missing independence evidence, absent/self/cyclic derived source, foreign tagged field, or caller-only independence assertion cannot produce an independent contribution. | Test (TC-041) |
-| FR-024-AC-3 | An execution or comparison result contributes only after the accepted Engineering Assurance interface revision, request identity, strict-reader-proved executable, and retained corpus projection match. Agreement supports only the declared relation; an Engineering Assurance failure yields a typed execution finding, and disagreement retains both exact observations with an unresolved outcome while only the exact disagreement procedure may add attribution or bounds. | Test (TC-041) |
+| FR-024-AC-3 | An execution or comparison result contributes only after the compiled and profile-selected Engineering Assurance interface revisions, request identity, result identity, strict-reader-proved executable, and retained corpus projection match. Every non-completed Engineering Assurance state yields a typed execution finding. Agreement supports only the declared relation, and disagreement retains both exact observations with an unresolved outcome while only the exact disagreement procedure may add attribution or bounds. | Test (TC-041) |
 | FR-024-AC-4 | Changing any profile, corpus, guarantee, oracle, executable, Engineering Assurance interface/request/result, comparison procedure, disagreement procedure, projection, input entry, expected relation, dependence, limitation, observation, or prior manifest identity refuses reuse; permuting set-like inputs leaves the JCS manifest or comparison identity unchanged. | Test (TC-041) |
 
 ## Error Conditions
@@ -145,7 +179,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
 |------|-----------|--------|
 | `invalid_qualification_oracle_manifest` | The manifest is structurally invalid, incompletely covers guarantees, conflicts with the frozen profile/corpus, projects an unretained entry, or carries inconsistent dependence lineage. | Refuse freezing and return no partial manifest. |
 | `invalid_qualification_oracle_binding` | A strict reference, Engineering Assurance interface/request/result, executable digest, projection, expected relation, limitation, observation, or reuse identity differs from the frozen binding. | Refuse that result or comparison and return no fabricated observation. |
-| Engineering Assurance execution state | The accepted Rust producer reports unavailable, refused, failed, timed out, malformed response, or containment failure. | Preserve that exact typed state as an execution finding; do not convert it to agreement or disagreement. |
+| Engineering Assurance execution state | The accepted Rust producer reports unavailable, refused, failed, timed out, malformed response, containment failure, or cancellation. | Preserve that exact typed state as an execution finding; do not convert it to agreement or disagreement. |
 
 ## Dependencies
 
@@ -153,5 +187,5 @@ Oracle obligations consume [FR-022](./FR-022-freeze-qualification-claim.md),
 [FR-023](./FR-023-retain-qualification-corpus.md), and the existing dependence
 model in [FR-017](./FR-017-retain-oracle-dependence.md). Host execution and evidence
 production depend on the accepted versioned Rust interface owned by Engineering
-Assurance issue `agent-ix/engineering-assurance#11`; absence remains an explicit
+Assurance issue `agent-ix/engineering-assurance#34`; absence remains an explicit
 producer-owned blocker and does not authorize a local implementation.

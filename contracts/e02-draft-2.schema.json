@@ -1397,6 +1397,7 @@
         "oracleRef",
         "executableRef",
         "comparisonProcedureRef",
+        "comparisonExecutableRef",
         "inputProjection",
         "expectedRelation",
         "dependence",
@@ -1411,6 +1412,7 @@
         "oracleRef": { "$ref": "#/$defs/OracleReference" },
         "executableRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
         "comparisonProcedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+        "comparisonExecutableRef": { "$ref": "#/$defs/ExecutableProjectionReference" },
         "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
         "expectedRelation": { "$ref": "#/$defs/QualificationOracleExpectedRelation" },
         "dependence": { "$ref": "#/$defs/QualificationOracleDependence" },
@@ -1473,6 +1475,188 @@
           "items": { "$ref": "#/$defs/QualificationOracleGap" }
         }
       },
+      "additionalProperties": false
+    },
+    "EngineeringAssuranceJcsIdentity": {
+      "type": "object",
+      "required": ["scheme", "digest"],
+      "properties": {
+        "scheme": { "const": "sha256-jcs" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationOracleProducerResponse": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "bindingId", "guaranteeId", "inputProjection", "relationId", "observationRef"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-oracle-response/v1" },
+        "kind": { "const": "QualificationOracleProducerResponse" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
+        "relationId": { "type": "string", "minLength": 1 },
+        "observationRef": { "$ref": "#/$defs/ObservationReference" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationComparisonProducerResponse": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "bindingId", "guaranteeId", "inputProjection", "relationId", "candidateObservationRef", "oracleObservationRef", "outcome"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-comparison-response/v1" },
+        "kind": { "const": "QualificationComparisonProducerResponse" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
+        "relationId": { "type": "string", "minLength": 1 },
+        "candidateObservationRef": { "$ref": "#/$defs/ObservationReference" },
+        "oracleObservationRef": { "$ref": "#/$defs/ObservationReference" },
+        "outcome": { "enum": ["agreed", "disagreed", "unresolved"] }
+      },
+      "additionalProperties": false
+    },
+    "QualificationOracleExecutionRefusal": {
+      "enum": ["executable_identity", "capability_root", "input", "output", "adapter_binding", "cancellation_binding", "concurrency"]
+    },
+    "QualificationOracleExecutionFailure": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["stdout_too_large", "stderr_too_large", "observation", "output_artifact"] }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "enum": ["exit_code", "signal"] },
+            "value": { "type": "integer", "minimum": -2147483648, "maximum": 2147483647 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QualificationOracleExecutionState": {
+      "oneOf": [
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "unavailable" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind", "reason"], "properties": { "kind": { "const": "refused" }, "reason": { "$ref": "#/$defs/QualificationOracleExecutionRefusal" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind", "reason"], "properties": { "kind": { "const": "failed" }, "reason": { "$ref": "#/$defs/QualificationOracleExecutionFailure" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "timed_out" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "malformed_response" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "containment_failure" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind"], "properties": { "kind": { "const": "cancelled" } }, "additionalProperties": false },
+        { "type": "object", "required": ["kind", "observationRef"], "properties": { "kind": { "const": "completed" }, "observationRef": { "$ref": "#/$defs/ObservationReference" } }, "additionalProperties": false }
+      ]
+    },
+    "QualificationOracleExecutionRecord": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "operation", "manifestIdentity", "bindingId", "guaranteeId", "inputProjection", "engineeringAssuranceRevision", "executionProtocol", "requestIdentity", "resultIdentity", "resultRef", "state"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-oracle-execution/v1" },
+        "kind": { "const": "QualificationOracleExecutionRecord" },
+        "operation": { "enum": ["oracle", "comparison"] },
+        "manifestIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
+        "engineeringAssuranceRevision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "executionProtocol": { "const": "engineering-assurance.producer-execution-result/v1" },
+        "requestIdentity": { "$ref": "#/$defs/EngineeringAssuranceJcsIdentity" },
+        "resultIdentity": { "$ref": "#/$defs/EngineeringAssuranceJcsIdentity" },
+        "resultRef": { "$ref": "#/$defs/RunArtifactReference" },
+        "state": { "$ref": "#/$defs/QualificationOracleExecutionState" }
+      },
+      "additionalProperties": false
+    },
+    "QualificationOracleComparisonRecord": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "manifestIdentity", "bindingId", "guaranteeId", "inputProjection", "engineeringAssuranceRevision", "executionProtocol", "requestIdentity", "resultIdentity", "resultRef", "expectedRelation", "candidateObservationRef", "oracleObservationRef", "outcome", "resolution"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-oracle-comparison/v1" },
+        "kind": { "const": "QualificationOracleComparisonRecord" },
+        "manifestIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "inputProjection": { "$ref": "#/$defs/QualificationOracleInputProjection" },
+        "engineeringAssuranceRevision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "executionProtocol": { "const": "engineering-assurance.producer-execution-result/v1" },
+        "requestIdentity": { "$ref": "#/$defs/EngineeringAssuranceJcsIdentity" },
+        "resultIdentity": { "$ref": "#/$defs/EngineeringAssuranceJcsIdentity" },
+        "resultRef": { "$ref": "#/$defs/RunArtifactReference" },
+        "expectedRelation": { "$ref": "#/$defs/QualificationOracleExpectedRelation" },
+        "candidateObservationRef": { "$ref": "#/$defs/ObservationReference" },
+        "oracleObservationRef": { "$ref": "#/$defs/ObservationReference" },
+        "outcome": { "enum": ["agreed", "disagreed", "unresolved"] },
+        "resolution": { "enum": ["resolved", "unresolved"] }
+      },
+      "allOf": [
+        { "if": { "properties": { "outcome": { "const": "agreed" } }, "required": ["outcome"] }, "then": { "properties": { "resolution": { "const": "resolved" } } }, "else": { "properties": { "resolution": { "const": "unresolved" } } } }
+      ],
+      "additionalProperties": false
+    },
+    "QualificationDisagreementProcedureResponse": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "bindingId", "comparisonIdentity", "procedureRef", "attributions", "bounds"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-disagreement-response/v1" },
+        "kind": { "const": "QualificationDisagreementProcedureResponse" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "comparisonIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "procedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+        "attributions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "bounds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "anyOf": [
+        { "properties": { "attributions": { "minItems": 1 } }, "required": ["attributions"] },
+        { "properties": { "bounds": { "minItems": 1 } }, "required": ["bounds"] }
+      ],
+      "additionalProperties": false
+    },
+    "QualificationOracleDisagreementRecord": {
+      "type": "object",
+      "required": ["contractVersion", "schemaVersion", "kind", "manifestIdentity", "bindingId", "guaranteeId", "comparisonIdentity", "procedureRef", "resultRef", "attributions", "bounds"],
+      "properties": {
+        "contractVersion": { "const": "quire-verification/e02-draft-2" },
+        "schemaVersion": { "const": "quire-verification.qualification-disagreement/v1" },
+        "kind": { "const": "QualificationOracleDisagreementRecord" },
+        "manifestIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "bindingId": { "type": "string", "minLength": 1 },
+        "guaranteeId": { "type": "string", "minLength": 1 },
+        "comparisonIdentity": { "type": "string", "pattern": "^sha256-jcs:[0-9a-f]{64}$" },
+        "procedureRef": { "$ref": "#/$defs/ReviewProcedureReference" },
+        "resultRef": { "$ref": "#/$defs/RunArtifactReference" },
+        "attributions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "bounds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "anyOf": [
+        { "properties": { "attributions": { "minItems": 1 } }, "required": ["attributions"] },
+        { "properties": { "bounds": { "minItems": 1 } }, "required": ["bounds"] }
+      ],
       "additionalProperties": false
     },
     "QualificationTechniqueSettings": {

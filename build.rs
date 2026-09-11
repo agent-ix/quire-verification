@@ -17,6 +17,7 @@ const SHARED_V1_SCHEMA_PATH: &str = "contracts/shared-reference-1-draft.schema.j
 const SHARED_V2_SCHEMA_PATH: &str = "contracts/shared-reference-2-draft/schema.json";
 
 fn main() -> Result<(), Box<dyn Error>> {
+    println!("cargo:rerun-if-changed=Cargo.toml");
     for path in [
         E02_SCHEMA_PATH,
         SHARED_V1_SCHEMA_PATH,
@@ -24,6 +25,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     ] {
         println!("cargo:rerun-if-changed={path}");
     }
+    println!(
+        "cargo:rustc-env=ENGINEERING_ASSURANCE_REVISION={}",
+        engineering_assurance_revision()?
+    );
 
     let authored_schema: Value = serde_json::from_str(&fs::read_to_string(E02_SCHEMA_PATH)?)?;
     let contract_version = authored_schema
@@ -53,6 +58,27 @@ fn main() -> Result<(), Box<dyn Error>> {
     generate_types(SHARED_V1_SCHEMA_PATH, "shared_reference_v1.rs", "")?;
     generate_types(SHARED_V2_SCHEMA_PATH, "shared_reference_v2.rs", "")?;
     Ok(())
+}
+
+fn engineering_assurance_revision() -> Result<String, Box<dyn Error>> {
+    let manifest = fs::read_to_string("Cargo.toml")?;
+    let manifest = manifest.parse::<toml::Table>()?;
+    let revision = manifest
+        .get("dependencies")
+        .and_then(toml::Value::as_table)
+        .and_then(|dependencies| dependencies.get("engineering-assurance"))
+        .and_then(toml::Value::as_table)
+        .and_then(|dependency| dependency.get("rev"))
+        .and_then(toml::Value::as_str)
+        .ok_or("Engineering Assurance dependency must declare a revision")?;
+    if revision.len() != 40
+        || !revision
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || matches!(byte, b'a'..=b'f'))
+    {
+        return Err("Engineering Assurance dependency revision is not a full commit".into());
+    }
+    Ok(revision.to_owned())
 }
 
 fn generate_types(

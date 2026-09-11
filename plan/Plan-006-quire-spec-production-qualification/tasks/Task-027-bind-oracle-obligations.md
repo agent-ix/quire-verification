@@ -28,16 +28,17 @@ dependence, limitation, and disagreement procedure.
   oracle-contribution dependence graph.
 - [x] Bind every portable oracle declaration to the exact frozen profile, corpus
   projection, executable, procedures, requests, limitations, and strict-reader proofs.
-- [ ] Submit the exact oracle and comparison requests through the accepted Rust
+- [x] Submit the exact oracle and comparison requests through the accepted Rust
   Engineering Assurance producer-execution interface from issue 34.
-- [ ] Consume typed agreeing and disagreeing observations, retaining both exact
+- [x] Consume typed agreeing and disagreeing observations, retaining both exact
   observations and an unresolved result for disagreement.
-- [ ] Preserve unavailable, refused, failed, timed-out, malformed-response, and
-  containment-failure producer states without fabricating observations.
+- [x] Preserve unavailable, refused, failed, timed-out, malformed-response,
+  containment-failure, cancelled, and completed producer states without fabricating
+  observations.
 - [x] Confirm the portable checkpoint adds no local runner, evidence store, fixture
   script, or arbitrary stdout parser.
 - [x] Recount the Test Execution Summary by category and status after changing TC-041.
-- [ ] Recount the Test Execution Summary again by category and overall whenever this
+- [x] Recount the Test Execution Summary again by category and overall whenever this
   task changes another test row or status, and record the exact totals before review.
 
 ## Deliverables
@@ -50,7 +51,8 @@ dependence, limitation, and disagreement procedure.
 - Merged revision `4a5e1961d353db45aa227f8c6ef964d9f67eae29` contains the
   independently re-reviewed portable manifest and dependence checkpoint. It does not
   contain execution observations or complete TC-041.
-- Engineering Assurance issue `agent-ix/engineering-assurance#34` owns the reusable
-  producer-execution/result seam and currently has no producer PR. Its absence blocks
-  integration without authorizing a substitute.
+- Engineering Assurance issue `agent-ix/engineering-assurance#34` and PR 46 own the
+  reusable producer-execution/result seam. TC-041/TC-126 pass locally against exact
+  candidate revision `f640f4c1af95e8657bef04207758091fc938658a`; promotion and the
+  post-merge pin remain cross-repository gates and do not authorize a substitute.
 - Unblocks Task-028.

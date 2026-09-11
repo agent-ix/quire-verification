@@ -2,13 +2,14 @@
 name = "quire-verification"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.94"
+rust-version = "1.98.1"
 license = "AGPL-3.0-or-later"
 description = "Qualified-path verification contracts, planning, and evidence assessment"
 repository = "https://github.com/agent-ix/quire-verification"
 
 [features]
 native-process-test-fixture = []
+qualification-oracle-test-fixture = []
 
 [[bin]]
 name = "native-process-fixture"
@@ -28,12 +29,26 @@ name = "parser_portfolio"
 path = "tests/parser_portfolio.rs"
 required-features = ["native-process-test-fixture"]
 
+[[bin]]
+name = "qualification-oracle-fixture"
+path = "tests/support/qualification_oracle_fixture.rs"
+required-features = ["qualification-oracle-test-fixture"]
+test = false
+bench = false
+doc = false
+
+[[test]]
+name = "qualification_oracle_execution"
+path = "tests/qualification_oracle_execution.rs"
+required-features = ["qualification-oracle-test-fixture"]
+
 [lib]
 name = "quire_verification"
 path = "src/lib.rs"
 
 [dependencies]
 chrono = { version = "0.4.42", default-features = false, features = ["serde"] }
+engineering-assurance = { version = "=0.1.0", git = "https://github.com/agent-ix/engineering-assurance", rev = "c28da1157b33014028a7788a578c47da33690e44", default-features = false, features = ["producer-execution"] }
 jsonschema = { version = "0.55.0", default-features = false }
 regress = "=0.11.1"
 rustix = { version = "1.1.2", features = ["fs", "process"] }
@@ -47,6 +62,7 @@ tempfile = "3.23.0"
 [build-dependencies]
 schemars = "0.8.22"
 serde_json = "1.0.145"
+toml = { version = "=0.9.12", default-features = false, features = ["parse", "serde", "std"] }
 typify = "0.7.0"
 
 [dev-dependencies]
