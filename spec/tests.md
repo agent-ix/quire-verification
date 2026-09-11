@@ -76,7 +76,7 @@ rejected JavaScript prototype is not evidence.
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
 | FR-022 | FR-022-AC-1..5 | TC-039, IT-004 | 🚧 Planned |
 | FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | ✅ Rust boundary implemented; production corpus blocked |
-| FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | ✅ Rust boundary implemented against pinned EA candidate |
+| FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | 🚧 Rust boundary implemented; EA candidate blocked by TC-031 regression |
 | FR-025 | FR-025-AC-1..6 | TC-042, IT-004 | 🚧 Planned |
 | FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
 | FR-027 | FR-027-AC-1..5 | TC-045, IT-004 | 🚧 Planned |
@@ -100,7 +100,7 @@ rejected JavaScript prototype is not evidence.
 |------------|------------|-----------------|
 | FR-022-CON-1..2 | TC-039 | 🚧 Planned |
 | FR-023-CON-1 | TC-040 | ✅ Complete |
-| FR-024-CON-1..2 | TC-041 | ✅ Passed against pinned EA candidate |
+| FR-024-CON-1..2 | TC-041 | 🚧 Focused TC-041 passes; EA candidate blocked by TC-031 regression |
 | FR-025-CON-1..4 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |
@@ -139,7 +139,7 @@ rejected JavaScript prototype is not evidence.
 | TC-028 | Reject cross-variant verification inputs | Property | P0 | FR-002-AC-4, FR-015-AC-1..FR-015-AC-4, NFR-002-AC-3 | ✅ Passed |
 | TC-029 | Refuse malformed or unsupported shared references | Property | P0 | FR-016-AC-1..FR-016-AC-6 | ✅ Implemented |
 | TC-030 | Build a heterogeneous parser portfolio plan | Integration | P0 | FR-013-AC-2, FR-014-AC-1..FR-014-AC-2, FR-015-AC-3, FR-015-AC-5 | ✅ Passed |
-| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ✅ Implemented |
+| TC-031 | Execute the independent shared-reference consumer | Integration | P0 | FR-016-AC-1..FR-016-AC-7 | ❌ Fails with the pinned EA candidate's `serde_json/arbitrary_precision` regression |
 | TC-032 | Apply the earliest evidence freshness bound | Unit | P0 | FR-018-AC-1..FR-018-AC-5 | ✅ Passed |
 | TC-033 | Retain correlated and unknown oracle dependence | Property | P0 | FR-017-AC-1..FR-017-AC-7 | ✅ Passed |
 | TC-034 | Execute native parser baseline and adverse cases | Integration | P0 | FR-019-AC-1..FR-019-AC-2 | ✅ Passed |
@@ -149,7 +149,7 @@ rejected JavaScript prototype is not evidence.
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 | TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-5 | 🚧 In progress |
 | TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | ✅ Passed |
-| TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | ✅ Passed against pinned EA candidate |
+| TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Focused tests pass; EA candidate blocked by TC-031 regression |
 | TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-6, FR-025-CON-1..FR-025-CON-4, NFR-004-AC-1..NFR-004-AC-3 | 🚧 Planned |
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
@@ -425,8 +425,8 @@ rejected JavaScript prototype is not evidence.
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
 | Unit | 17 | 17 | 0 | 0 | 100% |
-| Integration | 11 | 9 | 0 | 2 | 82% |
+| Integration | 11 | 8 | 1 | 2 | 73% |
 | Property | 13 | 11 | 0 | 2 | 85% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 45 | 40 | 0 | 5 | 89% |
+| Overall | 45 | 39 | 1 | 5 | 87% |
