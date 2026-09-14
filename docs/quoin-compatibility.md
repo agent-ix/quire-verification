@@ -56,9 +56,10 @@ Portable intake now requires one exact result binding. Multiple results for the
 same plan/task/run/producer/adapter tuple are reported as ambiguous. A
 compatibility summary status remains for current consumers, while the gap list
 enumerates all simultaneous execution, activation, participation, assumption,
-adequacy, and logical findings. The `runRef` role and version domains remain
-provisional pending FS02/FS05; this repository does not invent a Quoin-side run
-identity.
+adequacy, and logical findings. The `runRef` role and version domains use the
+accepted FS02/FS05 retained packet at
+`agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
+This repository does not invent a Quoin-side run identity.
 
 The current cargo-mutants adapter aggregates caught/missed/timeout outcomes per
 production function, excludes unviable mutants, and intentionally binds no
@@ -72,8 +73,8 @@ that limit; it does not invent individual-mutant attribution.
 | Catalog/module/package locking | quoin #287 | Additive export of exact module/source revision and digest; retain installation behavior. |
 | Evidence discharge/inward completeness | quoin #272 | Accept exact scoped result references; preserve live obligation derivation and human dispositions. |
 | Coverage states and clause addresses | quire-contract-ir #58 | Align missing/incomplete/unsupported states and property identity; do not collapse result dimensions. |
-| Shared model/source identity | FS02 | Confirm the opaque identity seam and dependency/binding digest domains. |
-| Version/canonical compatibility | FS05 | Confirm independent profile/version axes and historical evidence behavior. |
+| Shared model/source identity | FS02 | Accepted retained packet fixes the opaque identity seam and dependency/binding digest domains for this private consumer. |
+| Version/canonical compatibility | FS05 | Accepted retained packet fixes independent profile/version axes and historical-evidence behavior for this private consumer. |
 
 Quoin #272 still names quire-rs #373 and #374 as blockers. Both endpoints return
 HTTP 410 (`deleted`) on 2026-09-07. This is a stale dependency requiring owner

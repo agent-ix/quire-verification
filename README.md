@@ -1,9 +1,10 @@
 # quire-verification
 
-Private bounded E02 implementation, 2026-09-07. The compatibility adapter,
-planning interfaces, and evidence assessment in this repository are provisional
-until their E01, FS02, and FS05 dependencies are reviewed. No represented native
-verification tool is claimed to have run merely because its fixture validates.
+Private bounded E02 implementation. The draft-2 compatibility adapter, planning
+interfaces, and evidence assessment are accepted for exact private
+cross-repository Rust consumption at the revision recorded in the interface
+decision. VP01–VP04 and every represented native verification tool remain
+separately gated; a validating fixture never claims a tool ran.
 
 ## Charter
 

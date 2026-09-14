@@ -1,6 +1,9 @@
-# E02 bounded compatibility evaluation
+# E02 bounded compatibility evaluation (historical)
 
-Date: 2026-09-07 PDT / 2026-09-08 UTC. Scope: private fixture planning, result
+Date: 2026-09-07 PDT / 2026-09-08 UTC. This report records the state at that
+time; its provisional language is not the current E02 acceptance disposition.
+See `docs/interface-decision.md` for the accepted exact private
+cross-repository contract. Scope: private fixture planning, result
 assessment, and bounded local catalog-adapter checks. No represented external
 verification tool, parser, production system, fault injection, or human review
 ran.
@@ -106,8 +109,11 @@ VP02 implementation is complete but its acceptance remains gated on VP01; VP03
 now retains and reports correlated-oracle evidence but still needs its external
 acceptance dependencies; and VP04 still needs
 a reviewed native parser or aggregate producer portfolio, a seeded domain
-defect, agreed thresholds, and the recorded reviewer disposition. E01, FS02,
-FS05, and E04 remain open.
+defect, agreed thresholds, and the recorded reviewer disposition. At the time
+of this historical evaluation, E01, FS02, FS05, and E04 remained open. The
+accepted retained FS02/FS05 packet now closes the E02 cross-repository seam
+only; it does not close VP01–VP04, public publication, or any represented-tool
+claim.
 
 Fixture and local portfolio success establish only the represented
 adapter/planner/intake cases and the two named adapter properties. They do not
