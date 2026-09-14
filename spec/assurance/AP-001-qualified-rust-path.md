@@ -62,9 +62,10 @@ relationships:
 ## Decision Boundary
 
 This profile covers one candidate revision of the private bounded compatibility
-slice, including the bounded VP04 native process adapter. It does not accept the
-provisional FS02/FS05 identity seam, authorize publication, or qualify any
-represented external verification tool.
+slice, including the bounded VP04 native process adapter. It consumes the
+accepted retained FS02/FS05 identity seam without replacing it, and does not
+authorize public publication or qualify any represented external verification
+tool.
 
 ## Impact Scenarios
 

@@ -80,6 +80,7 @@ rejected JavaScript prototype is not evidence.
 | FR-025 | FR-025-AC-1..6 | TC-042, IT-004 | 🚧 Planned |
 | FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
 | FR-027 | FR-027-AC-1..5 | TC-045, IT-004 | 🚧 Planned |
+| FR-028 | FR-028-AC-1..3 | TC-002, TC-029, TC-031, TC-046 | ✅ Complete |
 
 ### Non-Functional Requirement Coverage
 
@@ -154,6 +155,7 @@ rejected JavaScript prototype is not evidence.
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
 | TC-045 | Seal and bind the qualification disposition | Integration | P0 | FR-027-AC-1..FR-027-AC-5, NFR-008-AC-3 | 🚧 Planned |
+| TC-046 | Accept E02 cross-repository contract without result loss | Unit | P0 | FR-028-AC-1..FR-028-AC-3 | ✅ Passed |
 
 ## Option Permutation Matrix
 

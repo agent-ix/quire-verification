@@ -45,6 +45,8 @@ relationships:
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/FR-021"
     type: "satisfied_by"
+  - target: "ix://agent-ix/quire-verification/FR-028"
+    type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-001"
     type: "satisfied_by"
   - target: "ix://agent-ix/quire-verification/NFR-002"
@@ -89,9 +91,9 @@ and future production consumers are affected stakeholders at the JSON boundary.
 ## Context and Assumptions
 
 The prior JavaScript implementation was a rejected prototype and supplied
-behavioral discovery input only. FS02 and FS05 identity decisions remain
-provisional; B's consumer adoption is conditional on the recorded JCS-domain
-and role-kind amendments.
+behavioral discovery input only. The accepted retained FS02/FS05 packet fixes
+the selected JCS-domain and role-kind amendments for this private Rust boundary;
+public schema terms remain unresolved.
 
 ## Stakeholder Constraints (Contextual)
 
@@ -101,8 +103,8 @@ bounded resource behavior before any production performance threshold is set.
 
 ## Dependencies
 
-The need depends on the versioned E02 schema packet and the pinned Quoin method
-catalog boundary. Cross-repository identity acceptance remains outside this slice.
+The need depends on the versioned E02 schema packet, the retained accepted
+FS02/FS05 reference packet, and the pinned Quoin method-catalog boundary.
 
 ## Priority and Risk (Informative)
 

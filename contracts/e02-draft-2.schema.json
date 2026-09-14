@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://private.agent-ix.local/quire-verification/e02-draft-2.schema.json",
   "title": "Private E02 verification interface draft",
-  "description": "Provisional private interface; not a published normative schema.",
+  "description": "Accepted private cross-repository Rust interface; not a public normative schema.",
   "oneOf": [
     { "$ref": "#/$defs/TechniqueDefinition" },
     { "$ref": "#/$defs/ToolCapability" },

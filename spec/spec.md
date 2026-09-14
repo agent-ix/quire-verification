@@ -65,9 +65,9 @@ retained reports, and continuous-integration checks in this repository.
 
 ### 2.2 Out of Scope
 
-- Acceptance or replacement of the shared FS02/FS05 identity and version model.
-- Acceptance of E02, VP01, or VP02 before their recorded prerequisite and disposition gates close.
-- Publication of these private provisional contracts as cross-repository authority.
+- Replacement of the accepted shared FS02/FS05 identity and version model.
+- Acceptance of VP01 or VP02 before their recorded prerequisite and disposition gates close.
+- Public publication of the private E02 contract or reusable-artifact packet.
 - Execution of a model checker, fuzzer, fault injector, generated backend, evaluator, or production system.
 - A parser portfolio outside the reviewed bounded syntax profile or a general parser-effectiveness claim.
 - Qualification of every `quire-spec` command, semantic stage, corpus, caller,
@@ -149,6 +149,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-025 | Produce discriminating qualification results | Proposed |
 | FR-026 | Execute the declared production chain | Proposed |
 | FR-027 | Bind the production qualification disposition | Proposed |
+| FR-028 | Accept the E02 cross-repository contract | Implemented; verified |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -193,9 +194,11 @@ This specification describes a private compatibility slice implemented and
 verified in Rust, the VP01 registry/policy qualification increment, the
 implemented VP02 planning increment, and the implemented VP03
 evidence-assessment increment.
-VP01 acceptance remains gated on E02 and a recorded owner/reviewer disposition.
-VP02 acceptance remains gated on VP01 and FS02. VP03 acceptance remains gated on
-E02 and FS05. VP04 acceptance remains gated on VP02, VP03, exact native producer
+VP01 acceptance remains gated on a recorded owner/reviewer disposition. VP02
+acceptance remains gated on VP01. VP03 retains its own external acceptance
+dependencies. The E02 and retained FS02/FS05 private-consumer gates are
+accepted at the exact revisions recorded by FR-028. VP04 acceptance remains
+gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
 Merged specification revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
 resolved B's recorded canonical-domain and reference-role findings. FR-016,

@@ -7,8 +7,11 @@ types and vocabulary constants from those two sources. At runtime,
 `src/contracts.rs` compiles the complete draft 2020-12 schema, including
 conditional assertions that are not constructive Rust types. The only additional plan validation is for duplicate
 task IDs, unknown dependency references, and dependency cycles, which require
-cross-record graph checks. This is a private versioned schema, not a published
-normative schema or an accepted replacement for FS02/FS05 identities.
+cross-record graph checks. This is the accepted private versioned interface for
+cross-repository Rust consumers, not a public normative schema. Its retained
+shared-reference packet is pinned at
+`agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`;
+public reusable-artifact terms remain separately unresolved.
 
 The same schema owns the internal `QualificationProfile` definition used by the
 Rust production-qualification planner. It is not a sixth public E02 root contract.

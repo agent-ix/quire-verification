@@ -244,7 +244,12 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
     let mut wrong_type = plan.clone();
     wrong_type["tasks"][0]["missingPrerequisites"] = json!("none");
     assert!(validate_plan_value(&wrong_type).is_err());
-    let mut unknown_version = results["results"][0].clone();
+}
+
+#[trace("TC-002", "FR-028-AC-2")]
+#[test]
+fn tc_002_refuses_unknown_e02_contract_version_without_fallback() {
+    let mut unknown_version = fixture("results.json")["results"][0].clone();
     unknown_version["contractVersion"] = json!("quire-verification/e02-unknown");
     assert_eq!(
         validate_contract(unknown_version)
@@ -252,6 +257,50 @@ fn tc_002_rejects_contradictions_task_drift_and_unknown_versions() {
             .code(),
         VerificationErrorCode::UnsupportedContractVersion
     );
+}
+
+#[trace("TC-046", "FR-028-AC-1")]
+#[test]
+fn tc_046_freezes_e02_accepted_interface_identity() {
+    let decision = include_str!("../docs/interface-decision.md");
+    for required in [
+        "accepted private cross-repository Rust interface",
+        "`agent-ix/quire-verification`",
+        "`quire-verification/e02-draft-2`",
+        "`d2fc0d8134c776d2f1a17fd249f016b18a6ba124`",
+        "exact private cross-repository Rust use",
+    ] {
+        assert!(decision.contains(required), "missing {required}");
+    }
+}
+
+#[trace("TC-046", "FR-028-AC-3")]
+#[test]
+fn tc_046_refuses_lossy_cross_repository_result_projections() {
+    let result = fixture("results.json")["results"][0].clone();
+    validate_contract(result.clone()).expect("complete result must validate");
+
+    for field in [
+        "execution",
+        "logical",
+        "activation",
+        "participation",
+        "assumptions",
+        "adequacy",
+        "provenance",
+        "nativeArtifacts",
+        "oracleContributions",
+    ] {
+        let mut lossy = result.clone();
+        lossy.as_object_mut().expect("result object").remove(field);
+        assert_eq!(
+            validate_contract(lossy)
+                .expect_err("lossy result projection must fail")
+                .code(),
+            VerificationErrorCode::SchemaViolation,
+            "{field}"
+        );
+    }
 }
 
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]
