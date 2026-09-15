@@ -79,4 +79,40 @@ fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
         consume_analyze_result(&incomplete_envelope),
         ProviderConsumption::Refused
     );
+    let mut wrong_contract = result(AnalyzeMethod::HybridReachability, AnalyzeOutcome::Enclosure);
+    wrong_contract.contract_version = "quire.method-result/v0".into();
+    assert_eq!(
+        consume_analyze_result(&wrong_contract),
+        ProviderConsumption::Refused
+    );
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::HybridReachability,
+            AnalyzeOutcome::Candidate
+        )),
+        ProviderConsumption::Refused
+    );
+}
+
+/// Tracing: IT-005-SC-04.
+#[test]
+#[trace("IT-005")]
+fn it_005_sc_04_keeps_every_terminal_outcome_typed() {
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::CanonicalSynthesis,
+            AnalyzeOutcome::NoCandidate
+        )),
+        ProviderConsumption::NoCandidate
+    );
+    for outcome in [
+        AnalyzeOutcome::Incomplete,
+        AnalyzeOutcome::Failed,
+        AnalyzeOutcome::Refused,
+    ] {
+        assert_eq!(
+            consume_analyze_result(&result(AnalyzeMethod::CanonicalSynthesis, outcome)),
+            ProviderConsumption::NonConclusive
+        );
+    }
 }

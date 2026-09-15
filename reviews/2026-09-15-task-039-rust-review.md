@@ -41,15 +41,16 @@ only; it does not authorize a release, qualification, or a production provider i
   consumes caller-supplied typed output only, which keeps producer execution outside this crate.
 - The public surface is documented, performs no I/O or allocation proportional to untrusted input,
   contains no `unwrap`, `expect`, `panic!`, `unsafe`, `todo!`, or test-only production branch.
-- Both integration tests carry compiler-checked `IT-005` and `Task-039` trace markers and exercise
-  candidate/validation distinction, non-conclusion preservation, and stale-revision refusal.
+- All three integration tests carry compiler-checked `IT-005` trace markers and exercise
+  candidate/validation distinction, non-conclusion preservation, stale-revision refusal,
+  contract-version refusal, and the closed method/outcome partition.
 
 ## Local Gates
 
 | Gate | Result |
 | --- | --- |
 | `cargo fmt --all --check` | pass |
-| `cargo test --test hybrid_synthesis_provider -q` | 2 passed |
+| `cargo test --test hybrid_synthesis_provider -q` | 3 passed |
 | `cargo clippy --test hybrid_synthesis_provider -- -D warnings` | pass |
 | `cargo test --workspace --all-features --locked` | pass |
 | `cargo clippy --workspace --all-targets --all-features -- -D warnings` | pass |
