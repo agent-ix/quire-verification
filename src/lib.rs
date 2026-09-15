@@ -12,6 +12,7 @@ pub mod catalog;
 pub mod contracts;
 pub mod evidence;
 pub mod fixtures;
+pub mod linked_method_plan;
 pub mod measurement;
 pub mod model_testing;
 pub mod native_process;

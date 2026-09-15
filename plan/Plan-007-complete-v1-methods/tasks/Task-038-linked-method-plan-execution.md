@@ -2,7 +2,7 @@
 id: Task-038
 title: "Implement linked method plan execution"
 type: Task
-status: not_started
+status: done
 track: D3
 priority: P0
 relationships:
@@ -21,11 +21,11 @@ Complete Verification #37 and V1-RUN-017 behind interface-001.
 
 ## Subtasks
 
-- [ ] Implement versioned external plan linking and typed dependency graph validation.
-- [ ] Dispatch ready nodes through capability-constrained providers.
-- [ ] Isolate failed prerequisites and preserve exactly one disposition per node.
-- [ ] Apply only authored aggregation rules without changing source admission.
-- [ ] Add TC-049 and IT-005-SC-03 executable traces, Rust review, and gap analysis.
+- [x] Implement versioned external plan linking and typed dependency graph validation.
+- [x] Dispatch ready nodes through capability-constrained providers.
+- [x] Isolate failed prerequisites and preserve exactly one disposition per node.
+- [x] Apply only authored aggregation rules without changing source admission.
+- [x] Add TC-049 and IT-005-SC-03 executable traces, Rust review, and gap analysis.
 
 ## Deliverables
 
