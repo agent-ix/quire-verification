@@ -142,6 +142,14 @@ pub enum VerificationErrorCode {
     UnexpectedProcessDescendant,
     /// Native process-group signaling, reaping, or termination observation failed.
     ProcessContainmentFailure,
+    /// A checked model domain, identity, predicate, or bound is malformed.
+    InvalidModelDomain,
+    /// Checked preconditions and relationships admit no model assignment.
+    UnsatisfiableModelDomain,
+    /// Model-domain expansion exceeded its explicit construction bound.
+    ModelConstructionBoundExceeded,
+    /// Complete boundary partitions exceeded the explicit case bound.
+    ModelCaseBoundExceeded,
 }
 
 impl VerificationErrorCode {
@@ -207,6 +215,10 @@ impl VerificationErrorCode {
             Self::UnsupportedExecutionProfile => "unsupported_execution_profile",
             Self::UnexpectedProcessDescendant => "unexpected_process_descendant",
             Self::ProcessContainmentFailure => "process_containment_failure",
+            Self::InvalidModelDomain => "invalid_model_domain",
+            Self::UnsatisfiableModelDomain => "unsatisfiable_model_domain",
+            Self::ModelConstructionBoundExceeded => "model_construction_bound_exceeded",
+            Self::ModelCaseBoundExceeded => "model_case_bound_exceeded",
         }
     }
 
@@ -270,6 +282,10 @@ impl VerificationErrorCode {
             Self::UnsupportedExecutionProfile,
             Self::UnexpectedProcessDescendant,
             Self::ProcessContainmentFailure,
+            Self::InvalidModelDomain,
+            Self::UnsatisfiableModelDomain,
+            Self::ModelConstructionBoundExceeded,
+            Self::ModelCaseBoundExceeded,
         ]
     }
 

@@ -13,6 +13,7 @@ pub mod contracts;
 pub mod evidence;
 pub mod fixtures;
 pub mod measurement;
+pub mod model_testing;
 pub mod native_process;
 pub mod parser_portfolio;
 pub mod planner;
