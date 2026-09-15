@@ -33,7 +33,7 @@ fn result(method: AnalyzeMethod, outcome: AnalyzeOutcome) -> AnalyzeResult {
 
 /// Tracing: IT-005, Task-039.
 #[test]
-#[trace("IT-005", "Task-039")]
+#[trace("IT-005")]
 fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
     assert_eq!(
         consume_analyze_result(&result(
@@ -60,7 +60,7 @@ fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
 
 /// Tracing: IT-005, Task-039.
 #[test]
-#[trace("IT-005", "Task-039")]
+#[trace("IT-005")]
 fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
     assert_eq!(
         consume_analyze_result(&result(

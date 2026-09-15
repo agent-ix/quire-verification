@@ -49,9 +49,14 @@ crate-wide strict Clippy gate.
   independent per-row claim-class vectors, and separately attributed decisions.
   Planned/unexecuted production material remains explicit incomplete state and
   does not stop local development execution.
+- IT-005-SC-04 through SC-07 now compose Analyze result intake with circular
+  discharge refusal and the closed 176-row ledger. A rejected candidate remains
+  distinct from failure, future evidence remains incomplete rather than blocking,
+  and a malformed denominator is refused without mutating retained rows.
 - `cargo fmt --all --check`: pass.
 - `cargo test --test evidence_ledger -q`: 5 passed; all new tests carry
   compiler-checked TC/FR/IT trace attributes.
+- `cargo test --test complete_v1_integration -q`: 2 passed.
 - `cargo clippy --workspace --all-targets --all-features -- -D warnings`: pass.
 
 Native `quoin write` failed with QM012 transport (tracked in

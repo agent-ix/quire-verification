@@ -39,10 +39,10 @@ future production evidence represented as explicit data.
   `spec/tests.md` (TM-001); implementation/tests: `src/evidence_ledger.rs` and
   `tests/evidence_ledger.rs`.
 - Reconciliation: native Quire 0.32.0 / engine `a874fb64`, with duplicate
-  module-archetype diagnostics. It reported 213 / 239 rows backed, zero status
-  lies, and zero untracked symbols in this invocation. The unbacked remainder
-  belongs to work outside the Task-040 subset; no complete row is claimed for
-  FR-032 through FR-034.
+  module-archetype diagnostics. It reported 213 / 239 rows backed and zero
+  status lies. The one untracked symbol is in vendored `ix-trace-rs`, outside
+  the Task-040 subset. The unbacked remainder belongs to work outside the
+  Task-040 subset; no complete row is claimed for FR-032 through FR-034.
 - Task states: 4 / 6 done. Tasks-039 and -040 are in progress.
 - Reverse inventory: five public operations/behaviors (`evidence_digest`,
   graph validation, lineage validation, vector validation, qualification
