@@ -13,6 +13,7 @@ pub mod contracts;
 pub mod evidence;
 pub mod evidence_ledger;
 pub mod fixtures;
+pub mod hybrid_synthesis_provider;
 pub mod linked_method_plan;
 pub mod measurement;
 pub mod model_testing;
