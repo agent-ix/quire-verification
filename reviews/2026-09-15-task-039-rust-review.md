@@ -35,8 +35,8 @@ only; it does not authorize a release, qualification, or a production provider i
   assumptions, bounds, content, and result identities are distinct public newtypes.
 - The boundary accepts only the pinned Analyze revision and refuses empty identities or outcomes
   incompatible with the requested method.
-- `Candidate` and `ValidatedCandidate` remain explicitly non-proof consumption states; incomplete,
-  failed, and refused producer outcomes remain non-conclusive.
+- `Candidate`, `ValidatedCandidate`, and `ValidationRejected` remain distinct non-proof consumption
+  states; incomplete, failed, and refused producer outcomes remain non-conclusive.
 - The module neither links nor executes Analyze while dependency patch pins are incompatible. It
   consumes caller-supplied typed output only, which keeps producer execution outside this crate.
 - The public surface is documented, performs no I/O or allocation proportional to untrusted input,

@@ -65,6 +65,8 @@ pub enum AnalyzeOutcome {
     Candidate,
     /// A candidate has upstream validation evidence, not a general proof.
     ValidatedCandidate,
+    /// An independent validator rejected the exact candidate.
+    ValidationRejected,
     /// The finite candidate space was exhausted.
     NoCandidate,
     /// A bounded analysis/search did not finish.
@@ -117,6 +119,8 @@ pub enum ProviderConsumption {
     CandidateRequiresIndependentCheck,
     /// Upstream validation is retained without promotion to a general proof.
     ValidatedCandidateRequiresEvidenceReview,
+    /// A candidate was rejected by its independent validator.
+    CandidateValidationRejected,
     /// No candidate is a finite search result, not satisfaction.
     NoCandidate,
     /// Non-conclusive provider states remain visible.
@@ -145,6 +149,7 @@ pub fn consume_analyze_result(result: &AnalyzeResult) -> ProviderConsumption {
                 result.outcome,
                 AnalyzeOutcome::Candidate
                     | AnalyzeOutcome::ValidatedCandidate
+                    | AnalyzeOutcome::ValidationRejected
                     | AnalyzeOutcome::NoCandidate
             ))
         || (result.method == AnalyzeMethod::CanonicalSynthesis
@@ -158,6 +163,7 @@ pub fn consume_analyze_result(result: &AnalyzeResult) -> ProviderConsumption {
         AnalyzeOutcome::ValidatedCandidate => {
             ProviderConsumption::ValidatedCandidateRequiresEvidenceReview
         }
+        AnalyzeOutcome::ValidationRejected => ProviderConsumption::CandidateValidationRejected,
         AnalyzeOutcome::NoCandidate => ProviderConsumption::NoCandidate,
         AnalyzeOutcome::Incomplete | AnalyzeOutcome::Failed | AnalyzeOutcome::Refused => {
             ProviderConsumption::NonConclusive

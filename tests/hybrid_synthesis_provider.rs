@@ -49,6 +49,13 @@ fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
         )),
         ProviderConsumption::ValidatedCandidateRequiresEvidenceReview
     );
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::CanonicalSynthesis,
+            AnalyzeOutcome::ValidationRejected
+        )),
+        ProviderConsumption::CandidateValidationRejected
+    );
 }
 
 /// Tracing: IT-005, Task-039.
