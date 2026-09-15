@@ -8,6 +8,8 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
+use sha2::{Digest, Sha256};
+
 /// Closed categories for identities at the evidence boundary.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum EvidenceKind {
@@ -101,8 +103,8 @@ pub struct EvidenceIntake {
     pub identity: EvidenceIdentity,
     /// Declared SHA-256 digest.
     pub declared_digest: String,
-    /// Digest actually observed at intake.
-    pub observed_digest: String,
+    /// Exact producer bytes inspected at intake; they are never executed.
+    pub producer_bytes: Vec<u8>,
     /// Acquisition provenance.
     pub provenance: String,
 }
@@ -475,8 +477,15 @@ fn invalid_edge(e: &EvidenceEdge) -> bool {
 fn invalid_intake(i: &EvidenceIntake) -> bool {
     !valid_identity(&i.identity)
         || i.declared_digest.len() != 64
-        || i.declared_digest != i.observed_digest
+        || i.declared_digest != evidence_digest(&i.producer_bytes)
         || i.provenance.is_empty()
+}
+
+/// Returns the lowercase SHA-256 digest of producer bytes inspected at intake.
+#[must_use]
+pub fn evidence_digest(bytes: &[u8]) -> String {
+    let digest = Sha256::digest(bytes);
+    format!("{digest:x}")
 }
 fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
     edges

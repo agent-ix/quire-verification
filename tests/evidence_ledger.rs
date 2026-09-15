@@ -80,8 +80,8 @@ fn tc_050_refuses_circular_discharge_without_erasing_graph() {
         edges: edges.clone(),
         intake: vec![EvidenceIntake {
             identity: id(EvidenceKind::Artifact, "artifact:1"),
-            declared_digest: "a".repeat(64),
-            observed_digest: "a".repeat(64),
+            declared_digest: evidence_digest(b"artifact bytes"),
+            producer_bytes: b"artifact bytes".to_vec(),
             provenance: "producer".into(),
         }],
         limitations: vec![],
@@ -90,6 +90,12 @@ fn tc_050_refuses_circular_discharge_without_erasing_graph() {
         validate_evidence_graph(&graph, &claim),
         LedgerOutcome::Accounted
     );
+    let mut digest_mismatch = graph.clone();
+    digest_mismatch.intake[0].declared_digest = "0".repeat(64);
+    assert!(matches!(
+        validate_evidence_graph(&digest_mismatch, &claim),
+        LedgerOutcome::Refused { .. }
+    ));
     edges.push(EvidenceEdge {
         from: claim.clone(),
         to: id(EvidenceKind::Requirement, "Requirement:1"),
