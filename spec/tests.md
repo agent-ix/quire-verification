@@ -440,7 +440,7 @@ rejected JavaScript prototype is not evidence.
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
-| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 SC-01..SC-03 passed; SC-04..SC-07 pending; production evidence is non-blocking state |
+| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 SC-01..SC-04 passed; SC-05..SC-07 pending; production evidence is non-blocking state |
 
 ### Integration Test Details
 
