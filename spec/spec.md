@@ -22,8 +22,8 @@ standards_alignment:
 This specification defines the observable behavior of the private E02
 compatibility boundary, the VP01 registry/policy qualification slice, the VP02
 native planning contract, the VP03 evidence-assessment contract, the VP04
-bounded native parser portfolio, and the proposed bounded production-qualification
-campaign. It
+bounded native parser portfolio, the proposed bounded production-qualification
+campaign, and the complete-V1 verification-method development lane. It
 gives maintainers the reviewed requirements baseline for the code, fixtures,
 retained reports, and continuous-integration checks in this repository.
 
@@ -61,6 +61,11 @@ retained reports, and continuous-integration checks in this repository.
   real-chain, performance, and reproduction evidence for the frozen profile.
 - A final qualification report whose external disposition cannot expand the
   immutable profile or hide an unresolved evidence gap.
+- Checked-domain model generation with complete boundary partitions, deterministic shrinking, and native replay.
+- Relational and finite-trace hyperproperty analysis with explicit populations, ordered quantifiers, and total alignment.
+- Linked complete-V1 method plans with isolated provider failures and one disposition per node.
+- Typed evidence graphs, immutable counterexample lineage, and a 176-row qualification ledger.
+- Development integration of hybrid-reachability and bounded-synthesis results from `quire-analyze`.
 - Fixture validation, retained reports, and Rust repository CI checks for this slice.
 
 ### 2.2 Out of Scope
@@ -77,6 +82,7 @@ retained reports, and continuous-integration checks in this repository.
   contract-agent-c work, or a production caller owned by another repository.
 - A VP04 native process profile for an operating system other than the exact reviewed Linux environment.
 - An automated evidence-sufficiency decision.
+- Making development implementation or local verification depend on production evidence, production profiles, release ceremony, or a final human disposition.
 - ROI, delivery, production-throughput, scale, or certification conclusions from bounded timing observations.
 - A duplicate evidence store or migration of Quoin-owned evidence.
 - Backward compatibility for the rejected JavaScript module API, npm package, scripts, or runtime behavior outside the versioned JSON contracts and fixtures.
@@ -104,6 +110,11 @@ chain, measures owner-supplied phase budgets, reproduces the retained evidence,
 and then binds an external disposition to the sealed core. Missing producer
 interfaces remain prerequisites rather than local replacements.
 
+The complete-V1 development lane adds independent model, relational, hybrid, and
+synthesis providers behind linked plan/result contracts. It composes their typed
+results into evidence graphs and an inventory-derived ledger. Missing future
+production evidence remains explicit ledger state and does not block development.
+
 The intended users are verification integrators, evidence assessors, and
 maintainers of the Quoin compatibility boundary.
 
@@ -122,6 +133,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | US-002 | Assess evidence without false attribution | Groundwork implemented; VP04 disposition pending |
 | US-003 | Detect compatibility regressions locally | Groundwork implemented; VP04 disposition pending |
 | US-004 | Qualify one quire-spec production profile | Proposed |
+| US-005 | Execute complete-V1 verification methods | Specified; implementation pending |
 | FR-001 | Validate the five public contracts | Implemented; verified |
 | FR-002 | Derive runtime contract behavior from the schema | Implemented; verified |
 | FR-003 | Validate every fixture through an explicit handler | Implemented; verified |
@@ -150,6 +162,12 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-026 | Execute the declared production chain | Proposed |
 | FR-027 | Bind the production qualification disposition | Proposed |
 | FR-028 | Accept the E02 cross-repository contract | Implemented; verified |
+| FR-029 | Generate and shrink complete-V1 model tests | Specified; implementation pending |
+| FR-030 | Analyze relational and finite-trace hyperproperties | Specified; implementation pending |
+| FR-031 | Execute linked complete-V1 method plans | Specified; implementation pending |
+| FR-032 | Link exact semantic subjects to evidence | Specified; implementation pending |
+| FR-033 | Preserve immutable counterexample lineage | Specified; implementation pending |
+| FR-034 | Account the complete-V1 qualification ledger | Specified; implementation pending |
 | NFR-001 | Deterministic structured comparison | Implemented; verified |
 | NFR-002 | Contract source maintainability | Implemented; verified |
 | NFR-003 | Conservative assurance claims | Implemented; verified |
@@ -158,10 +176,12 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-006 | Bound native process execution | Implemented; verified |
 | NFR-007 | Measure the declared production performance budget | Proposed |
 | NFR-008 | Reproduce every qualification identity and result | Proposed |
+| NFR-009 | Deterministic bounded method and ledger accounting | Specified; implementation pending |
 | IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 | IT-002 | Independent shared-reference consumer qualification | Implemented; verified |
 | IT-003 | Native parser portfolio execution | In progress; automated core sealed, external disposition pending |
 | IT-004 | Quire-spec production qualification campaign | Proposed |
+| IT-005 | Complete-V1 method and evidence development chain | Specified; implementation pending |
 
 ## 6. Identification and Traceability
 
@@ -187,6 +207,11 @@ representative population coverage, explicitly classified oracle independence,
 generative and mutation evidence, the actual production caller and assurance
 handoff, owner-supplied performance thresholds, independent reproduction, exact
 Rust review, semantic gap analysis, and one external disposition.
+
+IT-005 is independent of that production campaign. It verifies complete-V1
+development interfaces and implementations using pinned fixtures and explicit
+non-conclusive states; absent production evidence or disposition is tested as
+data rather than treated as a development gate.
 
 ## 8. Lifecycle and Change Control
 
@@ -222,3 +247,5 @@ agents' accepted versioned outputs, and leave unavailable producer work blocked.
 - `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, accepted private shared-reference packet.
 - `agent-ix/quire-spec-language`, the exact reviewed Rust parser candidate selected by IT-003.
 - `agent-ix/quire-verification#13`, the production-qualification expansion epic.
+- `agent-ix/quire-specification@8d0fbad`, accepted complete-V1 method, interface, evidence, and qualification semantics.
+- `agent-ix/quire-verification#34` through `#38` and `agent-ix/quire-analyze#33`, the complete-V1 lane-D development tickets.

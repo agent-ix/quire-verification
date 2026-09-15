@@ -14,7 +14,9 @@ concrete test case. The implemented TC-001 through TC-038 evidence runs in Rust
 through compiler-checked `ix-trace-rs` markers. TC-039 and TC-040 implement the
 qualification profile and corpus-validation boundaries; TC-041 implements the exact
 Engineering Assurance consumer boundary, while TC-042 through TC-045 define the remaining
-test-first qualification scope. The production profile and corpus remain
+test-first qualification scope. TC-047 through TC-052 and IT-005 define the
+complete-V1 method/evidence development slice independently of production
+ceremony. The production profile and corpus remain
 externally blocked, so no production qualification is claimed. The IT-003 automated
 core is retained separately from the still-pending external disposition. The
 rejected JavaScript prototype is not evidence.
@@ -48,6 +50,7 @@ rejected JavaScript prototype is not evidence.
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
 | US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
 | US-004 | One exact production qualification profile | TC-039..TC-045, IT-004 | 🚧 Planned |
+| US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Specified; implementation pending |
 
 ### Functional Requirement Coverage
 
@@ -81,6 +84,12 @@ rejected JavaScript prototype is not evidence.
 | FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
 | FR-027 | FR-027-AC-1..5 | TC-045, IT-004 | 🚧 Planned |
 | FR-028 | FR-028-AC-1..3 | TC-002, TC-029, TC-031, TC-046 | ✅ Complete |
+| FR-029 | FR-029-AC-1..3 | TC-047, IT-005 | 🚧 Specified; implementation pending |
+| FR-030 | FR-030-AC-1..3 | TC-048, IT-005 | 🚧 Specified; implementation pending |
+| FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | 🚧 Specified; implementation pending |
+| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Specified; implementation pending |
+| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Specified; implementation pending |
+| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Specified; implementation pending |
 
 ### Non-Functional Requirement Coverage
 
@@ -94,6 +103,7 @@ rejected JavaScript prototype is not evidence.
 | NFR-006 | Native process containment tests | TC-038 | ✅ Complete |
 | NFR-007 | Owner-threshold performance measurement | TC-044, IT-004 | 🚧 Planned |
 | NFR-008 | Independent artifact and result reproduction | TC-044, TC-045, IT-004 | 🚧 Planned |
+| NFR-009 | Deterministic bounded method and ledger accounting | TC-047..TC-049, TC-051, IT-005 | 🚧 Specified; implementation pending |
 
 ### Qualification Constraint Coverage
 
@@ -105,6 +115,11 @@ rejected JavaScript prototype is not evidence.
 | FR-025-CON-1..4 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |
+| FR-029-CON-1..3 | TC-047 | 🚧 Specified; implementation pending |
+| FR-030-CON-1..3 | TC-048 | 🚧 Specified; implementation pending |
+| FR-031-CON-1..2 | TC-049 | 🚧 Specified; implementation pending |
+| FR-032-CON-1..2 | TC-050 | 🚧 Specified; implementation pending |
+| FR-034-CON-1..3 | TC-051 | 🚧 Specified; implementation pending |
 
 ## Test Case Summary
 
@@ -156,6 +171,12 @@ rejected JavaScript prototype is not evidence.
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
 | TC-045 | Seal and bind the qualification disposition | Integration | P0 | FR-027-AC-1..FR-027-AC-5, NFR-008-AC-3 | 🚧 Planned |
 | TC-046 | Accept E02 cross-repository contract without result loss | Unit | P0 | FR-028-AC-1..FR-028-AC-3 | ✅ Passed |
+| TC-047 | Model generation and domain-valid shrinking | Property | P0 | FR-029-AC-1..FR-029-AC-3, FR-029-CON-1..FR-029-CON-3, NFR-009 | 🚧 Specified |
+| TC-048 | Relational and finite-trace hyperproperty analysis | Property | P0 | FR-030-AC-1..FR-030-AC-3, FR-030-CON-1..FR-030-CON-3, NFR-009 | 🚧 Specified |
+| TC-049 | Linked method plan execution and accounting | Property | P0 | FR-031-AC-1..FR-031-AC-3, FR-031-CON-1..FR-031-CON-2, NFR-009 | 🚧 Specified |
+| TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | 🚧 Specified |
+| TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | 🚧 Specified |
+| TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | 🚧 Specified |
 
 ## Option Permutation Matrix
 
@@ -203,6 +224,12 @@ rejected JavaScript prototype is not evidence.
 | TC-043 | exact candidate | test-only caller | real handoff omitted | production-chain qualification refused |
 | TC-044 | passing aggregate | one phase above threshold | complete raw observations | phase violation remains visible |
 | TC-045 | exact core | one claim-expanding disposition | valid reviewer identity | disposition refused; core unchanged |
+| TC-047 | satisfiable checked domain | valid smaller candidate | same native failing disposition | shrink retained |
+| TC-047 | unsatisfiable checked domain | any seed | no executable cases | domain refusal; no pass |
+| TC-048 | same closed trace population | universal-existential prefix | existential-universal prefix | authored order preserved; results may differ |
+| TC-048 | equal local names | distinct trace identities | no explicit correlation | incomplete/refused; no inferred match |
+| TC-049 | failed required node | dependent child | independent sibling | child blocked; sibling executes and remains unchanged |
+| TC-051 | all development vectors accounted | future production evidence absent | no final decision | local development passes; future states remain planned/unexecuted |
 
 ## Constraint Boundary Tests
 
@@ -258,6 +285,14 @@ rejected JavaScript prototype is not evidence.
 | Qualification profile dimensions | Exact | Every required dimension present | TC-039 | Emit one immutable profile |
 | Qualification profile dimensions | Under minimum | One required dimension absent | TC-039 | Refuse profile emission |
 | Required corpus-class coverage | Exact | At least one qualified input or one explicit gap per class | TC-040 | Preserve complete denominator |
+| Model scalar domain | Lower boundary | Inclusive minimum and representable just-outside value | TC-047 | Generate minimum; retain just-outside refusal partition |
+| Model scalar domain | Upper boundary | Inclusive maximum and representable just-outside value | TC-047 | Generate maximum; retain just-outside refusal partition |
+| Shrink order | Exact | Strictly smaller domain-valid candidate | TC-047 | Replay and retain only on same failing disposition |
+| Trace alignment | Under minimum | One read position without exactly one match | TC-048 | Incomplete; no comparison by index or name |
+| Plan node accounting | Exact | One terminal disposition per node | TC-049 | Pass |
+| Plan node accounting | Under/above | Zero or two dispositions for one node | TC-049 | Refuse accounting |
+| Qualification primary rows | Exact | 176 unique accepted capability IDs | TC-051 | Canonical ledger |
+| Qualification primary rows | Under/above | 175 rows or one duplicate among 176 entries | TC-051 | Incomplete/refused ledger |
 | Required oracle coverage | Under minimum | No oracle and no explicit no-oracle gap | TC-041 | Refuse evidence plan |
 | Mutation discrimination | Exact | One named guard removal per critical claim | TC-042 | Named traced test fails for intended reason |
 | Local Cargo concurrency | Max | 2 jobs | TC-044 | Accept bounded run |
@@ -305,6 +340,13 @@ rejected JavaScript prototype is not evidence.
 | ERR-034 | Performance threshold is missing or exceeded | TC-044 | Keep performance gate incomplete or violated |
 | ERR-035 | Reproduction cannot resolve exact bytes or explain a difference | TC-044 | Keep affected evidence unresolved |
 | ERR-036 | Qualification disposition is missing, foreign, duplicated, stale, or claim-expanding | TC-045 | Incomplete or stable refusal; core unchanged |
+| ERR-037 | Checked generation domain is unsatisfiable or a precondition would require rejection sampling | TC-047 | Domain refusal; no cases and no semantic pass |
+| ERR-038 | Shrink leaves the domain, is not strictly smaller, changes the failing clause/disposition, or fails exact replay | TC-047, TC-052 | Reject child revision and retain original counterexample |
+| ERR-039 | Trace population is open, alignment is absent/ambiguous, bound is exhausted, or correlation relies on a local name | TC-048 | Incomplete/requires-bound or refusal; no semantic verdict |
+| ERR-040 | Plan reference/provider is missing, method is unsupported, prerequisite fails, or dependency cycle exists | TC-049 | One typed node disposition; only descendants block and siblings remain |
+| ERR-041 | Evidence identity kind, subject revision, relation, digest, or discharge path is invalid or circular | TC-050 | Refuse affected discharge; preserve graph and sibling evidence |
+| ERR-042 | Qualification inventory row/vector is missing/duplicated, ecosystem pin changes, or evidence is self-produced | TC-051 | Refuse or leave affected future claim incomplete; development continues |
+| ERR-043 | Counterexample transformation loses replay material, correspondence, domain validity, or failing disposition | TC-052 | Preserve immutable revision with limitation or reject child; never overwrite parent |
 
 ## State Transition Coverage
 
@@ -332,6 +374,9 @@ rejected JavaScript prototype is not evidence.
 | Oracle status | independent agreement → disagreement or shared ancestry | TC-041 | affected claim becomes unresolved |
 | Production chain | all exact seams → one changed or missing seam | TC-043 | chain becomes blocked or failed at named boundary |
 | Qualification report | incomplete core → one exact disposition | TC-045 | final decision binds the same bounded claim |
+| Method-plan node | ready → unsupported/failed | TC-049 | exactly one terminal disposition; independent siblings unchanged |
+| Counterexample | original → transformed → replayed | TC-052 | immutable ordered lineage with claim-relative equivalence |
+| Qualification vector | planned → unexecuted → passed/failed/unsupported/waived | TC-051 | each transition remains explicit and never gates development execution |
 
 ## Edge Cases
 
@@ -376,6 +421,14 @@ rejected JavaScript prototype is not evidence.
 | EC-036 | A test adapter bypasses the real production caller or assurance handoff | FR-026 | TC-043 | Component success can masquerade as production-chain qualification |
 | EC-037 | A favorable aggregate hides one hot-path phase over budget | NFR-007 | TC-044 | Production latency breach can disappear in the summary |
 | EC-038 | A report is tampered and internally resealed while retained source bytes change | NFR-008 | TC-045 | Self-consistency can masquerade as source-bound integrity |
+| EC-040 | Empty/singleton domains omit just-outside refusal partitions | FR-029 | TC-047 | Generator coverage can look complete while boundary behavior is absent |
+| EC-041 | A smaller counterexample violates a cross-field relationship | FR-029, FR-033 | TC-047, TC-052 | Shrinking can leave the checked semantic domain |
+| EC-042 | Reversing a mixed quantifier prefix is normalized away | FR-030 | TC-048 | A different hyperproperty can be evaluated silently |
+| EC-043 | Two equal-valued traces or local names are treated as one identity | FR-030 | TC-048 | A quantifier can be satisfied by duplicating/correlating the wrong execution |
+| EC-044 | Failed prerequisite erases a successful sibling branch | FR-031 | TC-049 | Useful independent evidence disappears from accounting |
+| EC-045 | Evidence cycle or producer self-test discharges its own claim | FR-032, FR-034 | TC-050, TC-051 | Circular evidence can masquerade as independent qualification |
+| EC-046 | Redaction removes a replay field but retains the old counterexample claim | FR-032, FR-033 | TC-050, TC-052 | Non-replayable evidence can masquerade as qualified replay |
+| EC-047 | Missing future production evidence is represented as a failed development gate | FR-034 | TC-051, IT-005 | Production ceremony can unnecessarily stop provider implementation and local integration |
 
 ## Integration Test Matrix
 
@@ -387,6 +440,7 @@ rejected JavaScript prototype is not evidence.
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
+| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 Specified; production evidence is non-blocking state |
 
 ### Integration Test Details
 
@@ -411,6 +465,12 @@ rejected JavaScript prototype is not evidence.
 | TC-043 | IT-004 | Real chain and one-seam substitutions | Exact caller, candidate, result, and assurance interfaces | Exact handoff or named blocked/failed seam | P0 |
 | TC-044 | IT-004 | Performance and independent reproduction | Raw observations, thresholds, and retained identities | Per-phase decision and reproducible evidence | P0 |
 | TC-045 | IT-004 | Complete, incomplete, tampered, and disposition variants | Sealed core and external owner decision | Bounded final report or stable refusal | P0 |
+| TC-047 | IT-005 | Domain partitions, unsatisfiable models, shrinking, and replay | Checked model domains and native subject | Deterministic cases or exact refusal; replayable minimal failure | P0 |
+| TC-048 | IT-005 | Ordered quantifiers, closure, alignment, and correlation variants | Closed trace populations and relational expressions | Exact paired/trace-set result or typed non-conclusion | P0 |
+| TC-049 | IT-005 | Acyclic, unsupported, failed-prerequisite, sibling, and cyclic plan variants | Linked plan and provider manifests | One disposition per node with isolated failure | P0 |
+| TC-050 | IT-005 | Valid, stale, cross-kind, circular, redacted, and unavailable evidence | Typed subjects, results, artifacts, and relations | Exact graph or scoped refusal/limitation | P0 |
+| TC-051 | IT-005 | Exact 176 rows plus row/vector/pin/evidence/decision mutations | Accepted inventory, corpus, lock, and results | Canonical ledger; future gaps explicit and development unblocked | P0 |
+| TC-052 | IT-005 | Original, transformed, redacted, and changed-verdict lineages | Exact counterexamples, operations, correspondences, and replay | Immutable valid lineage or retained limitation/refusal | P0 |
 
 ## Resolved Coverage Gaps
 
@@ -426,9 +486,9 @@ rejected JavaScript prototype is not evidence.
 
 | Category | Total | Passed | Failed | Pending | Coverage |
 |----------|-------|--------|--------|---------|----------|
-| Unit | 17 | 17 | 0 | 0 | 100% |
+| Unit | 18 | 18 | 0 | 0 | 100% |
 | Integration | 11 | 8 | 1 | 2 | 73% |
-| Property | 13 | 11 | 0 | 2 | 85% |
+| Property | 19 | 11 | 0 | 8 | 58% |
 | Static | 2 | 2 | 0 | 0 | 100% |
 | Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 45 | 39 | 1 | 5 | 87% |
+| Overall | 52 | 40 | 1 | 11 | 77% |
