@@ -123,8 +123,12 @@ pub enum ProviderConsumption {
     CandidateValidationRejected,
     /// No candidate is a finite search result, not satisfaction.
     NoCandidate,
-    /// Non-conclusive provider states remain visible.
-    NonConclusive,
+    /// A bounded provider search did not finish.
+    Incomplete,
+    /// Provider execution failed without a semantic conclusion.
+    Failed,
+    /// Provider refused malformed input.
+    ProviderRefused,
     /// The upstream result cannot be consumed at this pin/boundary.
     Refused,
 }
@@ -165,8 +169,8 @@ pub fn consume_analyze_result(result: &AnalyzeResult) -> ProviderConsumption {
         }
         AnalyzeOutcome::ValidationRejected => ProviderConsumption::CandidateValidationRejected,
         AnalyzeOutcome::NoCandidate => ProviderConsumption::NoCandidate,
-        AnalyzeOutcome::Incomplete | AnalyzeOutcome::Failed | AnalyzeOutcome::Refused => {
-            ProviderConsumption::NonConclusive
-        }
+        AnalyzeOutcome::Incomplete => ProviderConsumption::Incomplete,
+        AnalyzeOutcome::Failed => ProviderConsumption::Failed,
+        AnalyzeOutcome::Refused => ProviderConsumption::ProviderRefused,
     }
 }

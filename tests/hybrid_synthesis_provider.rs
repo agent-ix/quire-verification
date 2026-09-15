@@ -67,7 +67,7 @@ fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
             AnalyzeMethod::HybridReachability,
             AnalyzeOutcome::Incomplete
         )),
-        ProviderConsumption::NonConclusive
+        ProviderConsumption::Incomplete
     );
     let mut stale = result(AnalyzeMethod::HybridReachability, AnalyzeOutcome::Enclosure);
     stale.provider_revision = ProviderRevision("stale".into());
@@ -105,14 +105,25 @@ fn it_005_sc_04_keeps_every_terminal_outcome_typed() {
         )),
         ProviderConsumption::NoCandidate
     );
-    for outcome in [
-        AnalyzeOutcome::Incomplete,
-        AnalyzeOutcome::Failed,
-        AnalyzeOutcome::Refused,
-    ] {
-        assert_eq!(
-            consume_analyze_result(&result(AnalyzeMethod::CanonicalSynthesis, outcome)),
-            ProviderConsumption::NonConclusive
-        );
-    }
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::CanonicalSynthesis,
+            AnalyzeOutcome::Incomplete
+        )),
+        ProviderConsumption::Incomplete
+    );
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::CanonicalSynthesis,
+            AnalyzeOutcome::Failed
+        )),
+        ProviderConsumption::Failed
+    );
+    assert_eq!(
+        consume_analyze_result(&result(
+            AnalyzeMethod::CanonicalSynthesis,
+            AnalyzeOutcome::Refused
+        )),
+        ProviderConsumption::ProviderRefused
+    );
 }
