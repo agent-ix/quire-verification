@@ -333,6 +333,9 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
         .map(|e| e.from.kind)
         .collect();
     let kinds = [
+        EvidenceKind::Source,
+        EvidenceKind::Model,
+        EvidenceKind::Binding,
         EvidenceKind::Requirement,
         EvidenceKind::Subject,
         EvidenceKind::Assumption,

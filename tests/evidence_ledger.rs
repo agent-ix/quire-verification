@@ -49,6 +49,9 @@ fn rows(state: VectorState) -> Vec<LedgerRow> {
 fn tc_050_refuses_circular_discharge_without_erasing_graph() {
     let claim = id(EvidenceKind::Claim, "claim:1");
     let kinds = [
+        EvidenceKind::Source,
+        EvidenceKind::Model,
+        EvidenceKind::Binding,
         EvidenceKind::Requirement,
         EvidenceKind::Subject,
         EvidenceKind::Assumption,
@@ -99,7 +102,7 @@ fn tc_050_refuses_circular_discharge_without_erasing_graph() {
         validate_evidence_graph(&graph, &claim),
         LedgerOutcome::Refused { .. }
     ));
-    assert_eq!(graph.edges.len(), 10);
+    assert_eq!(graph.edges.len(), 13);
 }
 
 /// Tracing: TC-050, FR-032-AC-3, IT-005.
