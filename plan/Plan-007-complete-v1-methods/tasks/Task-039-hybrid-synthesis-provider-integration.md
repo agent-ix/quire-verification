@@ -28,7 +28,7 @@ its interface-001-compatible result contract in development integration.
 - [x] Implement sound mode/flow/guard/reset enclosures with declared numeric error.
 - [x] Implement canonical bounded candidate enumeration and independent validation.
 - [x] Preserve convergence failure, incomplete search, no-candidate, candidate, proof, and counterexample states.
-- [ ] Add Analyze-owned tests plus IT-005-SC-04 integration, Rust review, and gap analysis.
+- [x] Add Analyze-owned tests plus IT-005-SC-04 integration, Rust review, and gap analysis.
 
 ## Deliverables
 

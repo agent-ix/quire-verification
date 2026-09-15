@@ -50,7 +50,7 @@ rejected JavaScript prototype is not evidence.
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
 | US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
 | US-004 | One exact production qualification profile | TC-039..TC-045, IT-004 | 🚧 Planned |
-| US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Task-040 implementation and focused traces in progress |
+| US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Task-039/040 development implementation and focused traces are ready for peer review |
 
 ### Functional Requirement Coverage
 
