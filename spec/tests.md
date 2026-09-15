@@ -86,7 +86,7 @@ rejected JavaScript prototype is not evidence.
 | FR-028 | FR-028-AC-1..3 | TC-002, TC-029, TC-031, TC-046 | ✅ Complete |
 | FR-029 | FR-029-AC-1..3 | TC-047, IT-005 | ✅ Complete |
 | FR-030 | FR-030-AC-1..3 | TC-048, IT-005 | ✅ Complete |
-| FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | 🚧 Specified; implementation pending |
+| FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | ✅ Complete |
 | FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Specified; implementation pending |
 | FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Specified; implementation pending |
 | FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Specified; implementation pending |
@@ -117,7 +117,7 @@ rejected JavaScript prototype is not evidence.
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |
 | FR-029-CON-1..3 | TC-047 | ✅ Complete |
 | FR-030-CON-1..3 | TC-048 | ✅ Complete |
-| FR-031-CON-1..2 | TC-049 | 🚧 Specified; implementation pending |
+| FR-031-CON-1..2 | TC-049 | ✅ Complete |
 | FR-032-CON-1..2 | TC-050 | 🚧 Specified; implementation pending |
 | FR-034-CON-1..3 | TC-051 | 🚧 Specified; implementation pending |
 
@@ -173,7 +173,7 @@ rejected JavaScript prototype is not evidence.
 | TC-046 | Accept E02 cross-repository contract without result loss | Unit | P0 | FR-028-AC-1..FR-028-AC-3 | ✅ Passed |
 | TC-047 | Model generation and domain-valid shrinking | Property | P0 | FR-029-AC-1..FR-029-AC-3, FR-029-CON-1..FR-029-CON-3, NFR-009 | ✅ Passed |
 | TC-048 | Relational and finite-trace hyperproperty analysis | Property | P0 | FR-030-AC-1..FR-030-AC-3, FR-030-CON-1..FR-030-CON-3, NFR-009 | ✅ Passed |
-| TC-049 | Linked method plan execution and accounting | Property | P0 | FR-031-AC-1..FR-031-AC-3, FR-031-CON-1..FR-031-CON-2, NFR-009 | 🚧 Specified |
+| TC-049 | Linked method plan execution and accounting | Property | P0 | FR-031-AC-1..FR-031-AC-3, FR-031-CON-1..FR-031-CON-2, NFR-009 | ✅ Passed |
 | TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | 🚧 Specified |
 | TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | 🚧 Specified |
 | TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | 🚧 Specified |
@@ -440,7 +440,7 @@ rejected JavaScript prototype is not evidence.
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
-| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 SC-01..SC-02 passed; SC-03..SC-07 pending; production evidence is non-blocking state |
+| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 SC-01..SC-03 passed; SC-04..SC-07 pending; production evidence is non-blocking state |
 
 ### Integration Test Details
 
@@ -468,6 +468,7 @@ rejected JavaScript prototype is not evidence.
 | TC-047 | IT-005 | Domain partitions, unsatisfiable models, shrinking, and replay | Checked model domains and native subject | Deterministic cases or exact refusal; replayable minimal failure | P0 |
 | IT-005-SC-01 | IT-005 | Execute model generation, shrinking, and exact native replay | Checked model domains and native subject | Every admitted case and retained shrink satisfies FR-029; rejected preconditions never pass | P0 |
 | IT-005-SC-02 | IT-005 | Evaluate relational traces with ordered quantifiers and exact alignment | Closed trace populations and typed relational expressions | Exact paired witness or typed non-conclusion; local names never correlate traces | P0 |
+| IT-005-SC-03 | IT-005 | Dispatch a linked plan with unavailable, failed, and cyclic variants | Linked nodes, provider manifests, and dependency edges | Every node has one disposition and independent siblings remain unchanged | P0 |
 | TC-048 | IT-005 | Ordered quantifiers, closure, alignment, and correlation variants | Closed trace populations and relational expressions | Exact paired/trace-set result or typed non-conclusion | P0 |
 | TC-049 | IT-005 | Acyclic, unsupported, failed-prerequisite, sibling, and cyclic plan variants | Linked plan and provider manifests | One disposition per node with isolated failure | P0 |
 | TC-050 | IT-005 | Valid, stale, cross-kind, circular, redacted, and unavailable evidence | Typed subjects, results, artifacts, and relations | Exact graph or scoped refusal/limitation | P0 |

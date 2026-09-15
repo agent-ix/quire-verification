@@ -237,8 +237,8 @@ fn tc_048_never_correlates_by_local_name_or_reuses_one_trace_identity() {
     ));
 }
 
-/// Tracing: TC-048, FR-030-CON-2, FR-030-CON-3.
-#[trace("TC-048", "FR-030-CON-2", "FR-030-CON-3")]
+/// Tracing: TC-048, FR-030-CON-3.
+#[trace("TC-048", "FR-030-CON-3")]
 #[test]
 fn tc_048_preserves_dependent_oracle_classification_without_promotion() {
     let request = request(Quantifier::Exists, Quantifier::ForAll);
