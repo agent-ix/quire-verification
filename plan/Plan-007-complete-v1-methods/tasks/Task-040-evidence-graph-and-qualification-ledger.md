@@ -42,7 +42,7 @@ are merged and pinned.
 - [x] Account all 176 primary rows and applicable independent claim-class vectors.
 - [x] Reject self/circular discharge and preserve redaction/loss claim impacts.
 - [x] Keep future human decisions separate and missing production evidence non-blocking for development.
-- [ ] Add TC-050-TC-052 and IT-005-SC-05..07 executable traces, Rust review, and gap analysis.
+- [x] Add TC-050-TC-052 and IT-005-SC-05..07 executable traces, Rust review, and gap analysis.
 
 ## Deliverables
 

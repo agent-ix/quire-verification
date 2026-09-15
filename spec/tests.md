@@ -87,9 +87,9 @@ rejected JavaScript prototype is not evidence.
 | FR-029 | FR-029-AC-1..3 | TC-047, IT-005 | ✅ Complete |
 | FR-030 | FR-030-AC-1..3 | TC-048, IT-005 | ✅ Complete |
 | FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | ✅ Complete |
-| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Focused implementation traced; review pending |
-| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Focused implementation traced; review pending |
-| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Focused implementation traced; review pending |
+| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
+| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
+| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
 
 ### Non-Functional Requirement Coverage
 
