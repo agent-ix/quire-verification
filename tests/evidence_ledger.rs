@@ -29,8 +29,10 @@ fn vector(class: ClaimClass, state: VectorState) -> QualificationVector {
         state,
     }
 }
-fn accepted() -> Vec<String> {
-    (0..176).map(|n| format!("capability:{n}")).collect()
+fn accepted() -> Vec<CapabilityIdentity> {
+    (0..176)
+        .map(|n| CapabilityIdentity(format!("capability:{n}")))
+        .collect()
 }
 fn rows(state: VectorState) -> Vec<LedgerRow> {
     accepted()
@@ -281,7 +283,7 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         LedgerOutcome::Accounted
     );
     let mut duplicate = rows(VectorState::Passed);
-    duplicate[175].capability_identity = "capability:0".into();
+    duplicate[175].capability_identity = CapabilityIdentity("capability:0".into());
     assert!(matches!(
         account_qualification(&accepted(), &lock(), &graph, &duplicate, None, "scope:1"),
         LedgerOutcome::Refused { .. }

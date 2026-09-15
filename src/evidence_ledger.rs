@@ -249,12 +249,16 @@ pub struct QualificationVector {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct LedgerRow {
     /// Accepted capability identity.
-    pub capability_identity: String,
+    pub capability_identity: CapabilityIdentity,
     /// Claim classes applicable to this capability under the selected profile.
     pub required_claim_classes: Vec<ClaimClass>,
     /// Applicable independent vectors.
     pub vectors: Vec<QualificationVector>,
 }
+
+/// Exact capability identity in the closed qualification denominator.
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct CapabilityIdentity(pub String);
 
 /// Immutable attributed human decision over an unchanged ledger scope.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -409,7 +413,7 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
 /// Accounts the exact denominator and independent vectors without gating local development on production artifacts.
 #[must_use]
 pub fn account_qualification(
-    accepted: &[String],
+    accepted: &[CapabilityIdentity],
     lock: &EvidenceIdentity,
     graph: &EvidenceGraph,
     rows: &[LedgerRow],
