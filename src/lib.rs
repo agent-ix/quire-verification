@@ -22,6 +22,7 @@ pub mod qualification_oracle;
 pub mod qualification_oracle_execution;
 pub mod qualification_profile;
 pub mod qualification_technique;
+pub mod relational_hyperproperty;
 pub mod report;
 pub mod shared_reference;
 

@@ -2,7 +2,7 @@
 id: Task-037
 title: "Implement relational and hyperproperty analysis"
 type: Task
-status: not_started
+status: done
 track: D2
 priority: P0
 relationships:
@@ -21,10 +21,10 @@ Complete Verification #36 and V1-RUN-015-016 behind interface-001.
 
 ## Subtasks
 
-- [ ] Represent exact trace populations, ordered quantifier prefixes, and typed cross-execution expressions.
-- [ ] Implement total alignment/correlation and explicit declassification/environment assumptions.
-- [ ] Emit paired/trace-set witnesses and exact incomplete/requires-bound states.
-- [ ] Add TC-048 and IT-005-SC-02 executable traces, Rust review, and gap analysis.
+- [x] Represent exact trace populations, ordered quantifier prefixes, and typed cross-execution expressions.
+- [x] Implement total alignment/correlation and explicit declassification/environment assumptions.
+- [x] Emit paired/trace-set witnesses and exact incomplete/requires-bound states.
+- [x] Add TC-048 and IT-005-SC-02 executable traces, Rust review, and gap analysis.
 
 ## Deliverables
 
