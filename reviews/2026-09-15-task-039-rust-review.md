@@ -26,11 +26,13 @@ only; it does not authorize a release, qualification, or a production provider i
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | low | No unresolved Rust idiom, panic-surface, tracing, or test-seam finding in the reviewed subset. | `src/hybrid_synthesis_provider.rs`, `tests/hybrid_synthesis_provider.rs` |
+| FND-001 | medium | Resolved: the intake envelope now carries and requires the exact request, implementation, toolchain, options, assumptions, bounds, and content identities required by interface-001, rather than trusting an opaque result identity alone. | `src/hybrid_synthesis_provider.rs::AnalyzeResult`, IT-005-SC-04 |
+| FND-002 | low | No unresolved Rust idiom, panic-surface, tracing, or test-seam finding remains in the reviewed subset. | `src/hybrid_synthesis_provider.rs`, `tests/hybrid_synthesis_provider.rs` |
 
 ## Rust Boundary Review
 
-- Provider revision, semantic subject, run, and result identities are distinct public newtypes.
+- Provider revision, semantic subject, run, request, implementation, toolchain, options,
+  assumptions, bounds, content, and result identities are distinct public newtypes.
 - The boundary accepts only the pinned Analyze revision and refuses empty identities or outcomes
   incompatible with the requested method.
 - `Candidate` and `ValidatedCandidate` remain explicitly non-proof consumption states; incomplete,
