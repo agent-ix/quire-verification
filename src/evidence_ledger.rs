@@ -316,6 +316,9 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
     }) {
         return refused("only a decision may decide an exact claim");
     }
+    if graph.limitations.iter().any(invalid_limitation) {
+        return refused("limitations must name exact affected claims and redacted fields");
+    }
     let limitations: Vec<_> = graph
         .limitations
         .iter()
@@ -325,7 +328,7 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
     if !limitations.is_empty() {
         return LedgerOutcome::Incomplete { limitations };
     }
-    if has_any_cycle(&graph.edges) {
+    if has_cycle_reaching_claim(&graph.edges, claim) {
         return refused("circular self-evidence cannot discharge a claim");
     }
     let incoming: BTreeSet<_> = graph
@@ -369,6 +372,9 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
         {
             return refused("counterexample revision has malformed exact provenance");
         }
+        if rev.limitations.iter().any(invalid_limitation) {
+            return refused("counterexample limitation must name exact affected claims");
+        }
         if let Some(parent_id) = rev.parent.as_deref() {
             let Some(parent) = seen.get(parent_id) else {
                 return refused("lineage parent is absent or unordered");
@@ -377,7 +383,7 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
                 || rev.subject != parent.subject
                 || rev.claim != parent.claim
                 || rev.domain_valid != parent.domain_valid
-                || rev.replay != parent.replay
+                || (rev.replay != parent.replay && rev.replay != ReplayOutcome::Unavailable)
             {
                 return refused("transformation changes domain, claim, correspondence, or verdict");
             }
@@ -389,6 +395,9 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
                 .any(|l| l.kind != LimitationKind::FutureProductionEvidence)
         {
             return refused("limited replay material cannot be replay-qualified");
+        }
+        if rev.replay == ReplayOutcome::Unavailable && rev.limitations.is_empty() {
+            return refused("unavailable replay must retain an explicit limitation");
         }
         if seen.insert(&rev.identity, rev).is_some() {
             return refused("counterexample revisions are immutable and unique");
@@ -481,6 +490,15 @@ fn invalid_intake(i: &EvidenceIntake) -> bool {
         || i.provenance.is_empty()
 }
 
+fn invalid_limitation(limitation: &Limitation) -> bool {
+    limitation.affected_claims.is_empty()
+        || limitation
+            .affected_claims
+            .iter()
+            .any(|claim| !valid_kind(claim, EvidenceKind::Claim))
+        || (limitation.kind == LimitationKind::Redacted && limitation.removed_fields.is_empty())
+}
+
 /// Returns the lowercase SHA-256 digest of producer bytes inspected at intake.
 #[must_use]
 pub fn evidence_digest(bytes: &[u8]) -> String {
@@ -491,6 +509,27 @@ fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
     edges
         .iter()
         .any(|e| reaches(edges, &e.to, &e.from, &mut BTreeSet::new()))
+}
+
+fn has_cycle_reaching_claim(edges: &[EvidenceEdge], claim: &EvidenceIdentity) -> bool {
+    let mut relevant = BTreeSet::from([claim.clone()]);
+    loop {
+        let before = relevant.len();
+        for edge in edges {
+            if relevant.contains(&edge.to) {
+                relevant.insert(edge.from.clone());
+            }
+        }
+        if relevant.len() == before {
+            break;
+        }
+    }
+    let upstream: Vec<_> = edges
+        .iter()
+        .filter(|edge| relevant.contains(&edge.from) && relevant.contains(&edge.to))
+        .cloned()
+        .collect();
+    has_any_cycle(&upstream)
 }
 fn reaches(
     edges: &[EvidenceEdge],

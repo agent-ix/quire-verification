@@ -133,6 +133,67 @@ fn tc_050_keeps_redaction_claim_specific() {
     );
 }
 
+/// Tracing: TC-050, FR-032-AC-2, FR-032-AC-3, IT-005.
+#[test]
+#[trace("TC-050", "FR-032-AC-2", "FR-032-AC-3", "IT-005")]
+fn tc_050_retains_sibling_claim_when_an_unrelated_cycle_exists() {
+    let claim = id(EvidenceKind::Claim, "claim:target");
+    let kinds = [
+        EvidenceKind::Source,
+        EvidenceKind::Model,
+        EvidenceKind::Binding,
+        EvidenceKind::Requirement,
+        EvidenceKind::Subject,
+        EvidenceKind::Assumption,
+        EvidenceKind::Implementation,
+        EvidenceKind::Method,
+        EvidenceKind::Provider,
+        EvidenceKind::ProviderRun,
+        EvidenceKind::Artifact,
+        EvidenceKind::Decision,
+    ];
+    let mut edges: Vec<_> = kinds
+        .into_iter()
+        .map(|kind| EvidenceEdge {
+            from: id(kind, &format!("{kind:?}:target")),
+            to: claim.clone(),
+            relation: if kind == EvidenceKind::Decision {
+                EvidenceRelation::Decides
+            } else {
+                EvidenceRelation::Supports
+            },
+            scope: "scope".into(),
+            provenance: "p".into(),
+        })
+        .collect();
+    edges.extend([
+        EvidenceEdge {
+            from: id(EvidenceKind::Claim, "cycle:a"),
+            to: id(EvidenceKind::Claim, "cycle:b"),
+            relation: EvidenceRelation::Supports,
+            scope: "scope".into(),
+            provenance: "p".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Claim, "cycle:b"),
+            to: id(EvidenceKind::Claim, "cycle:a"),
+            relation: EvidenceRelation::Supports,
+            scope: "scope".into(),
+            provenance: "p".into(),
+        },
+    ]);
+    let graph = EvidenceGraph {
+        edges,
+        intake: vec![],
+        limitations: vec![],
+    };
+    assert_eq!(
+        validate_evidence_graph(&graph, &claim),
+        LedgerOutcome::Accounted
+    );
+    assert_eq!(graph.edges.len(), 14);
+}
+
 /// Tracing: TC-052, FR-033-AC-1, FR-033-AC-2, FR-033-AC-3, IT-005.
 #[test]
 #[trace("TC-052", "FR-033-AC-1", "FR-033-AC-2", "FR-033-AC-3", "IT-005")]
@@ -162,6 +223,16 @@ fn tc_052_preserves_ordered_lineage_and_refuses_verdict_change() {
         LedgerOutcome::Accounted
     );
     child.replay = ReplayOutcome::Unavailable;
+    child.limitations = vec![Limitation {
+        kind: LimitationKind::NonReplayable,
+        affected_claims: vec![child.claim.clone()],
+        removed_fields: vec![],
+    }];
+    assert_eq!(
+        validate_lineage(&[root.clone(), child.clone()]),
+        LedgerOutcome::Accounted
+    );
+    child.limitations.clear();
     assert!(matches!(
         validate_lineage(&[root, child]),
         LedgerOutcome::Refused { .. }

@@ -2,7 +2,7 @@
 id: Task-040
 title: "Implement evidence graph and qualification ledger"
 type: Task
-status: not_started
+status: in_progress
 track: D5
 priority: P0
 relationships:
@@ -36,15 +36,14 @@ are merged and pinned.
 
 ## Subtasks
 
-- [ ] Implement typed evidence nodes/relations with exact source/model/binding/implementation/method/run provenance.
-- [ ] Implement immutable counterexample revision and replay lineage.
-- [ ] Consume exact ecosystem locks and independent conformance corpus records.
-- [ ] Account all 176 primary rows and applicable independent claim-class vectors.
-- [ ] Reject self/circular discharge and preserve redaction/loss claim impacts.
-- [ ] Keep future human decisions separate and missing production evidence non-blocking for development.
+- [x] Implement typed evidence nodes/relations with exact source/model/binding/implementation/method/run provenance.
+- [x] Implement immutable counterexample revision and replay lineage.
+- [x] Consume exact ecosystem locks and independent conformance corpus records.
+- [x] Account all 176 primary rows and applicable independent claim-class vectors.
+- [x] Reject self/circular discharge and preserve redaction/loss claim impacts.
+- [x] Keep future human decisions separate and missing production evidence non-blocking for development.
 - [ ] Add TC-050-TC-052 and IT-005-SC-05..07 executable traces, Rust review, and gap analysis.
 
 ## Deliverables
 
 Typed evidence graph, counterexample lineage, and complete qualification ledger with no implicit promotion.
-
