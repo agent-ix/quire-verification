@@ -1,138 +1,513 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Agent-IX
 
-//! Append-only typed evidence intake, counterexample lineage, and ledger accounting.
-//! Governing requirements: FR-032 through FR-034 and TC-050 through TC-052.
+//! Typed, append-only qualification evidence records for FR-032 through FR-034.
+//!
+//! This I18--I21 boundary validates producer-supplied records. It neither runs
+//! producers nor creates an evidence store owned by Quoin.
 
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
-/// Closed identity categories; equal text never permits cross-kind substitution.
+/// Closed categories for identities at the evidence boundary.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub enum EvidenceKind {
+    /// Qualification claim.
     Claim,
+    /// Source revision.
+    Source,
+    /// Package revision.
+    Package,
+    /// Semantic model.
+    Model,
+    /// Model binding.
+    Binding,
+    /// Requirement.
     Requirement,
+    /// Requirement clause.
+    Clause,
+    /// Semantic subject.
     Subject,
+    /// Assumption.
     Assumption,
+    /// Implementation revision.
     Implementation,
+    /// Verification method.
     Method,
+    /// Provider identity.
+    Provider,
+    /// Provider run.
     ProviderRun,
+    /// Provider result.
+    Result,
+    /// Immutable artifact.
     Artifact,
+    /// Ecosystem lock.
+    EcosystemLock,
+    /// Conformance corpus.
+    Corpus,
+    /// Human decision.
     Decision,
 }
-/// Closed append-only evidence relations.
+
+/// Closed, append-only graph relations.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum EvidenceRelation {
+    /// Source derivation.
     DerivedFrom,
+    /// Evaluation.
     Evaluates,
+    /// Implementation.
     Implements,
+    /// Producer generation.
     GeneratedBy,
+    /// Replay.
     Replays,
+    /// Support.
     Supports,
+    /// Contradiction.
     Contradicts,
+    /// Attributed decision.
     Decides,
 }
-/// Exact typed evidence identity.
+
+/// An exact identity whose category is never inferred from text.
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct EvidenceIdentity {
+    /// Closed category.
     pub kind: EvidenceKind,
+    /// Producer-owned opaque identifier.
     pub value: String,
 }
-/// One immutable evidence edge with exact provenance and scope.
+
+/// One immutable relation with exact scope and provenance.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EvidenceEdge {
+    /// Relation origin.
     pub from: EvidenceIdentity,
+    /// Relation target.
     pub to: EvidenceIdentity,
+    /// Relation kind.
     pub relation: EvidenceRelation,
+    /// Exact relation scope.
     pub scope: String,
+    /// Immutable provenance.
     pub provenance: String,
 }
-/// Visible impact of absent or weakened evidence; never a semantic verdict.
+
+/// Producer bytes accepted without executing or reinterpreting the producer.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct EvidenceIntake {
+    /// Record/artifact identity.
+    pub identity: EvidenceIdentity,
+    /// Declared SHA-256 digest.
+    pub declared_digest: String,
+    /// Digest actually observed at intake.
+    pub observed_digest: String,
+    /// Acquisition provenance.
+    pub provenance: String,
+}
+
+/// A limitation and the exact claims it narrows.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct Limitation {
+    /// Limitation category.
+    pub kind: LimitationKind,
+    /// Affected claims only.
+    pub affected_claims: Vec<EvidenceIdentity>,
+    /// Removed fields for a redaction.
+    pub removed_fields: Vec<String>,
+}
+
+/// Evidence limitations that never broaden claims.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Limitation {
+pub enum LimitationKind {
+    /// Data was redacted.
     Redacted,
+    /// Data was lost.
     Lost,
+    /// Data is inaccessible.
     Inaccessible,
+    /// Data cannot be replayed.
     NonReplayable,
+    /// Future production material is absent.
     FutureProductionEvidence,
 }
-/// Immutable counterexample revision linked to one prior revision or root.
+
+/// A typed graph emitted by this repository and retained by Quoin.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct EvidenceGraph {
+    /// Append-only edges.
+    pub edges: Vec<EvidenceEdge>,
+    /// Byte-validated intake records.
+    pub intake: Vec<EvidenceIntake>,
+    /// Visible claim limitations.
+    pub limitations: Vec<Limitation>,
+}
+
+/// Exact replay result of a counterexample revision.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ReplayOutcome {
+    /// Exact named failure replayed.
+    SameFailure,
+    /// Replay material unavailable.
+    Unavailable,
+}
+
+/// One immutable, ordered counterexample revision.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CounterexampleRevision {
+    /// Revision identity.
     pub identity: String,
+    /// Parent identity, or none for the original.
     pub parent: Option<String>,
+    /// Exact subject.
     pub subject: EvidenceIdentity,
-    pub replay_identity: Option<String>,
+    /// Exact failing claim.
+    pub claim: EvidenceIdentity,
+    /// Typed values/trace digest.
+    pub values_or_trace: String,
+    /// Provider identity.
+    pub provider: EvidenceIdentity,
+    /// Provider run.
+    pub run: EvidenceIdentity,
+    /// Transform/replay operation.
+    pub operation: String,
+    /// Explicit correspondence to parent values/execution.
+    pub correspondence: Option<String>,
+    /// Domain validity for the named claim.
+    pub domain_valid: bool,
+    /// Replay disposition.
+    pub replay: ReplayOutcome,
+    /// Retained material limitations.
+    pub limitations: Vec<Limitation>,
 }
-/// One primary inventory capability row.
+
+/// Independent qualification vectors.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub enum ClaimClass {
+    /// Grammar.
+    Grammar,
+    /// Semantic kernel.
+    SemanticKernel,
+    /// Runtime/monitor.
+    RuntimeMonitor,
+    /// Analysis.
+    Analysis,
+    /// Backend.
+    Backend,
+    /// Tooling.
+    Tooling,
+    /// Consumer integration.
+    ConsumingIntegration,
+}
+
+/// A vector's visible execution state.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum VectorState {
+    /// Explicit future work.
+    Planned,
+    /// Not executed.
+    Unexecuted,
+    /// Passed.
+    Passed,
+    /// Failed.
+    Failed,
+    /// Unsupported.
+    Unsupported,
+    /// Human waiver, never a pass.
+    Waived,
+}
+
+/// Exact provenance binding for one independent vector.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct QualificationVector {
+    /// Independent class.
+    pub claim_class: ClaimClass,
+    /// Source identity.
+    pub source: EvidenceIdentity,
+    /// Package identity.
+    pub package: EvidenceIdentity,
+    /// Implementation identity.
+    pub implementation: EvidenceIdentity,
+    /// Method identity.
+    pub method: EvidenceIdentity,
+    /// Corpus identity.
+    pub corpus: EvidenceIdentity,
+    /// Ecosystem lock identity.
+    pub ecosystem_lock: EvidenceIdentity,
+    /// Provider run identity.
+    pub run: EvidenceIdentity,
+    /// Result identity.
+    pub result: EvidenceIdentity,
+    /// Vector state.
+    pub state: VectorState,
+}
+
+/// One primary row in the closed capability denominator.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct LedgerRow {
+    /// Accepted capability identity.
     pub capability_identity: String,
-    pub claim_class: String,
-    pub evidence: Vec<EvidenceIdentity>,
-    pub limitations: Vec<Limitation>,
-    pub decision: Option<EvidenceIdentity>,
+    /// Claim classes applicable to this capability under the selected profile.
+    pub required_claim_classes: Vec<ClaimClass>,
+    /// Applicable independent vectors.
+    pub vectors: Vec<QualificationVector>,
 }
-/// Typed intake result, deliberately without evidence-storage ownership.
+
+/// Immutable attributed human decision over an unchanged ledger scope.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HumanDecision {
+    /// Decision identity.
+    pub identity: EvidenceIdentity,
+    /// Authenticated actor.
+    pub actor: String,
+    /// Decision authority.
+    pub authority: String,
+    /// Exact ledger scope digest.
+    pub ledger_scope: String,
+    /// Disposition.
+    pub disposition: DecisionDisposition,
+    /// Human rationale.
+    pub rationale: String,
+}
+
+/// Eventual decision disposition.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum DecisionDisposition {
+    /// Accept.
+    Accepted,
+    /// Reject.
+    Rejected,
+    /// Limit scope.
+    Limited,
+}
+
+/// Result of a graph, lineage, or ledger operation.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum LedgerOutcome {
+    /// Valid local accounting.
     Accounted,
-    Incomplete { limitation: Limitation },
-    Refused { reason: String },
+    /// Development can proceed; exact claims are incomplete.
+    Incomplete {
+        /// Limiting states.
+        limitations: Vec<LimitationKind>,
+    },
+    /// Invalid discharge/acceptance.
+    Refused {
+        /// Stable explanatory reason.
+        reason: String,
+    },
 }
-/// Validates graph and ledger invariants without executing providers or deciding release acceptance.
+
+/// Validates exact graph intake and discharge without executing providers.
 #[must_use]
-pub fn account_ledger(
-    edges: &[EvidenceEdge],
-    revisions: &[CounterexampleRevision],
-    rows: &[LedgerRow],
-) -> LedgerOutcome {
-    if rows.len() != 176
-        || rows
-            .iter()
-            .map(|row| row.capability_identity.as_str())
-            .collect::<BTreeSet<_>>()
-            .len()
-            != 176
-    {
-        return LedgerOutcome::Refused {
-            reason: "ledger requires exactly 176 unique primary capability rows".into(),
-        };
+pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) -> LedgerOutcome {
+    if !valid_kind(claim, EvidenceKind::Claim) {
+        return refused("discharge requires an exact claim identity");
     }
-    if edges.iter().any(|edge| {
-        edge.scope.is_empty()
-            || edge.provenance.is_empty()
-            || edge.from.kind == edge.to.kind && edge.from.value == edge.to.value
+    if graph.edges.iter().any(invalid_edge) || graph.intake.iter().any(invalid_intake) {
+        return refused("malformed, stale, cross-kind, or digest-mismatched evidence");
+    }
+    if graph.edges.iter().any(|e| {
+        e.relation == EvidenceRelation::Decides
+            && (!valid_kind(&e.from, EvidenceKind::Decision) || e.to.kind != EvidenceKind::Claim)
     }) {
-        return LedgerOutcome::Refused {
-            reason: "empty provenance or self evidence edge".into(),
-        };
+        return refused("only a decision may decide an exact claim");
     }
-    if revisions.iter().any(|revision| {
-        revision.identity.is_empty()
-            || revision.parent.as_deref() == Some(revision.identity.as_str())
-    }) {
-        return LedgerOutcome::Refused {
-            reason: "counterexample lineage is not immutable".into(),
-        };
+    let limitations: Vec<_> = graph
+        .limitations
+        .iter()
+        .filter(|l| l.affected_claims.iter().any(|c| c == claim))
+        .map(|l| l.kind)
+        .collect();
+    if !limitations.is_empty() {
+        return LedgerOutcome::Incomplete { limitations };
     }
-    if rows.iter().any(|row| !row.limitations.is_empty()) {
-        return LedgerOutcome::Incomplete {
-            limitation: rows
-                .iter()
-                .flat_map(|row| row.limitations.iter())
-                .next()
-                .copied()
-                .unwrap_or(Limitation::FutureProductionEvidence),
-        };
+    if has_any_cycle(&graph.edges) {
+        return refused("circular self-evidence cannot discharge a claim");
     }
-    if rows.iter().any(|row| {
-        row.decision
-            .as_ref()
-            .is_some_and(|decision| decision.kind != EvidenceKind::Decision)
-    }) {
-        return LedgerOutcome::Refused {
-            reason: "only attributed decision identities may decide a claim".into(),
-        };
+    let incoming: BTreeSet<_> = graph
+        .edges
+        .iter()
+        .filter(|e| e.to == *claim)
+        .map(|e| e.from.kind)
+        .collect();
+    let kinds = [
+        EvidenceKind::Requirement,
+        EvidenceKind::Subject,
+        EvidenceKind::Assumption,
+        EvidenceKind::Implementation,
+        EvidenceKind::Method,
+        EvidenceKind::Provider,
+        EvidenceKind::ProviderRun,
+        EvidenceKind::Artifact,
+        EvidenceKind::Decision,
+    ];
+    if kinds.iter().any(|kind| !incoming.contains(kind)) {
+        return refused("claim lacks an independently attributed exact evidence path");
     }
     LedgerOutcome::Accounted
+}
+
+/// Validates ordered immutable, claim-relative counterexample revisions.
+#[must_use]
+pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
+    let mut seen = BTreeMap::<&str, &CounterexampleRevision>::new();
+    for rev in revisions {
+        if rev.identity.is_empty()
+            || rev.values_or_trace.is_empty()
+            || rev.operation.is_empty()
+            || !valid_kind(&rev.subject, EvidenceKind::Subject)
+            || !valid_kind(&rev.claim, EvidenceKind::Claim)
+            || !valid_kind(&rev.provider, EvidenceKind::Provider)
+            || !valid_kind(&rev.run, EvidenceKind::ProviderRun)
+        {
+            return refused("counterexample revision has malformed exact provenance");
+        }
+        if let Some(parent_id) = rev.parent.as_deref() {
+            let Some(parent) = seen.get(parent_id) else {
+                return refused("lineage parent is absent or unordered");
+            };
+            if rev.correspondence.as_deref().is_none_or(str::is_empty)
+                || rev.subject != parent.subject
+                || rev.claim != parent.claim
+                || rev.domain_valid != parent.domain_valid
+                || rev.replay != parent.replay
+            {
+                return refused("transformation changes domain, claim, correspondence, or verdict");
+            }
+        }
+        if rev.replay == ReplayOutcome::SameFailure
+            && rev
+                .limitations
+                .iter()
+                .any(|l| l.kind != LimitationKind::FutureProductionEvidence)
+        {
+            return refused("limited replay material cannot be replay-qualified");
+        }
+        if seen.insert(&rev.identity, rev).is_some() {
+            return refused("counterexample revisions are immutable and unique");
+        }
+    }
+    LedgerOutcome::Accounted
+}
+
+/// Accounts the exact denominator and independent vectors without gating local development on production artifacts.
+#[must_use]
+pub fn account_qualification(
+    accepted: &[String],
+    lock: &EvidenceIdentity,
+    graph: &EvidenceGraph,
+    rows: &[LedgerRow],
+    decision: Option<&HumanDecision>,
+    scope: &str,
+) -> LedgerOutcome {
+    let expected: BTreeSet<_> = accepted.iter().collect();
+    let actual: BTreeSet<_> = rows.iter().map(|r| &r.capability_identity).collect();
+    if accepted.len() != 176
+        || expected.len() != 176
+        || rows.len() != 176
+        || actual.len() != 176
+        || expected != actual
+    {
+        return refused("ledger requires the exact closed 176-capability denominator");
+    }
+    if !valid_kind(lock, EvidenceKind::EcosystemLock) || scope.is_empty() {
+        return refused("ledger requires one exact ecosystem lock and scope");
+    }
+    if graph.edges.iter().any(invalid_edge) || has_any_cycle(&graph.edges) {
+        return refused("self-produced or circular evidence cannot discharge a row");
+    }
+    let mut incomplete = false;
+    for row in rows {
+        let classes: BTreeSet<_> = row.vectors.iter().map(|v| v.claim_class).collect();
+        let required: BTreeSet<_> = row.required_claim_classes.iter().copied().collect();
+        if classes.len() != row.vectors.len()
+            || required.len() != row.required_claim_classes.len()
+            || classes != required
+        {
+            return refused("every applicable claim-class vector occurs exactly once per row");
+        }
+        for vector in &row.vectors {
+            if !valid_vector(vector, lock) {
+                return refused(
+                    "vector lacks an exact source/package/implementation/method/corpus/lock/run/result binding",
+                );
+            }
+            incomplete |= vector.state != VectorState::Passed;
+        }
+    }
+    if incomplete {
+        return LedgerOutcome::Incomplete {
+            limitations: vec![LimitationKind::FutureProductionEvidence],
+        };
+    }
+    if let Some(d) = decision
+        && (!valid_kind(&d.identity, EvidenceKind::Decision)
+            || d.actor.is_empty()
+            || d.authority.is_empty()
+            || d.rationale.is_empty()
+            || d.ledger_scope != scope)
+    {
+        return refused(
+            "decision is not authenticated, attributed, or scoped to this unchanged ledger",
+        );
+    }
+    LedgerOutcome::Accounted
+}
+
+fn valid_identity(id: &EvidenceIdentity) -> bool {
+    !id.value.is_empty()
+}
+fn valid_kind(id: &EvidenceIdentity, kind: EvidenceKind) -> bool {
+    id.kind == kind && valid_identity(id)
+}
+fn invalid_edge(e: &EvidenceEdge) -> bool {
+    !valid_identity(&e.from)
+        || !valid_identity(&e.to)
+        || e.from == e.to
+        || e.scope.is_empty()
+        || e.provenance.is_empty()
+}
+fn invalid_intake(i: &EvidenceIntake) -> bool {
+    !valid_identity(&i.identity)
+        || i.declared_digest.len() != 64
+        || i.declared_digest != i.observed_digest
+        || i.provenance.is_empty()
+}
+fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
+    edges
+        .iter()
+        .any(|e| reaches(edges, &e.to, &e.from, &mut BTreeSet::new()))
+}
+fn reaches(
+    edges: &[EvidenceEdge],
+    current: &EvidenceIdentity,
+    target: &EvidenceIdentity,
+    path: &mut BTreeSet<EvidenceIdentity>,
+) -> bool {
+    if !path.insert(current.clone()) {
+        return false;
+    }
+    let found = edges
+        .iter()
+        .filter(|e| e.from == *current)
+        .any(|e| e.to == *target || reaches(edges, &e.to, target, path));
+    path.remove(current);
+    found
+}
+fn valid_vector(v: &QualificationVector, lock: &EvidenceIdentity) -> bool {
+    valid_kind(&v.source, EvidenceKind::Source)
+        && valid_kind(&v.package, EvidenceKind::Package)
+        && valid_kind(&v.implementation, EvidenceKind::Implementation)
+        && valid_kind(&v.method, EvidenceKind::Method)
+        && valid_kind(&v.corpus, EvidenceKind::Corpus)
+        && v.ecosystem_lock == *lock
+        && valid_kind(&v.run, EvidenceKind::ProviderRun)
+        && valid_kind(&v.result, EvidenceKind::Result)
+}
+fn refused(reason: &str) -> LedgerOutcome {
+    LedgerOutcome::Refused {
+        reason: reason.into(),
+    }
 }
