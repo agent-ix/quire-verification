@@ -16,8 +16,8 @@ relationships:
 
 Audited the Task-040 implementation, its focused trace markers, and the
 Plan-007 task state. The implementation subset has traced executable coverage,
-but the plan cannot be certified complete while Task-039 is not started and
-Task-040 is intentionally still in progress pending this review cycle.
+but the plan cannot be certified complete while Tasks-039 and -040 remain
+actively in progress.
 
 ## Verdict
 
@@ -29,8 +29,8 @@ future production evidence represented as explicit data.
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | high | Plan-007 has 4 / 6 tasks done; Task-039 is `not_started` and Task-040 is `in_progress`, so the targeted plan fails the completion predicate. | Task-039, Task-040 |
-| FND-002 | medium | The repository-wide strict-Clippy gate is blocked by pre-existing linked-plan warnings/lints, so it cannot yet provide a clean whole-crate gate for the Task-040 subset. | `src/linked_method_plan.rs`, SR-261 |
+| FND-001 | high | Plan-007 has 4 / 6 tasks done; Tasks-039 and -040 are `in_progress`, so the targeted plan fails the completion predicate. | Task-039, Task-040 |
+| FND-002 | low | Resolved: the repository-wide strict-Clippy gate now passes after the linked-plan cleanup. | `src/linked_method_plan.rs`, SR-261, `abbedfd` |
 | FND-003 | low | Task-040 is marked in progress rather than complete in its task and matrix rows; this avoids a status lie while its final plan reconciliation remains open. | Task-040, `spec/tests.md` |
 
 ## Coverage
@@ -43,7 +43,7 @@ future production evidence represented as explicit data.
   lies, and zero untracked symbols in this invocation. The unbacked remainder
   belongs to work outside the Task-040 subset; no complete row is claimed for
   FR-032 through FR-034.
-- Task states: 4 / 6 done. Task-039 is not started; Task-040 is in progress.
+- Task states: 4 / 6 done. Tasks-039 and -040 are in progress.
 - Reverse inventory: five public operations/behaviors (`evidence_digest`,
   graph validation, lineage validation, vector validation, qualification
   accounting) are owned by FR-032 through FR-034 and interface-002. No source

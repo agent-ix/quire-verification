@@ -22,11 +22,9 @@ and missing unavailable-replay limitations before this artifact was written.
 
 ## Verdict
 
-**CONDITIONAL.** The reviewed source and focused executable tests pass; the
-crate-wide strict Clippy gate remains unavailable because pre-existing
-`linked_method_plan.rs` documentation and lint failures are compiled with this
-library target. That is a local code-quality debt, not a production or release
-precondition for Task-040 development.
+**PASS for Task-040's reviewed Rust subset.** The reviewed source and focused
+executable tests pass, and the subsequent linked-plan cleanup restored the
+crate-wide strict Clippy gate.
 
 ## Findings
 
@@ -35,7 +33,7 @@ precondition for Task-040 development.
 | FND-001 | low | Resolved: evidence intake now computes SHA-256 from supplied producer bytes rather than trusting two caller-declared digest strings. | `src/evidence_ledger.rs::evidence_digest`, TC-050 |
 | FND-002 | low | Resolved: only a cycle upstream of the requested claim refuses that discharge; an unrelated graph cycle leaves sibling evidence usable. | `src/evidence_ledger.rs::has_cycle_reaching_claim`, TC-050 |
 | FND-003 | low | Resolved: an unavailable replay must retain a claim-specific limitation and cannot substitute for replay-qualified evidence. | `src/evidence_ledger.rs::validate_lineage`, TC-052 |
-| FND-004 | medium | Pre-existing strict-Clippy failures in `linked_method_plan.rs` prevent a crate-wide `-D warnings` pass; no Task-040 source finding remained after targeted review. | `src/linked_method_plan.rs` |
+| FND-004 | low | Resolved: linked-plan public-contract documentation and small helper extraction restore crate-wide strict Clippy under `-D warnings`. | `src/linked_method_plan.rs`, `abbedfd` |
 
 ## Coverage
 
@@ -54,9 +52,7 @@ precondition for Task-040 development.
 - `cargo fmt --all --check`: pass.
 - `cargo test --test evidence_ledger -q`: 5 passed; all new tests carry
   compiler-checked TC/FR/IT trace attributes.
-- `cargo clippy --test evidence_ledger -- -D warnings`: blocked by the
-  pre-existing linked-plan findings named above; the reviewed source's own
-  reported collapsible-`if` finding was fixed.
+- `cargo clippy --workspace --all-targets --all-features -- -D warnings`: pass.
 
 Native `quoin write` failed with QM012 transport (tracked in
 [quoin#535](https://github.com/agent-ix/quoin/issues/535)); npm Quoin 0.23.1
