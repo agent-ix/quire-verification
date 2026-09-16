@@ -300,28 +300,61 @@ pub enum LedgerOutcome {
     },
     /// Invalid discharge/acceptance.
     Refused {
+        /// Stable refusal category.
+        code: LedgerRefusalCode,
         /// Stable explanatory reason.
         reason: String,
     },
+}
+
+/// Stable categories for rejected graph, lineage, and ledger operations.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum LedgerRefusalCode {
+    /// Identity, digest, scope, or provenance was malformed.
+    MalformedEvidence,
+    /// An edge relation cannot support its declared identity kinds.
+    InvalidRelation,
+    /// Evidence would discharge itself circularly.
+    CircularEvidence,
+    /// A required evidence path is absent.
+    MissingEvidencePath,
+    /// Lineage provenance or ordering is invalid.
+    InvalidLineage,
+    /// The closed qualification denominator or vectors are invalid.
+    InvalidLedger,
+    /// A decision is absent, invalid, or cannot accept this scope.
+    InvalidDecision,
 }
 
 /// Validates exact graph intake and discharge without executing providers.
 #[must_use]
 pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) -> LedgerOutcome {
     if !valid_kind(claim, EvidenceKind::Claim) {
-        return refused("discharge requires an exact claim identity");
+        return refused(
+            LedgerRefusalCode::MalformedEvidence,
+            "discharge requires an exact claim identity",
+        );
     }
     if graph.edges.iter().any(invalid_edge) || graph.intake.iter().any(invalid_intake) {
-        return refused("malformed, stale, cross-kind, or digest-mismatched evidence");
+        return refused(
+            LedgerRefusalCode::MalformedEvidence,
+            "malformed, stale, cross-kind, or digest-mismatched evidence",
+        );
     }
     if graph.edges.iter().any(|e| {
         e.relation == EvidenceRelation::Decides
             && (!valid_kind(&e.from, EvidenceKind::Decision) || e.to.kind != EvidenceKind::Claim)
     }) {
-        return refused("only a decision may decide an exact claim");
+        return refused(
+            LedgerRefusalCode::InvalidRelation,
+            "only a decision may decide an exact claim",
+        );
     }
     if graph.limitations.iter().any(invalid_limitation) {
-        return refused("limitations must name exact affected claims and redacted fields");
+        return refused(
+            LedgerRefusalCode::MalformedEvidence,
+            "limitations must name exact affected claims and redacted fields",
+        );
     }
     let limitations: Vec<_> = graph
         .limitations
@@ -333,12 +366,15 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
         return LedgerOutcome::Incomplete { limitations };
     }
     if has_cycle_reaching_claim(&graph.edges, claim) {
-        return refused("circular self-evidence cannot discharge a claim");
+        return refused(
+            LedgerRefusalCode::CircularEvidence,
+            "circular self-evidence cannot discharge a claim",
+        );
     }
     let incoming: BTreeSet<_> = graph
         .edges
         .iter()
-        .filter(|e| e.to == *claim)
+        .filter(|e| supports_claim(e, claim))
         .map(|e| e.from.kind)
         .collect();
     let kinds = [
@@ -356,7 +392,10 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
         EvidenceKind::Decision,
     ];
     if kinds.iter().any(|kind| !incoming.contains(kind)) {
-        return refused("claim lacks an independently attributed exact evidence path");
+        return refused(
+            LedgerRefusalCode::MissingEvidencePath,
+            "claim lacks an independently attributed exact evidence path",
+        );
     }
     LedgerOutcome::Accounted
 }
@@ -374,14 +413,23 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
             || !valid_kind(&rev.provider, EvidenceKind::Provider)
             || !valid_kind(&rev.run, EvidenceKind::ProviderRun)
         {
-            return refused("counterexample revision has malformed exact provenance");
+            return refused(
+                LedgerRefusalCode::InvalidLineage,
+                "counterexample revision has malformed exact provenance",
+            );
         }
         if rev.limitations.iter().any(invalid_limitation) {
-            return refused("counterexample limitation must name exact affected claims");
+            return refused(
+                LedgerRefusalCode::InvalidLineage,
+                "counterexample limitation must name exact affected claims",
+            );
         }
         if let Some(parent_id) = rev.parent.as_deref() {
             let Some(parent) = seen.get(parent_id) else {
-                return refused("lineage parent is absent or unordered");
+                return refused(
+                    LedgerRefusalCode::InvalidLineage,
+                    "lineage parent is absent or unordered",
+                );
             };
             if rev.correspondence.as_deref().is_none_or(str::is_empty)
                 || rev.subject != parent.subject
@@ -389,7 +437,10 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
                 || rev.domain_valid != parent.domain_valid
                 || (rev.replay != parent.replay && rev.replay != ReplayOutcome::Unavailable)
             {
-                return refused("transformation changes domain, claim, correspondence, or verdict");
+                return refused(
+                    LedgerRefusalCode::InvalidLineage,
+                    "transformation changes domain, claim, correspondence, or verdict",
+                );
             }
         }
         if rev.replay == ReplayOutcome::SameFailure
@@ -398,13 +449,22 @@ pub fn validate_lineage(revisions: &[CounterexampleRevision]) -> LedgerOutcome {
                 .iter()
                 .any(|l| l.kind != LimitationKind::FutureProductionEvidence)
         {
-            return refused("limited replay material cannot be replay-qualified");
+            return refused(
+                LedgerRefusalCode::InvalidLineage,
+                "limited replay material cannot be replay-qualified",
+            );
         }
         if rev.replay == ReplayOutcome::Unavailable && rev.limitations.is_empty() {
-            return refused("unavailable replay must retain an explicit limitation");
+            return refused(
+                LedgerRefusalCode::InvalidLineage,
+                "unavailable replay must retain an explicit limitation",
+            );
         }
         if seen.insert(&rev.identity, rev).is_some() {
-            return refused("counterexample revisions are immutable and unique");
+            return refused(
+                LedgerRefusalCode::InvalidLineage,
+                "counterexample revisions are immutable and unique",
+            );
         }
     }
     LedgerOutcome::Accounted
@@ -428,13 +488,22 @@ pub fn account_qualification(
         || actual.len() != 176
         || expected != actual
     {
-        return refused("ledger requires the exact closed 176-capability denominator");
+        return refused(
+            LedgerRefusalCode::InvalidLedger,
+            "ledger requires the exact closed 176-capability denominator",
+        );
     }
     if !valid_kind(lock, EvidenceKind::EcosystemLock) || scope.is_empty() {
-        return refused("ledger requires one exact ecosystem lock and scope");
+        return refused(
+            LedgerRefusalCode::InvalidLedger,
+            "ledger requires one exact ecosystem lock and scope",
+        );
     }
     if graph.edges.iter().any(invalid_edge) || has_any_cycle(&graph.edges) {
-        return refused("self-produced or circular evidence cannot discharge a row");
+        return refused(
+            LedgerRefusalCode::CircularEvidence,
+            "self-produced or circular evidence cannot discharge a row",
+        );
     }
     let mut incomplete = false;
     for row in rows {
@@ -444,12 +513,22 @@ pub fn account_qualification(
             || required.len() != row.required_claim_classes.len()
             || classes != required
         {
-            return refused("every applicable claim-class vector occurs exactly once per row");
+            return refused(
+                LedgerRefusalCode::InvalidLedger,
+                "every applicable claim-class vector occurs exactly once per row",
+            );
         }
         for vector in &row.vectors {
             if !valid_vector(vector, lock) {
                 return refused(
+                    LedgerRefusalCode::InvalidLedger,
                     "vector lacks an exact source/package/implementation/method/corpus/lock/run/result binding",
+                );
+            }
+            if vector.state == VectorState::Passed && !has_vector_evidence(graph, vector) {
+                return refused(
+                    LedgerRefusalCode::MissingEvidencePath,
+                    "a passed vector lacks retained graph evidence",
                 );
             }
             incomplete |= vector.state != VectorState::Passed;
@@ -468,10 +547,19 @@ pub fn account_qualification(
             || d.ledger_scope != scope)
     {
         return refused(
+            LedgerRefusalCode::InvalidDecision,
             "decision is not authenticated, attributed, or scoped to this unchanged ledger",
         );
     }
-    LedgerOutcome::Accounted
+    match decision {
+        Some(HumanDecision {
+            disposition: DecisionDisposition::Accepted,
+            ..
+        }) => LedgerOutcome::Accounted,
+        Some(_) | None => LedgerOutcome::Incomplete {
+            limitations: vec![LimitationKind::FutureProductionEvidence],
+        },
+    }
 }
 
 fn valid_identity(id: &EvidenceIdentity) -> bool {
@@ -509,10 +597,61 @@ pub fn evidence_digest(bytes: &[u8]) -> String {
     let digest = Sha256::digest(bytes);
     format!("{digest:x}")
 }
+fn supports_claim(edge: &EvidenceEdge, claim: &EvidenceIdentity) -> bool {
+    edge.to == *claim
+        && match edge.from.kind {
+            EvidenceKind::Decision => edge.relation == EvidenceRelation::Decides,
+            _ => edge.relation == EvidenceRelation::Supports,
+        }
+}
+
+fn has_vector_evidence(graph: &EvidenceGraph, vector: &QualificationVector) -> bool {
+    let identities = [
+        &vector.source,
+        &vector.package,
+        &vector.implementation,
+        &vector.method,
+        &vector.corpus,
+        &vector.run,
+        &vector.result,
+    ];
+    identities.iter().all(|identity| {
+        graph
+            .edges
+            .iter()
+            .any(|edge| edge.from == **identity || edge.to == **identity)
+    })
+}
+
 fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
-    edges
-        .iter()
-        .any(|e| reaches(edges, &e.to, &e.from, &mut BTreeSet::new()))
+    let mut indegree = BTreeMap::<EvidenceIdentity, usize>::new();
+    let mut outgoing = BTreeMap::<EvidenceIdentity, Vec<EvidenceIdentity>>::new();
+    for edge in edges {
+        indegree.entry(edge.from.clone()).or_default();
+        *indegree.entry(edge.to.clone()).or_default() += 1;
+        outgoing
+            .entry(edge.from.clone())
+            .or_default()
+            .push(edge.to.clone());
+    }
+    let mut ready = BTreeSet::new();
+    for (identity, degree) in &indegree {
+        if *degree == 0 {
+            ready.insert(identity.clone());
+        }
+    }
+    let mut visited = 0usize;
+    while let Some(identity) = ready.pop_first() {
+        visited = visited.saturating_add(1);
+        for next in outgoing.get(&identity).into_iter().flatten() {
+            let degree = indegree.get_mut(next).expect("edge target is indexed");
+            *degree -= 1;
+            if *degree == 0 {
+                ready.insert(next.clone());
+            }
+        }
+    }
+    visited != indegree.len()
 }
 
 fn has_cycle_reaching_claim(edges: &[EvidenceEdge], claim: &EvidenceIdentity) -> bool {
@@ -535,22 +674,6 @@ fn has_cycle_reaching_claim(edges: &[EvidenceEdge], claim: &EvidenceIdentity) ->
         .collect();
     has_any_cycle(&upstream)
 }
-fn reaches(
-    edges: &[EvidenceEdge],
-    current: &EvidenceIdentity,
-    target: &EvidenceIdentity,
-    path: &mut BTreeSet<EvidenceIdentity>,
-) -> bool {
-    if !path.insert(current.clone()) {
-        return false;
-    }
-    let found = edges
-        .iter()
-        .filter(|e| e.from == *current)
-        .any(|e| e.to == *target || reaches(edges, &e.to, target, path));
-    path.remove(current);
-    found
-}
 fn valid_vector(v: &QualificationVector, lock: &EvidenceIdentity) -> bool {
     valid_kind(&v.source, EvidenceKind::Source)
         && valid_kind(&v.package, EvidenceKind::Package)
@@ -561,8 +684,9 @@ fn valid_vector(v: &QualificationVector, lock: &EvidenceIdentity) -> bool {
         && valid_kind(&v.run, EvidenceKind::ProviderRun)
         && valid_kind(&v.result, EvidenceKind::Result)
 }
-fn refused(reason: &str) -> LedgerOutcome {
+fn refused(code: LedgerRefusalCode, reason: &str) -> LedgerOutcome {
     LedgerOutcome::Refused {
+        code,
         reason: reason.into(),
     }
 }

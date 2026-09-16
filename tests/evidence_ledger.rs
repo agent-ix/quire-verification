@@ -45,6 +45,33 @@ fn rows(state: VectorState) -> Vec<LedgerRow> {
         .collect()
 }
 
+fn passed_vector_graph() -> EvidenceGraph {
+    let claim = id(EvidenceKind::Claim, "claim:ledger");
+    let identities = [
+        id(EvidenceKind::Source, "source:1"),
+        id(EvidenceKind::Package, "package:1"),
+        id(EvidenceKind::Implementation, "implementation:1"),
+        id(EvidenceKind::Method, "method:1"),
+        id(EvidenceKind::Corpus, "corpus:1"),
+        id(EvidenceKind::ProviderRun, "run:1"),
+        id(EvidenceKind::Result, "result:1"),
+    ];
+    EvidenceGraph {
+        edges: identities
+            .into_iter()
+            .map(|from| EvidenceEdge {
+                from,
+                to: claim.clone(),
+                relation: EvidenceRelation::Supports,
+                scope: "scope:1".into(),
+                provenance: "fixture".into(),
+            })
+            .collect(),
+        intake: vec![],
+        limitations: vec![],
+    }
+}
+
 /// Tracing: TC-050, FR-032-AC-1, FR-032-AC-2, IT-005.
 #[test]
 #[trace("TC-050", "FR-032-AC-1", "FR-032-AC-2", "IT-005")]
@@ -92,6 +119,15 @@ fn tc_050_refuses_circular_discharge_without_erasing_graph() {
         validate_evidence_graph(&graph, &claim),
         LedgerOutcome::Accounted
     );
+    let mut contradictory = graph.clone();
+    contradictory.edges[0].relation = EvidenceRelation::Contradicts;
+    assert!(matches!(
+        validate_evidence_graph(&contradictory, &claim),
+        LedgerOutcome::Refused {
+            code: LedgerRefusalCode::MissingEvidencePath,
+            ..
+        }
+    ));
     let mut digest_mismatch = graph.clone();
     digest_mismatch.intake[0].declared_digest = "0".repeat(64);
     assert!(matches!(
@@ -254,7 +290,7 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         account_qualification(
             &accepted(),
             &lock(),
-            &graph,
+            &passed_vector_graph(),
             &rows(VectorState::Planned),
             None,
             "scope:1"
@@ -275,7 +311,7 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         account_qualification(
             &accepted(),
             &lock(),
-            &graph,
+            &passed_vector_graph(),
             &rows(VectorState::Passed),
             Some(&decision),
             "scope:1"
