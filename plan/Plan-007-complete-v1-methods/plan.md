@@ -97,7 +97,7 @@ manual and are not dispatched by this plan.
 | Task-037 | Verification #36 | FR-030, V1-RUN-015-016 | TC-048, IT-005-SC-02 | done |
 | Task-038 | Verification #37 | FR-031, V1-RUN-017 | TC-049, IT-005-SC-03 | done |
 | Task-039 | Analyze #33 | V1-RUN-018-019; provider side of interface-001 | Analyze-owned tests, IT-005-SC-04 | in_progress |
-| Task-040 | Verification #38 | FR-032-FR-034, V1-EVID-001-006 | TC-050-TC-052, IT-005-SC-05..07 | in_progress |
+| Task-040 | Verification #38 | FR-032-FR-034, V1-EVID-001-006 | TC-050-TC-052, IT-005-SC-05..07 | done |
 
 ## Coordination Rules
 

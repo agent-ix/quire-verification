@@ -87,9 +87,9 @@ rejected JavaScript prototype is not evidence.
 | FR-029 | FR-029-AC-1..3 | TC-047, IT-005 | ✅ Complete |
 | FR-030 | FR-030-AC-1..3 | TC-048, IT-005 | ✅ Complete |
 | FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | ✅ Complete |
-| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
-| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
-| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Focused implementation and review complete; plan integration pending |
+| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | ✅ Complete |
+| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | ✅ Complete |
+| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | ✅ Complete |
 
 ### Non-Functional Requirement Coverage
 
@@ -174,9 +174,9 @@ rejected JavaScript prototype is not evidence.
 | TC-047 | Model generation and domain-valid shrinking | Property | P0 | FR-029-AC-1..FR-029-AC-3, FR-029-CON-1..FR-029-CON-3, NFR-009 | ✅ Passed |
 | TC-048 | Relational and finite-trace hyperproperty analysis | Property | P0 | FR-030-AC-1..FR-030-AC-3, FR-030-CON-1..FR-030-CON-3, NFR-009 | ✅ Passed |
 | TC-049 | Linked method plan execution and accounting | Property | P0 | FR-031-AC-1..FR-031-AC-3, FR-031-CON-1..FR-031-CON-2, NFR-009 | ✅ Passed |
-| TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | 🚧 Focused traced test; review pending |
-| TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | 🚧 Focused traced test; review pending |
-| TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | 🚧 Focused traced test; review pending |
+| TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | ✅ Passed |
+| TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | ✅ Passed |
+| TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | ✅ Passed |
 
 ## Option Permutation Matrix
 

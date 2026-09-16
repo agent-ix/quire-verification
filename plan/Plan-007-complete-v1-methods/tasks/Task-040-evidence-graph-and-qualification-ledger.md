@@ -2,7 +2,7 @@
 id: Task-040
 title: "Implement evidence graph and qualification ledger"
 type: Task
-status: in_progress
+status: done
 track: D5
 priority: P0
 relationships:
