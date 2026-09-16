@@ -208,8 +208,8 @@ dependencies = [
 
 [[package]]
 name = "engineering-assurance"
-version = "0.1.0"
-source = "git+https://github.com/agent-ix/engineering-assurance?rev=c28da1157b33014028a7788a578c47da33690e44#c28da1157b33014028a7788a578c47da33690e44"
+version = "0.3.1"
+source = "git+https://github.com/agent-ix/engineering-assurance?rev=9237ce50ce19c6d6c937705bfde4b64adcc9d16b#9237ce50ce19c6d6c937705bfde4b64adcc9d16b"
 dependencies = [
  "rustix",
  "serde",
