@@ -658,6 +658,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a1d01941d82fa2ab50be1e79e6714289dd7cde78eba4c074bc5a4374f650dfe0"
 
 [[package]]
+name = "quire-analyze-method-contract"
+version = "0.1.0"
+source = "git+https://github.com/agent-ix/quire-analyze?rev=ddc099b918a6a569987c96cda97d567d2d3bba33#ddc099b918a6a569987c96cda97d567d2d3bba33"
+
+[[package]]
 name = "quire-verification"
 version = "0.1.0"
 dependencies = [
@@ -666,6 +671,7 @@ dependencies = [
  "ix-trace-rs",
  "jsonschema",
  "proptest",
+ "quire-analyze-method-contract",
  "regress",
  "rustix",
  "schemars",

@@ -8,107 +8,18 @@
 //! patch pins. This boundary consumes typed producer output without invoking,
 //! reinterpreting, or upgrading a candidate into a proof.
 
-/// Immutable upstream provider revision identity.
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct ProviderRevision(pub String);
-
-/// Exact semantic subject identity supplied by the Analyze provider.
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct AnalyzeSubjectIdentity(pub String);
-
-/// Exact upstream provider run identity.
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct AnalyzeRunIdentity(pub String);
-
-/// Exact immutable upstream result identity.
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct AnalyzeResultIdentity(pub String);
+pub use quire_analyze_method_contract::{
+    AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity, AnalyzeContentIdentity,
+    AnalyzeImplementationIdentity, AnalyzeMethod, AnalyzeOptionsIdentity, AnalyzeOutcome,
+    AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity, AnalyzeRunIdentity,
+    AnalyzeSubjectIdentity, AnalyzeToolchainIdentity, ProviderRevision,
+};
 
 /// Merged Analyze revision supplying hybrid/synthesis development results.
-pub const ANALYZE_PROVIDER_REVISION: &str = "a0a29b8e1db67105a78b19771982e1af7332237b";
+pub const ANALYZE_PROVIDER_REVISION: &str = "ddc099b918a6a569987c96cda97d567d2d3bba33";
 /// Shared method-result contract accepted at this provider boundary.
-pub const ANALYZE_METHOD_RESULT_VERSION: &str = "quire.method-result/v1";
-
-macro_rules! exact_identity {
-    ($($identity:ident),+ $(,)?) => {$(
-        /// Exact immutable identity retained in the Analyze result envelope.
-        #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-        pub struct $identity(pub String);
-    )+};
-}
-
-exact_identity!(
-    AnalyzeRequestIdentity,
-    AnalyzeImplementationIdentity,
-    AnalyzeToolchainIdentity,
-    AnalyzeOptionsIdentity,
-    AnalyzeAssumptionsIdentity,
-    AnalyzeBoundsIdentity,
-    AnalyzeContentIdentity,
-);
-
-/// The distinct provider methods consumed at this boundary.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum AnalyzeMethod {
-    /// Sound bounded hybrid reachability enclosure.
-    HybridReachability,
-    /// Bounded canonical synthesis search.
-    CanonicalSynthesis,
-}
-
-/// Typed upstream terminal outcome, never inferred from human-readable output.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum AnalyzeOutcome {
-    /// An enclosure with declared error; it remains analysis evidence.
-    Enclosure,
-    /// A discovered candidate requiring independent checking.
-    Candidate,
-    /// A candidate has upstream validation evidence, not a general proof.
-    ValidatedCandidate,
-    /// An independent validator rejected the exact candidate.
-    ValidationRejected,
-    /// The finite candidate space was exhausted.
-    NoCandidate,
-    /// A bounded analysis/search did not finish.
-    Incomplete,
-    /// The provider failed without a semantic conclusion.
-    Failed,
-    /// The provider refused malformed input.
-    Refused,
-}
-
-/// Exact producer output supplied to the Verification provider boundary.
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct AnalyzeResult {
-    /// Shared terminal method-result contract version.
-    pub contract_version: String,
-    /// Revision that produced this result.
-    pub provider_revision: ProviderRevision,
-    /// Exact provider method.
-    pub method: AnalyzeMethod,
-    /// Typed terminal outcome.
-    pub outcome: AnalyzeOutcome,
-    /// Exact semantic subject identity.
-    pub subject_identity: AnalyzeSubjectIdentity,
-    /// Exact provider run identity.
-    pub run_identity: AnalyzeRunIdentity,
-    /// Exact resolved method request identity.
-    pub request_identity: AnalyzeRequestIdentity,
-    /// Exact Analyze implementation identity.
-    pub implementation_identity: AnalyzeImplementationIdentity,
-    /// Exact producer toolchain identity.
-    pub toolchain_identity: AnalyzeToolchainIdentity,
-    /// Exact resolved method-options identity.
-    pub options_identity: AnalyzeOptionsIdentity,
-    /// Exact resolved assumptions identity.
-    pub assumptions_identity: AnalyzeAssumptionsIdentity,
-    /// Exact resolved semantic-bounds identity.
-    pub bounds_identity: AnalyzeBoundsIdentity,
-    /// Exact immutable outcome/witness content identity.
-    pub content_identity: AnalyzeContentIdentity,
-    /// Immutable result/artifact identity.
-    pub result_identity: AnalyzeResultIdentity,
-}
+pub const ANALYZE_METHOD_RESULT_VERSION: &str =
+    quire_analyze_method_contract::METHOD_RESULT_VERSION;
 
 /// Outcome of consuming one producer result locally.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
