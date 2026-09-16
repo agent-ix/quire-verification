@@ -3,6 +3,7 @@
 
 //! IT-005-SC-04 through SC-07 development integration coverage.
 
+// Integration-test fixture helpers are private and intentionally not documented.
 #![allow(missing_docs)]
 
 use ix_trace_rs::trace;
@@ -20,6 +21,25 @@ use quire_verification::{
         AnalyzeToolchainIdentity, ProviderConsumption, ProviderRevision, consume_analyze_result,
     },
 };
+
+struct FixtureAuthorizationVerifier;
+
+impl quire_verification::evidence_ledger::DecisionAuthorizationVerifier
+    for FixtureAuthorizationVerifier
+{
+    fn verifies(
+        &self,
+        decision: &HumanDecision,
+        authorization: &quire_verification::evidence_ledger::VerifiedDecisionAuthorization,
+    ) -> bool {
+        decision.identity == id(EvidenceKind::Decision, "decision:it-005")
+            && authorization.attestation == id(EvidenceKind::Artifact, "authentication:it-005")
+    }
+}
+
+fn verifier() -> FixtureAuthorizationVerifier {
+    FixtureAuthorizationVerifier
+}
 
 fn id(kind: EvidenceKind, value: &str) -> EvidenceIdentity {
     EvidenceIdentity {
@@ -99,8 +119,8 @@ fn rows() -> Vec<LedgerRow> {
                 method: id(EvidenceKind::Method, "method:it-005"),
                 corpus: id(EvidenceKind::Corpus, "corpus:it-005"),
                 ecosystem_lock: lock(),
-                run: id(EvidenceKind::ProviderRun, "run:it-005"),
-                result: id(EvidenceKind::Result, "result:it-005"),
+                run: id(EvidenceKind::ProviderRun, &format!("run:it-005:{number}")),
+                result: id(EvidenceKind::Result, &format!("result:it-005:{number}")),
                 state: VectorState::Planned,
             }],
         })
@@ -115,10 +135,12 @@ fn passed_rows() -> Vec<LedgerRow> {
     rows
 }
 
-fn graph_for_passed_rows(rows: &[LedgerRow]) -> EvidenceGraph {
+// This fixture spells out the complete cross-boundary evidence graph for IT-005.
+#[allow(clippy::too_many_lines)]
+fn graph_for_passed_rows(rows: &[LedgerRow], decision: &HumanDecision) -> EvidenceGraph {
     let claim = id(EvidenceKind::Claim, "claim:ledger");
     let vector = &rows[0].vectors[0];
-    let identities = [
+    let shared_identities = [
         vector.source.clone(),
         vector.package.clone(),
         vector.implementation.clone(),
@@ -127,8 +149,19 @@ fn graph_for_passed_rows(rows: &[LedgerRow]) -> EvidenceGraph {
         vector.run.clone(),
         vector.result.clone(),
     ];
-    EvidenceGraph {
-        edges: identities
+    let mut edges: Vec<_> = shared_identities
+        .into_iter()
+        .map(|from| EvidenceEdge {
+            from,
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        })
+        .collect();
+    edges.extend(rows.iter().flat_map(|row| {
+        let vector = &row.vectors[0];
+        [vector.run.clone(), vector.result.clone()]
             .into_iter()
             .map(|from| EvidenceEdge {
                 from,
@@ -137,8 +170,83 @@ fn graph_for_passed_rows(rows: &[LedgerRow]) -> EvidenceGraph {
                 scope: "it-005".into(),
                 provenance: "fixture".into(),
             })
-            .collect(),
-        intake: vec![],
+    }));
+    edges.extend([
+        EvidenceEdge {
+            from: id(EvidenceKind::Model, "model:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Binding, "binding:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Requirement, "requirement:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Subject, "subject:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Assumption, "assumption:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: id(EvidenceKind::Provider, "provider:it-005"),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: decision.authorization.attestation.clone(),
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: decision.identity.clone(),
+            to: claim,
+            relation: EvidenceRelation::Decides,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+    ]);
+    EvidenceGraph {
+        edges,
+        intake: [
+            decision.identity.clone(),
+            decision.authorization.attestation.clone(),
+        ]
+        .into_iter()
+        .map(
+            |identity| quire_verification::evidence_ledger::EvidenceIntake {
+                identity,
+                declared_digest: quire_verification::evidence_ledger::evidence_digest(
+                    b"attested fixture",
+                ),
+                producer_bytes: b"attested fixture".to_vec(),
+                provenance: "fixture".into(),
+            },
+        )
+        .collect(),
         limitations: vec![],
     }
 }
@@ -174,6 +282,8 @@ fn it_005_sc_04_05_rejects_candidate_and_refuses_circular_discharge() {
 /// Tracing: IT-005-SC-06, IT-005-SC-07, FR-034-AC-1, FR-034-AC-3.
 #[test]
 #[trace("IT-005", "FR-034-AC-1", "FR-034-AC-3")]
+// The integration scenario keeps its sequential qualification state transitions observable.
+#[allow(clippy::too_many_lines)]
 fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
     let accepted: Vec<_> = (0..176)
         .map(|number| CapabilityIdentity(format!("capability:{number}")))
@@ -185,7 +295,15 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
     };
     let retained = rows();
     assert_eq!(
-        account_qualification(&accepted, &lock(), &graph, &retained, None, "it-005"),
+        account_qualification(
+            &accepted,
+            &lock(),
+            &graph,
+            &retained,
+            None,
+            &verifier(),
+            "it-005"
+        ),
         LedgerOutcome::Incomplete {
             limitations: vec![
                 quire_verification::evidence_ledger::LimitationKind::FutureProductionEvidence
@@ -196,19 +314,34 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
     let mut duplicate = retained.clone();
     duplicate[175].capability_identity = CapabilityIdentity("capability:0".into());
     assert!(matches!(
-        account_qualification(&accepted, &lock(), &graph, &duplicate, None, "it-005"),
+        account_qualification(
+            &accepted,
+            &lock(),
+            &graph,
+            &duplicate,
+            None,
+            &verifier(),
+            "it-005"
+        ),
         LedgerOutcome::Refused { .. }
     ));
     let mut passed = passed_rows();
-    let evidence = graph_for_passed_rows(&passed);
     let decision = HumanDecision {
         identity: id(EvidenceKind::Decision, "decision:it-005"),
         actor: "reviewer".into(),
         authority: "owner".into(),
+        authorization: quire_verification::evidence_ledger::VerifiedDecisionAuthorization {
+            decision_identity: id(EvidenceKind::Decision, "decision:it-005"),
+            actor: "reviewer".into(),
+            authority: "owner".into(),
+            ledger_scope: "it-005".into(),
+            attestation: id(EvidenceKind::Artifact, "authentication:it-005"),
+        },
         ledger_scope: "it-005".into(),
         disposition: DecisionDisposition::Accepted,
         rationale: "fixture".into(),
     };
+    let evidence = graph_for_passed_rows(&passed, &decision);
     assert_eq!(
         account_qualification(
             &accepted,
@@ -216,6 +349,7 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             &evidence,
             &passed,
             Some(&decision),
+            &verifier(),
             "it-005"
         ),
         LedgerOutcome::Accounted
@@ -228,6 +362,7 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             &evidence,
             &passed,
             Some(&decision),
+            &verifier(),
             "it-005"
         ),
         LedgerOutcome::Refused { .. }
@@ -241,6 +376,7 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             &evidence,
             &wrong_lock,
             Some(&decision),
+            &verifier(),
             "it-005"
         ),
         LedgerOutcome::Refused { .. }
@@ -256,6 +392,7 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             &evidence,
             &passed_rows(),
             Some(&rejected),
+            &verifier(),
             "it-005"
         ),
         LedgerOutcome::Incomplete { .. }

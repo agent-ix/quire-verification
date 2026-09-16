@@ -269,12 +269,42 @@ pub struct HumanDecision {
     pub actor: String,
     /// Decision authority.
     pub authority: String,
+    /// Externally verified authorization bound to this exact decision.
+    pub authorization: VerifiedDecisionAuthorization,
     /// Exact ledger scope digest.
     pub ledger_scope: String,
     /// Disposition.
     pub disposition: DecisionDisposition,
     /// Human rationale.
     pub rationale: String,
+}
+
+/// An externally verified authorization result for one immutable decision.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct VerifiedDecisionAuthorization {
+    /// Exact decision authorized by the external verifier.
+    pub decision_identity: EvidenceIdentity,
+    /// Verified actor.
+    pub actor: String,
+    /// Verified authority.
+    pub authority: String,
+    /// Verified unchanged ledger scope.
+    pub ledger_scope: String,
+    /// Immutable verifier attestation artifact.
+    pub attestation: EvidenceIdentity,
+}
+
+/// External trust boundary for decision-attestation verification.
+///
+/// Implementations verify the attestation signature or authorization protocol;
+/// this ledger only consumes their boolean result and retains the exact bytes.
+pub trait DecisionAuthorizationVerifier {
+    /// Returns whether this authorization attests this exact decision.
+    fn verifies(
+        &self,
+        decision: &HumanDecision,
+        authorization: &VerifiedDecisionAuthorization,
+    ) -> bool;
 }
 
 /// Eventual decision disposition.
@@ -335,19 +365,14 @@ pub fn validate_evidence_graph(graph: &EvidenceGraph, claim: &EvidenceIdentity) 
             "discharge requires an exact claim identity",
         );
     }
-    if graph.edges.iter().any(invalid_edge) || graph.intake.iter().any(invalid_intake) {
-        return refused(
-            LedgerRefusalCode::MalformedEvidence,
-            "malformed, stale, cross-kind, or digest-mismatched evidence",
-        );
-    }
-    if graph.edges.iter().any(|e| {
-        e.relation == EvidenceRelation::Decides
-            && (!valid_kind(&e.from, EvidenceKind::Decision) || e.to.kind != EvidenceKind::Claim)
-    }) {
+    if graph.edges.iter().any(invalid_edge)
+        || graph.edges.iter().any(|edge| !valid_relation(edge))
+        || graph.intake.iter().any(invalid_intake)
+        || has_cross_kind_reuse(&graph.edges, &graph.intake)
+    {
         return refused(
             LedgerRefusalCode::InvalidRelation,
-            "only a decision may decide an exact claim",
+            "malformed, stale, cross-kind, digest-mismatched, or unsupported evidence relation",
         );
     }
     if graph.limitations.iter().any(invalid_limitation) {
@@ -478,6 +503,7 @@ pub fn account_qualification(
     graph: &EvidenceGraph,
     rows: &[LedgerRow],
     decision: Option<&HumanDecision>,
+    authorization_verifier: &dyn DecisionAuthorizationVerifier,
     scope: &str,
 ) -> LedgerOutcome {
     let expected: BTreeSet<_> = accepted.iter().collect();
@@ -499,64 +525,75 @@ pub fn account_qualification(
             "ledger requires one exact ecosystem lock and scope",
         );
     }
-    if graph.edges.iter().any(invalid_edge) || has_any_cycle(&graph.edges) {
+    if graph.edges.iter().any(invalid_edge)
+        || graph.edges.iter().any(|edge| !valid_relation(edge))
+        || graph.intake.iter().any(invalid_intake)
+        || graph.limitations.iter().any(invalid_limitation)
+        || has_cross_kind_reuse(&graph.edges, &graph.intake)
+    {
+        return refused(
+            LedgerRefusalCode::InvalidRelation,
+            "malformed, cross-kind, unsupported, or circular evidence cannot discharge a row",
+        );
+    }
+    if has_any_cycle(&graph.edges) {
         return refused(
             LedgerRefusalCode::CircularEvidence,
             "self-produced or circular evidence cannot discharge a row",
         );
     }
-    let mut incomplete = false;
-    for row in rows {
-        let classes: BTreeSet<_> = row.vectors.iter().map(|v| v.claim_class).collect();
-        let required: BTreeSet<_> = row.required_claim_classes.iter().copied().collect();
-        if classes.len() != row.vectors.len()
-            || required.len() != row.required_claim_classes.len()
-            || classes != required
-        {
-            return refused(
-                LedgerRefusalCode::InvalidLedger,
-                "every applicable claim-class vector occurs exactly once per row",
-            );
-        }
-        for vector in &row.vectors {
-            if !valid_vector(vector, lock) {
-                return refused(
-                    LedgerRefusalCode::InvalidLedger,
-                    "vector lacks an exact source/package/implementation/method/corpus/lock/run/result binding",
-                );
-            }
-            if vector.state == VectorState::Passed && !has_vector_evidence(graph, vector) {
-                return refused(
-                    LedgerRefusalCode::MissingEvidencePath,
-                    "a passed vector lacks retained graph evidence",
-                );
-            }
-            incomplete |= vector.state != VectorState::Passed;
-        }
-    }
+    let incomplete = match validate_ledger_rows(rows, lock) {
+        Ok(incomplete) => incomplete,
+        Err(outcome) => return outcome,
+    };
     if incomplete {
         return LedgerOutcome::Incomplete {
             limitations: vec![LimitationKind::FutureProductionEvidence],
         };
     }
-    if let Some(d) = decision
-        && (!valid_kind(&d.identity, EvidenceKind::Decision)
-            || d.actor.is_empty()
-            || d.authority.is_empty()
-            || d.rationale.is_empty()
-            || d.ledger_scope != scope)
+    if decision
+        .is_some_and(|decision| !valid_decision(decision, graph, authorization_verifier, scope))
     {
         return refused(
             LedgerRefusalCode::InvalidDecision,
             "decision is not authenticated, attributed, or scoped to this unchanged ledger",
         );
     }
+    let Some(decision) = decision else {
+        return LedgerOutcome::Incomplete {
+            limitations: vec![LimitationKind::FutureProductionEvidence],
+        };
+    };
+    let Some(claim) = decision_claim(graph, decision) else {
+        return refused(
+            LedgerRefusalCode::InvalidDecision,
+            "decision does not decide one exact qualification claim",
+        );
+    };
+    if let outcome @ LedgerOutcome::Refused { .. } = validate_evidence_graph(graph, claim) {
+        return outcome;
+    }
+    if let LedgerOutcome::Incomplete { .. } = validate_evidence_graph(graph, claim) {
+        return LedgerOutcome::Incomplete {
+            limitations: vec![LimitationKind::FutureProductionEvidence],
+        };
+    }
+    if rows
+        .iter()
+        .flat_map(|row| &row.vectors)
+        .any(|vector| !has_vector_evidence(graph, vector, claim))
+    {
+        return refused(
+            LedgerRefusalCode::MissingEvidencePath,
+            "a passed vector lacks an exact path to the qualification claim",
+        );
+    }
     match decision {
-        Some(HumanDecision {
+        HumanDecision {
             disposition: DecisionDisposition::Accepted,
             ..
-        }) => LedgerOutcome::Accounted,
-        Some(_) | None => LedgerOutcome::Incomplete {
+        } => LedgerOutcome::Accounted,
+        _ => LedgerOutcome::Incomplete {
             limitations: vec![LimitationKind::FutureProductionEvidence],
         },
     }
@@ -564,6 +601,70 @@ pub fn account_qualification(
 
 fn valid_identity(id: &EvidenceIdentity) -> bool {
     !id.value.is_empty()
+}
+
+fn valid_decision(
+    decision: &HumanDecision,
+    graph: &EvidenceGraph,
+    authorization_verifier: &dyn DecisionAuthorizationVerifier,
+    scope: &str,
+) -> bool {
+    valid_kind(&decision.identity, EvidenceKind::Decision)
+        && !decision.actor.is_empty()
+        && !decision.authority.is_empty()
+        && !decision.rationale.is_empty()
+        && decision.ledger_scope == scope
+        && decision.authorization.decision_identity == decision.identity
+        && decision.authorization.actor == decision.actor
+        && decision.authorization.authority == decision.authority
+        && decision.authorization.ledger_scope == decision.ledger_scope
+        && valid_kind(&decision.authorization.attestation, EvidenceKind::Artifact)
+        && graph
+            .intake
+            .iter()
+            .any(|intake| intake.identity == decision.identity)
+        && graph
+            .intake
+            .iter()
+            .any(|intake| intake.identity == decision.authorization.attestation)
+        && authorization_verifier.verifies(decision, &decision.authorization)
+}
+
+fn validate_ledger_rows(
+    rows: &[LedgerRow],
+    lock: &EvidenceIdentity,
+) -> Result<bool, LedgerOutcome> {
+    let mut incomplete = false;
+    let mut result_identities = BTreeSet::new();
+    for row in rows {
+        let classes: BTreeSet<_> = row.vectors.iter().map(|v| v.claim_class).collect();
+        let required: BTreeSet<_> = row.required_claim_classes.iter().copied().collect();
+        if classes.len() != row.vectors.len()
+            || required.len() != row.required_claim_classes.len()
+            || classes != required
+        {
+            return Err(refused(
+                LedgerRefusalCode::InvalidLedger,
+                "every applicable claim-class vector occurs exactly once per row",
+            ));
+        }
+        for vector in &row.vectors {
+            if !valid_vector(vector, lock) {
+                return Err(refused(
+                    LedgerRefusalCode::InvalidLedger,
+                    "vector lacks an exact source/package/implementation/method/corpus/lock/run/result binding",
+                ));
+            }
+            if !result_identities.insert(&vector.result) {
+                return Err(refused(
+                    LedgerRefusalCode::InvalidLedger,
+                    "an independent capability vector cannot reuse another vector result",
+                ));
+            }
+            incomplete |= vector.state != VectorState::Passed;
+        }
+    }
+    Ok(incomplete)
 }
 fn valid_kind(id: &EvidenceIdentity, kind: EvidenceKind) -> bool {
     id.kind == kind && valid_identity(id)
@@ -605,7 +706,11 @@ fn supports_claim(edge: &EvidenceEdge, claim: &EvidenceIdentity) -> bool {
         }
 }
 
-fn has_vector_evidence(graph: &EvidenceGraph, vector: &QualificationVector) -> bool {
+fn has_vector_evidence(
+    graph: &EvidenceGraph,
+    vector: &QualificationVector,
+    claim: &EvidenceIdentity,
+) -> bool {
     let identities = [
         &vector.source,
         &vector.package,
@@ -616,11 +721,84 @@ fn has_vector_evidence(graph: &EvidenceGraph, vector: &QualificationVector) -> b
         &vector.result,
     ];
     identities.iter().all(|identity| {
-        graph
-            .edges
-            .iter()
-            .any(|edge| edge.from == **identity || edge.to == **identity)
+        graph.edges.iter().any(|edge| {
+            edge.from == **identity
+                && edge.to == *claim
+                && edge.relation == EvidenceRelation::Supports
+        })
     })
+}
+
+fn decision_claim<'a>(
+    graph: &'a EvidenceGraph,
+    decision: &HumanDecision,
+) -> Option<&'a EvidenceIdentity> {
+    let mut claims = graph.edges.iter().filter_map(|edge| {
+        (edge.from == decision.identity && edge.relation == EvidenceRelation::Decides)
+            .then_some(&edge.to)
+    });
+    let claim = claims.next()?;
+    claims.all(|other| other == claim).then_some(claim)
+}
+
+fn valid_relation(edge: &EvidenceEdge) -> bool {
+    match edge.relation {
+        EvidenceRelation::DerivedFrom => {
+            matches!(
+                edge.from.kind,
+                EvidenceKind::Model
+                    | EvidenceKind::Binding
+                    | EvidenceKind::Artifact
+                    | EvidenceKind::Result
+            ) && edge.to.kind == EvidenceKind::Source
+        }
+        EvidenceRelation::Evaluates => {
+            edge.from.kind == EvidenceKind::Method
+                && matches!(
+                    edge.to.kind,
+                    EvidenceKind::Subject | EvidenceKind::Requirement
+                )
+        }
+        EvidenceRelation::Implements => {
+            edge.from.kind == EvidenceKind::Implementation
+                && matches!(
+                    edge.to.kind,
+                    EvidenceKind::Requirement | EvidenceKind::Subject
+                )
+        }
+        EvidenceRelation::GeneratedBy => {
+            matches!(
+                edge.from.kind,
+                EvidenceKind::ProviderRun | EvidenceKind::Result | EvidenceKind::Artifact
+            ) && matches!(
+                edge.to.kind,
+                EvidenceKind::Provider | EvidenceKind::ProviderRun
+            )
+        }
+        EvidenceRelation::Replays => {
+            edge.from.kind == EvidenceKind::ProviderRun && edge.to.kind == EvidenceKind::Artifact
+        }
+        EvidenceRelation::Supports | EvidenceRelation::Contradicts => {
+            edge.from.kind != EvidenceKind::Decision && edge.to.kind == EvidenceKind::Claim
+        }
+        EvidenceRelation::Decides => {
+            edge.from.kind == EvidenceKind::Decision && edge.to.kind == EvidenceKind::Claim
+        }
+    }
+}
+
+fn has_cross_kind_reuse(edges: &[EvidenceEdge], intake: &[EvidenceIntake]) -> bool {
+    let mut kinds = BTreeMap::<&str, EvidenceKind>::new();
+    edges
+        .iter()
+        .flat_map(|edge| [&edge.from, &edge.to])
+        .chain(intake.iter().map(|record| &record.identity))
+        .any(
+            |identity| match kinds.insert(&identity.value, identity.kind) {
+                Some(kind) => kind != identity.kind,
+                None => false,
+            },
+        )
 }
 
 fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
@@ -644,7 +822,9 @@ fn has_any_cycle(edges: &[EvidenceEdge]) -> bool {
     while let Some(identity) = ready.pop_first() {
         visited = visited.saturating_add(1);
         for next in outgoing.get(&identity).into_iter().flatten() {
-            let degree = indegree.get_mut(next).expect("edge target is indexed");
+            let Some(degree) = indegree.get_mut(next) else {
+                return true;
+            };
             *degree -= 1;
             if *degree == 0 {
                 ready.insert(next.clone());
