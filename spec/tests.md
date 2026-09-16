@@ -50,7 +50,7 @@ rejected JavaScript prototype is not evidence.
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
 | US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
 | US-004 | One exact production qualification profile | TC-039..TC-045, IT-004 | 🚧 Planned |
-| US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Specified; implementation pending |
+| US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Task-039/040 development implementation and focused traces are ready for peer review |
 
 ### Functional Requirement Coverage
 
@@ -87,9 +87,9 @@ rejected JavaScript prototype is not evidence.
 | FR-029 | FR-029-AC-1..3 | TC-047, IT-005 | ✅ Complete |
 | FR-030 | FR-030-AC-1..3 | TC-048, IT-005 | ✅ Complete |
 | FR-031 | FR-031-AC-1..3 | TC-049, IT-005 | ✅ Complete |
-| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | 🚧 Specified; implementation pending |
-| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | 🚧 Specified; implementation pending |
-| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | 🚧 Specified; implementation pending |
+| FR-032 | FR-032-AC-1..3 | TC-050, IT-005 | ✅ Complete |
+| FR-033 | FR-033-AC-1..3 | TC-052, IT-005 | ✅ Complete |
+| FR-034 | FR-034-AC-1..3 | TC-051, IT-005 | ✅ Complete |
 
 ### Non-Functional Requirement Coverage
 
@@ -174,9 +174,9 @@ rejected JavaScript prototype is not evidence.
 | TC-047 | Model generation and domain-valid shrinking | Property | P0 | FR-029-AC-1..FR-029-AC-3, FR-029-CON-1..FR-029-CON-3, NFR-009 | ✅ Passed |
 | TC-048 | Relational and finite-trace hyperproperty analysis | Property | P0 | FR-030-AC-1..FR-030-AC-3, FR-030-CON-1..FR-030-CON-3, NFR-009 | ✅ Passed |
 | TC-049 | Linked method plan execution and accounting | Property | P0 | FR-031-AC-1..FR-031-AC-3, FR-031-CON-1..FR-031-CON-2, NFR-009 | ✅ Passed |
-| TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | 🚧 Specified |
-| TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | 🚧 Specified |
-| TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | 🚧 Specified |
+| TC-050 | Semantic evidence graph integrity | Property | P0 | FR-032-AC-1..FR-032-AC-3, FR-032-CON-1..FR-032-CON-2 | ✅ Passed |
+| TC-051 | Complete-V1 176-row qualification ledger | Property | P0 | FR-034-AC-1..FR-034-AC-3, FR-034-CON-1..FR-034-CON-3, NFR-009 | ✅ Passed |
+| TC-052 | Immutable counterexample lineage and replay | Property | P0 | FR-033-AC-1..FR-033-AC-3 | ✅ Passed |
 
 ## Option Permutation Matrix
 
@@ -440,7 +440,7 @@ rejected JavaScript prototype is not evidence.
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
-| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | 🚧 SC-01..SC-03 passed; SC-04..SC-07 pending; production evidence is non-blocking state |
+| IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | ✅ SC-01..SC-07 have executable development coverage; production evidence remains a non-blocking explicit state |
 
 ### Integration Test Details
 

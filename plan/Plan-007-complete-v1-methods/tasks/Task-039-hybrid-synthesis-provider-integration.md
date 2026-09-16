@@ -2,7 +2,7 @@
 id: Task-039
 title: "Integrate hybrid and synthesis method providers"
 type: Task
-status: not_started
+status: done
 track: D4
 priority: P0
 relationships:
@@ -24,13 +24,12 @@ its interface-001-compatible result contract in development integration.
 
 ## Subtasks
 
-- [ ] Run the Analyze-owned `/specify` and self `/spec-review` before provider code.
-- [ ] Implement sound mode/flow/guard/reset enclosures with declared numeric error.
-- [ ] Implement canonical bounded candidate enumeration and independent validation.
-- [ ] Preserve convergence failure, incomplete search, no-candidate, candidate, proof, and counterexample states.
-- [ ] Add Analyze-owned tests plus IT-005-SC-04 integration, Rust review, and gap analysis.
+- [x] Run the Analyze-owned `/specify` and self `/spec-review` before provider code.
+- [x] Implement sound mode/flow/guard/reset enclosures with declared numeric error.
+- [x] Implement canonical bounded candidate enumeration and independent validation.
+- [x] Preserve convergence failure, incomplete search, no-candidate, candidate, proof, and counterexample states.
+- [x] Add Analyze-owned tests plus IT-005-SC-04 integration, Rust review, and gap analysis.
 
 ## Deliverables
 
 Pinned hybrid and synthesis providers returning the common typed method-result contract.
-
