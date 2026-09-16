@@ -252,7 +252,7 @@ fn graph_for_passed_rows(rows: &[LedgerRow], decision: &HumanDecision) -> Eviden
     }
 }
 
-/// Tracing: IT-005-SC-04, IT-005-SC-05, FR-032-AC-2.
+/// Covers the candidate-rejection and circular-discharge integration cases.
 #[test]
 #[trace("IT-005", "FR-032-AC-2")]
 fn it_005_sc_04_05_rejects_candidate_and_refuses_circular_discharge() {
@@ -280,7 +280,7 @@ fn it_005_sc_04_05_rejects_candidate_and_refuses_circular_discharge() {
     assert_eq!(graph.edges.len(), 13);
 }
 
-/// Tracing: IT-005-SC-06, IT-005-SC-07, FR-034-AC-1, FR-034-AC-3.
+/// Covers all-row retention and non-blocking future-evidence integration cases.
 #[test]
 #[trace("IT-005", "FR-034-AC-1", "FR-034-AC-3")]
 // The integration scenario keeps its sequential qualification state transitions observable.

@@ -14,7 +14,7 @@ relationships:
 
 ## Summary
 
-Task-040 is complete: typed evidence relations, byte-validated intake,
+Task-040 implementation is complete: typed evidence relations, byte-validated intake,
 claim-local cycle handling, immutable lineage, the 176-row ledger, independent
 result identity, and the externally verified decision seam are implemented and
 covered by traced executable tests. Future production evidence remains explicit
@@ -22,23 +22,24 @@ covered by traced executable tests. Future production evidence remains explicit
 
 ## Verdict
 
-**CONDITIONAL for Plan-007; PASS for Task-040.** Task-039 remains in progress
-because its Analyze provider contract has not yet received the required PR
-review/merge or been pinned into this repository. This is an integration
-dependency, not a production-evidence or human-ceremony development gate.
+**CONDITIONAL for Plan-007 and Task-040.** Task-040 remains `in_progress`
+until its Task-039 dependency is merged and pinned into this repository. This
+is a development integration dependency, not a production-evidence or
+human-ceremony development gate.
 
 ## Findings
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | medium | Plan-007 has 5 / 6 completed tasks. Task-039 remains in progress pending reviewed Analyze contract integration. | Task-039, Analyze PR-38 |
+| FND-001 | medium | Plan-007 has 4 / 6 completed tasks. Tasks-039 and -040 remain in progress pending Analyze contract integration. | Task-039, Task-040, Analyze PR-38 |
 | FND-002 | low | Resolved: qualification acceptance requires both retained typed evidence and an injected external `DecisionAuthorizationVerifier`; a rejecting verifier refuses acceptance. | FR-034-AC-3, TC-051 |
 | FND-003 | low | Resolved: duplicate result identities across independent vectors and every graph cycle refuse with typed outcomes. | FR-034-AC-2, TC-051 |
 
 ## Coverage
 
-- Task-040 and its Plan-007 mapping are `done`; FR-032 through FR-034 and
-  TC-050 through TC-052 are now accurately marked complete/passed in TM-001.
+- Task-040 is `in_progress` solely for its declared Task-039 dependency;
+  FR-032 through FR-034 and TC-050 through TC-052 remain implemented and
+  passed in TM-001.
 - `cargo fmt --all --check`, focused ledger/provider/integration tests, and
   `cargo clippy --workspace --all-targets --all-features -- -D warnings` pass.
   The repository-required `cargo test --workspace --all-features --locked`

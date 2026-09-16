@@ -621,35 +621,45 @@ pub fn qualification_scope(
     lock: &EvidenceIdentity,
     rows: &[LedgerRow],
 ) -> String {
-    let mut entries: Vec<_> = accepted
+    let mut records: Vec<Vec<u8>> = accepted
         .iter()
-        .map(|capability| capability.0.clone())
+        .map(|capability| {
+            let mut record = vec![b'C'];
+            encode_scope_text(&mut record, &capability.0);
+            record
+        })
         .collect();
-    entries.sort();
-    entries.push(format!("lock:{:?}:{}", lock.kind, lock.value));
-    entries.extend(rows.iter().map(ledger_row_identity));
-    entries.sort();
-    evidence_digest(entries.join("\n").as_bytes())
+    let mut lock_record = vec![b'L'];
+    encode_scope_identity(&mut lock_record, lock);
+    records.push(lock_record);
+    records.extend(rows.iter().map(ledger_row_identity));
+    records.sort();
+    let mut bytes = b"quire-verification/qualification-scope/v1".to_vec();
+    for record in records {
+        encode_scope_bytes(&mut bytes, &record);
+    }
+    evidence_digest(&bytes)
 }
 
-fn ledger_row_identity(row: &LedgerRow) -> String {
+fn ledger_row_identity(row: &LedgerRow) -> Vec<u8> {
     let mut classes: Vec<_> = row
         .required_claim_classes
         .iter()
-        .map(|class| format!("{class:?}"))
+        .map(|class| scope_claim_class(*class))
         .collect();
-    classes.sort();
+    classes.sort_unstable();
     let mut vectors: Vec<_> = row.vectors.iter().map(vector_identity).collect();
     vectors.sort();
-    format!(
-        "{}|{}|{}",
-        row.capability_identity.0,
-        classes.join(","),
-        vectors.join(",")
-    )
+    let mut record = vec![b'R'];
+    encode_scope_text(&mut record, &row.capability_identity.0);
+    encode_scope_bytes(&mut record, &classes);
+    for vector in vectors {
+        encode_scope_bytes(&mut record, &vector);
+    }
+    record
 }
 
-fn vector_identity(vector: &QualificationVector) -> String {
+fn vector_identity(vector: &QualificationVector) -> Vec<u8> {
     let identities = [
         &vector.source,
         &vector.package,
@@ -660,16 +670,75 @@ fn vector_identity(vector: &QualificationVector) -> String {
         &vector.run,
         &vector.result,
     ];
-    let values: Vec<_> = identities
-        .iter()
-        .map(|identity| format!("{:?}:{}", identity.kind, identity.value))
-        .collect();
-    format!(
-        "{:?}|{:?}|{}",
-        vector.claim_class,
-        vector.state,
-        values.join("|")
-    )
+    let mut record = vec![
+        b'V',
+        scope_claim_class(vector.claim_class),
+        scope_vector_state(vector.state),
+    ];
+    for identity in identities {
+        encode_scope_identity(&mut record, identity);
+    }
+    record
+}
+
+fn encode_scope_identity(bytes: &mut Vec<u8>, identity: &EvidenceIdentity) {
+    bytes.push(scope_evidence_kind(identity.kind));
+    encode_scope_text(bytes, &identity.value);
+}
+
+fn encode_scope_text(bytes: &mut Vec<u8>, value: &str) {
+    encode_scope_bytes(bytes, value.as_bytes());
+}
+
+fn encode_scope_bytes(bytes: &mut Vec<u8>, value: &[u8]) {
+    bytes.extend_from_slice(&(value.len() as u64).to_be_bytes());
+    bytes.extend_from_slice(value);
+}
+
+const fn scope_evidence_kind(kind: EvidenceKind) -> u8 {
+    match kind {
+        EvidenceKind::Claim => 0,
+        EvidenceKind::Source => 1,
+        EvidenceKind::Package => 2,
+        EvidenceKind::Model => 3,
+        EvidenceKind::Binding => 4,
+        EvidenceKind::Requirement => 5,
+        EvidenceKind::Clause => 6,
+        EvidenceKind::Subject => 7,
+        EvidenceKind::Assumption => 8,
+        EvidenceKind::Implementation => 9,
+        EvidenceKind::Method => 10,
+        EvidenceKind::Provider => 11,
+        EvidenceKind::ProviderRun => 12,
+        EvidenceKind::Result => 13,
+        EvidenceKind::Artifact => 14,
+        EvidenceKind::EcosystemLock => 15,
+        EvidenceKind::Corpus => 16,
+        EvidenceKind::Decision => 17,
+    }
+}
+
+const fn scope_claim_class(class: ClaimClass) -> u8 {
+    match class {
+        ClaimClass::Grammar => 0,
+        ClaimClass::SemanticKernel => 1,
+        ClaimClass::RuntimeMonitor => 2,
+        ClaimClass::Analysis => 3,
+        ClaimClass::Backend => 4,
+        ClaimClass::Tooling => 5,
+        ClaimClass::ConsumingIntegration => 6,
+    }
+}
+
+const fn scope_vector_state(state: VectorState) -> u8 {
+    match state {
+        VectorState::Planned => 0,
+        VectorState::Unexecuted => 1,
+        VectorState::Passed => 2,
+        VectorState::Failed => 3,
+        VectorState::Unsupported => 4,
+        VectorState::Waived => 5,
+    }
 }
 
 fn valid_identity(id: &EvidenceIdentity) -> bool {

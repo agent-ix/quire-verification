@@ -31,7 +31,7 @@ fn result(method: AnalyzeMethod, outcome: AnalyzeOutcome) -> AnalyzeResult {
     }
 }
 
-/// Tracing: IT-005, Task-039.
+/// Covers provider intake classification under the IT-005 integration family.
 #[test]
 #[trace("IT-005")]
 fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
@@ -58,7 +58,7 @@ fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
     );
 }
 
-/// Tracing: IT-005, Task-039.
+/// Covers typed provider failure classification under the IT-005 integration family.
 #[test]
 #[trace("IT-005")]
 fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
@@ -94,7 +94,7 @@ fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
     );
 }
 
-/// Tracing: IT-005-SC-04.
+/// Covers the provider-side IT-005 scenario.
 #[test]
 #[trace("IT-005")]
 fn it_005_sc_04_keeps_every_terminal_outcome_typed() {

@@ -493,6 +493,58 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         ),
         LedgerOutcome::Accounted
     );
+    let mut limited = decision.clone();
+    limited.disposition = DecisionDisposition::Limited;
+    assert_eq!(
+        account_qualification(
+            &accepted(),
+            &lock(),
+            &complete_passed_graph(&limited),
+            &rows(VectorState::Passed),
+            Some(&limited),
+            &verifier(),
+            "scope:1"
+        ),
+        LedgerOutcome::Limited {
+            decision: limited.identity.clone()
+        }
+    );
+    let mut missing_package = complete_passed_graph(&decision);
+    missing_package
+        .edges
+        .retain(|edge| edge.from != id(EvidenceKind::Package, "package:1"));
+    assert!(matches!(
+        account_qualification(
+            &accepted(),
+            &lock(),
+            &missing_package,
+            &rows(VectorState::Passed),
+            Some(&decision),
+            &verifier(),
+            "scope:1"
+        ),
+        LedgerOutcome::Refused {
+            code: LedgerRefusalCode::MissingEvidencePath,
+            ..
+        }
+    ));
+    let mut missing_lock = complete_passed_graph(&decision);
+    missing_lock.edges.retain(|edge| edge.from != lock());
+    assert!(matches!(
+        account_qualification(
+            &accepted(),
+            &lock(),
+            &missing_lock,
+            &rows(VectorState::Passed),
+            Some(&decision),
+            &verifier(),
+            "scope:1"
+        ),
+        LedgerOutcome::Refused {
+            code: LedgerRefusalCode::MissingEvidencePath,
+            ..
+        }
+    ));
     assert!(matches!(
         account_qualification(
             &accepted(),
@@ -631,4 +683,30 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         ),
         LedgerOutcome::Refused { .. }
     ));
+}
+
+/// Trace: TC-051, FR-034-AC-3.
+#[test]
+fn tc_051_scope_framing_separates_delimited_opaque_identities() {
+    let mut left = vector(ClaimClass::Grammar, VectorState::Passed);
+    left.source = id(EvidenceKind::Source, "a|Package:b");
+    left.package = id(EvidenceKind::Package, "c");
+    let mut right = vector(ClaimClass::Grammar, VectorState::Passed);
+    right.source = id(EvidenceKind::Source, "a");
+    right.package = id(EvidenceKind::Package, "b|Package:c");
+    let capability = CapabilityIdentity("capability:scope".into());
+    let left_rows = vec![LedgerRow {
+        capability_identity: capability.clone(),
+        required_claim_classes: vec![ClaimClass::Grammar],
+        vectors: vec![left],
+    }];
+    let right_rows = vec![LedgerRow {
+        capability_identity: capability.clone(),
+        required_claim_classes: vec![ClaimClass::Grammar],
+        vectors: vec![right],
+    }];
+    assert_ne!(
+        qualification_scope(std::slice::from_ref(&capability), &lock(), &left_rows),
+        qualification_scope(&[capability], &lock(), &right_rows),
+    );
 }
