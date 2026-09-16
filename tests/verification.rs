@@ -6,6 +6,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
+use std::process::Command;
 
 use ix_trace_rs::trace;
 use quire_verification::bounded_portfolio::{
@@ -268,6 +269,8 @@ fn tc_046_freezes_e02_accepted_interface_identity() {
         "`agent-ix/quire-verification`",
         "`quire-verification/e02-draft-2`",
         "`d2fc0d8134c776d2f1a17fd249f016b18a6ba124`",
+        "`293e342c6f5e2c69738956ff5165f75761b0364a`",
+        "`9237ce50ce19c6d6c937705bfde4b64adcc9d16b`",
         "exact private cross-repository Rust use",
     ] {
         assert!(decision.contains(required), "missing {required}");
@@ -301,6 +304,93 @@ fn tc_046_refuses_lossy_cross_repository_result_projections() {
             "{field}"
         );
     }
+}
+
+#[trace("TC-046", "FR-028-AC-4")]
+#[test]
+fn tc_046_compiles_the_exact_serde_1_0_228_consumer_graph() {
+    const QVERIFY_REVISION: &str = "293e342c6f5e2c69738956ff5165f75761b0364a";
+    let consumer = tempfile::tempdir().expect("consumer root");
+    fs::create_dir(consumer.path().join("src")).expect("consumer source directory");
+    let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let qverify_checkout = consumer.path().join("qverify");
+    let clone = Command::new("git")
+        .args(["clone", "--quiet", "--no-checkout", "--shared"])
+        .arg(manifest_dir)
+        .arg(&qverify_checkout)
+        .output()
+        .expect("local qverify clone must launch");
+    assert!(
+        clone.status.success(),
+        "local qverify clone must succeed:\n{}",
+        String::from_utf8_lossy(&clone.stderr)
+    );
+    let checkout = Command::new("git")
+        .args(["-C"])
+        .arg(&qverify_checkout)
+        .args(["checkout", "--quiet", "--detach", QVERIFY_REVISION])
+        .output()
+        .expect("exact qverify checkout must launch");
+    assert!(
+        checkout.status.success(),
+        "exact qverify checkout must succeed:\n{}",
+        String::from_utf8_lossy(&checkout.stderr)
+    );
+    let revision = Command::new("git")
+        .args(["-C"])
+        .arg(&qverify_checkout)
+        .args(["rev-parse", "HEAD"])
+        .output()
+        .expect("qverify revision inspection must launch");
+    assert!(revision.status.success());
+    assert_eq!(
+        String::from_utf8_lossy(&revision.stdout).trim(),
+        QVERIFY_REVISION
+    );
+    fs::write(
+        consumer.path().join("Cargo.toml"),
+        format!(
+            "[package]\nname='e02-consumer-fixture'\nversion='0.0.0'\nedition='2024'\nrust-version='1.98.1'\n[dependencies]\nquire-verification={{path={qverify_checkout:?}}}\nserde={{version='=1.0.228',features=['derive']}}\n"
+        ),
+    )
+    .expect("consumer manifest");
+    fs::write(
+        consumer.path().join("src/main.rs"),
+        "fn main(){assert_eq!(quire_verification::contracts::contract_version(),\"quire-verification/e02-draft-2\");}\n",
+    )
+    .expect("consumer source");
+
+    let output = Command::new(env!("CARGO"))
+        .args(["check", "--offline", "--manifest-path"])
+        .arg(consumer.path().join("Cargo.toml"))
+        .env("CARGO_BUILD_JOBS", "2")
+        .env("CARGO_TARGET_DIR", consumer.path().join("target"))
+        .output()
+        .expect("consumer cargo check must launch");
+    assert!(
+        output.status.success(),
+        "exact consumer graph must compile:\n{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+
+    let lock = fs::read_to_string(consumer.path().join("Cargo.lock"))
+        .expect("consumer lockfile must be written");
+    assert_eq!(
+        lock.matches("name = \"serde\"\nversion = \"1.0.228\"")
+            .count(),
+        1
+    );
+    assert!(!lock.contains("name = \"serde\"\nversion = \"1.0.229\""));
+    assert!(lock.contains(
+        "git+https://github.com/agent-ix/engineering-assurance?rev=9237ce50ce19c6d6c937705bfde4b64adcc9d16b#9237ce50ce19c6d6c937705bfde4b64adcc9d16b"
+    ));
+    assert_eq!(
+        format!(
+            "{:x}",
+            Sha256::digest(include_bytes!("../contracts/e02-draft-2.schema.json"))
+        ),
+        "677d5cd1de786bf260acefa0b8f4a4c51bfbb355507415f14ec1af7246ca4111"
+    );
 }
 
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]

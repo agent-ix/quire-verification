@@ -11,7 +11,8 @@ relationships:
 ## Description
 
 Verify the accepted private E02 draft-2 boundary preserves its complete result
-shape and records the exact contract and shared-reference revisions.
+shape, records the exact contract and shared-reference revisions, and remains
+resolvable by the exact `serde` 1.0.228 consumer graph used by Protocol.
 
 ## Test Procedure
 
@@ -21,10 +22,18 @@ revision, shared-reference revision, and private-only publication boundary. Run
 the Rust contract test with a valid `TechniqueResult`, then remove each required
 execution, logical, activation, participation, assumptions, adequacy,
 provenance, native-artifact, and oracle-contribution field independently.
+Create a temporary Rust consumer, clone the local qverify Git repository into
+its fixture, detach that clone at the recorded exact revision, and select the
+immutable checkout alongside exact `serde` 1.0.228. Assert the checkout identity,
+then run Cargo resolution and compilation offline. Inspect the resolved
+Engineering Assurance revision and re-run the E02 schema and strict-reader
+tests.
 
 ## Expected Results
 
 The provenance names the selected immutable revisions and no public-schema
 claim. The complete result is accepted. Every lossy projection is rejected as a
 schema violation before assessment; no fallback result or reduced finding set is
-emitted.
+emitted. The temporary consumer compiles with one `serde` 1.0.228 graph, the
+selected qverify checkout and Engineering Assurance revision are exact, and the
+accepted E02 schema digest and strict-reader results remain unchanged.
