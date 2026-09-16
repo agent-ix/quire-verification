@@ -33,9 +33,8 @@ no production evidence or human ceremony was used as a development gate.
 
 ## Coverage
 
-- Task-040 is `in_progress` solely for its declared Task-039 dependency;
-  FR-032 through FR-034 and TC-050 through TC-052 remain implemented and
-  passed in TM-001.
+- Tasks-039 and -040 are `done`; FR-032 through FR-034 and TC-050 through
+  TC-052 remain implemented and passed in TM-001.
 - `cargo fmt --all --check`, focused ledger/provider/integration tests, and
   `cargo clippy --workspace --all-targets --all-features -- -D warnings` pass.
   The repository-required `cargo test --workspace --all-features --locked`
