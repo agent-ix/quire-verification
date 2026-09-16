@@ -328,6 +328,16 @@ pub enum LedgerOutcome {
         /// Limiting states.
         limitations: Vec<LimitationKind>,
     },
+    /// An authenticated decision explicitly rejected the candidate.
+    Rejected {
+        /// Exact rejecting decision identity.
+        decision: EvidenceIdentity,
+    },
+    /// An authenticated decision explicitly limited the candidate scope.
+    Limited {
+        /// Exact limiting decision identity.
+        decision: EvidenceIdentity,
+    },
     /// Invalid discharge/acceptance.
     Refused {
         /// Stable refusal category.
@@ -504,7 +514,7 @@ pub fn account_qualification(
     rows: &[LedgerRow],
     decision: Option<&HumanDecision>,
     authorization_verifier: &dyn DecisionAuthorizationVerifier,
-    scope: &str,
+    _scope: &str,
 ) -> LedgerOutcome {
     let expected: BTreeSet<_> = accepted.iter().collect();
     let actual: BTreeSet<_> = rows.iter().map(|r| &r.capability_identity).collect();
@@ -519,7 +529,7 @@ pub fn account_qualification(
             "ledger requires the exact closed 176-capability denominator",
         );
     }
-    if !valid_kind(lock, EvidenceKind::EcosystemLock) || scope.is_empty() {
+    if !valid_kind(lock, EvidenceKind::EcosystemLock) {
         return refused(
             LedgerRefusalCode::InvalidLedger,
             "ledger requires one exact ecosystem lock and scope",
@@ -551,8 +561,9 @@ pub fn account_qualification(
             limitations: vec![LimitationKind::FutureProductionEvidence],
         };
     }
+    let scope = qualification_scope(accepted, lock, rows);
     if decision
-        .is_some_and(|decision| !valid_decision(decision, graph, authorization_verifier, scope))
+        .is_some_and(|decision| !valid_decision(decision, graph, authorization_verifier, &scope))
     {
         return refused(
             LedgerRefusalCode::InvalidDecision,
@@ -588,15 +599,77 @@ pub fn account_qualification(
             "a passed vector lacks an exact path to the qualification claim",
         );
     }
-    match decision {
-        HumanDecision {
-            disposition: DecisionDisposition::Accepted,
-            ..
-        } => LedgerOutcome::Accounted,
-        _ => LedgerOutcome::Incomplete {
-            limitations: vec![LimitationKind::FutureProductionEvidence],
+    decision_outcome(decision)
+}
+
+fn decision_outcome(decision: &HumanDecision) -> LedgerOutcome {
+    match decision.disposition {
+        DecisionDisposition::Accepted => LedgerOutcome::Accounted,
+        DecisionDisposition::Rejected => LedgerOutcome::Rejected {
+            decision: decision.identity.clone(),
+        },
+        DecisionDisposition::Limited => LedgerOutcome::Limited {
+            decision: decision.identity.clone(),
         },
     }
+}
+
+/// Computes the exact immutable scope identity for a qualification ledger.
+#[must_use]
+pub fn qualification_scope(
+    accepted: &[CapabilityIdentity],
+    lock: &EvidenceIdentity,
+    rows: &[LedgerRow],
+) -> String {
+    let mut entries: Vec<_> = accepted
+        .iter()
+        .map(|capability| capability.0.clone())
+        .collect();
+    entries.sort();
+    entries.push(format!("lock:{:?}:{}", lock.kind, lock.value));
+    entries.extend(rows.iter().map(ledger_row_identity));
+    entries.sort();
+    evidence_digest(entries.join("\n").as_bytes())
+}
+
+fn ledger_row_identity(row: &LedgerRow) -> String {
+    let mut classes: Vec<_> = row
+        .required_claim_classes
+        .iter()
+        .map(|class| format!("{class:?}"))
+        .collect();
+    classes.sort();
+    let mut vectors: Vec<_> = row.vectors.iter().map(vector_identity).collect();
+    vectors.sort();
+    format!(
+        "{}|{}|{}",
+        row.capability_identity.0,
+        classes.join(","),
+        vectors.join(",")
+    )
+}
+
+fn vector_identity(vector: &QualificationVector) -> String {
+    let identities = [
+        &vector.source,
+        &vector.package,
+        &vector.implementation,
+        &vector.method,
+        &vector.corpus,
+        &vector.ecosystem_lock,
+        &vector.run,
+        &vector.result,
+    ];
+    let values: Vec<_> = identities
+        .iter()
+        .map(|identity| format!("{:?}:{}", identity.kind, identity.value))
+        .collect();
+    format!(
+        "{:?}|{:?}|{}",
+        vector.claim_class,
+        vector.state,
+        values.join("|")
+    )
 }
 
 fn valid_identity(id: &EvidenceIdentity) -> bool {
@@ -717,6 +790,7 @@ fn has_vector_evidence(
         &vector.implementation,
         &vector.method,
         &vector.corpus,
+        &vector.ecosystem_lock,
         &vector.run,
         &vector.result,
     ];

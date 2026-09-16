@@ -146,6 +146,7 @@ fn graph_for_passed_rows(rows: &[LedgerRow], decision: &HumanDecision) -> Eviden
         vector.implementation.clone(),
         vector.method.clone(),
         vector.corpus.clone(),
+        vector.ecosystem_lock.clone(),
         vector.run.clone(),
         vector.result.clone(),
     ];
@@ -326,6 +327,8 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
         LedgerOutcome::Refused { .. }
     ));
     let mut passed = passed_rows();
+    let scope =
+        quire_verification::evidence_ledger::qualification_scope(&accepted, &lock(), &passed);
     let decision = HumanDecision {
         identity: id(EvidenceKind::Decision, "decision:it-005"),
         actor: "reviewer".into(),
@@ -334,10 +337,10 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             decision_identity: id(EvidenceKind::Decision, "decision:it-005"),
             actor: "reviewer".into(),
             authority: "owner".into(),
-            ledger_scope: "it-005".into(),
+            ledger_scope: scope.clone(),
             attestation: id(EvidenceKind::Artifact, "authentication:it-005"),
         },
-        ledger_scope: "it-005".into(),
+        ledger_scope: scope,
         disposition: DecisionDisposition::Accepted,
         rationale: "fixture".into(),
     };
@@ -395,6 +398,6 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
             &verifier(),
             "it-005"
         ),
-        LedgerOutcome::Incomplete { .. }
+        LedgerOutcome::Rejected { .. }
     ));
 }

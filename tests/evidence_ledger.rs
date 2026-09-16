@@ -92,6 +92,7 @@ fn passed_vector_graph(_rows: &[LedgerRow]) -> EvidenceGraph {
         id(EvidenceKind::Implementation, "implementation:1"),
         id(EvidenceKind::Method, "method:1"),
         id(EvidenceKind::Corpus, "corpus:1"),
+        lock(),
         id(EvidenceKind::ProviderRun, "run:1"),
         id(EvidenceKind::Result, "result:1"),
     ];
@@ -111,7 +112,7 @@ fn passed_vector_graph(_rows: &[LedgerRow]) -> EvidenceGraph {
     }
 }
 
-fn authenticated_decision() -> HumanDecision {
+fn authenticated_decision(scope: &str) -> HumanDecision {
     HumanDecision {
         identity: id(EvidenceKind::Decision, "decision:1"),
         actor: "human:1".into(),
@@ -120,10 +121,10 @@ fn authenticated_decision() -> HumanDecision {
             decision_identity: id(EvidenceKind::Decision, "decision:1"),
             actor: "human:1".into(),
             authority: "qualification-owner".into(),
-            ledger_scope: "scope:1".into(),
+            ledger_scope: scope.into(),
             attestation: id(EvidenceKind::Artifact, "authentication:1"),
         },
-        ledger_scope: "scope:1".into(),
+        ledger_scope: scope.into(),
         disposition: DecisionDisposition::Accepted,
         rationale: "reviewed".into(),
     }
@@ -296,19 +297,32 @@ fn tc_050_refuses_circular_discharge_without_erasing_graph() {
         validate_evidence_graph(&digest_mismatch, &claim),
         LedgerOutcome::Refused { .. }
     ));
-    edges.push(EvidenceEdge {
-        from: claim.clone(),
-        to: id(EvidenceKind::Requirement, "Requirement:1"),
-        relation: EvidenceRelation::Supports,
-        scope: "scope".into(),
-        provenance: "producer".into(),
-    });
+    let cycle = id(EvidenceKind::Claim, "claim:cycle");
+    edges.extend([
+        EvidenceEdge {
+            from: claim.clone(),
+            to: cycle.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "scope".into(),
+            provenance: "producer".into(),
+        },
+        EvidenceEdge {
+            from: cycle,
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "scope".into(),
+            provenance: "producer".into(),
+        },
+    ]);
     graph.edges = edges;
     assert!(matches!(
         validate_evidence_graph(&graph, &claim),
-        LedgerOutcome::Refused { .. }
+        LedgerOutcome::Refused {
+            code: LedgerRefusalCode::CircularEvidence,
+            ..
+        }
     ));
-    assert_eq!(graph.edges.len(), 13);
+    assert_eq!(graph.edges.len(), 14);
 }
 
 /// Tracing: TC-050, FR-032-AC-3, IT-005.
@@ -464,7 +478,9 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
             limitations: vec![LimitationKind::FutureProductionEvidence]
         }
     );
-    let decision = authenticated_decision();
+    let passed = rows(VectorState::Passed);
+    let scope = qualification_scope(&accepted(), &lock(), &passed);
+    let decision = authenticated_decision(&scope);
     assert_eq!(
         account_qualification(
             &accepted(),
