@@ -25,7 +25,7 @@ pub struct AnalyzeRunIdentity(pub String);
 pub struct AnalyzeResultIdentity(pub String);
 
 /// Merged Analyze revision supplying hybrid/synthesis development results.
-pub const ANALYZE_PROVIDER_REVISION: &str = "26a46969c4c9163ba80b5dedb3059bdcd4031946";
+pub const ANALYZE_PROVIDER_REVISION: &str = "a0a29b8e1db67105a78b19771982e1af7332237b";
 /// Shared method-result contract accepted at this provider boundary.
 pub const ANALYZE_METHOD_RESULT_VERSION: &str = "quire.method-result/v1";
 

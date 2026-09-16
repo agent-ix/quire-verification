@@ -2,7 +2,7 @@
 id: Task-039
 title: "Integrate hybrid and synthesis method providers"
 type: Task
-status: in_progress
+status: done
 track: D4
 priority: P0
 relationships:
@@ -24,7 +24,7 @@ its interface-001-compatible result contract in development integration.
 
 ## Subtasks
 
-- [ ] Run the Analyze-owned `/specify` and self `/spec-review` before provider code.
+- [x] Run the Analyze-owned `/specify` and self `/spec-review` before provider code.
 - [x] Implement sound mode/flow/guard/reset enclosures with declared numeric error.
 - [x] Implement canonical bounded candidate enumeration and independent validation.
 - [x] Preserve convergence failure, incomplete search, no-candidate, candidate, proof, and counterexample states.
