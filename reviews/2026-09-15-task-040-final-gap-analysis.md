@@ -14,7 +14,7 @@ relationships:
 
 ## Summary
 
-Task-040 is complete: typed evidence relations, byte-validated intake,
+Task-040 implementation is complete: typed evidence relations, byte-validated intake,
 claim-local cycle handling, immutable lineage, the 176-row ledger, independent
 result identity, and the externally verified decision seam are implemented and
 covered by traced executable tests. Future production evidence remains explicit
@@ -22,20 +22,20 @@ covered by traced executable tests. Future production evidence remains explicit
 
 ## Verdict
 
-**PASS.** Task-039 is merged at `a0a29b8e1db67105a78b19771982e1af7332237b`
-and pinned by the Verification intake boundary. No production evidence or
-human ceremony was used as a development gate.
+**PASS.** Task-039 is pinned through the merged shared Analyze result contract;
+no production evidence or human ceremony was used as a development gate.
 
 ## Findings
 
 | ID | Severity | Summary | Refs |
 | --- | --- | --- | --- |
-| FND-001 | low | No targeted gaps remain: Analyze #33 is merged and pinned, and Tasks-039/-040 are complete. | Task-039, Task-040, Analyze #33 |
+| FND-001 | low | No targeted gaps remain: Tasks-039 and -040 consume the shared pinned Analyze contract. | Task-039, Task-040 |
 
 ## Coverage
 
-- Tasks-039 and -040 are `done`; FR-032 through FR-034 and TC-050 through
-  TC-052 are implemented and passed in TM-001.
+- Task-040 is `in_progress` solely for its declared Task-039 dependency;
+  FR-032 through FR-034 and TC-050 through TC-052 remain implemented and
+  passed in TM-001.
 - `cargo fmt --all --check`, focused ledger/provider/integration tests, and
   `cargo clippy --workspace --all-targets --all-features -- -D warnings` pass.
   The repository-required `cargo test --workspace --all-features --locked`

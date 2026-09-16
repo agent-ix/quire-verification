@@ -32,7 +32,8 @@ relationships:
 ## Scope
 
 Complete Verification #38 and V1-EVID-001-006 after all method provider contracts
-are merged and pinned. Task-039 is now pinned to the merged Analyze #33 revision.
+are merged and pinned. Implementation and focused validation are complete; the
+Task-039 provider-contract integration remains outstanding.
 
 ## Subtasks
 
