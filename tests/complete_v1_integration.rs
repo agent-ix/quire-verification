@@ -8,9 +8,9 @@
 use ix_trace_rs::trace;
 use quire_verification::{
     evidence_ledger::{
-        CapabilityIdentity, ClaimClass, EvidenceEdge, EvidenceGraph, EvidenceIdentity,
-        EvidenceKind, EvidenceRelation, LedgerOutcome, LedgerRow, QualificationVector, VectorState,
-        account_qualification, validate_evidence_graph,
+        CapabilityIdentity, ClaimClass, DecisionDisposition, EvidenceEdge, EvidenceGraph,
+        EvidenceIdentity, EvidenceKind, EvidenceRelation, HumanDecision, LedgerOutcome, LedgerRow,
+        QualificationVector, VectorState, account_qualification, validate_evidence_graph,
     },
     hybrid_synthesis_provider::{
         ANALYZE_METHOD_RESULT_VERSION, ANALYZE_PROVIDER_REVISION, AnalyzeAssumptionsIdentity,
@@ -107,6 +107,42 @@ fn rows() -> Vec<LedgerRow> {
         .collect()
 }
 
+fn passed_rows() -> Vec<LedgerRow> {
+    let mut rows = rows();
+    for row in &mut rows {
+        row.vectors[0].state = VectorState::Passed;
+    }
+    rows
+}
+
+fn graph_for_passed_rows(rows: &[LedgerRow]) -> EvidenceGraph {
+    let claim = id(EvidenceKind::Claim, "claim:ledger");
+    let vector = &rows[0].vectors[0];
+    let identities = [
+        vector.source.clone(),
+        vector.package.clone(),
+        vector.implementation.clone(),
+        vector.method.clone(),
+        vector.corpus.clone(),
+        vector.run.clone(),
+        vector.result.clone(),
+    ];
+    EvidenceGraph {
+        edges: identities
+            .into_iter()
+            .map(|from| EvidenceEdge {
+                from,
+                to: claim.clone(),
+                relation: EvidenceRelation::Supports,
+                scope: "it-005".into(),
+                provenance: "fixture".into(),
+            })
+            .collect(),
+        intake: vec![],
+        limitations: vec![],
+    }
+}
+
 /// Tracing: IT-005-SC-04, IT-005-SC-05, FR-032-AC-2.
 #[test]
 #[trace("IT-005", "FR-032-AC-2")]
@@ -162,5 +198,66 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
     assert!(matches!(
         account_qualification(&accepted, &lock(), &graph, &duplicate, None, "it-005"),
         LedgerOutcome::Refused { .. }
+    ));
+    let mut passed = passed_rows();
+    let evidence = graph_for_passed_rows(&passed);
+    let decision = HumanDecision {
+        identity: id(EvidenceKind::Decision, "decision:it-005"),
+        actor: "reviewer".into(),
+        authority: "owner".into(),
+        ledger_scope: "it-005".into(),
+        disposition: DecisionDisposition::Accepted,
+        rationale: "fixture".into(),
+    };
+    assert_eq!(
+        account_qualification(
+            &accepted,
+            &lock(),
+            &evidence,
+            &passed,
+            Some(&decision),
+            "it-005"
+        ),
+        LedgerOutcome::Accounted
+    );
+    passed[0].vectors.clear();
+    assert!(matches!(
+        account_qualification(
+            &accepted,
+            &lock(),
+            &evidence,
+            &passed,
+            Some(&decision),
+            "it-005"
+        ),
+        LedgerOutcome::Refused { .. }
+    ));
+    let mut wrong_lock = passed_rows();
+    wrong_lock[0].vectors[0].ecosystem_lock = id(EvidenceKind::EcosystemLock, "lock:wrong");
+    assert!(matches!(
+        account_qualification(
+            &accepted,
+            &lock(),
+            &evidence,
+            &wrong_lock,
+            Some(&decision),
+            "it-005"
+        ),
+        LedgerOutcome::Refused { .. }
+    ));
+    let rejected = HumanDecision {
+        disposition: DecisionDisposition::Rejected,
+        ..decision
+    };
+    assert!(matches!(
+        account_qualification(
+            &accepted,
+            &lock(),
+            &evidence,
+            &passed_rows(),
+            Some(&rejected),
+            "it-005"
+        ),
+        LedgerOutcome::Incomplete { .. }
     ));
 }
