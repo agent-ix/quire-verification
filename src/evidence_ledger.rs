@@ -561,7 +561,12 @@ pub fn account_qualification(
             limitations: vec![LimitationKind::FutureProductionEvidence],
         };
     }
-    let scope = qualification_scope(accepted, lock, rows);
+    let Some(scope) = qualification_scope(accepted, lock, rows) else {
+        return refused(
+            LedgerRefusalCode::InvalidLedger,
+            "ledger scope exceeds the canonical framing bound",
+        );
+    };
     if decision
         .is_some_and(|decision| !valid_decision(decision, graph, authorization_verifier, &scope))
     {
@@ -620,46 +625,49 @@ pub fn qualification_scope(
     accepted: &[CapabilityIdentity],
     lock: &EvidenceIdentity,
     rows: &[LedgerRow],
-) -> String {
-    let mut records: Vec<Vec<u8>> = accepted
-        .iter()
-        .map(|capability| {
-            let mut record = vec![b'C'];
-            encode_scope_text(&mut record, &capability.0);
-            record
-        })
-        .collect();
+) -> Option<String> {
+    let mut records = Vec::with_capacity(accepted.len() + rows.len() + 1);
+    for capability in accepted {
+        let mut record = vec![b'C'];
+        encode_scope_text(&mut record, &capability.0)?;
+        records.push(record);
+    }
     let mut lock_record = vec![b'L'];
-    encode_scope_identity(&mut lock_record, lock);
+    encode_scope_identity(&mut lock_record, lock)?;
     records.push(lock_record);
-    records.extend(rows.iter().map(ledger_row_identity));
+    for row in rows {
+        records.push(ledger_row_identity(row)?);
+    }
     records.sort();
     let mut bytes = b"quire-verification/qualification-scope/v1".to_vec();
     for record in records {
-        encode_scope_bytes(&mut bytes, &record);
+        encode_scope_bytes(&mut bytes, &record)?;
     }
-    evidence_digest(&bytes)
+    Some(evidence_digest(&bytes))
 }
 
-fn ledger_row_identity(row: &LedgerRow) -> Vec<u8> {
+fn ledger_row_identity(row: &LedgerRow) -> Option<Vec<u8>> {
     let mut classes: Vec<_> = row
         .required_claim_classes
         .iter()
         .map(|class| scope_claim_class(*class))
         .collect();
     classes.sort_unstable();
-    let mut vectors: Vec<_> = row.vectors.iter().map(vector_identity).collect();
+    let mut vectors = Vec::with_capacity(row.vectors.len());
+    for vector in &row.vectors {
+        vectors.push(vector_identity(vector)?);
+    }
     vectors.sort();
     let mut record = vec![b'R'];
-    encode_scope_text(&mut record, &row.capability_identity.0);
-    encode_scope_bytes(&mut record, &classes);
+    encode_scope_text(&mut record, &row.capability_identity.0)?;
+    encode_scope_bytes(&mut record, &classes)?;
     for vector in vectors {
-        encode_scope_bytes(&mut record, &vector);
+        encode_scope_bytes(&mut record, &vector)?;
     }
-    record
+    Some(record)
 }
 
-fn vector_identity(vector: &QualificationVector) -> Vec<u8> {
+fn vector_identity(vector: &QualificationVector) -> Option<Vec<u8>> {
     let identities = [
         &vector.source,
         &vector.package,
@@ -676,23 +684,25 @@ fn vector_identity(vector: &QualificationVector) -> Vec<u8> {
         scope_vector_state(vector.state),
     ];
     for identity in identities {
-        encode_scope_identity(&mut record, identity);
+        encode_scope_identity(&mut record, identity)?;
     }
-    record
+    Some(record)
 }
 
-fn encode_scope_identity(bytes: &mut Vec<u8>, identity: &EvidenceIdentity) {
+fn encode_scope_identity(bytes: &mut Vec<u8>, identity: &EvidenceIdentity) -> Option<()> {
     bytes.push(scope_evidence_kind(identity.kind));
-    encode_scope_text(bytes, &identity.value);
+    encode_scope_text(bytes, &identity.value)
 }
 
-fn encode_scope_text(bytes: &mut Vec<u8>, value: &str) {
-    encode_scope_bytes(bytes, value.as_bytes());
+fn encode_scope_text(bytes: &mut Vec<u8>, value: &str) -> Option<()> {
+    encode_scope_bytes(bytes, value.as_bytes())
 }
 
-fn encode_scope_bytes(bytes: &mut Vec<u8>, value: &[u8]) {
-    bytes.extend_from_slice(&(value.len() as u64).to_be_bytes());
+fn encode_scope_bytes(bytes: &mut Vec<u8>, value: &[u8]) -> Option<()> {
+    let length = u64::try_from(value.len()).ok()?;
+    bytes.extend_from_slice(&length.to_be_bytes());
     bytes.extend_from_slice(value);
+    Some(())
 }
 
 const fn scope_evidence_kind(kind: EvidenceKind) -> u8 {

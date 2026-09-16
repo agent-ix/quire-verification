@@ -456,7 +456,7 @@ fn tc_052_preserves_ordered_lineage_and_refuses_verdict_change() {
 /// Tracing: TC-051, FR-034-AC-1, FR-034-AC-2, FR-034-AC-3, IT-005.
 #[test]
 #[trace("TC-051", "FR-034-AC-1", "FR-034-AC-2", "FR-034-AC-3", "IT-005")]
-// One traced adversarial scenario keeps all FR-034 acceptance mutations together.
+// One traced adversarial scenario keeps all acceptance mutations together.
 #[allow(clippy::too_many_lines)]
 fn tc_051_accounts_closed_vectors_without_production_gate() {
     let graph = EvidenceGraph {
@@ -479,7 +479,8 @@ fn tc_051_accounts_closed_vectors_without_production_gate() {
         }
     );
     let passed = rows(VectorState::Passed);
-    let scope = qualification_scope(&accepted(), &lock(), &passed);
+    let scope = qualification_scope(&accepted(), &lock(), &passed)
+        .expect("fixture ledger scope fits canonical framing");
     let decision = authenticated_decision(&scope);
     assert_eq!(
         account_qualification(

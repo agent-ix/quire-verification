@@ -10,8 +10,9 @@ use ix_trace_rs::trace;
 use quire_verification::{
     evidence_ledger::{
         CapabilityIdentity, ClaimClass, DecisionDisposition, EvidenceEdge, EvidenceGraph,
-        EvidenceIdentity, EvidenceKind, EvidenceRelation, HumanDecision, LedgerOutcome, LedgerRow,
-        QualificationVector, VectorState, account_qualification, validate_evidence_graph,
+        EvidenceIdentity, EvidenceKind, EvidenceRelation, HumanDecision, LedgerOutcome,
+        LedgerRefusalCode, LedgerRow, QualificationVector, VectorState, account_qualification,
+        validate_evidence_graph,
     },
     hybrid_synthesis_provider::{
         ANALYZE_METHOD_RESULT_VERSION, ANALYZE_PROVIDER_REVISION, AnalyzeAssumptionsIdentity,
@@ -266,18 +267,31 @@ fn it_005_sc_04_05_rejects_candidate_and_refuses_circular_discharge() {
         validate_evidence_graph(&graph, &claim),
         LedgerOutcome::Accounted
     );
-    graph.edges.push(EvidenceEdge {
-        from: claim.clone(),
-        to: id(EvidenceKind::Requirement, "Requirement:1"),
-        relation: EvidenceRelation::Supports,
-        scope: "it-005".into(),
-        provenance: "fixture".into(),
-    });
+    let cycle = id(EvidenceKind::Claim, "claim:it-005-cycle");
+    graph.edges.extend([
+        EvidenceEdge {
+            from: claim.clone(),
+            to: cycle.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+        EvidenceEdge {
+            from: cycle,
+            to: claim.clone(),
+            relation: EvidenceRelation::Supports,
+            scope: "it-005".into(),
+            provenance: "fixture".into(),
+        },
+    ]);
     assert!(matches!(
         validate_evidence_graph(&graph, &claim),
-        LedgerOutcome::Refused { .. }
+        LedgerOutcome::Refused {
+            code: LedgerRefusalCode::CircularEvidence,
+            ..
+        }
     ));
-    assert_eq!(graph.edges.len(), 13);
+    assert_eq!(graph.edges.len(), 14);
 }
 
 /// Covers all-row retention and non-blocking future-evidence integration cases.
@@ -328,7 +342,8 @@ fn it_005_sc_06_07_keeps_all_rows_and_future_evidence_nonblocking() {
     ));
     let mut passed = passed_rows();
     let scope =
-        quire_verification::evidence_ledger::qualification_scope(&accepted, &lock(), &passed);
+        quire_verification::evidence_ledger::qualification_scope(&accepted, &lock(), &passed)
+            .expect("fixture ledger scope fits canonical framing");
     let decision = HumanDecision {
         identity: id(EvidenceKind::Decision, "decision:it-005"),
         actor: "reviewer".into(),
