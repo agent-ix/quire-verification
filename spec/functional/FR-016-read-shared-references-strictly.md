@@ -53,7 +53,7 @@ before using the reference in planning or result identity comparison.
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-016-CON-1 | The reader SHALL consume only the exact independently reviewed private shared-reference packet merged at `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. | Compatibility | Integration Test (IT-002) |
-| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, and provenance-recorded. Its selected reusable-artifact terms (AGPL-3.0-or-later, owner ruling 2026-09-20) publish the complete packet in exactly one repository, `quire-verification-contracts` (VER-50); this repository holds no copy. | Rights / containment | Inspection (TC-031) |
+| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, and provenance-recorded. It is a TEMPORARY vendor of private `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, not a settlement, retained under VER-50's standing exception and published, under AGPL-3.0-or-later, in exactly one repository, `quire-verification-contracts` (the 2026-09-20 owner ruling separately authorized publication of the draft-2 schema fragment alone); this repository holds no copy. Per VER-51, the exception's expiry condition is "`quire-specification` becomes public, or the packet gets a public home" at its definer — publishing the packet in `quire-verification-contracts` does not itself satisfy that condition. Until that condition is met, this snapshot is deleted from `quire-verification-contracts` and replaced by a reference. | Rights / containment | Inspection (TC-031) |
 
 ## Dependencies
 

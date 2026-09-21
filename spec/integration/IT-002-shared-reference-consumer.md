@@ -24,9 +24,17 @@ is the accepted schema and data-only fixture packet owned by
 - FS02 and FS05 identify merged private revision
   `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
 - B's consumer-specific JCS and six role findings are resolved in that revision.
-- Public reusable-artifact terms are selected (AGPL-3.0-or-later, owner ruling
-  2026-09-20); the complete packet is published in public
-  `quire-verification-contracts` (VER-50), and this repository holds no copy.
+- The draft-2 schema fragment's public reusable-artifact terms are selected
+  (AGPL-3.0-or-later, owner ruling 2026-09-20). Under VER-50's standing
+  exception, the complete packet — that fragment, the retained draft-1 schema,
+  and the fourteen fixtures — is published as a TEMPORARY vendor of
+  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78` in
+  public `quire-verification-contracts`, and this repository holds no copy.
+  This is not a settlement: per VER-51, the exception's expiry condition is
+  "`quire-specification` becomes public, or the packet gets a public home" at
+  its definer — publishing the packet in `quire-verification-contracts` does
+  not itself satisfy that condition, since visibility is not the test. Until
+  that condition is met, this snapshot is deleted and replaced by a reference.
 
 ## Inputs
 
