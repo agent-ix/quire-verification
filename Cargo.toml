@@ -51,13 +51,12 @@ chrono = { version = "0.4.42", default-features = false, features = ["serde"] }
 engineering-assurance = { version = "=0.3.1", git = "https://github.com/agent-ix/engineering-assurance", rev = "9237ce50ce19c6d6c937705bfde4b64adcc9d16b", default-features = false, features = ["producer-execution"] }
 jsonschema = { version = "0.55.0", default-features = false }
 quire-analyze-method-contract = { git = "https://github.com/agent-ix/quire-analyze", rev = "ddc099b918a6a569987c96cda97d567d2d3bba33", package = "quire-analyze-method-contract", version = "=0.1.0" }
+quire-verification-contracts = { version = "=0.1.0", git = "https://github.com/agent-ix/quire-verification-contracts", rev = "da8d7272051b1cf02768ec459539551414fd6c21" }
 regress = "=0.11.1"
 rustix = { version = "1.1.2", features = ["fs", "process"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
-serde_json_canonicalizer = "0.3.2"
 sha2 = "0.10.9"
-thiserror = "2.0.16"
 tempfile = "3.23.0"
 
 [build-dependencies]

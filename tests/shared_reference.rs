@@ -925,6 +925,15 @@ fn executes_exact_reference_vectors(adverse: &Value) {
     }
 }
 
+/// Direct git dependencies already reviewed for this crate; see
+/// `detects_snapshot_drift_and_producer_coupling`.
+const ACCEPTED_GIT_SOURCES: &[&str] = &[
+    "https://github.com/agent-ix/engineering-assurance",
+    "https://github.com/agent-ix/ix-trace-rs",
+    "https://github.com/agent-ix/quire-analyze",
+    "https://github.com/agent-ix/quire-verification-contracts",
+];
+
 fn detects_snapshot_drift_and_producer_coupling() {
     let manifest = include_str!("../contracts/shared-reference-snapshot.sha256");
     assert_eq!(manifest.lines().count(), 16);
@@ -964,30 +973,32 @@ fn detects_snapshot_drift_and_producer_coupling() {
     assert_eq!(build.matches("TypeSpace::new").count(), 1);
     let cargo = include_str!("../Cargo.toml");
     assert!(!cargo.contains("quire-specification"));
-    // Every Git dependency is enumerated here and in `deny.toml`'s `allow-git`,
-    // so adding one is a deliberate, reviewed act rather than a silent import.
-    // Assert the set, not the count: a bare count went stale the moment
-    // `quire-analyze-method-contract` was added and reported a real drift as a
-    // number nobody could act on.
+    // Every direct git dependency must be one of ACCEPTED_GIT_SOURCES (already-reviewed),
+    // and every accepted source must still be in use. This does not assert a fixed count:
+    // the accepted set has grown as the crate gained dependencies (quire-analyze, then
+    // ix-trace-rs, then quire-verification-contracts) and will again. What this must keep
+    // catching is an unreviewed new git source slipping in unnoticed — most importantly a
+    // network dependency on private `quire-specification` — or a stale entry nothing uses.
     let git_sources = cargo
         .lines()
         .filter(|line| line.contains("git ="))
         .collect::<Vec<_>>();
-    let allowed = [
-        "https://github.com/agent-ix/engineering-assurance",
-        "https://github.com/agent-ix/quire-analyze",
-        "https://github.com/agent-ix/ix-trace-rs",
-    ];
+    assert!(
+        !git_sources.is_empty(),
+        "expected at least one git dependency"
+    );
     for source in &git_sources {
         assert!(
-            allowed.iter().any(|url| source.contains(url)),
-            "undeclared Git dependency; add it to this list and deny.toml: {source}"
+            ACCEPTED_GIT_SOURCES
+                .iter()
+                .any(|accepted| source.contains(accepted)),
+            "unreviewed git dependency source: {source}"
         );
     }
-    for url in allowed {
+    for url in ACCEPTED_GIT_SOURCES {
         assert!(
             git_sources.iter().any(|source| source.contains(url)),
-            "declared Git dependency is gone; remove it from this list: {url}"
+            "declared Git dependency is gone; remove it from ACCEPTED_GIT_SOURCES and deny.toml: {url}"
         );
     }
     assert!(snapshot_is_data_only(
