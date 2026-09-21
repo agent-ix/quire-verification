@@ -734,7 +734,7 @@ fn rejects_unaligned_source_map_spans() {
     );
 }
 
-#[trace("TC-031", "FR-016-AC-5")]
+#[trace("TC-031", "FR-016-AC-5", "FR-016-AC-7")]
 #[test]
 fn tc_031_executes_the_byte_identical_data_only_snapshot_independently() {
     validates_local_schema_and_canonical_vectors();
@@ -945,24 +945,76 @@ fn asserts_single_shared_reference_source() {
     // VER-50: the retained shared-reference schemas, fourteen fixtures, and their `typify`
     // codegen (previously this repository's own `build.rs`) now live in public crate
     // quire-verification-contracts, which this crate depends on and re-exports at
-    // `contracts::shared_reference`. NFR-002 is "single contract source": this repository's
-    // own build.rs must not also derive them, or there would be two sources instead of one.
-    // The byte-identical snapshot guard (`shared-reference-snapshot.sha256`,
-    // `verify_shared_reference_snapshot`) moved with the packet and is exercised directly in
-    // that crate's own test suite.
-    let build = include_str!("../build.rs");
-    assert_eq!(
-        build
-            .matches("shared-reference-1-draft.schema.json")
-            .count(),
-        0
+    // `contracts::shared_reference`. NFR-002 is "single contract source": this repository
+    // must hold no second copy of any of the sixteen retained files anywhere in its own
+    // tree, under any path or filename.
+    //
+    // This asserts that property directly, by content, against every file this repository
+    // tracks — not a proxy for it (grepping `build.rs`'s text for the schema paths it used
+    // to load). A text-based proxy cannot see a file re-vendored under a new path (say,
+    // `contracts/vendor/...`) and read with a fresh `include_str!` from `src/` that never
+    // touches `build.rs` at all; a content-based, whole-tree check can.
+    //
+    // The sixteen expected names and digests come from the packet's own manifest
+    // (`quire-verification-contracts::shared_reference::SNAPSHOT_MANIFEST`), not a second,
+    // hand-maintained copy of that list here.
+    let mut forbidden_names = BTreeSet::new();
+    let mut forbidden_digests = BTreeSet::new();
+    for line in quire_verification::contracts::shared_reference::SNAPSHOT_MANIFEST
+        .lines()
+        .filter(|line| !line.is_empty())
+    {
+        let (digest, path) = line
+            .split_once("  ")
+            .expect("manifest line has a digest and path");
+        forbidden_digests.insert(digest);
+        let name = std::path::Path::new(path)
+            .file_name()
+            .and_then(|name| name.to_str())
+            .expect("manifest path has a file name");
+        forbidden_names.insert(name);
+    }
+
+    let manifest_dir = env!("CARGO_MANIFEST_DIR");
+    let output = std::process::Command::new("git")
+        .args(["-C", manifest_dir, "ls-files", "-z"])
+        .output()
+        .expect("git ls-files must run to walk this repository's tracked tree");
+    assert!(
+        output.status.success(),
+        "git ls-files failed: {}",
+        String::from_utf8_lossy(&output.stderr)
     );
-    assert_eq!(
-        build
-            .matches("shared-reference-2-draft/schema.json")
-            .count(),
-        0
+    let mut checked = 0_usize;
+    for relative in output.stdout.split(|&byte| byte == 0) {
+        if relative.is_empty() {
+            continue;
+        }
+        let relative = std::str::from_utf8(relative).expect("tracked path is UTF-8");
+        let name = std::path::Path::new(relative)
+            .file_name()
+            .and_then(|name| name.to_str())
+            .unwrap_or(relative);
+        assert!(
+            !forbidden_names.contains(name),
+            "a retained shared-reference file appears to be re-vendored at {relative}; \
+             the packet must live only in quire-verification-contracts"
+        );
+        let bytes = std::fs::read(std::path::Path::new(manifest_dir).join(relative))
+            .unwrap_or_else(|error| panic!("read tracked file {relative}: {error}"));
+        let digest = format!("{:x}", Sha256::digest(&bytes));
+        assert!(
+            !forbidden_digests.contains(digest.as_str()),
+            "a tracked file's content matches a retained shared-reference file's digest at \
+             {relative}; the packet must live only in quire-verification-contracts"
+        );
+        checked += 1;
+    }
+    assert!(
+        checked > 100,
+        "expected to walk this repository's full tracked tree, only saw {checked} files"
     );
+
     let cargo = include_str!("../Cargo.toml");
     assert!(!cargo.contains("quire-specification"));
     // Every direct git dependency must be one of ACCEPTED_GIT_SOURCES (already-reviewed),
