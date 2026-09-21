@@ -22,4 +22,8 @@ unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
 # Exact candidate source required for the EA #34 downstream-consumer gate. Replace the
 # revision after provider promotion; unknown Git sources remain denied.
-allow-git = ["https://github.com/agent-ix/engineering-assurance"]
+allow-git = [
+    "https://github.com/agent-ix/engineering-assurance",
+    "https://github.com/agent-ix/ix-trace-rs",
+    "https://github.com/agent-ix/quire-analyze",
+]

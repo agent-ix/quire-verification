@@ -26,10 +26,10 @@ TC/AC argument in those attributes is discovered and bound. A marker that
 compiles but hides one or more continuation-line arguments from the configured
 Quire Rust trace reader fails this check. Report the first-party population as
 repository-owned Rust under `src/`, `tests/`, and `fuzz/`; classify any symbols discovered
-under `vendor/` as dependency-owned and governed by that dependency's matrix
+in Cargo-resolved dependencies as dependency-owned and governed by that dependency's matrix
 rather than silently including them in the first-party denominator. On a clean CI
-runner with no cross-repository credential, resolve the repository-contained
-trace crate snapshot and verify its recorded upstream revision before running
+runner with no cross-repository credential, resolve the trace crate from its
+public upstream repository at the pinned revision before running
 the Rust gates. Read `AGENTS.md` and `LICENSE-DECISION.md`; require an available
 Cargo gate and pointers to `Cargo.toml`, `Cargo.lock`, and
 `docs/artifact-rights.md`, and reject claims that a removed npm manifest or
