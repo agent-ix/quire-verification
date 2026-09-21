@@ -3,15 +3,17 @@
 
 //! Strict, bounded consumption of the selected shared-reference packet.
 //!
+//! The retained schemas, their derived `wire_v1`/`wire_v2` types, the fourteen amendment
+//! fixtures, and the byte-identical snapshot guard live in public crate
+//! `quire-verification-contracts` (PLAT-861, VER-50), which this crate depends on and
+//! re-exports at `contracts`; this module re-exports them unchanged so every call site below
+//! is unaffected.
+//!
 //! Governing requirements: FR-016, NFR-005, TC-029, TC-031, and IT-002.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
-use std::fs;
-use std::path::{Component, Path};
-use std::sync::OnceLock;
 
-use jsonschema::{Draft, Validator};
 use serde::de::{DeserializeSeed, Deserializer, MapAccess, SeqAccess, Visitor};
 use serde_json::{Map, Number, Value};
 use sha2::{Digest, Sha256};
@@ -30,17 +32,12 @@ const DEPTH_MARKER: &str = "shared-reference nesting limit exceeded";
 const ARRAY_MARKER: &str = "shared-reference array limit exceeded";
 const DUPLICATE_MARKER: &str = "duplicate decoded member name";
 
+/// Verifies the retained two-schema, fourteen-fixture snapshot manifest (VER-50).
+pub use crate::contracts::shared_reference::verify_shared_reference_snapshot;
 /// Rust wire types generated from the retained version-1 schema.
-#[allow(missing_docs, clippy::all, clippy::pedantic)]
-pub mod wire_v1 {
-    include!(concat!(env!("OUT_DIR"), "/shared_reference_v1.rs"));
-}
-
+pub use crate::contracts::shared_reference::wire_v1;
 /// Rust wire types generated from the retained version-2 schema.
-#[allow(missing_docs, clippy::all, clippy::pedantic)]
-pub mod wire_v2 {
-    include!(concat!(env!("OUT_DIR"), "/shared_reference_v2.rs"));
-}
+pub use crate::contracts::shared_reference::wire_v2;
 
 /// Versions and semantic features the local reader can interpret.
 #[derive(Clone, Debug, Default)]
@@ -251,19 +248,19 @@ impl SharedReferenceReader {
 
             match (version, kind, expectation) {
                 (V2, "artifact", ReferenceExpectation::Artifact(expected)) => {
-                    validate_schema(v2_validator()?, &value)?;
+                    crate::contracts::shared_reference::validate_shared_reference_v2(&value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_artifact(value_at(&value, "/value")?, expected)?;
                     ValidatedSharedReference::version2(&value, generated, expected.bytes.clone())
                 }
                 (V2, "semantic", ReferenceExpectation::Semantic(expected)) => {
-                    validate_schema(v2_validator()?, &value)?;
+                    crate::contracts::shared_reference::validate_shared_reference_v2(&value)?;
                     let generated = decode_v2(value.clone())?;
                     self.validate_semantic(value_at(&value, "/value")?, expected)?;
                     ValidatedSharedReference::version2(&value, generated, None)
                 }
                 (V1, "source-map", ReferenceExpectation::SourceMap(expected)) => {
-                    validate_schema(v1_validator()?, &value)?;
+                    crate::contracts::shared_reference::validate_shared_reference_v1(&value)?;
                     let generated = decode_v1(value.clone())?;
                     self.validate_source_map(value_at(&value, "/value")?, expected)?;
                     ValidatedSharedReference::version1(&value, generated)
@@ -315,7 +312,7 @@ impl SharedReferenceReader {
                     ));
                 }
                 preflight_reference_versions(&value, version, kind)?;
-                validate_schema(v1_validator()?, &value)?;
+                crate::contracts::shared_reference::validate_shared_reference_v1(&value)?;
                 let generated = decode_v1(value.clone())?;
                 let migration = value_at(&value, "/value")?;
                 if !migration_applies(migration, expectation)? {
@@ -555,98 +552,6 @@ pub fn parse_strict_bounded_json(bytes: &[u8]) -> Result<Value, VerificationErro
         .end()
         .map_err(|error| strict_decode_error(&error))?;
     Ok(value)
-}
-
-/// Verifies the retained two-schema, fourteen-fixture snapshot manifest.
-///
-/// # Errors
-/// Returns an I/O or identity error when a retained file is missing, unsafe,
-/// unlisted, or byte-different from the selected private upstream revision.
-pub fn verify_shared_reference_snapshot(root: &Path) -> Result<(), VerificationError> {
-    const MANIFEST: &str = include_str!("../contracts/shared-reference-snapshot.sha256");
-    let canonical_root = fs::canonicalize(root).map_err(|error| {
-        refusal(VerificationErrorCode::IoFailure, error.to_string())
-            .with_context("path", root.display().to_string())
-    })?;
-    let mut expected_paths = BTreeSet::new();
-    let mut entries = 0_usize;
-    for line in MANIFEST.lines().filter(|line| !line.is_empty()) {
-        let (expected, relative) = line.split_once("  ").ok_or_else(invalid_wire)?;
-        let relative = Path::new(relative);
-        if relative.is_absolute()
-            || relative.components().any(|part| {
-                matches!(
-                    part,
-                    Component::ParentDir | Component::RootDir | Component::Prefix(_)
-                )
-            })
-        {
-            return Err(invalid_wire());
-        }
-        expected_paths.insert(relative.to_path_buf());
-        let path = root.join(relative);
-        let metadata = fs::symlink_metadata(&path).map_err(|error| {
-            refusal(VerificationErrorCode::IoFailure, error.to_string())
-                .with_context("path", relative.display().to_string())
-        })?;
-        let canonical_path = fs::canonicalize(&path).map_err(|error| {
-            refusal(VerificationErrorCode::IoFailure, error.to_string())
-                .with_context("path", relative.display().to_string())
-        })?;
-        if !metadata.file_type().is_file() || !canonical_path.starts_with(&canonical_root) {
-            return Err(invalid_wire().with_context("path", relative.display().to_string()));
-        }
-        let bytes = fs::read(&path).map_err(|error| {
-            refusal(VerificationErrorCode::IoFailure, error.to_string())
-                .with_context("path", relative.display().to_string())
-        })?;
-        let actual = format!("{:x}", Sha256::digest(&bytes));
-        if actual != expected {
-            return Err(refusal(
-                VerificationErrorCode::IdentityMismatch,
-                "retained shared-reference snapshot digest mismatch",
-            )
-            .with_context("path", relative.display().to_string())
-            .with_context("expected", expected)
-            .with_context("actual", actual));
-        }
-        entries += 1;
-    }
-    if entries != 16 {
-        return Err(invalid_wire().with_context("manifest_entries", entries.to_string()));
-    }
-    let fixture_directory = root.join("fixtures/shared-reference-2-draft");
-    let mut fixture_entries = 0_usize;
-    for entry in fs::read_dir(&fixture_directory).map_err(|error| {
-        refusal(VerificationErrorCode::IoFailure, error.to_string())
-            .with_context("path", fixture_directory.display().to_string())
-    })? {
-        let entry = entry.map_err(|error| {
-            refusal(VerificationErrorCode::IoFailure, error.to_string())
-                .with_context("path", fixture_directory.display().to_string())
-        })?;
-        let relative = entry
-            .path()
-            .strip_prefix(root)
-            .map_err(|_| invalid_wire())?
-            .to_path_buf();
-        if !entry
-            .file_type()
-            .map_err(|error| {
-                refusal(VerificationErrorCode::IoFailure, error.to_string())
-                    .with_context("path", relative.display().to_string())
-            })?
-            .is_file()
-            || !expected_paths.contains(&relative)
-        {
-            return Err(invalid_wire().with_context("path", relative.display().to_string()));
-        }
-        fixture_entries += 1;
-    }
-    if fixture_entries != 14 {
-        return Err(invalid_wire().with_context("fixture_entries", fixture_entries.to_string()));
-    }
-    Ok(())
 }
 
 /// Validates one selected `sha256-jcs:` correspondence field in strict JSON payload bytes.
@@ -1222,53 +1127,6 @@ fn decode_v2(
 > {
     serde_json::from_value(value)
         .map_err(|error| refusal(VerificationErrorCode::InvalidWire, error.to_string()))
-}
-
-fn validate_schema(validator: &Validator, value: &Value) -> Result<(), VerificationError> {
-    if validator.is_valid(value) {
-        return Ok(());
-    }
-    let detail = validator
-        .iter_errors(value)
-        .map(|error| error.to_string())
-        .collect::<Vec<_>>()
-        .join("; ");
-    Err(refusal(
-        VerificationErrorCode::InvalidWire,
-        format!("shared-reference schema violation: {detail}"),
-    ))
-}
-
-fn v1_validator() -> Result<&'static Validator, VerificationError> {
-    static VALIDATOR: OnceLock<Result<Validator, String>> = OnceLock::new();
-    cached_validator(
-        &VALIDATOR,
-        include_str!("../contracts/shared-reference-1-draft.schema.json"),
-    )
-}
-
-fn v2_validator() -> Result<&'static Validator, VerificationError> {
-    static VALIDATOR: OnceLock<Result<Validator, String>> = OnceLock::new();
-    cached_validator(
-        &VALIDATOR,
-        include_str!("../contracts/shared-reference-2-draft/schema.json"),
-    )
-}
-
-fn cached_validator(
-    cell: &'static OnceLock<Result<Validator, String>>,
-    schema: &str,
-) -> Result<&'static Validator, VerificationError> {
-    match cell.get_or_init(|| {
-        let value: Value = serde_json::from_str(schema).map_err(|error| error.to_string())?;
-        jsonschema::options()
-            .with_draft(Draft::Draft202012)
-            .build(&value)
-            .map_err(|error| error.to_string())
-    }) {
-        Ok(validator) => Ok(validator),
-        Err(detail) => Err(refusal(VerificationErrorCode::InvalidWire, detail.clone())),
-    }
 }
 
 fn refusal(code: VerificationErrorCode, message: impl Into<Box<str>>) -> VerificationError {

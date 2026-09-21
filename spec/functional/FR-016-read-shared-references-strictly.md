@@ -46,14 +46,14 @@ before using the reference in planning or result identity comparison.
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
 | FR-016-AC-5 | The reader accepts only the selected `quire.verification.jcs` / `rfc8785-v1` / `sha256` canonical identity and exact `trace`, `fault-model`, `review-procedure`, `oracle`, `observation`, and `review-disposition` roles without placing `sha256-jcs:` semantic digests in `sha256:` byte-digest fields. | Test (TC-029, TC-031) |
 | FR-016-AC-6 | Version 2 accepts only artifact/semantic envelopes with `ix.artifact-ref/3-draft`; retained version 1 accepts only source-map/migration envelopes under its exact schema. Draft-1 artifact/semantic evidence is not reinterpreted as current, no migration is inferred, and no fallback reader treats an unknown kind or version as supported. | Test (TC-029) |
-| FR-016-AC-7 | The independent consumer verifies a repository-retained digest manifest for the exact amendment schema, all fourteen amendment fixture files, and the retained version-1 schema; executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval; and reports snapshot drift before reference interpretation. | Test (TC-031) |
+| FR-016-AC-7 | The independent consumer verifies a digest manifest, retained with the packet in `quire-verification-contracts`, for the exact amendment schema, all fourteen amendment fixture files, and the retained version-1 schema; executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval; and reports snapshot drift before reference interpretation. | Test (TC-031) |
 
 ## Constraints
 
 | ID | Constraint | Type | Validation |
 |----|------------|------|------------|
 | FR-016-CON-1 | The reader SHALL consume only the exact independently reviewed private shared-reference packet merged at `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. | Compatibility | Integration Test (IT-002) |
-| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, provenance-recorded, and excluded from public promotion until its reusable-artifact terms are selected. | Rights / containment | Inspection (TC-031) |
+| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, and provenance-recorded. Its selected reusable-artifact terms (AGPL-3.0-or-later, owner ruling 2026-09-20) publish the complete packet in exactly one repository, `quire-verification-contracts` (VER-50); this repository holds no copy. | Rights / containment | Inspection (TC-031) |
 
 ## Dependencies
 

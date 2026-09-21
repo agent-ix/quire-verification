@@ -24,7 +24,9 @@ is the accepted schema and data-only fixture packet owned by
 - FS02 and FS05 identify merged private revision
   `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
 - B's consumer-specific JCS and six role findings are resolved in that revision.
-- Private qualification use is accepted; public reusable-artifact terms remain unresolved.
+- Public reusable-artifact terms are selected (AGPL-3.0-or-later, owner ruling
+  2026-09-20); the complete packet is published in public
+  `quire-verification-contracts` (VER-50), and this repository holds no copy.
 
 ## Inputs
 
