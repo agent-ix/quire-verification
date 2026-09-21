@@ -22,8 +22,12 @@ unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
 # Exact candidate source required for the EA #34 downstream-consumer gate. Replace the
 # revision after provider promotion; unknown Git sources remain denied.
+# quire-verification-contracts is the public E02 contracts boundary extracted from this
+# crate (PLAT-861); quire-analyze supplies the analyze-method-contract type; ix-trace-rs
+# is the de-vendored tracing dependency (PLAT-853).
 allow-git = [
     "https://github.com/agent-ix/engineering-assurance",
     "https://github.com/agent-ix/ix-trace-rs",
     "https://github.com/agent-ix/quire-analyze",
+    "https://github.com/agent-ix/quire-verification-contracts",
 ]

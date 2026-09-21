@@ -2,16 +2,21 @@
 
 `e02-draft-2.schema.json` is the authoritative definition of the five E02
 contracts. Its artifact envelopes resolve the retained shared-reference draft-2
-schema rather than restating that schema's fields. The Rust build derives wire
-types and vocabulary constants from those two sources. At runtime,
-`src/contracts.rs` compiles the complete draft 2020-12 schema, including
-conditional assertions that are not constructive Rust types. The only additional plan validation is for duplicate
-task IDs, unknown dependency references, and dependency cycles, which require
+schema rather than restating that schema's fields. The `validate_contract`,
+wire-type, and RFC 8785 canonicalization boundary that compiles this schema
+now lives in public crate `quire-verification-contracts` (PLAT-861); this
+repository depends on it and re-exports it at `contracts`, so internal call
+sites are unchanged. This copy of `e02-draft-2.schema.json` is retained here
+because `src/qualification_oracle_execution.rs` and the acceptance tests embed
+it directly (`include_bytes!`/`include_str!`) rather than through the crate
+boundary. The only additional plan validation is for duplicate task IDs,
+unknown dependency references, and dependency cycles, which require
 cross-record graph checks. This is the accepted private versioned interface for
 cross-repository Rust consumers, not a public normative schema. Its retained
 shared-reference packet is pinned at
 `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`;
-public reusable-artifact terms remain separately unresolved.
+see `shared-reference-UPSTREAM.md` for the public reusable-artifact terms now
+selected for the draft-2 schema fragment.
 
 The same schema owns the internal `QualificationProfile` definition used by the
 Rust production-qualification planner. It is not a sixth public E02 root contract.

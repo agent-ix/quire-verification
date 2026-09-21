@@ -401,14 +401,22 @@ fn tc_003_derives_contract_vocabulary_and_types_from_one_schema() {
         input_kinds(),
         ["state", "relational", "trace", "fault", "manual"]
     );
+    // PLAT-861: the schema-derived wire types and vocabulary constants (build.rs `TypeSpace`
+    // codegen against contracts/e02-draft-2.schema.json) now live in public crate
+    // quire-verification-contracts, which this crate re-exports at `contracts`. NFR-002 is
+    // "single contract source": this repository's own build.rs must not also derive them, or
+    // there would be two sources instead of one.
     let build_script = include_str!("../build.rs");
     assert_eq!(
         build_script
             .matches("contracts/e02-draft-2.schema.json")
             .count(),
-        1
+        0
     );
-    assert!(build_script.contains("TypeSpace"));
+    let manifest = include_str!("../Cargo.toml");
+    assert!(manifest.contains(
+        "quire-verification-contracts = { version = \"=0.1.0\", git = \"https://github.com/agent-ix/quire-verification-contracts\""
+    ));
     assert!(
         !Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("src/contracts.generated.rs")
@@ -1237,8 +1245,11 @@ fn assert_shared_definition_is_external() {
         schema.pointer("/$defs/SharedArtifactEnvelope/properties/value/$ref"),
         Some(&json!("urn:ix:shared-reference:2-draft#/$defs/ArtifactRef"))
     );
+    // PLAT-861: resolving that external $ref at build time (`type_space.add_ref_types`) is
+    // now quire-verification-contracts's build.rs, not this repository's — this crate no
+    // longer derives E02 wire types at all (see tc_003_derives_contract_vocabulary...).
     let build_script = include_str!("../build.rs");
-    assert!(build_script.contains("type_space.add_ref_types(shared.definitions)"));
+    assert!(!build_script.contains("type_space.add_ref_types"));
 }
 
 fn assert_required_input_fields(request: &Value, references: &[ValidatedSharedReference]) {
