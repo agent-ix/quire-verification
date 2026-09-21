@@ -33,10 +33,10 @@ evidence.
 This requirement applies to all executable code in `src/`, `tests/`, `fuzz/`, and
 repository-owned command-line targets. JSON Schema, JSON fixtures, fuzz seed inputs, Markdown
 specification artifacts, and CI workflow files remain data or configuration.
-Vendored dependency sources under `vendor/` remain outside this repository's
+Dependency sources resolved by Cargo remain outside this repository's
 first-party traceability population because their owning dependency retains its
 own requirements matrix; coverage reports SHALL identify that population
-boundary instead of presenting vendored symbols as unmentioned first-party gaps.
+boundary instead of presenting dependency symbols as unmentioned first-party gaps.
 
 ## Rationale
 
@@ -64,9 +64,9 @@ forbids unsafe code at the crate root, formats the crate, compiles every target
 with Clippy warnings denied, runs the complete test suite, and checks dependency
 licenses and advisories with `cargo deny`. The same workspace lock and lints govern
 the fuzz targets, and a separate cargo-fuzz build compiles their instrumented entry
-points. The repository records and supplies
-the exact reviewed `ix-trace-rs` source needed by those tests so a clean CI
-runner does not depend on an unrecorded cross-repository credential.
+points. The workspace pins `ix-trace-rs` to an exact reviewed revision of its public
+upstream repository, so a clean CI runner resolves it without any
+cross-repository credential.
 TC-022 also reads the maintained contributor guidance and license decision,
 requires the current Cargo gate and authoritative Rust inventory/rights
 pointers, and rejects stale claims that removed npm manifests or JavaScript
@@ -79,9 +79,9 @@ packages remain current.
 | NFR-004-AC-1 | Governed executable paths, including every qualification fuzz target, contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, the cargo-fuzz target build, and dependency policy checks all exit successfully. | Test (TC-022) |
 | NFR-004-AC-3 | Every Rust test or fuzz target used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
-| NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from a repository-contained snapshot with recorded upstream revision and no cross-repository credential. | Test (TC-022) |
+| NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from its public upstream repository at the recorded revision, with no cross-repository credential. | Test (TC-022) |
 | NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` plus `docs/artifact-rights.md` as the current dependency and rights records without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
-| NFR-004-AC-6 | Trace coverage claims state that the first-party population covers repository-owned Rust under `src/`, `tests/`, and `fuzz/` while vendored dependency sources under `vendor/` remain governed by their owning dependency's matrix. | Inspection (TC-022) |
+| NFR-004-AC-6 | Trace coverage claims state that the first-party population covers repository-owned Rust under `src/`, `tests/`, and `fuzz/` while dependency sources remain governed by their owning dependency's matrix. | Inspection (TC-022) |
 
 ## Dependencies
 

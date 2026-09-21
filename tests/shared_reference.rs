@@ -964,12 +964,32 @@ fn detects_snapshot_drift_and_producer_coupling() {
     assert_eq!(build.matches("TypeSpace::new").count(), 1);
     let cargo = include_str!("../Cargo.toml");
     assert!(!cargo.contains("quire-specification"));
+    // Every Git dependency is enumerated here and in `deny.toml`'s `allow-git`,
+    // so adding one is a deliberate, reviewed act rather than a silent import.
+    // Assert the set, not the count: a bare count went stale the moment
+    // `quire-analyze-method-contract` was added and reported a real drift as a
+    // number nobody could act on.
     let git_sources = cargo
         .lines()
         .filter(|line| line.contains("git ="))
         .collect::<Vec<_>>();
-    assert_eq!(git_sources.len(), 1);
-    assert!(git_sources[0].contains("https://github.com/agent-ix/engineering-assurance"));
+    let allowed = [
+        "https://github.com/agent-ix/engineering-assurance",
+        "https://github.com/agent-ix/quire-analyze",
+        "https://github.com/agent-ix/ix-trace-rs",
+    ];
+    for source in &git_sources {
+        assert!(
+            allowed.iter().any(|url| source.contains(url)),
+            "undeclared Git dependency; add it to this list and deny.toml: {source}"
+        );
+    }
+    for url in allowed {
+        assert!(
+            git_sources.iter().any(|source| source.contains(url)),
+            "declared Git dependency is gone; remove it from this list: {url}"
+        );
+    }
     assert!(snapshot_is_data_only(
         &root().join("fixtures/shared-reference-2-draft")
     ));

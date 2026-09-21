@@ -3,5 +3,3 @@ version: 0.1.0
 description: Repository-local traceability scope for vendored third-party Rust
 artifact_types: []
 traceability:
-  source_exclude:
-    - "vendor/**"

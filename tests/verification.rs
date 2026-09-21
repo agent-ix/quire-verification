@@ -2658,32 +2658,21 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     assert!(!root.join("package-lock.json").exists());
     assert!(include_str!("../src/lib.rs").contains("#![forbid(unsafe_code)]"));
     let manifest = include_str!("../Cargo.toml");
-    assert!(manifest.contains("path = \"vendor/ix-trace-rs\""));
+    assert!(manifest.contains("git = \"https://github.com/agent-ix/ix-trace-rs\""));
+    assert!(manifest.contains("rev = \"2ce4ebf47f726b9d76388220545cd0abda8a5cfb\""));
     assert!(manifest.contains("version = \"=0.1.0\""));
     let workspace_lock = include_str!("../Cargo.lock");
-    assert!(!workspace_lock.contains("git+https://github.com/agent-ix/ix-trace-rs"));
+    assert!(workspace_lock.contains("git+https://github.com/agent-ix/ix-trace-rs"));
     assert!(workspace_lock.contains("name = \"quire-verification-fuzz\""));
     assert_eq!(workspace_lock.matches("name = \"jsonschema\"\n").count(), 1);
-    let upstream = include_str!("../vendor/ix-trace-rs/UPSTREAM.md");
-    assert!(upstream.contains("2ce4ebf47f726b9d76388220545cd0abda8a5cfb"));
-    assert!(
-        include_str!("../.ix/modules/quire-verification/manifest.yaml")
-            .contains("source_exclude:\n    - \"vendor/**\"")
-    );
+    assert!(workspace_lock.contains("2ce4ebf47f726b9d76388220545cd0abda8a5cfb"));
     let rust_requirement = include_str!("../spec/non-functional/NFR-004-rust-qualified-path.md");
     assert!(rust_requirement.contains("first-party traceability population"));
-    assert!(rust_requirement.contains("Vendored dependency sources under `vendor/`"));
+    assert!(rust_requirement.contains("Dependency sources resolved by Cargo"));
     assert!(rust_requirement.contains("| Rust quality gates passing | 5 of 5 | 5 of 5 |"));
     let trace_test = include_str!("../spec/test-cases/TC-022-rust-qualified-path.md");
     assert!(trace_test.contains("repository-owned Rust under `src/`, `tests/`, and `fuzz/`"));
     assert!(trace_test.contains("governed by that dependency's matrix"));
-    assert_eq!(
-        format!(
-            "{:x}",
-            Sha256::digest(include_bytes!("../vendor/ix-trace-rs/src/lib.rs"))
-        ),
-        "d7be2c00ed45ef0ad9bda683ef6a5b9397cca32483e89a7ac1fb745eb841d1c4"
-    );
     let workflow = include_str!("../.github/workflows/ci.yml");
     for gate in [
         "cargo fmt --all -- --check",
