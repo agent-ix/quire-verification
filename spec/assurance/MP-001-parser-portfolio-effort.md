@@ -5,16 +5,18 @@ type: MeasurementPlan
 status: proposed
 owner: agent-ix-verification-owner
 metric: portfolio_phase_elapsed_nanoseconds
-definition_version: quire-verification.parser-portfolio-effort-v1
+definition_version: quire-verification.parser-portfolio-effort-v2
 stage: baseline
 statistical_design:
   population: valid phase observations from one exact parser-portfolio candidate, fixture pair, dependency closure, environment, and command order
   sampling: one setup observation at repetition zero followed by direct-parse, parse-format-reparse, and complete-run observations for each of five sequential repetitions, retaining all 16 slots in collection order
   repetitions: 5
-  estimator: per-phase valid-sample count, minimum, lower median at sorted zero-based index (count minus one) divided by two, and maximum in integer nanoseconds
+  estimator: median
   error_model: process scheduling, filesystem cache state, clock granularity, build residue, thermal state, and invalid or interrupted executions
   uncertainty: retain every raw observation and report range plus environmental differences and plausible alternative explanations
-  decision_rule: treat the baseline as interpretable only when identities and phase boundaries are complete and at least one valid observation exists for every automated phase; otherwise retain the run as incomplete
+  decision_rule:
+    comparator: ge
+    threshold: 0
 relationships:
   - target: ix://agent-ix/quire-verification/FR-020
     type: measures
@@ -70,3 +72,27 @@ that phase and preserve every raw observation so the summary can be recomputed.
 Report environmental differences, invalid runs, uncertainty, and plausible
 alternative explanations. Do not infer ROI, delivery time, production throughput,
 scale limits, broad effectiveness, certification, or evidence sufficiency.
+
+## Decision Rule
+
+`statistical_design.decision_rule` exists because FR-021 requires a structured rule
+whenever `statistical_design` is present. This plan measures a baseline. It is not a
+gate: it establishes a reproducible reference and does not approve the candidate or
+set a performance threshold (see Decision Use). Its rule, `{ comparator: ge,
+threshold: 0 }`, is therefore deliberately vacuous. It holds for every valid elapsed
+time, because observations are non-negative integer nanoseconds. It is not a
+performance bar, and passing it means nothing about performance.
+
+The real condition for using a run is completeness, not magnitude. Treat the baseline
+as interpretable only when candidate and environment identities and phase boundaries
+are complete and every automated phase has at least one valid observation. Otherwise,
+keep the run and mark it incomplete. FR-021's `decision_rule` cannot express this
+condition, so this body carries it.
+
+`estimator: median` is the per-phase median of that phase's valid observations. It is
+the lower median: the value at sorted zero-based index (count minus one) divided by two,
+in integer nanoseconds. It is reported next to each phase's valid-sample count,
+minimum, and maximum (see Interpretation).
+
+No other plan uses this baseline as a threshold. MP-002's production gate uses only
+owner-declared budgets.
