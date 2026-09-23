@@ -5,8 +5,9 @@ type: MeasurementPlan
 status: proposed
 owner: agent-ix-verification-owner
 metric: quire_spec_profile_phase_duration
-definition_version: quire-verification.production-qualification-v2
+definition_version: quire-verification.production-qualification-v3
 stage: gate
+ground_truth_kind: mechanical
 objective:
   direction: lower
 statistical_design:
@@ -18,7 +19,32 @@ statistical_design:
   uncertainty: report every observation, exclusion, invalid sample, distribution summary, threshold comparison, and plausible environmental explanation
   decision_rule:
     comparator: le
-    baseline: prior-collection
+    baseline: external-reference
+protected_apparatus:
+  - contracts/e02-draft-2.schema.json
+  - src/qualification_profile.rs
+  - tests/qualification_profile.rs
+negative_controls:
+  - kind: apparatus-edit
+    description: >-
+      the QualificationProfile/PerformanceObservation/PerformanceSummary shapes in
+      contracts/e02-draft-2.schema.json and the parsing and cross-reference checks in
+      src/qualification_profile.rs are protected, so editing either to loosen what a
+      profile or an observation must declare changes the recorded digests
+  - kind: suppressed-observation
+    description: >-
+      ensure_known_guarantees_and_budgets refuses to freeze a profile whose
+      evidenceRequirements name a budgetId absent from resourceBudgets, so a phase
+      cannot be dropped from measurement by deleting its budget while an evidence
+      requirement still names it -- the profile fails to freeze instead of silently
+      measuring fewer phases
+  - kind: stale-evidence
+    description: >-
+      candidateRef, dependencyClosureRef, productionCallerRef, and environmentRef are
+      bound and validated before freeze, and the frozen profile's identity is an
+      RFC 8785 digest over that exact bound value, so a result collected against a
+      different candidate, dependency closure, caller, or environment carries a
+      different profile identity rather than presenting as current
 relationships:
   - target: ix://agent-ix/quire-verification/NFR-007
     type: measures
@@ -61,11 +87,6 @@ unexplained drift leaves the gate incomplete.
 
 ## Decision Rule
 
-**Known limitation (tracked in Linear PLAT-1009): `statistical_design.decision_rule`
-in this plan's frontmatter is a placeholder, not this gate's decision rule. Do not
-evaluate it as the gate, and do not read a result of it as a pass or fail of this
-gate.**
-
 The gate this plan measures is the one NFR-007 states: it passes only when every
 claimed phase has an owner threshold, the complete declared sample executes, each
 per-phase summary recomputes, and no phase exceeds its own threshold. Each phase is
@@ -74,32 +95,51 @@ judged independently against its own owner-declared budget. Those budgets are
 qualification profile. The profile author supplies them. Neither this document nor
 this repository holds any budget number.
 
-FR-021's `decision_rule` cannot express that gate. Its closed `baseline` vocabulary
-(`constant-predictor`, `prior-collection`, `best-seen`) has no kind for "a reference
-declared externally, per phase, and resolved by the checker". A single `threshold`
-would require inventing one number for every phase. The frontmatter therefore carries
-`{ comparator: le, baseline: prior-collection }` only because FR-021 requires a
-structured rule when `statistical_design` is present. If a checker evaluated that rule
-mechanically, it would test "median duration no worse than the previous collection".
-That is a regression check against the last run. It is not a comparison with the
-owner's budgets, and it has no reference at all for the first collection. Treat it as
-a materially different rule. The only true facts it records are the ones in `le` and
-`objective.direction: lower`: the metric is a duration, and lower is better.
+`{ comparator: le, baseline: external-reference }` expresses that directly.
+`baseline: external-reference` (FR-021-AC-10, `engineering-assurance` PR #125) is a
+per-dimension reference value the calling checker resolves from a source outside the
+plan at evaluation time -- here, the frozen profile's `resourceBudgets` entry for the
+phase under evaluation, read via `maximumWallClockNanoseconds`. The reference value is
+never written into this plan: this document names where the checker must look, and the
+checker supplies the resolved number the same way it supplies every other baseline
+value. `le` holds when the phase's median duration is no greater than that phase's own
+`maximumWallClockNanoseconds`, which is exactly NFR-007's "no phase exceeds its own
+threshold" applied once per phase, with no `margin`.
 
 The per-phase budget comparison belongs to Task-031 and TC-044, and it is not
 implemented yet: Task-031 is `not_started` and TC-044 is Planned. Today,
 `src/qualification_profile.rs` only validates that a profile declares uniquely
 identified budgets and that every evidence requirement names a declared budget. No
-code compares measured durations against those budgets yet. When it is built, it must
-read the budgets from the profile, not from this plan's `decision_rule`.
+code compares measured durations against those budgets yet. When Task-031 builds that
+comparison, it evaluates this plan's `decision_rule` once per phase, resolving each
+phase's `baseline: external-reference` value from that phase's
+`resourceBudgets.maximumWallClockNanoseconds` in the frozen profile -- it does not
+invent a separate rule.
 
 `estimator: median` narrows the previous definition, in which the owner selected the
 per-phase summary. It is the per-phase median of valid observations. It is still
 computed and compared independently for each phase, so a favorable aggregate cannot
 hide one phase over its budget.
 
-PLAT-1009 tracks the engineering-assurance design decision. The options are a new
-`baseline` kind for externally declared, per-dimension references, or splitting this
-gate into per-phase constituent MeasurementPlans linked by `relationships`. Once it is
-resolved, replace this placeholder rule and bump `definition_version`.
+## Protected Apparatus
+
+`contracts/e02-draft-2.schema.json` declares the `QualificationResourceBudget`,
+`PerformanceObservation`, and `PerformanceSummary` shapes that decide what a profile
+must declare and what an observation must retain. `src/qualification_profile.rs`
+parses and validates a candidate profile against that schema, enforces unique budget
+and guarantee identities, and refuses an evidence requirement that names an undeclared
+budget. `tests/qualification_profile.rs` is the test suite that exercises those
+refusals. Editing any of the three changes what the gate measures or what it accepts
+as a valid profile, not the production chain being measured.
+
+## Negative Controls
+
+See `negative_controls` in the frontmatter. `apparatus-edit` follows directly from
+`protected_apparatus` above. `suppressed-observation` and `stale-evidence` are both
+grounded in `src/qualification_profile.rs`'s existing validation, ahead of Task-031's
+still-unbuilt measurement path: `ensure_known_guarantees_and_budgets` refuses to freeze
+a profile with a dangling budget reference, and the RFC 8785 identity over the bound
+`candidateRef`/`dependencyClosureRef`/`productionCallerRef`/`environmentRef` set
+prevents a result collected under one subject or environment from presenting as
+current under another.
 
