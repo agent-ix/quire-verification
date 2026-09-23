@@ -75,15 +75,24 @@ scale limits, broad effectiveness, certification, or evidence sufficiency.
 
 ## Decision Rule
 
-`statistical_design.decision_rule` is the mechanical rule FR-021 requires whenever
-`statistical_design` is present. This plan is a baseline measurement, not a gate: it
-establishes a reproducible reference and "does not approve the candidate or establish
-a performance threshold" (see Decision Use above), so its rule is intentionally
-trivial rather than judging the metric -- `{ comparator: ge, threshold: 0 }` holds for
-any valid non-negative elapsed-nanosecond estimate. The actual interpretive bar is
-completeness, not magnitude: identities and phase boundaries complete, and at least
-one valid observation for every automated phase, as this section's opening paragraphs
-describe; that is a population/collection concern, not something FR-021's closed
-`decision_rule` vocabulary is meant to express. A later gate-stage plan that compares
-against this baseline does so via its own `decision_rule` with
-`baseline: prior-collection`.
+`statistical_design.decision_rule` exists because FR-021 requires a structured rule
+whenever `statistical_design` is present. This plan measures a baseline. It is not a
+gate: it establishes a reproducible reference and does not approve the candidate or
+set a performance threshold (see Decision Use). Its rule, `{ comparator: ge,
+threshold: 0 }`, is therefore deliberately vacuous. It holds for every valid elapsed
+time, because observations are non-negative integer nanoseconds. It is not a
+performance bar, and passing it means nothing about performance.
+
+The real condition for using a run is completeness, not magnitude. Treat the baseline
+as interpretable only when candidate and environment identities and phase boundaries
+are complete and every automated phase has at least one valid observation. Otherwise,
+keep the run and mark it incomplete. FR-021's `decision_rule` cannot express this
+condition, so this body carries it.
+
+`estimator: median` is the per-phase median of that phase's valid observations. It is
+the lower median: the value at sorted zero-based index (count minus one) divided by two,
+in integer nanoseconds. It is reported next to each phase's valid-sample count,
+minimum, and maximum (see Interpretation).
+
+No other plan uses this baseline as a threshold. MP-002's production gate uses only
+owner-declared budgets.

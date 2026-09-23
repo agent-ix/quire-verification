@@ -61,22 +61,45 @@ unexplained drift leaves the gate incomplete.
 
 ## Decision Rule
 
-`statistical_design.decision_rule` is the mechanical rule FR-021 requires. The gate's
-true reference values are the per-phase budgets declared in the frozen qualification
-profile (`resourceBudgets` in `qualification_profile.rs`, owned by the profile author,
-not this document) -- FR-021's closed `baseline` vocabulary (`constant-predictor`,
-`prior-collection`, `best-seen`) has no kind for "a reference value supplied by an
-external, owner-authored profile," so `decision_rule` here uses `baseline:
-prior-collection` as the closest available shape: a reference the checker resolves at
-evaluation time rather than one written into this frontmatter. **This is an
-approximation, not the intended gate.** The actual per-phase pass/fail behavior --
-"every claimed phase has an owner threshold and no phase exceeds it," independently
-per phase -- still lives in NFR-007 and is implemented directly against the
-qualification profile's `resourceBudgets` by Task-031/TC-044, not read out of this
-plan's `decision_rule`. Comparator `le` and `objective.direction: lower` record only
-that the metric is a duration where less is better. Follow-up: PLAT-956 should decide
-whether FR-021 needs an additional `baseline` kind for externally-declared,
-per-dimension thresholds, or whether a gate composed of independently-thresholded
-phases belongs in per-phase constituent MeasurementPlans linked by `relationships`
-instead of one plan's single `decision_rule`.
+**Known limitation (tracked in Linear PLAT-1009): `statistical_design.decision_rule`
+in this plan's frontmatter is a placeholder, not this gate's decision rule. Do not
+evaluate it as the gate, and do not read a result of it as a pass or fail of this
+gate.**
+
+The gate this plan measures is the one NFR-007 states: it passes only when every
+claimed phase has an owner threshold, the complete declared sample executes, each
+per-phase summary recomputes, and no phase exceeds its own threshold. Each phase is
+judged independently against its own owner-declared budget. Those budgets are
+`resourceBudgets` entries (`maximumWallClockNanoseconds` per `phase`) in the frozen
+qualification profile. The profile author supplies them. Neither this document nor
+this repository holds any budget number.
+
+FR-021's `decision_rule` cannot express that gate. Its closed `baseline` vocabulary
+(`constant-predictor`, `prior-collection`, `best-seen`) has no kind for "a reference
+declared externally, per phase, and resolved by the checker". A single `threshold`
+would require inventing one number for every phase. The frontmatter therefore carries
+`{ comparator: le, baseline: prior-collection }` only because FR-021 requires a
+structured rule when `statistical_design` is present. If a checker evaluated that rule
+mechanically, it would test "median duration no worse than the previous collection".
+That is a regression check against the last run. It is not a comparison with the
+owner's budgets, and it has no reference at all for the first collection. Treat it as
+a materially different rule. The only true facts it records are the ones in `le` and
+`objective.direction: lower`: the metric is a duration, and lower is better.
+
+The per-phase budget comparison belongs to Task-031 and TC-044, and it is not
+implemented yet: Task-031 is `not_started` and TC-044 is Planned. Today,
+`src/qualification_profile.rs` only validates that a profile declares uniquely
+identified budgets and that every evidence requirement names a declared budget. No
+code compares measured durations against those budgets yet. When it is built, it must
+read the budgets from the profile, not from this plan's `decision_rule`.
+
+`estimator: median` narrows the previous definition, in which the owner selected the
+per-phase summary. It is the per-phase median of valid observations. It is still
+computed and compared independently for each phase, so a favorable aggregate cannot
+hide one phase over its budget.
+
+PLAT-1009 tracks the engineering-assurance design decision. The options are a new
+`baseline` kind for externally declared, per-dimension references, or splitting this
+gate into per-phase constituent MeasurementPlans linked by `relationships`. Once it is
+resolved, replace this placeholder rule and bump `definition_version`.
 
