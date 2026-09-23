@@ -4,7 +4,7 @@ title: Quire-spec bounded production qualification profile
 type: AssuranceProfile
 status: proposed
 owner: agent-ix-verification-owner
-profile_version: 0.2
+schema_version: 0.2
 profile_kind: general
 scope: one exact quire-spec candidate, production caller, input population, environment, resource budget, and claim profile
 impact_assessments:
