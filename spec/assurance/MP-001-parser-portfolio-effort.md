@@ -5,16 +5,18 @@ type: MeasurementPlan
 status: proposed
 owner: agent-ix-verification-owner
 metric: portfolio_phase_elapsed_nanoseconds
-definition_version: quire-verification.parser-portfolio-effort-v1
+definition_version: quire-verification.parser-portfolio-effort-v2
 stage: baseline
 statistical_design:
   population: valid phase observations from one exact parser-portfolio candidate, fixture pair, dependency closure, environment, and command order
   sampling: one setup observation at repetition zero followed by direct-parse, parse-format-reparse, and complete-run observations for each of five sequential repetitions, retaining all 16 slots in collection order
   repetitions: 5
-  estimator: per-phase valid-sample count, minimum, lower median at sorted zero-based index (count minus one) divided by two, and maximum in integer nanoseconds
+  estimator: median
   error_model: process scheduling, filesystem cache state, clock granularity, build residue, thermal state, and invalid or interrupted executions
   uncertainty: retain every raw observation and report range plus environmental differences and plausible alternative explanations
-  decision_rule: treat the baseline as interpretable only when identities and phase boundaries are complete and at least one valid observation exists for every automated phase; otherwise retain the run as incomplete
+  decision_rule:
+    comparator: ge
+    threshold: 0
 relationships:
   - target: ix://agent-ix/quire-verification/FR-020
     type: measures
@@ -70,3 +72,18 @@ that phase and preserve every raw observation so the summary can be recomputed.
 Report environmental differences, invalid runs, uncertainty, and plausible
 alternative explanations. Do not infer ROI, delivery time, production throughput,
 scale limits, broad effectiveness, certification, or evidence sufficiency.
+
+## Decision Rule
+
+`statistical_design.decision_rule` is the mechanical rule FR-021 requires whenever
+`statistical_design` is present. This plan is a baseline measurement, not a gate: it
+establishes a reproducible reference and "does not approve the candidate or establish
+a performance threshold" (see Decision Use above), so its rule is intentionally
+trivial rather than judging the metric -- `{ comparator: ge, threshold: 0 }` holds for
+any valid non-negative elapsed-nanosecond estimate. The actual interpretive bar is
+completeness, not magnitude: identities and phase boundaries complete, and at least
+one valid observation for every automated phase, as this section's opening paragraphs
+describe; that is a population/collection concern, not something FR-021's closed
+`decision_rule` vocabulary is meant to express. A later gate-stage plan that compares
+against this baseline does so via its own `decision_rule` with
+`baseline: prior-collection`.
