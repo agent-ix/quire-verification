@@ -48,7 +48,10 @@ path = "src/lib.rs"
 
 [dependencies]
 chrono = { version = "0.4.42", default-features = false, features = ["serde"] }
-engineering-assurance = { version = "=0.3.1", git = "https://github.com/agent-ix/engineering-assurance", rev = "9237ce50ce19c6d6c937705bfde4b64adcc9d16b", default-features = false, features = ["producer-execution"] }
+# PLAT-1007: rev is the exact commit the released v0.4.0 tag points to (build.rs
+# requires a full commit SHA, not a `tag` key, so it can bake the pinned
+# revision into ENGINEERING_ASSURANCE_REVISION for provenance).
+engineering-assurance = { version = "=0.4.0", git = "https://github.com/agent-ix/engineering-assurance", rev = "438b30fcd5d4df457fe0fca4682b322c72856c1c", default-features = false, features = ["producer-execution"] }
 quire-analyze-method-contract = { git = "https://github.com/agent-ix/quire-analyze", rev = "ddc099b918a6a569987c96cda97d567d2d3bba33", package = "quire-analyze-method-contract", version = "=0.1.0" }
 # VER-50: pinned to agent-ix/quire-verification-contracts#4 (ver-50-shared-reference-packet)
 # pending merge; bump this rev to the merged main commit once that PR lands.
