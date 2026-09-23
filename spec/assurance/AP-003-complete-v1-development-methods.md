@@ -4,7 +4,7 @@ title: Complete-V1 development method assurance profile
 type: AssuranceProfile
 status: proposed
 owner: agent-ix-verification-owner
-profile_version: 0.2
+schema_version: 0.2
 profile_kind: general
 scope: lane-D development interfaces and implementations for Verification issues 34 through 38 and Analyze issue 33
 impact_assessments:

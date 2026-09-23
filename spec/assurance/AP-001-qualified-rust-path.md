@@ -4,7 +4,7 @@ title: Qualified Rust verification-path profile
 type: AssuranceProfile
 status: active
 owner: agent-ix-verification-owner
-profile_version: 0.2
+schema_version: 0.2
 profile_kind: general
 scope: one candidate revision of the private quire-verification bounded compatibility slice
 impact_assessments:
