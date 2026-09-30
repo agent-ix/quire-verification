@@ -111,7 +111,7 @@ rejected JavaScript prototype is not evidence.
 |------------|------------|-----------------|
 | FR-022-CON-1..2 | TC-039 | 🚧 Planned |
 | FR-023-CON-1 | TC-040 | ✅ Complete |
-| FR-024-CON-1..2 | TC-041 | ✅ Complete |
+| FR-024-CON-1..3 | TC-041 | ✅ Complete |
 | FR-025-CON-1..4 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |

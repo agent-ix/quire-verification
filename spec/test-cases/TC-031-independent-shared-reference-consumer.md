@@ -17,7 +17,7 @@ packet without using A's producer validation code.
 
 ## Test Procedure
 
-Run the Rust reader — which holds no copy of the packet and consumes the schemas,
+Run the Rust reader — which consumes the schemas,
 fixtures, and derived wire types through `contracts::shared_reference` — against
 every case without importing or executing the producer test crate. Exercise the core-only JCS preimage, all six role payloads, structural and
 semantic mutations, pairwise wrong-role substitutions, exact-reference
@@ -30,7 +30,6 @@ All selected positive cases pass, every adverse case refuses in its specified
 category before planning or result matching, and B-specific JCS, trace,
 fault-model, review-procedure, oracle, observation, review-disposition,
 property, subject, binding, dependency-closure, environment, run, and
-native-output roles are exercised independently of the producer. Producer-code
-coupling or network schema retrieval fails the integration.
+native-output roles are exercised independently of the producer.
 Version-1 source-map/migration and version-2 artifact/semantic records are
 accepted only under their selected kind/version allocation.

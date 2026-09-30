@@ -22,8 +22,7 @@ is the accepted schema and data-only fixture packet owned by
 ## Preconditions
 
 - B's consumer-specific JCS and six role findings are resolved in the accepted packet.
-- The packet is consumed through public `quire-verification-contracts`; this
-  repository holds no copy.
+- The packet is consumed through public `quire-verification-contracts`.
 
 ## Inputs
 

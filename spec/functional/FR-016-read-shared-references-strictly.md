@@ -45,7 +45,7 @@ before using the reference in planning or result identity comparison.
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
 | FR-016-AC-5 | The reader accepts only the selected `quire.verification.jcs` / `rfc8785-v1` / `sha256` canonical identity and exact `trace`, `fault-model`, `review-procedure`, `oracle`, `observation`, and `review-disposition` roles without placing `sha256-jcs:` semantic digests in `sha256:` byte-digest fields. | Test (TC-029, TC-031) |
 | FR-016-AC-6 | Version 2 accepts only artifact/semantic envelopes with `ix.artifact-ref/3-draft`; retained version 1 accepts only source-map/migration envelopes under its exact schema. Draft-1 artifact/semantic evidence is not reinterpreted as current, no migration is inferred, and no fallback reader treats an unknown kind or version as supported. | Test (TC-029) |
-| FR-016-AC-7 | The independent consumer executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval. | Test (TC-031) |
+| FR-016-AC-7 | The independent consumer executes every upstream and B-authored positive/adverse case. | Test (TC-031) |
 
 ## Dependencies
 
