@@ -1,13 +1,8 @@
 # E02 accepted cross-repository verification interface
 
-Status: accepted private cross-repository Rust interface, 2026-09-14; exact
-dependency-compatible consumer revision accepted 2026-09-15. The accepted
+Status: accepted private cross-repository Rust interface, 2026-09-14. The accepted
 owner is `agent-ix/quire-verification`; the frozen schema and strict-reader
-interface is `quire-verification/e02-draft-2` at repository revision
-`d2fc0d8134c776d2f1a17fd249f016b18a6ba124`. The exact compatible consumer
-implementation revision is
-`293e342c6f5e2c69738956ff5165f75761b0364a`, which selects Engineering
-Assurance revision `9237ce50ce19c6d6c937705bfde4b64adcc9d16b`. This acceptance
+interface is `quire-verification/e02-draft-2`. This acceptance
 authorizes exact Rust consumers only. It does not publish a normative schema,
 accept a represented verification tool, or make an evidence-sufficiency
 decision.
@@ -53,8 +48,7 @@ Those remain Quoin and human-owner responsibilities.
 
 The slice uses an opaque `artifactRef` shape with authority, identity, revision,
 digest, and profile fields. It compares these fields exactly and never derives a
-new authored identity. The exact retained FS02/FS05 packet at
-`agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
+new authored identity. The retained FS02/FS05 packet
 confirms this seam for private cross-repository consumption. A consumer must
 use the strict reader and must not normalize, upgrade, downgrade, or replace
 the selected identities.
@@ -113,9 +107,7 @@ No global score, certification status, or inferred sufficiency is produced.
 
 ## Acceptance disposition
 
-The E02 interface is accepted for exact private cross-repository Rust use at
-the schema/reader revision and dependency-compatible consumer revision recorded
-above. Its strict reader rejects unknown contract versions, unsupported
+The E02 interface is accepted for exact private cross-repository Rust use. Its strict reader rejects unknown contract versions, unsupported
 shared-reference versions, wrong roles, identity or content drift, ambiguous
 equivalence, and any `TechniqueResult` projection that omits a required result
 dimension. These refusals occur before planning, matching, or assessment and

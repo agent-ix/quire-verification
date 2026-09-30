@@ -14,11 +14,11 @@ relationships:
 
 ## Description
 
-When a pinned Quoin catalog or advice export is adapted, the catalog adapter SHALL preserve authored method identity and meaning while exposing source conflicts, unreadable roots, and inconclusive applicability.
+When a Quoin catalog or advice export is adapted, the catalog adapter SHALL preserve authored method identity and meaning while exposing source conflicts, unreadable roots, and inconclusive applicability.
 
 ## Inputs
 
-- A pinned Quoin `MethodCatalog` export or advice record.
+- A Quoin `MethodCatalog` export or advice record.
 
 ## Outputs
 
@@ -35,4 +35,3 @@ When a pinned Quoin catalog or advice export is adapted, the catalog adapter SHA
 ## Dependencies
 
 - Implements [US-003](../usecase/US-003-detect-compatibility-regressions.md).
-- The real producer boundary is verified by [IT-001](../integration/IT-001-real-quoin-catalog-parity.md).

@@ -1,18 +1,9 @@
 # Quoin catalog and evidence compatibility
 
-## Inspected baseline
+## Quoin behavior
 
-- Quoin `7072d65db7e236e819d99be42e094ba548e9496a`:
-  `src/advisor/methods.ts`, `src/advisor/advise.ts`,
-  `src/auditor/combinatorial.ts`, and `src/evidence/**`.
-- spec-artifacts-process
-  `61a20e010d5e758f52864ad3152ccdb304a39d27`:
-  `spec_artifacts_process/manifest.yaml`.
-- quire-contract-ir `decc99a430a0894de489102dbab04e83d1fb804f` and
-  live issue #58 for formalization coverage-state ownership.
-
-The captured Quoin export contains 33 method IDs, sorted by bytewise ID, with no
-duplicate or unreadable module at the pinned inputs. Quoin merges method IDs
+The Quoin export fixture contains 33 method IDs, sorted by bytewise ID, with no
+duplicate or unreadable module. Quoin merges method IDs
 first-wins, reports duplicates and unreadable roots, treats applicability axes
 as open, recommends when any observable rule value matches, orders advice by
 descending reason count then bytewise ID, and distinguishes mismatch,
@@ -44,8 +35,7 @@ changing Quoin execution/evidence ownership.
 
 Quoin's current `RunEntry.outcome` is limited to pass/fail/skip/error, while its
 adapter contract separately reports producer states that cannot be represented.
-Its `RunRecord` pins suite, commit, tool, evidence kind, timestamp, and entries;
-it does not carry the full E02 property/profile/binding/dependency/scope,
+Its `RunRecord` does not carry the full E02 property/profile/binding/dependency/scope,
 plan/task/run/producer/adapter binding, or activation/adequacy tuple. VP03
 therefore needs an additive intake/envelope or linked result reference owned by
 Quoin. Mapping unsupported, exhausted,
@@ -57,8 +47,7 @@ same plan/task/run/producer/adapter tuple are reported as ambiguous. A
 compatibility summary status remains for current consumers, while the gap list
 enumerates all simultaneous execution, activation, participation, assumption,
 adequacy, and logical findings. The `runRef` role and version domains use the
-accepted FS02/FS05 retained packet at
-`agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
+accepted FS02/FS05 retained packet.
 This repository does not invent a Quoin-side run identity.
 
 The current cargo-mutants adapter aggregates caught/missed/timeout outcomes per
@@ -70,7 +59,6 @@ that limit; it does not invent individual-mutant attribution.
 
 | Delta | Existing owner | Verification-side request |
 |---|---|---|
-| Catalog/module/package locking | quoin #287 | Additive export of exact module/source revision and digest; retain installation behavior. |
 | Evidence discharge/inward completeness | quoin #272 | Accept exact scoped result references; preserve live obligation derivation and human dispositions. |
 | Coverage states and clause addresses | quire-contract-ir #58 | Align missing/incomplete/unsupported states and property identity; do not collapse result dimensions. |
 | Shared model/source identity | FS02 | Accepted retained packet fixes the opaque identity seam and dependency/binding digest domains for this private consumer. |

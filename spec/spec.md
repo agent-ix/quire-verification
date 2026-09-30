@@ -34,8 +34,8 @@ retained reports, and continuous-integration checks in this repository.
 - Five portable public contracts: `TechniqueDefinition`, `ToolCapability`,
   `SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`.
 - Runtime validation derived from one JSON Schema packet.
-- Adaptation of pinned Quoin method-catalog and advice exports.
-- Qualification of registry and policy snapshots against the pinned Quoin baseline.
+- Adaptation of Quoin method-catalog and advice exports.
+- Qualification of registry and policy snapshots against the Quoin catalog.
 - Prerequisite-aware verification planning across five input shapes.
 - Explicit authored-or-unknown classification and explainable authored priority.
 - Actionable prerequisite DAGs that keep required and exhausted work visible.
@@ -177,7 +177,6 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-007 | Measure the declared production performance budget | Proposed |
 | NFR-008 | Reproduce every qualification identity and result | Proposed |
 | NFR-009 | Deterministic bounded method and ledger accounting | Specified; implementation pending |
-| IT-001 | Real Quoin method-catalog parity | Implemented; verified |
 | IT-002 | Independent shared-reference consumer qualification | Implemented; verified |
 | IT-003 | Native parser portfolio execution | In progress; automated core sealed, external disposition pending |
 | IT-004 | Quire-spec production qualification campaign | Proposed |
@@ -194,11 +193,10 @@ its driving story and each test artifact to the requirement it verifies.
 Automated Rust tests verify examples, error paths, exact-binding dimensions,
 native planning, strict shared references, and metamorphic order invariance.
 Fixture validation executes the versioned schema against every JSON fixture.
-The Quoin integration test loads the real method catalog from a pinned checkout;
-the shared-reference integration test uses only the pinned data packet through
+The shared-reference integration test uses only the data packet through
 an independent Rust consumer. The native parser integration runs exact real
-`parse` and `format` commands, records adverse and incomplete cases, and retains
-the report-bound human disposition and raw effort observations. The process
+`parse` and `format` commands, records adverse and incomplete cases, and raw
+effort observations. The process
 boundary is direct and finite; the final report binds a separately supplied
 human disposition to a sealed automated core.
 
@@ -209,7 +207,7 @@ handoff, owner-supplied performance thresholds, independent reproduction, exact
 Rust review, semantic gap analysis, and one external disposition.
 
 IT-005 is independent of that production campaign. It verifies complete-V1
-development interfaces and implementations using pinned fixtures and explicit
+development interfaces and implementations using fixtures and explicit
 non-conclusive states; absent production evidence or disposition is tested as
 data rather than treated as a development gate.
 
@@ -222,13 +220,10 @@ evidence-assessment increment.
 VP01 acceptance remains gated on a recorded owner/reviewer disposition. VP02
 acceptance remains gated on VP01. VP03 retains its own external acceptance
 dependencies. The E02 and retained FS02/FS05 private-consumer gates are
-accepted at the exact revisions recorded by FR-028. VP04 acceptance remains
+accepted by FR-028. VP04 acceptance remains
 gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
-Merged specification revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
-resolved B's recorded canonical-domain and reference-role findings. FR-016,
-FR-017, and IT-002 now use that accepted packet through the one strict reader;
-FR-021 remains downstream of it. The breaking draft-2 transition updated
+The breaking draft-2 transition updated
 requirements, tests, fixtures, and retained reports without reinterpreting
 draft-1 evidence.
 
@@ -244,8 +239,8 @@ agents' accepted versioned outputs, and leave unavailable producer work blocked.
 - RFC 8785, JSON Canonicalization Scheme.
 - ISO/IEC/IEEE 29148, Requirements Engineering.
 - `contracts/e02-draft-2.schema.json`, the private versioned contract packet.
-- `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, accepted private shared-reference packet.
-- `agent-ix/quire-spec-language`, the exact reviewed Rust parser candidate selected by IT-003.
+- `agent-ix/quire-specification`, accepted private shared-reference packet.
+- `agent-ix/quire-spec-language`, the Rust parser candidate selected by IT-003.
 - `agent-ix/quire-verification#13`, the production-qualification expansion epic.
-- `agent-ix/quire-specification@8d0fbad`, accepted complete-V1 method, interface, evidence, and qualification semantics.
+- `agent-ix/quire-specification`, accepted complete-V1 method, interface, evidence, and qualification semantics.
 - `agent-ix/quire-verification#34` through `#38` and `agent-ix/quire-analyze#33`, the complete-V1 lane-D development tickets.

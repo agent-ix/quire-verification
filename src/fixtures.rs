@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Agent-IX
 
-//! Fixture validation, rendering, and external catalog baseline helpers (FR-003, IT-001).
+//! Fixture validation and rendering helpers (FR-003).
 
 use std::fs;
 use std::path::Path;
@@ -9,9 +9,9 @@ use std::path::Path;
 use serde::Serialize;
 use serde_json::{Value, json};
 
-use crate::catalog::{adapt_quoin_advice, adapt_quoin_catalog, by_technique_id};
+use crate::catalog::{adapt_quoin_advice, adapt_quoin_catalog};
 use crate::contracts::{
-    VerificationError, VerificationErrorCode, jcs_equal, parse_bounded_json, validate_contract,
+    VerificationError, VerificationErrorCode, parse_bounded_json, validate_contract,
     validate_schema_definition,
 };
 use crate::evidence::assess_evidence;
@@ -123,53 +123,6 @@ pub fn validate_fixture_result_references(
         }
     }
     validate_fixture_envelopes(&envelopes)
-}
-
-/// Compares real Quoin catalog output with the retained fixture by technique identifier.
-///
-/// # Errors
-/// Returns an input, duplicate-identifier, canonicalization, or parity error.
-pub fn check_quoin_baseline(actual: &Value, fixture: &Value) -> Result<usize, VerificationError> {
-    let expected = field(fixture, "catalog", "catalog fixture")?;
-    let actual_methods = arrays_field(actual, "methods", "actual catalog")?;
-    let expected_methods = arrays_field(expected, "methods", "expected catalog")?;
-    let actual_by_id = by_technique_id(actual_methods, "id", "actual method")?;
-    let expected_by_id = by_technique_id(expected_methods, "id", "expected method")?;
-    if actual_by_id.len() != expected_by_id.len() {
-        return Err(VerificationError::new(
-            VerificationErrorCode::CatalogParityMismatch,
-            "Quoin baseline method count differs",
-        ));
-    }
-    for (id, expected_method) in expected_by_id {
-        let Some(actual_method) = actual_by_id.get(&id) else {
-            return Err(VerificationError::new(
-                VerificationErrorCode::CatalogParityMismatch,
-                "Quoin baseline is missing a technique",
-            )
-            .with_context("technique_id", id.as_str()));
-        };
-        if !jcs_equal(*actual_method, expected_method)? {
-            return Err(VerificationError::new(
-                VerificationErrorCode::CatalogParityMismatch,
-                "Quoin baseline method differs",
-            )
-            .with_context("technique_id", id.as_str()));
-        }
-    }
-    for field_name in ["duplicates", "unreadable"] {
-        if !jcs_equal(
-            field(actual, field_name, "actual catalog")?,
-            field(expected, field_name, "expected catalog")?,
-        )? {
-            return Err(VerificationError::new(
-                VerificationErrorCode::CatalogParityMismatch,
-                "Quoin baseline diagnostics differ",
-            )
-            .with_context("field", field_name));
-        }
-    }
-    Ok(actual_methods.len())
 }
 
 fn validate_portfolio(value: &Value) -> Result<usize, VerificationError> {

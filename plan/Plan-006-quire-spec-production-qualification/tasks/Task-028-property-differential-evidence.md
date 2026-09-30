@@ -70,7 +70,7 @@ Assurance.
   planner therefore continues to refuse that family instead of minting a private method.
 - Native formal-clause evidence remains gapped rule by rule until the selected native
   Quire source profile publishes accepted admission observations. Composed-baseline PR 15
-  at `d8d984b542fe30f65b6e07f4a07b2d1f81d3962b` maintains one coherent working draft and
+  maintains one coherent working draft and
   defers exact profile/rule/dependency/source identity freeze to acceptance. Its source,
   observation, and executable/export consumer paths now carry all five independent
   closure axes with discriminating controls, closing B's content gap. Composed acceptance

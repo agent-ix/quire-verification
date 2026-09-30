@@ -3,8 +3,8 @@
 
 //! Strict, bounded consumption of the selected shared-reference packet.
 //!
-//! The retained schemas, their derived `wire_v1`/`wire_v2` types, the fourteen amendment
-//! fixtures, and the byte-identical snapshot guard live in public crate
+//! The retained schemas, their derived `wire_v1`/`wire_v2` types, and the fourteen amendment
+//! fixtures live in public crate
 //! `quire-verification-contracts` (PLAT-861, VER-50), which this crate depends on and
 //! re-exports at `contracts`; this module re-exports them unchanged so every call site below
 //! is unaffected.
@@ -32,8 +32,6 @@ const DEPTH_MARKER: &str = "shared-reference nesting limit exceeded";
 const ARRAY_MARKER: &str = "shared-reference array limit exceeded";
 const DUPLICATE_MARKER: &str = "duplicate decoded member name";
 
-/// Verifies the retained two-schema, fourteen-fixture snapshot manifest (VER-50).
-pub use crate::contracts::shared_reference::verify_shared_reference_snapshot;
 /// Rust wire types generated from the retained version-1 schema.
 pub use crate::contracts::shared_reference::wire_v1;
 /// Rust wire types generated from the retained version-2 schema.

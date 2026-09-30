@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Agent-IX
 
-//! Pinned, non-executing intake of Analyze hybrid/synthesis provider results.
+//! Non-executing intake of Analyze hybrid/synthesis provider results.
 //!
-//! Governing requirements: Task-039 and IT-005-SC-04. The Analyze crate is not
-//! linked here while its transitive dependency graph has incompatible exact
-//! patch pins. This boundary consumes typed producer output without invoking,
+//! Governing requirements: Task-039 and IT-005-SC-04. This boundary consumes typed producer output without invoking,
 //! reinterpreting, or upgrading a candidate into a proof.
 
 pub use quire_analyze_method_contract::{
@@ -15,8 +13,6 @@ pub use quire_analyze_method_contract::{
     AnalyzeSubjectIdentity, AnalyzeToolchainIdentity, ProviderRevision,
 };
 
-/// Merged Analyze revision supplying hybrid/synthesis development results.
-pub const ANALYZE_PROVIDER_REVISION: &str = "ddc099b918a6a569987c96cda97d567d2d3bba33";
 /// Shared method-result contract accepted at this provider boundary.
 pub const ANALYZE_METHOD_RESULT_VERSION: &str =
     quire_analyze_method_contract::METHOD_RESULT_VERSION;
@@ -40,7 +36,7 @@ pub enum ProviderConsumption {
     Failed,
     /// Provider refused malformed input.
     ProviderRefused,
-    /// The upstream result cannot be consumed at this pin/boundary.
+    /// The upstream result cannot be consumed at this boundary.
     Refused,
 }
 
@@ -48,7 +44,6 @@ pub enum ProviderConsumption {
 #[must_use]
 pub fn consume_analyze_result(result: &AnalyzeResult) -> ProviderConsumption {
     if result.contract_version != ANALYZE_METHOD_RESULT_VERSION
-        || result.provider_revision.0 != ANALYZE_PROVIDER_REVISION
         || result.subject_identity.0.is_empty()
         || result.run_identity.0.is_empty()
         || result.request_identity.0.is_empty()

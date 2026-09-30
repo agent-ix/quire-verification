@@ -10,23 +10,18 @@ The repository includes the corresponding license text in `LICENSE`.
 
 The implementation is cleanly written against observed interfaces. It does not
 copy Quoin implementation source. The Quoin catalog fixture is a generated
-snapshot containing method data from spec-artifacts-process; its origin,
-revisions, source path, and applicable AGPL terms are recorded with the fixture
-and in `docs/artifact-rights.md`. Native result artifacts remain references and
-are not copied into this repository.
+snapshot containing method data from spec-artifacts-process under AGPL terms.
+Native result artifacts remain references and are not copied into this repository.
 
-`Cargo.toml` and `Cargo.lock` are the authoritative Rust dependency inventory.
-Dependency licenses, copied/generated artifact provenance, and applicable
-source revisions are classified in `docs/artifact-rights.md`. The dependency
+`Cargo.toml` and `Cargo.lock` are the authoritative Rust dependencies. The dependency
 policy gate is `cargo deny check`; redistributed bundles must preserve the
-applicable upstream notices recorded by the release-specific inventory.
+applicable upstream notices.
 
 This decision does not select the eventual license for normative language prose,
-public schemas, or conformance vectors. Those remain gated by E01/E04 and a
-release-specific inventory. It does not relicense existing source or authorize
-publication of this private history.
+public schemas, or conformance vectors. Those remain gated by E01/E04. It does not
+relicense existing source or authorize publication of this private history.
 
-Every release still needs an included-file inventory, inbound rights, exact
+Every release still needs inbound rights, exact
 outbound license, dependency compatibility, notices, generated-content review,
 and publication approval. Repository visibility and license are separate
 decisions.

@@ -24,7 +24,7 @@ relationships:
 ## Scope
 
 Implement V1-RUN-014 through V1-RUN-019 and V1-EVID-001 through
-V1-EVID-006 from accepted QSpec revision `8d0fbad` through Verification
+V1-EVID-006 from accepted QSpec through Verification
 issues #34-#38 and Analyze issue #33. Preserve existing E02/Q13 work and use
 shared interfaces rather than duplicating compatibility, execution, retention,
 or sufficiency machinery.
@@ -58,7 +58,7 @@ Task-036 + Task-037 + Task-038 + Task-039
   -> Task-040 (Verification #38 evidence graph/lineage/176-row ledger)
 ```
 
-Implementation tasks consume only merged, pinned development interfaces. A
+Implementation tasks consume only merged development interfaces. A
 missing provider produces `unsupported`, `incomplete`, `failed`, or `unexecuted`
 state at its owning node; it does not stop independent siblings or authorize a
 local substitute. Shared-interface contradictions return to QSpec rather than
@@ -106,4 +106,4 @@ manual and are not dispatched by this plan.
 3. Preserve completed E02 and Q13 behavior; extend shared types or add versioned complete-V1 types without reinterpreting retained evidence.
 4. Do not add a local process runner, evidence store, sufficiency engine, shared schema copy, or foreign-language executable path.
 5. Production evidence and eventual human decisions remain explicit ledger state and never gate development tasks.
-6. Task-040 may integrate only merged/pinned provider interfaces and results; a missing provider remains an accounted node/vector state.
+6. Task-040 may integrate only merged provider interfaces and results; a missing provider remains an accounted node/vector state.

@@ -30,13 +30,12 @@ requiring production evidence or a release disposition.
 The system under test is `quire-verification`. External dependencies are the
 accepted checked-package/native-runtime interfaces, `quire-analyze` method
 provider interface, accepted 176-row inventory/corpus shapes, and Quoin evidence
-intake boundary. Tests use pinned local fixtures or explicit unavailable states;
+intake boundary. Tests use local fixtures or explicit unavailable states;
 they do not deploy or invoke a production system.
 
 ## Preconditions
 
-QSpec revision `8d0fbad` and the merged producer revisions used by the fixture
-are pinned. Each unavailable provider or future production artifact is declared
+Each unavailable provider or future production artifact is declared
 as an explicit input state rather than a test skip or task blocker.
 
 ## Inputs
@@ -72,7 +71,7 @@ produces no production-readiness, deployment, release, or certification claim.
 
 - Priority: P0
 - Target Integration: QSpec I04/I10/I13-I15/I18-I21 development boundaries
-- Automation: Automated Rust tests with pinned fixtures
+- Automation: Automated Rust tests with fixtures
 
 ## Dependencies
 

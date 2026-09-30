@@ -58,16 +58,14 @@ Merging this planning artifact does not unblock issue 13 execution. Plan-006 is 
 as active planning, while Task-025 and all dependent implementation remain gated on the
 owner-authored profile dimensions, phase thresholds, and accepted exact producer inputs.
 
-The merged `quire-verification` revision
-`4a5e1961d353db45aa227f8c6ef964d9f67eae29` closes reviewed portable checkpoints in
+Merged `quire-verification` work closes reviewed portable checkpoints in
 Tasks 027 through 029. It does not complete any Plan-006 task: execution observations,
 the promoted differential method, native-profile admission, the selected production
 binary/caller, production-chain evidence, measurements, reproduction, sealing, and
 disposition remain open at their existing owners.
 
 Quire Specification's B-owned result/projection correction and F's observation
-contribution are integrated into composed-baseline PR 15 at
-`d8d984b542fe30f65b6e07f4a07b2d1f81d3962b`. Its reviewed FR-062 projection keeps the
+contribution are integrated into composed-baseline PR 15. Its reviewed FR-062 projection keeps the
 canonical protocol result distinct from E02. A has replaced per-edit candidate/version
 churn with one current prototype draft and an exact coherent freeze at acceptance.
 FR-059/FR-061 now define complete-global-conformance closure as an explicit fifth axis,

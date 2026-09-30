@@ -48,11 +48,6 @@ dependence, limitation, and disagreement procedure.
 ## Notes
 
 - No self-consistency check may be relabeled as independent evidence.
-- Merged revision `4a5e1961d353db45aa227f8c6ef964d9f67eae29` contains the
-  independently re-reviewed portable manifest and dependence checkpoint. It does not
-  contain execution observations or complete TC-041.
 - Engineering Assurance issue `agent-ix/engineering-assurance#34` and PR 46 own the
-  reusable producer-execution/result seam. TC-041/TC-126 pass locally against exact
-  candidate revision `f640f4c1af95e8657bef04207758091fc938658a`; promotion and the
-  post-merge pin remain cross-repository gates and do not authorize a substitute.
+  reusable producer-execution/result seam.
 - Unblocks Task-028.

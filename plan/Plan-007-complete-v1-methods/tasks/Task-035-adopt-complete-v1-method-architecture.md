@@ -17,7 +17,7 @@ relationships:
 
 ## Scope
 
-Complete Verification #34 by adopting QSpec `8d0fbad` AD-009/AD-011,
+Complete Verification #34 by adopting QSpec AD-009/AD-011,
 FR-190-FR-194, FR-310-FR-312, and I14/I15/I18-I21 into one repository-local
 development plan without redesigning the accepted shared contracts.
 

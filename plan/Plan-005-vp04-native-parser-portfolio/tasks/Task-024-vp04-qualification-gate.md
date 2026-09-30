@@ -39,14 +39,9 @@ the exact Rust review, and close VP04 with QUOIN gap analysis.
 
 ## Deliverables
 
-- Retained VP04 report, exact external disposition, green qualification evidence, Rust review, and QUOIN gap-analysis record.
+- Green qualification gates, Rust review, and QUOIN gap analysis.
 
 ## Notes
 
-- Task-023 and all transitive implementation gates are complete. The retained
-  owner disposition accepts the unchanged sealed core, and final gap analysis
-  records no remaining Plan-005 gap.
-- The bounded LC01 syntax candidate and fixture entrance criterion is retained in
-  `evidence/vp04-parser-candidate.md`; it does not clear the shared wire or
-  predecessor gates.
+- Task-023 and all transitive implementation gates are complete.
 - A successful result establishes only the declared parser-fixture portfolio behavior.

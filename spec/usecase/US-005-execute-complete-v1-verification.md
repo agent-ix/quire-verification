@@ -41,7 +41,7 @@ execute.
 
 ## Constraints (Contextual)
 
-The accepted QSpec revision `8d0fbad` owns shared semantics and I14/I15/I18-I21.
+The accepted QSpec owns shared semantics and I14/I15/I18-I21.
 This repository adopts those boundaries and reports contradictions upstream
 instead of changing a shared interface unilaterally.
 

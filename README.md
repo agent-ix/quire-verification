@@ -2,8 +2,7 @@
 
 Private bounded E02 implementation. The draft-2 compatibility adapter, planning
 interfaces, and evidence assessment are accepted for exact private
-cross-repository Rust consumption at the revision recorded in the interface
-decision. VP01–VP04 and every represented native verification tool remain
+cross-repository Rust consumption. VP01–VP04 and every represented native verification tool remain
 separately gated; a validating fixture never claims a tool ran.
 
 ## Charter
@@ -13,7 +12,7 @@ Portable technique/capability/policy/plan/result contracts and qualified plannin
 ## Implemented slice
 
 The current slice defines `TechniqueDefinition`, `ToolCapability`,
-`SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a pinned
+`SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a
 Quoin catalog export without relocating it; constructs prerequisite-aware task
 plans with closed bounded native runner requests; and assesses result scope and
 freshness without storing evidence or making sufficiency decisions.
@@ -44,18 +43,6 @@ assessment.
 It also emits an `inspection` result whose execution status remains `not-run`
 until a verification owner records the required human disposition.
 
-After independently checking out the pinned Quoin and module revisions, recheck
-the captured catalog (the Quoin checkout must have its locked development
-dependencies installed):
-
-```sh
-cd /path/to/quoin
-node --no-warnings --loader ts-node/esm --input-type=module \
-  -e 'import { loadMethodCatalog } from "./src/advisor/index.ts"; console.log(JSON.stringify(loadMethodCatalog([process.argv[1]]), null, 2));' \
-  /path/to/spec-artifacts-process/spec_artifacts_process \
-  | cargo run --locked --manifest-path /path/to/quire-verification/Cargo.toml --bin check-quoin-baseline
-```
-
 The fixture suite covers catalog identity parity, conflicting definitions,
 applicability versus readiness, state/relational/trace/fault/manual input shapes,
 authored-or-unknown classification, authored policy priority and score refusal,
@@ -68,19 +55,12 @@ role input, native artifact interface, and one finite budget. Missing budgets
 become setup dependencies, excessive budgets become explicit gaps, and manual
 work never receives native invocation permission.
 
-Every acceptance test imports the pinned `ix-trace-rs` macro and uses a bare,
+Every acceptance test imports the `ix-trace-rs` macro and uses a bare,
 compiler-checked `#[trace(...)]` marker. From the repository root, run:
 
 ```sh
-IX_FILAMENT_MODULES_PATH="$PWD/.ix/modules:${IX_FILAMENT_MODULES_PATH:-$HOME/.ix/filament/modules}" \
-  quire coverage --scope . --json
+quire coverage --scope . --json
 ```
-
-The repository-local module contributes the `vendor/**` source exclusion while
-the installed `spec-artifacts-process` module contributes the traceability
-model. This exact composition keeps the byte-identical vendored third-party
-macro source outside the first-party test census and still reconciles the Rust
-markers with the QUOIN Test Matrix.
 
 ## Boundaries
 
@@ -94,10 +74,7 @@ No duplicate evidence store, hidden normative dependency, or unqualified backend
 - [Private formalization board](https://github.com/orgs/agent-ix/projects/20)
 
 Read [the interface decision](docs/interface-decision.md), [compatibility map](docs/quoin-compatibility.md),
-the [evaluation report](docs/evaluation-report.md), [retained local portfolio](evidence/local-catalog-portfolio.json),
-the [artifact rights inventory](docs/artifact-rights.md), the
-[Rust review](reviews/26-09-07-rust-review.md), and the
-[gap analysis](reviews/26-09-07-rust-rearchitecture.md) before extending the
+and the [evaluation report](docs/evaluation-report.md) before extending the
 slice. Read [license decision](LICENSE-DECISION.md) before adding code or
 normative artifacts. Publication requires a fresh review; do not flip private
 history public.

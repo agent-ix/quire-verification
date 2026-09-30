@@ -14,5 +14,3 @@ type: index
 - [Task-038: linked plans](./tasks/Task-038-linked-method-plan-execution.md)
 - [Task-039: hybrid and synthesis providers](./tasks/Task-039-hybrid-synthesis-provider-integration.md)
 - [Task-040: evidence and qualification](./tasks/Task-040-evidence-graph-and-qualification-ledger.md)
-- [Log](./log.md)
-

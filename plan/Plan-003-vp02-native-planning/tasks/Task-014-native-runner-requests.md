@@ -38,10 +38,5 @@ with one selected in-limit budget.
 
 ## Notes
 
-- Tasks 011 and 013 are complete. The implementation is governed by accepted
-  QUOIN review run `4a60dcc5-e3fc-4d46-b3f9-7806027dfd19` and SR-120 through
-  SR-127 at `adaff03`.
-- Completed in `86ebb0b`; refreshed portfolio evidence is `96344bc`. Exact Rust
-  review SR-128 found no unresolved defect, all repository gates pass, affected
-  FR-005/FR-013/FR-014/FR-015 rows are backed, and Quire binds all 47 Rust test
-  candidates.
+- Tasks 011 and 013 are complete.
+- Affected FR-005/FR-013/FR-014/FR-015 rows are backed.

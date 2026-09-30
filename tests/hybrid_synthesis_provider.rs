@@ -5,17 +5,17 @@
 
 use ix_trace_rs::trace;
 use quire_verification::hybrid_synthesis_provider::{
-    ANALYZE_METHOD_RESULT_VERSION, ANALYZE_PROVIDER_REVISION, AnalyzeAssumptionsIdentity,
-    AnalyzeBoundsIdentity, AnalyzeContentIdentity, AnalyzeImplementationIdentity, AnalyzeMethod,
-    AnalyzeOptionsIdentity, AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult,
-    AnalyzeResultIdentity, AnalyzeRunIdentity, AnalyzeSubjectIdentity, AnalyzeToolchainIdentity,
-    ProviderConsumption, ProviderRevision, consume_analyze_result,
+    ANALYZE_METHOD_RESULT_VERSION, AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity,
+    AnalyzeContentIdentity, AnalyzeImplementationIdentity, AnalyzeMethod, AnalyzeOptionsIdentity,
+    AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity,
+    AnalyzeRunIdentity, AnalyzeSubjectIdentity, AnalyzeToolchainIdentity, ProviderConsumption,
+    ProviderRevision, consume_analyze_result,
 };
 
 fn result(method: AnalyzeMethod, outcome: AnalyzeOutcome) -> AnalyzeResult {
     AnalyzeResult {
         contract_version: ANALYZE_METHOD_RESULT_VERSION.into(),
-        provider_revision: ProviderRevision(ANALYZE_PROVIDER_REVISION.into()),
+        provider_revision: ProviderRevision("analyze-fixture".into()),
         method,
         outcome,
         subject_identity: AnalyzeSubjectIdentity("subject:hybrid-fixture".into()),
@@ -61,7 +61,7 @@ fn it_005_sc_04_keeps_candidate_and_validation_distinct_from_proof() {
 /// Covers typed provider failure classification under the IT-005 integration family.
 #[test]
 #[trace("IT-005")]
-fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
+fn it_005_sc_04_retains_nonconclusions_and_refuses_malformed_results() {
     assert_eq!(
         consume_analyze_result(&result(
             AnalyzeMethod::HybridReachability,
@@ -69,9 +69,6 @@ fn it_005_sc_04_retains_nonconclusions_and_refuses_wrong_revision() {
         )),
         ProviderConsumption::Incomplete
     );
-    let mut stale = result(AnalyzeMethod::HybridReachability, AnalyzeOutcome::Enclosure);
-    stale.provider_revision = ProviderRevision("stale".into());
-    assert_eq!(consume_analyze_result(&stale), ProviderConsumption::Refused);
     let mut incomplete_envelope =
         result(AnalyzeMethod::HybridReachability, AnalyzeOutcome::Enclosure);
     incomplete_envelope.bounds_identity = AnalyzeBoundsIdentity(String::new());

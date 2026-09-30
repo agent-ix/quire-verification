@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 Agent-IX
 
-//! Records the pinned Engineering Assurance revision.
+//! Records the Engineering Assurance revision.
 //!
 //! The E02 public-contract wire types (`e02_contracts.rs`) and the retained
 //! shared-reference `wire_v1`/`wire_v2` types (`shared_reference_v1.rs`, `shared_reference_v2.rs`)

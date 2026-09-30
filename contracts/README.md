@@ -12,11 +12,7 @@ it directly (`include_bytes!`/`include_str!`) rather than through the crate
 boundary. The only additional plan validation is for duplicate task IDs,
 unknown dependency references, and dependency cycles, which require
 cross-record graph checks. This is the accepted private versioned interface for
-cross-repository Rust consumers, not a public normative schema. Its retained
-shared-reference packet is pinned at
-`agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`;
-see `shared-reference-UPSTREAM.md` for the public reusable-artifact terms now
-selected for the draft-2 schema fragment.
+cross-repository Rust consumers, not a public normative schema.
 
 The same schema owns the internal `QualificationProfile` definition used by the
 Rust production-qualification planner. It is not a sixth public E02 root contract.
@@ -71,7 +67,7 @@ the planner emits `unknown` when it was omitted.
 The shared-reference reader consumes Rust wire types (`wire_v1`, `wire_v2`) and schema
 validation derived from the retained `shared-reference-1-draft.schema.json` and
 `shared-reference-2-draft/schema.json` files. Both schemas, all fourteen amendment
-fixtures, their `typify` codegen, and the byte-identical snapshot guard live in public
+fixtures, and their `typify` codegen live in public
 crate `quire-verification-contracts` (PLAT-861, VER-50); this repository holds no copy
 of any of it and re-exports the module unchanged at `contracts::shared_reference`.
 Version 2 is selected only for artifact and semantic envelopes; version 1 is retained
@@ -87,13 +83,6 @@ Evidence assessment applies that same rule to every result oracle and
 observation reference. Evaluated results retain at least one closed oracle
 contribution with an explicit dependence relation; other results may carry an
 empty contribution array. E02 draft-1 has no compatibility or migration path.
-
-`shared-reference-snapshot.sha256`, which covers both schemas and all fourteen
-selected amendment fixtures, and `shared-reference-UPSTREAM.md`, which records their
-exact private upstream revision and containment terms, live with the packet in
-`quire-verification-contracts`. These files are independent input data for the Rust
-consumer; no producer validation code or network schema retrieval is part of the
-reader.
 
 The fixture packet deliberately includes state, relational, trace, fault, and
 manual inputs. The schema keeps their required inputs distinct rather than

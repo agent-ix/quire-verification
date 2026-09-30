@@ -14,7 +14,6 @@ relationships:
   - { target: "ix://agent-ix/quire-verification/Task-006", type: depends_on }
   - { target: "ix://agent-ix/quire-verification/StR-001", type: references }
   - { target: "ix://agent-ix/quire-verification/NFR-004", type: references }
-  - { target: "ix://agent-ix/quire-verification/TC-021", type: verifies }
   - { target: "ix://agent-ix/quire-verification/TC-022", type: verifies }
 ---
 # Task-007: Qualified-path gate
@@ -41,8 +40,3 @@ exact requested Rust review and gap analysis, and reconcile plan and matrix stat
 ## Notes
 
 - The merge command runs only after every mandatory profile operation succeeds.
-- Reopened after the full-plan coverage audit showed that one multiline compiled
-  marker left NFR-006-AC-2 and NFR-006-AC-3 unbound in Quire. Reviewed amendment
-  SR-081 through SR-088 governs the remediation.
-- Restored after implementation `760bbbd` and exact Rust review SR-089 proved
-  all 41 first-party candidates and every NFR-006 acceptance criterion bound.

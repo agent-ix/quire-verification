@@ -21,20 +21,8 @@ is the accepted schema and data-only fixture packet owned by
 
 ## Preconditions
 
-- FS02 and FS05 identify merged private revision
-  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`.
-- B's consumer-specific JCS and six role findings are resolved in that revision.
-- The draft-2 schema fragment's public reusable-artifact terms are selected
-  (AGPL-3.0-or-later, owner ruling 2026-09-20). Under VER-50's standing
-  exception, the complete packet — that fragment, the retained draft-1 schema,
-  and the fourteen fixtures — is published as a TEMPORARY vendor of
-  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78` in
-  public `quire-verification-contracts`, and this repository holds no copy.
-  This is not a settlement: per VER-51, the exception's expiry condition is
-  "`quire-specification` becomes public, or the packet gets a public home" at
-  its definer — publishing the packet in `quire-verification-contracts` does
-  not itself satisfy that condition, since visibility is not the test. Until
-  that condition is met, this snapshot is deleted and replaced by a reference.
+- B's consumer-specific JCS and six role findings are resolved in the accepted packet.
+- The packet is consumed through public `quire-verification-contracts`.
 
 ## Inputs
 
@@ -44,11 +32,10 @@ is the accepted schema and data-only fixture packet owned by
 
 ## Test Procedure
 
-1. Verify the retained snapshot provenance, both schema digests, and all fourteen amendment fixture byte digests against the selected repository revision.
-2. Reject duplicate decoded JSON members before object materialization, then validate every selected positive and adverse vector with B's Rust reader only.
-3. Run B's role-composition, immutable-identity, feature-set, exact-reference, JCS-domain, source-map, and explicit-migration mutations under their selected envelope versions.
-4. Verify the non-circular core digest over the validated automated core alone and refuse byte-digest substitution or a foreign core digest.
-5. Record accepted/refused counts and stable error categories without importing producer code or fetching a network schema.
+1. Reject duplicate decoded JSON members before object materialization, then validate every selected positive and adverse vector with B's Rust reader only.
+2. Run B's role-composition, immutable-identity, feature-set, exact-reference, JCS-domain, source-map, and explicit-migration mutations under their selected envelope versions.
+3. Verify the non-circular core digest over the validated automated core alone and refuse byte-digest substitution or a foreign core digest.
+4. Record accepted/refused counts and stable error categories without importing producer code or fetching a network schema.
 
 ## Expected Results
 
@@ -60,12 +47,12 @@ unmapped B role.
 
 - Priority: P0
 - Target Integration: FS02/FS05 shared-reference data packet
-- Automation: Rust integration test with pinned data-only fixtures
+- Automation: Rust integration test with data-only fixtures
 
 ## Dependencies
 
 - Verifies [FR-016](../functional/FR-016-read-shared-references-strictly.md).
-- The external representation dependency is satisfied at `8ab058be`; B's
+- The external representation dependency is satisfied; B's
   independent reader implementation and qualification remain pending.
 
 ## Traceability

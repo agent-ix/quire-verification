@@ -15,10 +15,10 @@ use quire_verification::{
         validate_evidence_graph,
     },
     hybrid_synthesis_provider::{
-        ANALYZE_METHOD_RESULT_VERSION, ANALYZE_PROVIDER_REVISION, AnalyzeAssumptionsIdentity,
-        AnalyzeBoundsIdentity, AnalyzeContentIdentity, AnalyzeImplementationIdentity,
-        AnalyzeMethod, AnalyzeOptionsIdentity, AnalyzeOutcome, AnalyzeRequestIdentity,
-        AnalyzeResult, AnalyzeResultIdentity, AnalyzeRunIdentity, AnalyzeSubjectIdentity,
+        ANALYZE_METHOD_RESULT_VERSION, AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity,
+        AnalyzeContentIdentity, AnalyzeImplementationIdentity, AnalyzeMethod,
+        AnalyzeOptionsIdentity, AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult,
+        AnalyzeResultIdentity, AnalyzeRunIdentity, AnalyzeSubjectIdentity,
         AnalyzeToolchainIdentity, ProviderConsumption, ProviderRevision, consume_analyze_result,
     },
 };
@@ -87,7 +87,7 @@ fn graph_for(claim: &EvidenceIdentity) -> EvidenceGraph {
 fn rejected_candidate() -> AnalyzeResult {
     AnalyzeResult {
         contract_version: ANALYZE_METHOD_RESULT_VERSION.into(),
-        provider_revision: ProviderRevision(ANALYZE_PROVIDER_REVISION.into()),
+        provider_revision: ProviderRevision("analyze-it-005".into()),
         method: AnalyzeMethod::CanonicalSynthesis,
         outcome: AnalyzeOutcome::ValidationRejected,
         subject_identity: AnalyzeSubjectIdentity("subject:it-005".into()),
