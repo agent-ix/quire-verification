@@ -17,8 +17,7 @@ Engineering Assurance consumer boundary, while TC-042 through TC-045 define the 
 test-first qualification scope. TC-047 through TC-052 and IT-005 define the
 complete-V1 method/evidence development slice independently of production
 ceremony. The production profile and corpus remain
-externally blocked, so no production qualification is claimed. The IT-003 automated
-core is retained separately from the still-pending external disposition. The
+externally blocked, so no production qualification is claimed. The
 rejected JavaScript prototype is not evidence.
 
 ## Test Matrix Rules
@@ -48,7 +47,7 @@ rejected JavaScript prototype is not evidence.
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
-| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete; external disposition pending |
+| US-001, US-002, US-003 | Bounded native parser portfolio, measured effort, and disposition | TC-034..TC-038 | 🚧 Automated evidence complete |
 | US-004 | One exact production qualification profile | TC-039..TC-045, IT-004 | 🚧 Planned |
 | US-005 | Complete-V1 methods, replayable evidence, and exact ledger accounting | TC-047..TC-052, IT-005 | 🚧 Task-039/040 development implementation and focused traces are ready for peer review |
 
@@ -74,9 +73,9 @@ rejected JavaScript prototype is not evidence.
 | FR-016 | FR-016-AC-1..7 | TC-029, TC-031 | ✅ Implemented against accepted packet |
 | FR-017 | FR-017-AC-1..7 | TC-033 | ✅ Complete |
 | FR-018 | FR-018-AC-1..5 | TC-032 | ✅ Complete |
-| FR-019 | FR-019-AC-1..6 | TC-034, TC-035, IT-003 | ✅ Implemented; automated core retained |
-| FR-020 | FR-020-AC-1..9 | TC-036, TC-037, IT-003 | ✅ Implemented; automated core retained |
-| FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
+| FR-019 | FR-019-AC-1..6 | TC-034, TC-035 | ✅ Implemented |
+| FR-020 | FR-020-AC-1..9 | TC-036, TC-037 | ✅ Implemented |
+| FR-021 | FR-021-AC-1..5 | TC-037 | ✅ Implemented |
 | FR-022 | FR-022-AC-1..5 | TC-039, IT-004 | 🚧 Planned |
 | FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | ✅ Rust boundary implemented; production corpus blocked |
 | FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | ✅ Rust boundary implemented |
@@ -436,7 +435,6 @@ rejected JavaScript prototype is not evidence.
 | Integration ID | Purpose | Target Project | Type | Test Cases | Status |
 |----------------|---------|----------------|------|------------|--------|
 | IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented |
-| IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
 | IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | ✅ SC-01..SC-07 have executable development coverage; production evidence remains a non-blocking explicit state |
 
@@ -447,12 +445,6 @@ rejected JavaScript prototype is not evidence.
 | TC-031 | IT-002 | Exact supported shared references | Schema, artifacts, and positive vectors | Every B-used role accepted | P0 |
 | TC-031 | IT-002 | One-axis reference mutations | Adverse vectors and B mutations | Stable refusal before planning | P0 |
 | TC-031 | IT-002 | Unmapped JCS or trace/fault/manual role | Consumer role composition | No permissive fallback; integration fails | P0 |
-| TC-034 | IT-003 | Valid exact source | Real parse and parse-format-reparse commands | Two completed satisfied results | P0 |
-| TC-034 | IT-003 | One declared syntax mutation | Real parse command and expected diagnostic | Completed violated result; unexpected failure stays failed | P0 |
-| TC-035 | IT-003 | Missing prerequisite and expired exact result | Mutated plan and assessment time | Blocked work and stale finding remain explicit | P0 |
-| TC-036 | IT-003 | Five prescribed measured repetitions | Raw monotonic phase observations | Setup separated; summaries recompute exactly | P0 |
-| TC-037 | IT-003 | Exact report and review procedure | Verification-owner disposition | One bound value and bounded claims | P0 |
-| TC-038 | IT-003 | Controlled time, output, argument, environment, path, status, and protocol cases | Native process adapter | Bounded typed results and no orphan process | P0 |
 | TC-039 | IT-004 | Complete and one-axis-mutated qualification profiles | Owner-authored exact boundary | One immutable profile or explicit refusal/prerequisite | P0 |
 | TC-040 | IT-004 | Representative, boundary, malformed, generated, and mutated corpus | Exact bytes, classes, provenance, rights, and lineage | Complete denominator or explicit gaps | P0 |
 | TC-041 | IT-004 | Independent, shared, derived, absent, and disagreeing oracles | Exact bounded oracle executions | Correct dependence and disagreement findings | P0 |
@@ -479,14 +471,3 @@ rejected JavaScript prototype is not evidence.
 | GAP-003 | Added ambiguous compatible capability refusal. | TC-011 |
 | GAP-004 | Replaced every governed executable and test with Rust and added CI gates. | TC-022 |
 | GAP-005 | Added byte, nesting, and array-size limits at public ingestion boundaries. | TC-023 |
-
-## Test Execution Summary
-
-| Category | Total | Passed | Failed | Pending | Coverage |
-|----------|-------|--------|--------|---------|----------|
-| Unit | 18 | 18 | 0 | 0 | 100% |
-| Integration | 11 | 8 | 1 | 2 | 73% |
-| Property | 19 | 13 | 0 | 6 | 68% |
-| Static | 2 | 2 | 0 | 0 | 100% |
-| Benchmark | 2 | 1 | 0 | 1 | 50% |
-| Overall | 52 | 42 | 1 | 9 | 81% |

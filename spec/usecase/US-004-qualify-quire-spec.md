@@ -18,8 +18,7 @@ narrow successful fixture for general qualification.
 
 ## Context
 
-VP04 retained a reproducible syntax baseline and proved that the portable planning,
-native execution, assessment, measurement, and sealing path works. The next decision
+The next decision
 needs a declared production caller and population, broader tests, independent
 oracles, resource measurements, and exact dependency identities.
 

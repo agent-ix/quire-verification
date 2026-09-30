@@ -27,8 +27,8 @@ development plan without redesigning the accepted shared contracts.
 - [x] Define method-provider and qualification-evidence interfaces.
 - [x] Map V1-RUN-014-019 and V1-EVID-001-006 to native tickets and tests.
 - [x] Separate development dependencies from future production evidence and decisions.
-- [x] Run self `/spec-review`, remediate findings, and validate the reviewed revision.
+- [x] Run self `/spec-review` and remediate findings.
 
 ## Deliverables
 
-Plan-007, its requirements/interfaces/tests/assurance artifacts, and validated self-review records.
+Plan-007 and its requirements/interfaces/tests/assurance artifacts.

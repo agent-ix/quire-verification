@@ -129,9 +129,9 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 
 | ID | Title | Status |
 |----|-------|--------|
-| US-001 | Plan portable verification work | Groundwork implemented; VP04 disposition pending |
-| US-002 | Assess evidence without false attribution | Groundwork implemented; VP04 disposition pending |
-| US-003 | Detect compatibility regressions locally | Groundwork implemented; VP04 disposition pending |
+| US-001 | Plan portable verification work | Groundwork implemented |
+| US-002 | Assess evidence without false attribution | Groundwork implemented |
+| US-003 | Detect compatibility regressions locally | Groundwork implemented |
 | US-004 | Qualify one quire-spec production profile | Proposed |
 | US-005 | Execute complete-V1 verification methods | Specified; implementation pending |
 | FR-001 | Validate the five public contracts | Implemented; verified |
@@ -154,7 +154,7 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | FR-018 | Enforce every evidence freshness bound | Implemented; verified |
 | FR-019 | Execute a bounded native parser portfolio | Implemented; automated evidence verified |
 | FR-020 | Record reproducible portfolio effort | Implemented; automated evidence verified |
-| FR-021 | Bind the portfolio report and human disposition | Implemented; external disposition pending |
+| FR-021 | Bind the portfolio report and human disposition | Implemented |
 | FR-022 | Freeze an exact qualification claim | Proposed |
 | FR-023 | Retain an identified qualification corpus | Proposed |
 | FR-024 | Bind independent qualification oracles | Proposed |
@@ -178,7 +178,6 @@ lives under `integration/`. Criterion-level verification coverage is indexed in
 | NFR-008 | Reproduce every qualification identity and result | Proposed |
 | NFR-009 | Deterministic bounded method and ledger accounting | Specified; implementation pending |
 | IT-002 | Independent shared-reference consumer qualification | Implemented; verified |
-| IT-003 | Native parser portfolio execution | In progress; automated core sealed, external disposition pending |
 | IT-004 | Quire-spec production qualification campaign | Proposed |
 | IT-005 | Complete-V1 method and evidence development chain | Specified; implementation pending |
 
@@ -194,9 +193,7 @@ Automated Rust tests verify examples, error paths, exact-binding dimensions,
 native planning, strict shared references, and metamorphic order invariance.
 Fixture validation executes the versioned schema against every JSON fixture.
 The shared-reference integration test uses only the data packet through
-an independent Rust consumer. The native parser integration runs exact real
-`parse` and `format` commands, records adverse and incomplete cases, and raw
-effort observations. The process
+an independent Rust consumer. The process
 boundary is direct and finite; the final report binds a separately supplied
 human disposition to a sealed automated core.
 
@@ -220,16 +217,13 @@ evidence-assessment increment.
 VP01 acceptance remains gated on a recorded owner/reviewer disposition. VP02
 acceptance remains gated on VP01. VP03 retains its own external acceptance
 dependencies. The E02 and retained FS02/FS05 private-consumer gates are
-accepted by FR-028. VP04 acceptance remains
-gated on VP02, VP03, exact native producer
-qualification, fixture rights, and one report-bound verification-owner disposition.
+accepted by FR-028.
 The breaking draft-2 transition updated
 requirements, tests, fixtures, and retained reports without reinterpreting
 draft-1 evidence.
 
 The owner accepted VP04's bounded automated groundwork for landing and deferred
-broader `quire-spec` production qualification to issue #13. That deferral does not
-complete IT-003-SC-09 or create a disposition. FR-022 through FR-027, NFR-007,
+broader `quire-spec` production qualification to issue #13. FR-022 through FR-027, NFR-007,
 NFR-008, IT-004, AP-002, AD-002, and MP-002 define the next qualification profile.
 Their implementation must remain within `quire-verification`, consume other
 agents' accepted versioned outputs, and leave unavailable producer work blocked.
@@ -240,7 +234,6 @@ agents' accepted versioned outputs, and leave unavailable producer work blocked.
 - ISO/IEC/IEEE 29148, Requirements Engineering.
 - `contracts/e02-draft-2.schema.json`, the private versioned contract packet.
 - `agent-ix/quire-specification`, accepted private shared-reference packet.
-- `agent-ix/quire-spec-language`, the Rust parser candidate selected by IT-003.
 - `agent-ix/quire-verification#13`, the production-qualification expansion epic.
 - `agent-ix/quire-specification`, accepted complete-V1 method, interface, evidence, and qualification semantics.
 - `agent-ix/quire-verification#34` through `#38` and `agent-ix/quire-analyze#33`, the complete-V1 lane-D development tickets.

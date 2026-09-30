@@ -37,4 +37,3 @@ review disposition without circular identity or automated sufficiency.
 
 - Tasks 012, 021, and 022 and the independently accepted JCS and
   review-disposition shared vocabulary supply the completed prerequisites.
-- Unblocks Task-024.

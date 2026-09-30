@@ -2,6 +2,5 @@ node_modules/
 target/
 *-target/
 .worktrees/
-/.vp04-build/
 /.fuzz-target/
 /.mutants-target/
