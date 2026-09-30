@@ -29,8 +29,7 @@ cargo deny check
 cargo run --locked --bin render-fixtures
 ```
 
-Run the bounded local portfolio against an exact checkout revision and retain
-its JSON report from standard output with:
+Run the bounded local portfolio with:
 
 ```sh
 cargo run --locked --bin run-bounded-portfolio -- "$(git rev-parse HEAD)" 2026-09-08T02:00:00Z

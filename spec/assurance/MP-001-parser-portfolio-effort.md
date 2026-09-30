@@ -20,8 +20,6 @@ statistical_design:
 relationships:
   - target: ix://agent-ix/quire-verification/FR-020
     type: measures
-  - target: ix://agent-ix/quire-verification/IT-003
-    type: references
 ---
 
 # Bounded parser portfolio effort measurement

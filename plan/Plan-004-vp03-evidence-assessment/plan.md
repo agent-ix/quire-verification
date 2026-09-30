@@ -84,8 +84,7 @@ Plan-003/Task-012 + FS05 -> Task-017 -> Task-018 -------------+-> Task-019
 
 ## Coordination Rules
 
-Task-017 proceeds from accepted QUOIN review workflow
-`c2e99bbd-6105-4282-b8ec-4eb1f6161647`; Task-018 starts only after its schema
+Task-018 starts only after its schema
 contract passes. B does not edit the upstream FS05 schema, C's Engineering
 Assurance implementation, Quoin, or Filament. Any changed behavior returns to
 `/specify` and `/spec-review` before implementation.

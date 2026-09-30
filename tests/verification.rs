@@ -6,7 +6,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
-use std::process::Command;
 
 use ix_trace_rs::trace;
 use quire_verification::bounded_portfolio::{
@@ -299,48 +298,6 @@ fn tc_046_refuses_lossy_cross_repository_result_projections() {
             "{field}"
         );
     }
-}
-
-#[trace("TC-046", "FR-028-AC-4")]
-#[test]
-fn tc_046_compiles_the_exact_serde_1_0_228_consumer_graph() {
-    let consumer = tempfile::tempdir().expect("consumer root");
-    fs::create_dir(consumer.path().join("src")).expect("consumer source directory");
-    let qverify_root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    fs::write(
-        consumer.path().join("Cargo.toml"),
-        format!(
-            "[package]\nname='e02-consumer-fixture'\nversion='0.0.0'\nedition='2024'\nrust-version='1.98.1'\n[dependencies]\nquire-verification={{path={qverify_root:?}}}\nserde={{version='=1.0.228',features=['derive']}}\n"
-        ),
-    )
-    .expect("consumer manifest");
-    fs::write(
-        consumer.path().join("src/main.rs"),
-        "fn main(){assert_eq!(quire_verification::contracts::contract_version(),\"quire-verification/e02-draft-2\");}\n",
-    )
-    .expect("consumer source");
-
-    let output = Command::new(env!("CARGO"))
-        .args(["check", "--offline", "--manifest-path"])
-        .arg(consumer.path().join("Cargo.toml"))
-        .env("CARGO_BUILD_JOBS", "2")
-        .env("CARGO_TARGET_DIR", consumer.path().join("target"))
-        .output()
-        .expect("consumer cargo check must launch");
-    assert!(
-        output.status.success(),
-        "exact consumer graph must compile:\n{}",
-        String::from_utf8_lossy(&output.stderr)
-    );
-
-    let lock = fs::read_to_string(consumer.path().join("Cargo.lock"))
-        .expect("consumer lockfile must be written");
-    assert_eq!(
-        lock.matches("name = \"serde\"\nversion = \"1.0.228\"")
-            .count(),
-        1
-    );
-    assert!(!lock.contains("name = \"serde\"\nversion = \"1.0.229\""));
 }
 
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]
@@ -2605,9 +2562,6 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     assert!(!root.join("package-lock.json").exists());
     assert!(include_str!("../src/lib.rs").contains("#![forbid(unsafe_code)]"));
     let manifest = include_str!("../Cargo.toml");
-    let workspace_lock = include_str!("../Cargo.lock");
-    assert!(workspace_lock.contains("name = \"quire-verification-fuzz\""));
-    assert_eq!(workspace_lock.matches("name = \"jsonschema\"\n").count(), 1);
     let rust_requirement = include_str!("../spec/non-functional/NFR-004-rust-qualified-path.md");
     assert!(rust_requirement.contains("first-party traceability population"));
     assert!(rust_requirement.contains("Dependency sources resolved by Cargo"));

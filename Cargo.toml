@@ -53,8 +53,6 @@ chrono = { version = "0.4.42", default-features = false, features = ["serde"] }
 # revision into ENGINEERING_ASSURANCE_REVISION for provenance).
 engineering-assurance = { version = "=0.4.0", git = "https://github.com/agent-ix/engineering-assurance", rev = "438b30fcd5d4df457fe0fca4682b322c72856c1c", default-features = false, features = ["producer-execution"] }
 quire-analyze-method-contract = { git = "https://github.com/agent-ix/quire-analyze", rev = "ddc099b918a6a569987c96cda97d567d2d3bba33", package = "quire-analyze-method-contract", version = "=0.1.0" }
-# VER-50: pinned to agent-ix/quire-verification-contracts#4 (ver-50-shared-reference-packet)
-# pending merge; bump this rev to the merged main commit once that PR lands.
 quire-verification-contracts = { version = "=0.1.0", git = "https://github.com/agent-ix/quire-verification-contracts", rev = "be73336844cde3316c734edf18a629de2b4bcb55" }
 rustix = { version = "1.1.2", features = ["fs", "process"] }
 serde = { version = "1.0.228", features = ["derive"] }

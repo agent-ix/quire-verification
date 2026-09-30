@@ -29,6 +29,5 @@ contributions using the exact independently accepted FS05 roles.
 
 ## Notes
 
-- Plan-003 Task-012 and the pinned FS05 packet are complete. QUOIN review
-  `c2e99bbd-6105-4282-b8ec-4eb1f6161647` accepted the implementation contract;
-  no generic-kind fallback is allowed.
+- Plan-003 Task-012 and the FS05 packet are complete. No generic-kind fallback
+  is allowed.

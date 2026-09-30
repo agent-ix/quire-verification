@@ -53,8 +53,7 @@ inheriting the verification owner's decision authority.
 
 ## Context and Assumptions
 
-The current candidate is Rust and the existing VP04 execution core is retained as
-historical groundwork. FS02 and FS05 identities, Agent A parser/compiler outputs,
+The current candidate is Rust. FS02 and FS05 identities, Agent A parser/compiler outputs,
 and Agent C assurance-chain interfaces may advance independently. Qualification
 uses only exact reviewed revisions and does not modify those producers.
 

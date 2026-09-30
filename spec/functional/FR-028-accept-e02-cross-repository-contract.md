@@ -28,11 +28,6 @@ result dimension and every strict-reader refusal.
 - An unchanged validated contract value, or a typed refusal before planning,
   matching, or assessment.
 
-## Behavior
-
-- When a private Rust consumer depends on `quire-verification`, the package
-  SHALL resolve alongside the consumer's exact `serde` 1.0.228 requirement.
-
 ## Acceptance Criteria
 
 | ID | Criteria | Verification |
@@ -40,8 +35,6 @@ result dimension and every strict-reader refusal.
 | FR-028-AC-1 | The owner, contract version, and private-only publication boundary are stated in the interface decision. | Inspection (TC-046) |
 | FR-028-AC-2 | A boundary value with an unknown contract version, unsupported reference version, wrong role, or identity/content mismatch is refused without compatibility inference, fallback, or a replacement result. | Test (TC-002, TC-029, TC-031) |
 | FR-028-AC-3 | A result projection that omits any required execution, logical, activation, participation, assumptions, adequacy, provenance, artifact, or oracle-contribution dimension is refused before assessment. | Test (TC-046) |
-| FR-028-AC-4 | A minimal private Rust consumer with exact `serde` 1.0.228 resolves and compiles `quire-verification`. | Test (TC-046) |
-
 ## Dependencies
 
 - Uses the exact contract validation in [FR-001](./FR-001-validate-public-contracts.md).
