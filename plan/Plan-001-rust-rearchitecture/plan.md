@@ -51,7 +51,7 @@ relationships:
 ## Dependency Graph
 
 - `Task-001 -> Task-002, Task-003, Task-004`: catalog, planning, and evidence need the generated contracts, JCS, errors, and resource bounds.
-- `Task-002 -> Task-005`: fixture and baseline binaries need the catalog adapter.
+- `Task-002 -> Task-005`: fixture binaries need the catalog adapter.
 - `Task-002 + Task-003 + Task-004 -> Task-006`: the bounded portfolio composes all three services.
 - `Task-001..Task-006 -> Task-007`: the qualified-path gate reviews and validates the complete Rust replacement.
 
@@ -80,7 +80,6 @@ accepted deliverable.
 - [x] **TC-006**: Reject an unhandled fixture and inspect CI.
 - [x] **TC-007**: Preserve complete Quoin method records.
 - [x] **TC-008**: Qualify catalog conflicts and advice.
-- [x] **TC-021**: Execute the real Quoin catalog baseline.
 
 ### Planning and Evidence
 
@@ -115,7 +114,7 @@ accepted deliverable.
 
 ### Track C: Integration
 
-- **C1 = Task-005** Rust fixture and baseline binaries — Medium; exit: all fixtures and the real pinned Quoin output pass TC-005, TC-006, and TC-021.
+- **C1 = Task-005** Rust fixture binaries — Medium; exit: all fixtures pass TC-005 and TC-006.
 
 ## Parallel Execution Summary
 
@@ -133,9 +132,9 @@ Task-001 ─┬─ Task-002 ─ Task-005 ─┐
 | Task-002 | B | FR-004 | TC-007, TC-008 | done |
 | Task-003 | B | FR-005 | TC-009..TC-011 | done |
 | Task-004 | A | FR-006, FR-007, NFR-001, NFR-003 | TC-012..TC-015 | done |
-| Task-005 | C | FR-003 | TC-005, TC-006, TC-021 | done |
+| Task-005 | C | FR-003 | TC-005, TC-006 | done |
 | Task-006 | A | FR-009 | TC-018..TC-020 | done |
-| Task-007 | Gate | StR-001, NFR-004 | TC-021, TC-022 | done |
+| Task-007 | Gate | StR-001, NFR-004 | TC-022 | done |
 
 ## Coordination Rules
 

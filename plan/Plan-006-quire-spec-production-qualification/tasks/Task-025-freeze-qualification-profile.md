@@ -57,13 +57,13 @@ commands, syntax and formatting guarantees, and the declared retained population
 binding, type checking, evaluation, backend projection, and other environments remain
 excluded.
 
-| Role | Observed revision | State | Exact prerequisite |
-|---|---|---|---|
-| E02 portable contracts | `agent-ix/quire-verification@4a5e1961d353db45aa227f8c6ef964d9f67eae29` | accepted portable checkpoint | Bind this merged and independently re-reviewed contract revision, or an explicitly reviewed successor, in the selected profile. |
-| FS02/FS05 shared references and composed profile | `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`; PR 15 at `d8d984b542fe30f65b6e07f4a07b2d1f81d3962b` | coherent working draft ready for composed disposition | A has replaced repeated per-edit candidates and checksum refreshes with one current prototype draft whose exact profile/rule/dependency/source identities freeze at acceptance. B's explicit fifth-axis source contract and F's FR-115/FR-116, TC-145/TC-146, IT-051 and mapping controls now preserve every independent closure axis through the executable/export consumer. The B-facing content gap is closed, but composed acceptance has not occurred. Wait for the shared baseline to be accepted and frozen, then bind the exact role and profile versions used by the executable projection. Working-draft history remains inventory evidence, not qualification admission. |
-| parser/compiler and direct CLI caller | `agent-ix/quire-spec-language@3bc1b3890f72f91873022ac807d74d047349baa8` | missing selected-v1 executable projection | After the composed profile is accepted, retain its selected release binary, dependency closure, command invocation, and environment reference. The historical state-profile candidate does not establish the composed product boundary. |
-| Engineering Assurance | `agent-ix/engineering-assurance@c47e176e5ef5d133c448171e25640b76d653a077`; issue 34 open with no producer PR | provisional | Consume Agent C's accepted Rust producer-execution/result revision after issue 34's specification, implementation, cross-repository contract test, and reviews land. |
-| Quoin evidence ownership | `agent-ix/quoin@7072d65db7e236e819d99be42e094ba548e9496a` | accepted containment candidate | Bind the exact versioned evidence interface used by the selected profile without expanding Quoin. |
+| Role | State | Exact prerequisite |
+|---|---|---|
+| E02 portable contracts | accepted portable checkpoint | Bind this merged and independently re-reviewed contract revision, or an explicitly reviewed successor, in the selected profile. |
+| FS02/FS05 shared references and composed profile | coherent working draft ready for composed disposition | A has replaced repeated per-edit candidates with one current prototype draft whose exact profile/rule/dependency/source identities freeze at acceptance. B's explicit fifth-axis source contract and F's FR-115/FR-116, TC-145/TC-146, IT-051 and mapping controls now preserve every independent closure axis through the executable/export consumer. The B-facing content gap is closed, but composed acceptance has not occurred. Wait for the shared baseline to be accepted and frozen, then bind the exact role and profile versions used by the executable projection. |
+| parser/compiler and direct CLI caller | missing selected-v1 executable projection | After the composed profile is accepted, retain its selected release binary, dependency closure, command invocation, and environment reference. The historical state-profile candidate does not establish the composed product boundary. |
+| Engineering Assurance | provisional | Consume Agent C's accepted Rust producer-execution/result revision after issue 34's specification, implementation, cross-repository contract test, and reviews land. |
+| Quoin evidence ownership | accepted containment candidate | Bind the exact versioned evidence interface used by the selected profile without expanding Quoin. |
 
 The E02 merge closes one former prerequisite but does not freeze the profile. The
 composed native source profile, its selected executable projection and caller, and the

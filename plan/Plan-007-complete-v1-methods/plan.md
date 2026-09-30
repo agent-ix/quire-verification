@@ -24,7 +24,7 @@ relationships:
 ## Scope
 
 Implement V1-RUN-014 through V1-RUN-019 and V1-EVID-001 through
-V1-EVID-006 from accepted QSpec revision `8d0fbad` through Verification
+V1-EVID-006 from accepted QSpec through Verification
 issues #34-#38 and Analyze issue #33. Preserve existing E02/Q13 work and use
 shared interfaces rather than duplicating compatibility, execution, retention,
 or sufficiency machinery.

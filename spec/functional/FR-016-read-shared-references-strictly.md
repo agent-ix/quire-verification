@@ -26,9 +26,8 @@ before using the reference in planning or result identity comparison.
 
 - Bounded UTF-8 JSON containing either an `ix.shared-reference/2-draft`
   artifact/semantic envelope or an `ix.shared-reference/1-draft`
-  source-map/migration envelope from the exact
-  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
-  private data packet.
+  source-map/migration envelope from the
+  `agent-ix/quire-specification` private data packet.
 - Locally supplied artifact bytes, supported versions/features, and qualified canonical derivations.
 
 ## Outputs
@@ -46,18 +45,10 @@ before using the reference in planning or result identity comparison.
 | FR-016-AC-4 | Reordered required features compare as the same set, while every other collection follows its owning contract's declared ordering or identity-key rule. | Test (TC-029) |
 | FR-016-AC-5 | The reader accepts only the selected `quire.verification.jcs` / `rfc8785-v1` / `sha256` canonical identity and exact `trace`, `fault-model`, `review-procedure`, `oracle`, `observation`, and `review-disposition` roles without placing `sha256-jcs:` semantic digests in `sha256:` byte-digest fields. | Test (TC-029, TC-031) |
 | FR-016-AC-6 | Version 2 accepts only artifact/semantic envelopes with `ix.artifact-ref/3-draft`; retained version 1 accepts only source-map/migration envelopes under its exact schema. Draft-1 artifact/semantic evidence is not reinterpreted as current, no migration is inferred, and no fallback reader treats an unknown kind or version as supported. | Test (TC-029) |
-| FR-016-AC-7 | The independent consumer verifies a digest manifest, retained with the packet in `quire-verification-contracts`, for the exact amendment schema, all fourteen amendment fixture files, and the retained version-1 schema; executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval; and reports snapshot drift before reference interpretation. | Test (TC-031) executes the upstream/B-authored positive and adverse cases against the retained packet through the dependency; the manifest-drift check itself is verified in `quire-verification-contracts`'s own suite (`verify_shared_reference_snapshot_passes_for_the_retained_packet`, `verify_shared_reference_snapshot_rejects_an_unlisted_fixture_file`, `verify_shared_reference_snapshot_rejects_a_mutated_fixture`), since the manifest and the function that checks it moved there with the packet (VER-50). |
-
-## Constraints
-
-| ID | Constraint | Type | Validation |
-|----|------------|------|------------|
-| FR-016-CON-1 | The reader SHALL consume only the exact independently reviewed private shared-reference packet merged at `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. | Compatibility | Integration Test (IT-002) |
-| FR-016-CON-2 | The retained packet snapshot SHALL stay data-only, byte-identical to the selected upstream files, and provenance-recorded. It is a TEMPORARY vendor of private `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`, not a settlement, retained under VER-50's standing exception and published, under AGPL-3.0-or-later, in exactly one repository, `quire-verification-contracts` (the 2026-09-20 owner ruling separately authorized publication of the draft-2 schema fragment alone); this repository holds no copy. Per VER-51, the exception's expiry condition is "`quire-specification` becomes public, or the packet gets a public home" at its definer — publishing the packet in `quire-verification-contracts` does not itself satisfy that condition. Until that condition is met, this snapshot is deleted from `quire-verification-contracts` and replaced by a reference. | Rights / containment | Inspection (TC-031) |
+| FR-016-AC-7 | The independent consumer executes every upstream and B-authored positive/adverse case without producer code or network schema retrieval. | Test (TC-031) |
 
 ## Dependencies
 
 - Contract validation and JCS behavior come from [FR-001](./FR-001-validate-public-contracts.md) and [FR-008](./FR-008-use-jcs.md).
-- The FS02/FS05 representation dependency is satisfied by merged specification
-  revision `8ab058beff03cc76c0f39cc06c87ef98f76e8d78`. Independent B adoption and
+- The FS02/FS05 representation dependency is satisfied. Independent B adoption and
   qualification are implemented and pass TC-029 and TC-031.

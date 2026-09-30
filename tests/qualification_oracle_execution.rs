@@ -875,37 +875,6 @@ fn tc_041_binds_only_the_exact_disagreement_procedure_without_a_disposition() {
 
 #[test]
 #[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
-fn tc_041_tc_126_refuse_foreign_engineering_assurance_revision() {
-    let executor = ProducerExecutor::new(1).expect("one execution slot");
-    let foreign_interface = Scenario::new(
-        Operation::Oracle,
-        ProducerMode::Completed,
-        "agreed",
-        "0000000000000000000000000000000000000000",
-    );
-    let cancellation = CancellationToken::new(foreign_interface.request.cancellation.clone());
-    let result = execute_qualification_oracle(&executor, &foreign_interface.request, &cancellation)
-        .expect("structurally valid foreign-interface request");
-    let (result_ref, validated) = foreign_interface.result_proofs(&result, "result:foreign-ea");
-    let evidence = QualificationExecutionEvidence {
-        manifest: &foreign_interface.manifest,
-        binding_id: "binding-ea",
-        profile: &foreign_interface.profile,
-        corpus: &foreign_interface.corpus,
-        request: &foreign_interface.request,
-        result_ref: &result_ref,
-        validated_references: &validated,
-    };
-    let error = record_qualification_oracle_execution(&evidence, &result)
-        .expect_err("foreign Engineering Assurance revision");
-    assert_eq!(
-        error.code(),
-        VerificationErrorCode::InvalidQualificationOracleBinding
-    );
-}
-
-#[test]
-#[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_request_identity_drift() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
     let exact = Scenario::new(

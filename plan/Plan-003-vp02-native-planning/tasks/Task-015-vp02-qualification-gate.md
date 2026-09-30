@@ -35,9 +35,6 @@ independent QUOIN gap analysis.
 
 ## Notes
 
-- Tasks 011 through 014 are done. Formatting, strict Clippy, 44 first-party Rust
-  tests, fixture validation, and dependency policy pass. Quire validates 182
-  specification documents and binds 47/47 Rust test candidates; exact Rust
-  review SR-128 has no unresolved finding. The done bundle is the input to the
+- Tasks 011 through 014 are done. The done bundle is the input to the
   independent gap-analysis audit and reopens if that audit reports a blocking
   gap.

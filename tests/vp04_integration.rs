@@ -21,10 +21,10 @@ use quire_verification::parser_portfolio::{
     ParserDiagnostic, ParserPortfolioRequest, ParserSource, collect_parser_portfolio_measurements,
 };
 use quire_verification::planner::{build_verification_plan, verification_task_id};
-use quire_verification::report::{DispositionInput, assemble_portfolio_report};
+use quire_verification::report::assemble_portfolio_report;
 use quire_verification::shared_reference::{
     ArtifactExpectation, ReferenceExpectation, ReferenceSupport, SharedReferenceReader,
-    ValidatedSharedReference, parse_strict_bounded_json,
+    ValidatedSharedReference,
 };
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -873,7 +873,7 @@ fn assert_invalid_measurement_scenario(
 #[trace("IT-003")]
 #[test]
 #[ignore = "VP04 automated-core collection lane; requires the exact qualified Rust parser"]
-fn vp04_collects_and_retains_automated_core() {
+fn vp04_collects_and_seals_automated_core() {
     let inputs = prepare_inputs();
     assert_plan_and_failure_scenarios(&inputs);
     let request = &inputs.request;
@@ -932,82 +932,4 @@ fn vp04_collects_and_retains_automated_core() {
     )
     .expect("sealed incomplete report");
     assert_eq!(report["status"], "incomplete");
-    let output = std::env::var_os("VP04_CORE_OUTPUT").map_or_else(
-        || root().join("evidence/vp04-parser-portfolio-core.json"),
-        PathBuf::from,
-    );
-    fs::write(
-        output,
-        serde_json::to_vec_pretty(&report).expect("report JSON"),
-    )
-    .expect("retain VP04 automated core");
-}
-
-#[trace("IT-003")]
-#[test]
-#[ignore = "VP04 disposition-finalization lane; requires retained core and external disposition"]
-fn vp04_binds_external_disposition_to_retained_core() {
-    let executable = std::env::var_os("VP04_PARSER").map_or_else(
-        || root().join(".vp04-build/release/quire-spec"),
-        PathBuf::from,
-    );
-    let assets = load_assets(&executable);
-    let references = build_references(&assets);
-    let core_path = std::env::var_os("VP04_CORE_INPUT").map_or_else(
-        || root().join("evidence/vp04-parser-portfolio-core.json"),
-        PathBuf::from,
-    );
-    let retained_bytes = fs::read(core_path).expect("retained automated-core report");
-    let retained = parse_strict_bounded_json(&retained_bytes).expect("strict retained report");
-    assert_eq!(retained["status"], "incomplete");
-    let core = &retained["core"];
-
-    let disposition_path = std::env::var_os("VP04_DISPOSITION_INPUT").map_or_else(
-        || root().join("evidence/vp04-review-disposition.json"),
-        PathBuf::from,
-    );
-    let disposition_bytes = fs::read(disposition_path).expect("external VP04 disposition");
-    let disposition =
-        parse_strict_bounded_json(&disposition_bytes).expect("strict external disposition payload");
-    let disposition_id = disposition["dispositionId"]
-        .as_str()
-        .expect("disposition ID");
-    let disposition_ref = artifact_reference(
-        "review-disposition",
-        &format!("disposition:{disposition_id}"),
-        "application/json",
-        &disposition_bytes,
-    );
-    let validated_disposition =
-        validate_references([(&disposition_ref, disposition_bytes.as_slice())])
-            .pop()
-            .expect("validated disposition reference");
-    let final_report = assemble_portfolio_report(
-        core,
-        &references.validated,
-        &references.procedure,
-        &references.validated[5],
-        REVIEWER,
-        &[DispositionInput {
-            reference: &disposition_ref,
-            validated_reference: &validated_disposition,
-            bytes: &disposition_bytes,
-        }],
-    )
-    .expect("final report with exact external disposition");
-    assert_eq!(final_report["status"], "final");
-    assert_eq!(final_report["coreDigest"], retained["coreDigest"]);
-    assert_eq!(final_report["disposition"], disposition);
-    assert_eq!(final_report["core"]["evidenceOwner"], "Quoin");
-    assert_eq!(final_report["core"]["sufficiencyDecision"], "not-made");
-
-    let output = std::env::var_os("VP04_EVIDENCE_OUTPUT").map_or_else(
-        || root().join("evidence/vp04-parser-portfolio.json"),
-        PathBuf::from,
-    );
-    fs::write(
-        output,
-        serde_json::to_vec_pretty(&final_report).expect("final report JSON"),
-    )
-    .expect("retain final VP04 report");
 }

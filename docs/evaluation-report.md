@@ -66,8 +66,7 @@ an adapted field corruption, and an adapter exception.
   observation references pass the strict shared-reference reader. Assessment
   validates exact membership and derived lineage, then reports correlation or
   unknown dependence among uniquely selected results without assigning a score.
-- The retained local portfolio at source revision
-  `32d2680e8eca3c128dd531763b8cdba47cf61f8f` executed two complementary
+- The retained local portfolio executed two complementary
   methods over the adapter: unit-style parity compared every preserved field
   across 33 definitions, and a metamorphic check compared the output after
   reversed and rotated input orders. Both local obligations are supported. Its

@@ -118,8 +118,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
 - A producer response SHALL NOT carry the frozen manifest identity because the manifest
   already binds the canonical execution request; the consumer SHALL add the manifest
   identity only after validating that request reference, avoiding a recursive identity.
-- The Engineering Assurance interface revision selected by the frozen profile SHALL
-  equal the exact revision compiled into the consumer; the interface, request, result,
+- The Engineering Assurance interface, request, result,
   executable, and retained observation references SHALL all pass the strict reader
   before a completed result contributes.
 - The accepted Engineering Assurance result SHALL prove direct bounded execution with no
@@ -170,7 +169,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
 |----|----------|--------------|
 | FR-024-AC-1 | The frozen manifest binds the exact profile and corpus identities and covers every frozen guarantee with one or more closed oracle bindings or exactly one owned no-oracle gap with nonempty limitations; missing, duplicate, unknown, simultaneously bound-and-gapped, or unowned guarantees refuse the manifest. | Test (TC-041) |
 | FR-024-AC-2 | Independent, shared, derived, and unknown bindings retain exactly their tagged dependence data; a self-produced or unknown-origin expected value, intersecting ancestry, shared exact reference, absent shared group/basis, missing independence evidence, absent/self/cyclic derived source, foreign tagged field, or caller-only independence assertion cannot produce an independent contribution. | Test (TC-041) |
-| FR-024-AC-3 | An execution or comparison result contributes only after the compiled and profile-selected Engineering Assurance interface revisions, request identity, result identity, strict-reader-proved executable, and retained corpus projection match. Every non-completed Engineering Assurance state yields a typed execution finding. Agreement supports only the declared relation, and disagreement retains both exact observations with an unresolved outcome while only the exact disagreement procedure may add attribution or bounds. | Test (TC-041) |
+| FR-024-AC-3 | An execution or comparison result contributes only after the strict-reader-proved Engineering Assurance interface, request identity, result identity, strict-reader-proved executable, and retained corpus projection match. Every non-completed Engineering Assurance state yields a typed execution finding. Agreement supports only the declared relation, and disagreement retains both exact observations with an unresolved outcome while only the exact disagreement procedure may add attribution or bounds. | Test (TC-041) |
 | FR-024-AC-4 | Changing any profile, corpus, guarantee, oracle, executable, Engineering Assurance interface/request/result, comparison procedure, disagreement procedure, projection, input entry, expected relation, dependence, limitation, observation, or prior manifest identity refuses reuse; permuting set-like inputs leaves the JCS manifest or comparison identity unchanged. | Test (TC-041) |
 
 ## Error Conditions

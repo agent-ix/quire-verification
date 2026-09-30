@@ -12,7 +12,7 @@ Portable technique/capability/policy/plan/result contracts and qualified plannin
 ## Implemented slice
 
 The current slice defines `TechniqueDefinition`, `ToolCapability`,
-`SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a pinned
+`SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`; adapts a
 Quoin catalog export without relocating it; constructs prerequisite-aware task
 plans with closed bounded native runner requests; and assesses result scope and
 freshness without storing evidence or making sufficiency decisions.
@@ -55,12 +55,11 @@ role input, native artifact interface, and one finite budget. Missing budgets
 become setup dependencies, excessive budgets become explicit gaps, and manual
 work never receives native invocation permission.
 
-Every acceptance test imports the pinned `ix-trace-rs` macro and uses a bare,
+Every acceptance test imports the `ix-trace-rs` macro and uses a bare,
 compiler-checked `#[trace(...)]` marker. From the repository root, run:
 
 ```sh
-IX_FILAMENT_MODULES_PATH="$PWD/.ix/modules:${IX_FILAMENT_MODULES_PATH:-$HOME/.ix/filament/modules}" \
-  quire coverage --scope . --json
+quire coverage --scope . --json
 ```
 
 ## Boundaries
@@ -75,9 +74,7 @@ No duplicate evidence store, hidden normative dependency, or unqualified backend
 - [Private formalization board](https://github.com/orgs/agent-ix/projects/20)
 
 Read [the interface decision](docs/interface-decision.md), [compatibility map](docs/quoin-compatibility.md),
-the [evaluation report](docs/evaluation-report.md), [retained local portfolio](evidence/local-catalog-portfolio.json),
-the [Rust review](reviews/26-09-07-rust-review.md), and the
-[gap analysis](reviews/26-09-07-rust-rearchitecture.md) before extending the
+and the [evaluation report](docs/evaluation-report.md) before extending the
 slice. Read [license decision](LICENSE-DECISION.md) before adding code or
 normative artifacts. Publication requires a fresh review; do not flip private
 history public.

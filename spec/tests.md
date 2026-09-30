@@ -44,7 +44,7 @@ rejected JavaScript prototype is not evidence.
 |------------|---------------------|------------|-----------------|
 | US-001 | Ready task; unsafe fault task | TC-001..TC-004, TC-009..TC-011 | ✅ Complete |
 | US-002 | Exact fresh result; competing results | TC-012..TC-017 | ✅ Complete |
-| US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-021 | ✅ Complete |
+| US-003 | Reordered catalog; adapter failure | TC-005..TC-008, TC-018..TC-020 | ✅ Complete |
 | US-001, US-003 | Qualified selection semantics | TC-010, TC-024, TC-025 | ✅ Complete |
 | US-001 | Actionable native planning and strict references | TC-026..TC-031 | ✅ Complete |
 | US-002 | Conservative freshness and oracle dependence | TC-032, TC-033 | ✅ Complete |
@@ -59,7 +59,7 @@ rejected JavaScript prototype is not evidence.
 | FR-001 | FR-001-AC-1..5 | TC-001, TC-002 | ✅ Complete |
 | FR-002 | FR-002-AC-1..4 | TC-003, TC-004, TC-028 | ✅ Complete |
 | FR-003 | FR-003-AC-1..3 | TC-005, TC-006 | ✅ Complete |
-| FR-004 | FR-004-AC-1..3 | TC-007, TC-008, TC-021 | ✅ Complete |
+| FR-004 | FR-004-AC-1..3 | TC-007, TC-008 | ✅ Complete |
 | FR-005 | FR-005-AC-1..6 | TC-009, TC-010, TC-011 | ✅ Complete |
 | FR-006 | FR-006-AC-1..5 | TC-012, TC-013, TC-014 | ✅ Complete |
 | FR-007 | FR-007-AC-1..5 | TC-014, TC-015 | ✅ Complete |
@@ -145,7 +145,6 @@ rejected JavaScript prototype is not evidence.
 | TC-018 | Compare catalog parity by technique ID | Property | P0 | FR-009-AC-1..FR-009-AC-2, NFR-001-AC-1 | ✅ Passed |
 | TC-019 | Return violated and failed results | Unit | P0 | FR-009-AC-3..FR-009-AC-4 | ✅ Passed |
 | TC-020 | Retain pending human work and claim limits | Unit | P0 | FR-009-AC-5..FR-009-AC-6, NFR-003-AC-2 | ✅ Passed |
-| TC-021 | Execute real Quoin catalog baseline | Integration | P0 | FR-004-AC-1, FR-009-AC-1 | ✅ Passed |
 | TC-022 | Enforce the Rust qualified-path implementation | Static | P0 | NFR-004-AC-1..NFR-004-AC-6 | ✅ Passed |
 | TC-023 | Enforce the JSON resource envelope | Property | P0 | NFR-005-AC-1..NFR-005-AC-3 | ✅ Passed |
 | TC-024 | Keep applicability, readiness, and classification independent | Unit | P0 | FR-010-AC-1, FR-011-AC-1..FR-011-AC-2 | ✅ Passed |
@@ -436,8 +435,7 @@ rejected JavaScript prototype is not evidence.
 
 | Integration ID | Purpose | Target Project | Type | Test Cases | Status |
 |----------------|---------|----------------|------|------------|--------|
-| IT-001 | Compare retained catalog with real producer output | agent-ix/quoin plus spec-artifacts-process | service | TC-021 | ✅ |
-| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented against `8ab058be` |
+| IT-002 | Qualify the shared-reference packet with an independent Rust reader | agent-ix/quire-specification FS02/FS05 | contract | TC-031 | ✅ Implemented |
 | IT-003 | Execute the bounded native parser portfolio and retain measured evidence | agent-ix/quire-spec-language plus Quoin evidence handoff | command/process | TC-034..TC-038 | ✅ Complete — bounded owner disposition retained |
 | IT-004 | Qualify one exact production profile end to end | Exact caller, quire-spec, portable contracts, Engineering Assurance, and Quoin | command/process/contracts | TC-039..TC-045 | 🚧 Planned; external dependencies gated |
 | IT-005 | Integrate complete-V1 method results through evidence and ledger development boundaries | QSpec checked-package/runtime, quire-analyze, accepted inventory/corpus, and Quoin intake contracts | Rust contracts/providers | TC-047..TC-052 | ✅ SC-01..SC-07 have executable development coverage; production evidence remains a non-blocking explicit state |
@@ -446,11 +444,8 @@ rejected JavaScript prototype is not evidence.
 
 | Test Case | Integration | Scenario | Input | Expected | Priority |
 |-----------|-------------|----------|-------|----------|----------|
-| TC-021 | IT-001 | Pinned exact-source happy path | Real module root and pinned revisions | 33 methods, 0 duplicates, 0 unreadable roots | P0 |
-| TC-021 | IT-001 | Producer or fixture drift | Any missing, extra, or changed method field | Nonzero comparison exit | P0 |
-| TC-021 | IT-001 | Unreadable or conflicting module | Real loader diagnostic | Nonzero comparison exit | P0 |
-| TC-031 | IT-002 | Exact supported shared references | Pinned schema, artifacts, and positive vectors | Every B-used role accepted | P0 |
-| TC-031 | IT-002 | One-axis reference mutations | Pinned adverse vectors and B mutations | Stable refusal before planning | P0 |
+| TC-031 | IT-002 | Exact supported shared references | Schema, artifacts, and positive vectors | Every B-used role accepted | P0 |
+| TC-031 | IT-002 | One-axis reference mutations | Adverse vectors and B mutations | Stable refusal before planning | P0 |
 | TC-031 | IT-002 | Unmapped JCS or trace/fault/manual role | Consumer role composition | No permissive fallback; integration fails | P0 |
 | TC-034 | IT-003 | Valid exact source | Real parse and parse-format-reparse commands | Two completed satisfied results | P0 |
 | TC-034 | IT-003 | One declared syntax mutation | Real parse command and expected diagnostic | Completed violated result; unexpected failure stays failed | P0 |

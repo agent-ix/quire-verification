@@ -35,8 +35,7 @@ they do not deploy or invoke a production system.
 
 ## Preconditions
 
-QSpec revision `8d0fbad` and the merged producer revisions used by the fixture
-are pinned. Each unavailable provider or future production artifact is declared
+Each unavailable provider or future production artifact is declared
 as an explicit input state rather than a test skip or task blocker.
 
 ## Inputs

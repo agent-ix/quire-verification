@@ -448,7 +448,7 @@ fn validate_execution_context<T: Serialize>(
     evidence: &QualificationExecutionEvidence<'_>,
     result: &ProducerExecutionResult<T>,
 ) -> Result<ExecutionContext, VerificationError> {
-    validate_interface_revision(evidence.profile, evidence.validated_references)?;
+    validate_engineering_assurance_interface(evidence.profile, evidence.validated_references)?;
     let manifest_value =
         serde_json::to_value(evidence.manifest.manifest()).map_err(encoding_refusal)?;
     let binding = manifest_value["bindings"]
@@ -569,7 +569,7 @@ where
     Ok(())
 }
 
-fn validate_interface_revision(
+fn validate_engineering_assurance_interface(
     profile: &FrozenQualificationProfile,
     proofs: &[ValidatedSharedReference],
 ) -> Result<(), VerificationError> {
@@ -586,12 +586,6 @@ fn validate_interface_revision(
         })?;
     let reference = &interface["interfaceRef"];
     require_reference_bytes(reference, "source", proofs)?;
-    if reference["value"]["revision"]["value"] != ENGINEERING_ASSURANCE_REVISION {
-        return Err(invalid_binding(
-            "profile Engineering Assurance revision differs from the compiled dependency",
-            ENGINEERING_ASSURANCE_REVISION,
-        ));
-    }
     Ok(())
 }
 

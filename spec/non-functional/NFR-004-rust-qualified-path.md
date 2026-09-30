@@ -23,9 +23,8 @@ The compatibility slice SHALL implement production logic, command-line tools, an
 
 When maintained repository guidance describes the implemented toolchain or
 dependency inventory, that guidance SHALL name the current Rust commands,
-identify `Cargo.toml` and `Cargo.lock` as the authoritative package inventory,
-and identify `docs/artifact-rights.md` as its rights classification without
-presenting removed JavaScript manifests or packages as current implementation
+identify `Cargo.toml` and `Cargo.lock` as the authoritative package inventory
+without presenting removed JavaScript manifests or packages as current implementation
 evidence.
 
 ## Scope
@@ -79,8 +78,8 @@ packages remain current.
 | NFR-004-AC-1 | Governed executable paths, including every qualification fuzz target, contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, the cargo-fuzz target build, and dependency policy checks all exit successfully. | Test (TC-022) |
 | NFR-004-AC-3 | Every Rust test or fuzz target used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
-| NFR-004-AC-4 | A clean CI runner resolves the exact reviewed `ix-trace-rs` source from its public upstream repository at the recorded revision, with no cross-repository credential. | Test (TC-022) |
-| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` plus `docs/artifact-rights.md` as the current dependency and rights records without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
+| NFR-004-AC-4 | A clean CI runner resolves the `ix-trace-rs` source from its public upstream repository with no cross-repository credential. | Test (TC-022) |
+| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` identifies `Cargo.toml`/`Cargo.lock` as the current dependencies without claiming that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
 | NFR-004-AC-6 | Trace coverage claims state that the first-party population covers repository-owned Rust under `src/`, `tests/`, and `fuzz/` while dependency sources remain governed by their owning dependency's matrix. | Inspection (TC-022) |
 
 ## Dependencies

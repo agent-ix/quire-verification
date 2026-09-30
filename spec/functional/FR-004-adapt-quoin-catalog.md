@@ -35,4 +35,3 @@ When a pinned Quoin catalog or advice export is adapted, the catalog adapter SHA
 ## Dependencies
 
 - Implements [US-003](../usecase/US-003-detect-compatibility-regressions.md).
-- The real producer boundary is verified by [IT-001](../integration/IT-001-real-quoin-catalog-parity.md).

@@ -35,9 +35,6 @@ shared-reference-aware variants.
 
 ## Notes
 
-- Unblocked by Task-012 at exact Rust review `ce4e03e` / SR-100.
-- Specification candidate `432036c` passed owner-selected QUOIN `/spec-review all`
-  at `c791101` (SR-102 through SR-109).
-- Completed at exact Rust review SR-118 (`70f9d6b`) and gap analysis SR-119
-  (`a72d1dc`). FR-002 and NFR-002 are fully backed; FR-015-AC-5 and TC-030
+- Unblocked by Task-012.
+- FR-002 and NFR-002 are fully backed; FR-015-AC-5 and TC-030
   remain assigned to Task-014's runner-eligibility integration.

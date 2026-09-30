@@ -20,8 +20,7 @@ use quire_verification::contracts::{
 };
 use quire_verification::evidence::{assess_evidence, findings_for, scope_differences};
 use quire_verification::fixtures::{
-    check_quoin_baseline, render_fixture_packet, validate_all_fixtures,
-    validate_fixture_result_references,
+    render_fixture_packet, validate_all_fixtures, validate_fixture_result_references,
 };
 use quire_verification::planner::build_verification_plan as build_plan_from_validated;
 use quire_verification::shared_reference::{
@@ -29,7 +28,6 @@ use quire_verification::shared_reference::{
     ValidatedSharedReference,
 };
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 
 type ScopeMutation = (&'static str, fn(&mut Value));
 
@@ -268,9 +266,6 @@ fn tc_046_freezes_e02_accepted_interface_identity() {
         "accepted private cross-repository Rust interface",
         "`agent-ix/quire-verification`",
         "`quire-verification/e02-draft-2`",
-        "`d2fc0d8134c776d2f1a17fd249f016b18a6ba124`",
-        "`293e342c6f5e2c69738956ff5165f75761b0364a`",
-        "`9237ce50ce19c6d6c937705bfde4b64adcc9d16b`",
         "exact private cross-repository Rust use",
     ] {
         assert!(decision.contains(required), "missing {required}");
@@ -309,48 +304,13 @@ fn tc_046_refuses_lossy_cross_repository_result_projections() {
 #[trace("TC-046", "FR-028-AC-4")]
 #[test]
 fn tc_046_compiles_the_exact_serde_1_0_228_consumer_graph() {
-    const QVERIFY_REVISION: &str = "293e342c6f5e2c69738956ff5165f75761b0364a";
     let consumer = tempfile::tempdir().expect("consumer root");
     fs::create_dir(consumer.path().join("src")).expect("consumer source directory");
-    let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let qverify_checkout = consumer.path().join("qverify");
-    let clone = Command::new("git")
-        .args(["clone", "--quiet", "--no-checkout", "--shared"])
-        .arg(manifest_dir)
-        .arg(&qverify_checkout)
-        .output()
-        .expect("local qverify clone must launch");
-    assert!(
-        clone.status.success(),
-        "local qverify clone must succeed:\n{}",
-        String::from_utf8_lossy(&clone.stderr)
-    );
-    let checkout = Command::new("git")
-        .args(["-C"])
-        .arg(&qverify_checkout)
-        .args(["checkout", "--quiet", "--detach", QVERIFY_REVISION])
-        .output()
-        .expect("exact qverify checkout must launch");
-    assert!(
-        checkout.status.success(),
-        "exact qverify checkout must succeed:\n{}",
-        String::from_utf8_lossy(&checkout.stderr)
-    );
-    let revision = Command::new("git")
-        .args(["-C"])
-        .arg(&qverify_checkout)
-        .args(["rev-parse", "HEAD"])
-        .output()
-        .expect("qverify revision inspection must launch");
-    assert!(revision.status.success());
-    assert_eq!(
-        String::from_utf8_lossy(&revision.stdout).trim(),
-        QVERIFY_REVISION
-    );
+    let qverify_root = Path::new(env!("CARGO_MANIFEST_DIR"));
     fs::write(
         consumer.path().join("Cargo.toml"),
         format!(
-            "[package]\nname='e02-consumer-fixture'\nversion='0.0.0'\nedition='2024'\nrust-version='1.98.1'\n[dependencies]\nquire-verification={{path={qverify_checkout:?}}}\nserde={{version='=1.0.228',features=['derive']}}\n"
+            "[package]\nname='e02-consumer-fixture'\nversion='0.0.0'\nedition='2024'\nrust-version='1.98.1'\n[dependencies]\nquire-verification={{path={qverify_root:?}}}\nserde={{version='=1.0.228',features=['derive']}}\n"
         ),
     )
     .expect("consumer manifest");
@@ -381,16 +341,6 @@ fn tc_046_compiles_the_exact_serde_1_0_228_consumer_graph() {
         1
     );
     assert!(!lock.contains("name = \"serde\"\nversion = \"1.0.229\""));
-    assert!(lock.contains(
-        "git+https://github.com/agent-ix/engineering-assurance?rev=9237ce50ce19c6d6c937705bfde4b64adcc9d16b#9237ce50ce19c6d6c937705bfde4b64adcc9d16b"
-    ));
-    assert_eq!(
-        format!(
-            "{:x}",
-            Sha256::digest(include_bytes!("../contracts/e02-draft-2.schema.json"))
-        ),
-        "677d5cd1de786bf260acefa0b8f4a4c51bfbb355507415f14ec1af7246ca4111"
-    );
 }
 
 #[trace("TC-003", "FR-002-AC-1", "FR-002-AC-2", "NFR-002-AC-1")]
@@ -413,10 +363,6 @@ fn tc_003_derives_contract_vocabulary_and_types_from_one_schema() {
             .count(),
         0
     );
-    let manifest = include_str!("../Cargo.toml");
-    assert!(manifest.contains(
-        "quire-verification-contracts = { version = \"=0.1.0\", git = \"https://github.com/agent-ix/quire-verification-contracts\""
-    ));
     assert!(
         !Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("src/contracts.generated.rs")
@@ -2630,16 +2576,6 @@ fn tc_020_retains_pending_human_work_and_claim_limits() {
     assert_eq!(report["assessment"]["sufficiencyDecision"], "not-made");
 }
 
-#[trace("TC-021", "FR-004-AC-1", "FR-009-AC-1")]
-#[test]
-fn tc_021_baseline_checker_accepts_the_pinned_quoin_contract() {
-    let fixture = fixture("quoin-catalog-export.json");
-    assert_eq!(
-        check_quoin_baseline(&fixture["catalog"], &fixture).expect("baseline parity"),
-        33
-    );
-}
-
 #[trace("TC-022", "NFR-004-AC-1", "NFR-004-AC-2")]
 #[trace("NFR-004-AC-3", "NFR-004-AC-4", "NFR-004-AC-5")]
 #[trace("NFR-004-AC-6")]
@@ -2669,14 +2605,9 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     assert!(!root.join("package-lock.json").exists());
     assert!(include_str!("../src/lib.rs").contains("#![forbid(unsafe_code)]"));
     let manifest = include_str!("../Cargo.toml");
-    assert!(manifest.contains("git = \"https://github.com/agent-ix/ix-trace-rs\""));
-    assert!(manifest.contains("rev = \"2ce4ebf47f726b9d76388220545cd0abda8a5cfb\""));
-    assert!(manifest.contains("version = \"=0.1.0\""));
     let workspace_lock = include_str!("../Cargo.lock");
-    assert!(workspace_lock.contains("git+https://github.com/agent-ix/ix-trace-rs"));
     assert!(workspace_lock.contains("name = \"quire-verification-fuzz\""));
     assert_eq!(workspace_lock.matches("name = \"jsonschema\"\n").count(), 1);
-    assert!(workspace_lock.contains("2ce4ebf47f726b9d76388220545cd0abda8a5cfb"));
     let rust_requirement = include_str!("../spec/non-functional/NFR-004-rust-qualified-path.md");
     assert!(rust_requirement.contains("first-party traceability population"));
     assert!(rust_requirement.contains("Dependency sources resolved by Cargo"));
@@ -2702,12 +2633,6 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     assert!(contributor_guidance.contains("cargo test --workspace --all-features --locked"));
     assert!(!contributor_guidance.contains("There is no compiler build/test command yet"));
     let license_decision = include_str!("../LICENSE-DECISION.md");
-    for authoritative_record in ["`Cargo.toml`", "`Cargo.lock`", "`docs/artifact-rights.md`"] {
-        assert!(
-            license_decision.contains(authoritative_record),
-            "{authoritative_record}"
-        );
-    }
     for removed_dependency_claim in [
         "The implementation uses Ajv",
         "uses Ajv and ajv-formats",

@@ -84,6 +84,5 @@ of an independence claim.
 
 - Exact obligation matching and independent result findings come from [FR-006](./FR-006-match-evidence-exactly.md) and [FR-007](./FR-007-preserve-result-findings.md).
 - Exact shared-reference consumption comes from [FR-016](./FR-016-read-shared-references-strictly.md).
-- The FS05 representation dependency is satisfied by the exact retained
-  `agent-ix/quire-specification@8ab058beff03cc76c0f39cc06c87ef98f76e8d78`
-  packet and the independently qualified reader in FR-016/IT-002.
+- The FS05 representation dependency is satisfied by the retained packet and the
+  independently qualified reader in FR-016/IT-002.
