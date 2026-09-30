@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde_json::{Map, Value, json};
 
 use crate::contracts::{
-    VerificationError, VerificationErrorCode, contract_version, jcs_canonicalize, jcs_sha256,
+    VerificationError, VerificationErrorCode, contract_version, jcs_canonicalize,
     validate_contract, validate_schema_definition,
 };
 use crate::value::{arrays_field, field, object, optional_array, string, string_field};
@@ -81,7 +81,6 @@ pub fn adapt_quoin_catalog(snapshot: &Value) -> Result<Value, VerificationError>
             "legacyToolingHints": tooling,
             "sourceModule": string_field(method, "moduleName", &label)?,
             "sourceRef": source_ref,
-            "definitionDigest": jcs_sha256(method)?,
         });
         validate_contract(definition.clone())?;
         techniques.push((identifier, definition));

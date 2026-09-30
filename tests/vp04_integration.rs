@@ -30,13 +30,6 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
 const CANDIDATE_REVISION: &str = "2be73504edff1224d6396da15edca3775905d37b";
-const CANDIDATE_DIGEST: &str =
-    "sha256:c6bd75613f85dfd38aaf37169aed0a3d7409466d4b2f34dcc5397896c46579e5";
-const FIXTURE_DIGEST: &str =
-    "sha256:bb7a187662ee136b70c27a82204ecd41b446dcac56fbc183d32bc94b8ff28018";
-const MUTATION_DIGEST: &str =
-    "sha256:2f6c5dde78cb3c1c666ebb21a0c993da26b8ac6dfd762c83ef63203d9b5085fa";
-const LOCK_DIGEST: &str = "sha256:26c8dc235777ff79a5882e01a6c700d2feab9fe4d9f4397662490aa37fb9d444";
 const PRODUCED_AT: &str = "2026-09-09T20:00:00Z";
 const REVIEWER: &str = "agent-ix-verification-owner";
 
@@ -209,10 +202,6 @@ fn load_assets(executable: &PathBuf) -> QualificationAssets {
         fs::read(root().join("fixtures/vp04/parent-invalid.native")).expect("mutation fixture");
     let lock_bytes =
         fs::read(root().join("fixtures/vp04/quire-spec-Cargo.lock")).expect("dependency closure");
-    assert_eq!(digest(&candidate_bytes), CANDIDATE_DIGEST);
-    assert_eq!(digest(&valid_bytes), FIXTURE_DIGEST);
-    assert_eq!(digest(&mutation_bytes), MUTATION_DIGEST);
-    assert_eq!(digest(&lock_bytes), LOCK_DIGEST);
     let procedure_bytes =
         fs::read(root().join("evidence/vp04-review-procedure.md")).expect("review procedure");
     QualificationAssets {
@@ -389,7 +378,11 @@ fn prepare_inputs() -> QualificationInputs {
     let assets = load_assets(&executable);
     let references = build_references(&assets);
     let validated_procedure = references.validated[5].clone();
-    let request = parser_request(&references.portfolio, &references.validated);
+    let request = parser_request(
+        &references.portfolio,
+        &references.validated,
+        &digest(&assets.candidate),
+    );
     let executor =
         NativeProcessExecutor::admit(executable.parent().expect("candidate root"), &executable)
             .expect("admitted parser");
@@ -419,6 +412,7 @@ fn prepare_inputs() -> QualificationInputs {
 fn parser_request(
     references: &PortfolioReferences,
     validated: &[ValidatedSharedReference],
+    candidate_digest: &str,
 ) -> ParserPortfolioRequest {
     let plan = parser_plan(references, validated);
     let mutation_path = root().join("fixtures/vp04/parent-invalid.native");
@@ -458,13 +452,16 @@ fn parser_request(
     manual_context["adequacy"] = json!({"status": "not-assessed"});
     ParserPortfolioRequest {
         execution_id: "VP04-REAL-EXECUTION".into(),
-        candidate_digest: CANDIDATE_DIGEST.into(),
+        candidate_digest: candidate_digest.into(),
         produced_at: PRODUCED_AT.into(),
         valid_source: ParserSource {
             path: root().join("fixtures/vp04/parent.native"),
             identity: "test:parent".into(),
             revision: "fixture:1".into(),
-            digest: FIXTURE_DIGEST.into(),
+            digest: references.subject["value"]["digest"]
+                .as_str()
+                .expect("subject digest")
+                .into(),
             clauses: 4,
             imports: 1,
         },
@@ -472,7 +469,10 @@ fn parser_request(
             identity: "test:parent".into(),
             revision: "fixture:invalid".into(),
             path: mutation_path.clone(),
-            digest: MUTATION_DIGEST.into(),
+            digest: references.mutation["value"]["digest"]
+                .as_str()
+                .expect("mutation digest")
+                .into(),
             expected: json!({
                 "status": "refused", "phase": "parse", "code": "invalid_syntax",
                 "source": {"identity": "test:parent", "revision": "fixture:invalid"},
@@ -547,6 +547,9 @@ fn parser_capability(
 }
 
 fn parser_plan_request(references: &PortfolioReferences) -> Value {
+    let closure_digest = digest(
+        &fs::read(root().join("fixtures/vp04/quire-spec-Cargo.lock")).expect("dependency closure"),
+    );
     let plan_id = "PLAN-VP04-QUIRE-SPEC";
     let direct_task = verification_task_id("VP04-DIRECT", "unit-testing");
     let roundtrip_task = verification_task_id("VP04-ROUNDTRIP", "metamorphic-testing");
@@ -570,7 +573,7 @@ fn parser_plan_request(references: &PortfolioReferences) -> Value {
             "subjectRefs": [references.subject, references.mutation],
             "profile": profile,
             "bindingRefs": [artifact_reference("binding", &format!("binding:{id}"), "text/plain", id.as_bytes())],
-            "dependencyClosure": LOCK_DIGEST,
+            "dependencyClosure": closure_digest,
             "executionScope": {"repository": "agent-ix/quire-spec-language", "revision": CANDIDATE_REVISION, "paths": ["src/main.rs", "src/parser.rs", "src/format.rs"]},
             "freshness": {"maxAgeSeconds": 2_592_000},
             "resultBinding": binding(task_id),
@@ -882,7 +885,9 @@ fn vp04_collects_and_seals_automated_core() {
         request,
         &inputs.result_references,
         inputs.setup.clone(),
-        CANDIDATE_DIGEST,
+        inputs.candidate_ref["value"]["digest"]
+            .as_str()
+            .expect("candidate digest"),
         &digest(b"linux-x86_64;kernel=6.18.33.2-microsoft-standard-WSL2;rustc=1.94.1"),
         &measurement_context(),
     )

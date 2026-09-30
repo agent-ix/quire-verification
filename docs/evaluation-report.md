@@ -11,10 +11,10 @@ ran.
 ## Agreed fixture scope and controls
 
 The admitted subject is a synthetic parser at revision `parser-r1`. The packet
-uses pinned Quoin/catalog sources, private provisional identity/profile names,
+uses Quoin/catalog sources, private provisional identity/profile names,
 synthetic bindings and native artifact references, a 10-second fixture budget,
 and no credentials or retained user data. The acceptance threshold for this
-slice was deterministic parity for every pinned method ID plus explicit plans
+slice was deterministic parity for every method ID plus explicit plans
 and result states for the required positive, adverse, missing-input, stale,
 unsupported, untriggered, and observation-inadequate cases.
 
@@ -31,9 +31,7 @@ an adapted field corruption, and an adapter exception.
 
 ## Results
 
-- All 33 existing method IDs and descriptive fields survive adaptation. The
-  exact-source command reports 33 methods, zero duplicates, and zero unreadable
-  roots at the pinned revisions.
+- All 33 existing method IDs and descriptive fields survive adaptation.
 - A duplicate or unreadable input preserves Quoin's active first-wins view for
   diagnosis while making the portable snapshot unqualified.
 - The retained plan contains 14 tasks: six verification tasks and eight visible
@@ -90,13 +88,10 @@ Repeatable local costs on this checkout were:
 | Release fixture validation (4 files, 52 contract instances) | 0.01 s | 9,676 KiB |
 | Release plan/result fixture rendering | 0.01 s | 9,944 KiB |
 | Release bounded local portfolio | 0.01 s | 9,940 KiB |
-| Exact-source Quoin parity plus release Rust checker | 1.50 s | 295,468 KiB |
 
 These are local workflow measurements, not delivery estimates or efficacy/ROI
 claims. The test-suite row includes Cargo's test harness and compiler process;
-the release-binary rows isolate the executable path. The exact-source check
-includes loading Quoin through its installed TypeScript development tooling,
-which dominates its memory use and remains outside this crate.
+the release-binary rows isolate the executable path.
 
 ## Disposition and limitations
 

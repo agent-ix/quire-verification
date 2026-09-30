@@ -25,8 +25,8 @@ use quire_verification::qualification_oracle::{
     FrozenQualificationOracleManifest, QualificationOracleOutcome, qualify_oracle_manifest,
 };
 use quire_verification::qualification_oracle_execution::{
-    ENGINEERING_ASSURANCE_REVISION, QualificationComparisonAssessment,
-    QualificationExecutionEvidence, execute_qualification_comparison, execute_qualification_oracle,
+    QualificationComparisonAssessment, QualificationExecutionEvidence,
+    execute_qualification_comparison, execute_qualification_oracle,
     qualification_comparison_response_binding, qualification_oracle_response_binding,
     record_qualification_comparison_execution, record_qualification_disagreement,
     record_qualification_oracle_execution,
@@ -189,22 +189,15 @@ fn interface_kind(role: &str) -> &'static str {
     }
 }
 
-fn profile_value(engineering_assurance_revision: &str) -> Value {
+fn profile_value() -> Value {
     let interface = |id: &str, role: &str| {
         let identity = format!("interface:{id}");
-        let revision = if role == "engineering-assurance" {
-            engineering_assurance_revision
-        } else {
-            "r1"
-        };
         json!({
             "interfaceId": id,
             "role": role,
             "owner": format!("owner:{id}"),
             "status": "accepted",
-            "interfaceRef": artifact_with_revision(
-                interface_kind(role), &identity, revision, identity.as_bytes()
-            ),
+            "interfaceRef": artifact(interface_kind(role), &identity, identity.as_bytes()),
             "reason": null
         })
     };
@@ -279,8 +272,8 @@ fn profile_value(engineering_assurance_revision: &str) -> Value {
     })
 }
 
-fn freeze_profile(revision: &str) -> (Box<FrozenQualificationProfile>, Value) {
-    let value = profile_value(revision);
+fn freeze_profile() -> (Box<FrozenQualificationProfile>, Value) {
+    let value = profile_value();
     let profile =
         match freeze_qualification_profile(value.clone(), &proofs(&value, &BTreeMap::new()))
             .expect("profile decision")
@@ -572,11 +565,11 @@ fn manifest_value(
 }
 
 impl Scenario {
-    fn new(operation: Operation, mode: ProducerMode, outcome: &str, revision: &str) -> Self {
+    fn new(operation: Operation, mode: ProducerMode, outcome: &str) -> Self {
         let root = tempfile::tempdir().expect("temporary capability root");
         fs::write(root.path().join("malformed.quire"), b"kind: [").expect("malformed input");
         fs::write(root.path().join("valid.quire"), b"kind: valid\n").expect("valid input");
-        let (profile, profile_source) = freeze_profile(revision);
+        let (profile, profile_source) = freeze_profile();
         let (corpus, corpus_source, mut retained) = freeze_corpus(&profile);
         let oracle_observation = artifact("observation", "observation:oracle", b"oracle");
         let candidate_observation = artifact("observation", "observation:candidate", b"candidate");
@@ -657,12 +650,7 @@ fn collect_retained_defaults(value: &Value) -> BTreeMap<String, Vec<u8>> {
 }
 
 fn oracle_execution_state(mode: ProducerMode) -> Value {
-    let scenario = Scenario::new(
-        Operation::Oracle,
-        mode,
-        "agreed",
-        ENGINEERING_ASSURANCE_REVISION,
-    );
+    let scenario = Scenario::new(Operation::Oracle, mode, "agreed");
     let executor = ProducerExecutor::new(1).expect("one execution slot");
     let cancellation = CancellationToken::new(scenario.request.cancellation.clone());
     if matches!(mode, ProducerMode::Cancelled) {
@@ -755,12 +743,7 @@ fn execute_comparison_record(
 }
 
 fn comparison_record(outcome: &str) -> Value {
-    let scenario = Scenario::new(
-        Operation::Comparison,
-        ProducerMode::Completed,
-        outcome,
-        ENGINEERING_ASSURANCE_REVISION,
-    );
+    let scenario = Scenario::new(Operation::Comparison, ProducerMode::Completed, outcome);
     serde_json::to_value(execute_comparison_record(&scenario)).expect("comparison record JSON")
 }
 
@@ -831,12 +814,7 @@ fn record_disagreement(
 #[test]
 #[trace("TC-041", "FR-024-AC-3")]
 fn tc_041_binds_only_the_exact_disagreement_procedure_without_a_disposition() {
-    let scenario = Scenario::new(
-        Operation::Comparison,
-        ProducerMode::Completed,
-        "disagreed",
-        ENGINEERING_ASSURANCE_REVISION,
-    );
+    let scenario = Scenario::new(Operation::Comparison, ProducerMode::Completed, "disagreed");
     let comparison = execute_comparison_record(&scenario);
     let manifest = serde_json::to_value(scenario.manifest.manifest()).expect("manifest JSON");
     let procedure_ref = manifest["bindings"][0]["disagreementProcedureRef"].clone();
@@ -877,12 +855,7 @@ fn tc_041_binds_only_the_exact_disagreement_procedure_without_a_disposition() {
 #[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_request_identity_drift() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
-    let exact = Scenario::new(
-        Operation::Oracle,
-        ProducerMode::Completed,
-        "agreed",
-        ENGINEERING_ASSURANCE_REVISION,
-    );
+    let exact = Scenario::new(Operation::Oracle, ProducerMode::Completed, "agreed");
     let mut changed_request = exact.request.clone();
     changed_request.arguments.push(ArgumentBinding::Literal {
         value: "foreign".to_owned(),
@@ -913,12 +886,7 @@ fn tc_041_tc_126_refuse_request_identity_drift() {
 #[trace("TC-041", "FR-024-AC-3", "FR-024-AC-4")]
 fn tc_041_tc_126_refuse_result_and_retained_observation_drift() {
     let executor = ProducerExecutor::new(1).expect("one execution slot");
-    let exact = Scenario::new(
-        Operation::Oracle,
-        ProducerMode::Completed,
-        "agreed",
-        ENGINEERING_ASSURANCE_REVISION,
-    );
+    let exact = Scenario::new(Operation::Oracle, ProducerMode::Completed, "agreed");
     let cancellation = CancellationToken::new(exact.request.cancellation.clone());
     let exact_result = execute_qualification_oracle(&executor, &exact.request, &cancellation)
         .expect("exact request");

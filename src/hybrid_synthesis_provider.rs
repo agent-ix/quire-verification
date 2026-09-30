@@ -3,9 +3,7 @@
 
 //! Non-executing intake of Analyze hybrid/synthesis provider results.
 //!
-//! Governing requirements: Task-039 and IT-005-SC-04. The Analyze crate is not
-//! linked here while its transitive dependency graph has incompatible exact
-//! patch pins. This boundary consumes typed producer output without invoking,
+//! Governing requirements: Task-039 and IT-005-SC-04. This boundary consumes typed producer output without invoking,
 //! reinterpreting, or upgrading a candidate into a proof.
 
 pub use quire_analyze_method_contract::{

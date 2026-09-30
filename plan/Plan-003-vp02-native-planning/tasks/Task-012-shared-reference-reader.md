@@ -19,11 +19,11 @@ Implement the independent bounded Rust reader for the accepted FS02/FS05 packet.
 ## Subtasks
 
 - [x] Resolve the shared JCS-domain and six exact role findings with Agent A.
-- [x] Retain the exact data-only schemas/fixtures with a provenance and digest manifest and derive the Rust wire types from those schemas.
+- [x] Retain the exact data-only schemas/fixtures and derive the Rust wire types from those schemas.
 - [x] Reject duplicate raw JSON members and every selected version/identity failure.
 - [x] Verify local byte digests, feature-set semantics, canonical identities, and role kinds.
 - [x] Validate retained version-1 source-map/migration behavior without cross-version fallback.
-- [x] Execute the pinned data-only packet independently.
+- [x] Execute the data-only packet independently.
 
 ## Deliverables
 

@@ -37,7 +37,7 @@ relationships:
 ## Dependency Graph
 
 - `Plan-001/Task-003 -> Task-011`: prerequisite coalescing extends the existing Rust planner.
-- `quire-specification@8ab058be -> Task-012`: the accepted FS02/FS05 packet supplies the selected JCS domain, roles, version split, and vectors.
+- `quire-specification -> Task-012`: the accepted FS02/FS05 packet supplies the selected JCS domain, roles, version split, and vectors.
 - `Task-012 -> Task-013`: closed role-specific inputs depend on the selected shared references.
 - `Task-011 + Task-013 -> Task-014`: runner requests require both prerequisite and input semantics.
 - `Task-011..Task-014 -> Task-015`: qualification covers the complete VP02 slice.
@@ -67,7 +67,7 @@ producers retain native artifacts and Agent A owns the shared schema.
 ### Shared reference integration
 
 - [x] **TC-029**: Refuse malformed, unsupported, conflicting, or ambiguous shared references.
-- [x] **TC-031**: Execute the independent Rust consumer over the pinned shared packet.
+- [x] **TC-031**: Execute the independent Rust consumer over the shared packet.
 
 ### Qualified-path gates
 

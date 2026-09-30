@@ -2577,7 +2577,7 @@ fn tc_020_retains_pending_human_work_and_claim_limits() {
 }
 
 #[trace("TC-022", "NFR-004-AC-1", "NFR-004-AC-2")]
-#[trace("NFR-004-AC-3", "NFR-004-AC-4", "NFR-004-AC-5")]
+#[trace("NFR-004-AC-3", "NFR-004-AC-5")]
 #[trace("NFR-004-AC-6")]
 #[trace("StR-001-VC-1")]
 #[test]

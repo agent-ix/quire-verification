@@ -35,7 +35,7 @@ limitations, bounded invocation, and disagreement procedure before execution.
   comparison executable projection, Engineering Assurance execution request, comparison
   request, disagreement procedure, run, and retained observation reference.
 - An accepted Rust Engineering Assurance interface in the frozen profile and structured
-  results produced by that exact interface revision.
+  results produced by that interface.
 
 ## Outputs
 

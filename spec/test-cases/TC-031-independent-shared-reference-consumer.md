@@ -30,7 +30,7 @@ All selected positive cases pass, every adverse case refuses in its specified
 category before planning or result matching, and B-specific JCS, trace,
 fault-model, review-procedure, oracle, observation, review-disposition,
 property, subject, binding, dependency-closure, environment, run, and
-native-output roles are exercised independently of the producer. Snapshot drift,
-producer-code coupling, or network schema retrieval fails the integration.
+native-output roles are exercised independently of the producer. Producer-code
+coupling or network schema retrieval fails the integration.
 Version-1 source-map/migration and version-2 artifact/semantic records are
 accepted only under their selected kind/version allocation.

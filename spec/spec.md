@@ -34,7 +34,7 @@ retained reports, and continuous-integration checks in this repository.
 - Five portable public contracts: `TechniqueDefinition`, `ToolCapability`,
   `SelectionPolicy`, `VerificationPlan`, and `TechniqueResult`.
 - Runtime validation derived from one JSON Schema packet.
-- Adaptation of pinned Quoin method-catalog and advice exports.
+- Adaptation of Quoin method-catalog and advice exports.
 - Qualification of registry and policy snapshots against the Quoin catalog.
 - Prerequisite-aware verification planning across five input shapes.
 - Explicit authored-or-unknown classification and explainable authored priority.
@@ -193,11 +193,10 @@ its driving story and each test artifact to the requirement it verifies.
 Automated Rust tests verify examples, error paths, exact-binding dimensions,
 native planning, strict shared references, and metamorphic order invariance.
 Fixture validation executes the versioned schema against every JSON fixture.
-The Quoin integration test loads the real method catalog from a pinned checkout;
-the shared-reference integration test uses only the pinned data packet through
+The shared-reference integration test uses only the data packet through
 an independent Rust consumer. The native parser integration runs exact real
-`parse` and `format` commands, records adverse and incomplete cases, and retains
-the report-bound human disposition and raw effort observations. The process
+`parse` and `format` commands, records adverse and incomplete cases, and raw
+effort observations. The process
 boundary is direct and finite; the final report binds a separately supplied
 human disposition to a sealed automated core.
 
@@ -208,7 +207,7 @@ handoff, owner-supplied performance thresholds, independent reproduction, exact
 Rust review, semantic gap analysis, and one external disposition.
 
 IT-005 is independent of that production campaign. It verifies complete-V1
-development interfaces and implementations using pinned fixtures and explicit
+development interfaces and implementations using fixtures and explicit
 non-conclusive states; absent production evidence or disposition is tested as
 data rather than treated as a development gate.
 
@@ -224,9 +223,7 @@ dependencies. The E02 and retained FS02/FS05 private-consumer gates are
 accepted by FR-028. VP04 acceptance remains
 gated on VP02, VP03, exact native producer
 qualification, fixture rights, and one report-bound verification-owner disposition.
-FR-016,
-FR-017, and IT-002 now use that accepted packet through the one strict reader;
-FR-021 remains downstream of it. The breaking draft-2 transition updated
+The breaking draft-2 transition updated
 requirements, tests, fixtures, and retained reports without reinterpreting
 draft-1 evidence.
 

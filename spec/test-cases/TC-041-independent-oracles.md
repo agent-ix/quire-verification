@@ -28,8 +28,7 @@ agreement, disagreement, execution failure, and reuse drift as distinct outcomes
    candidate executable, oracle, comparison procedure, or candidate-origin expected
    value while declaring independence; remove each shared field; inject a foreign tagged
    field; and build absent, self, and cyclic derivations.
-4. Compile against the exact Engineering Assurance producer-execution revision selected
-   by the frozen profile. Through that Rust interface, submit the exact oracle and
+4. Through the Engineering Assurance Rust interface, submit the exact oracle and
    comparison invocation references, bind each canonical result and retained output to
    the retained corpus projection, and consume one agreeing and one disagreeing
    observation. This real downstream execution also supplies Engineering Assurance
@@ -51,9 +50,8 @@ that same identity. Every deletion, duplicate, conflicting coverage state, unkno
 guarantee, unretained input, empty limitation, changed identity, or invalid dependence
 refuses with `invalid_qualification_oracle_manifest`.
 
-Only typed results from the exact accepted Rust Engineering Assurance library interface
-whose compiled revision matches the frozen profile, canonical request and result
-references, strict-reader-bound executable, and retained projection contribute.
+Only typed results from the accepted Rust Engineering Assurance library interface with
+canonical request and result references, strict-reader-bound executable, and retained projection contribute.
 Non-completed producer states retain their typed state and create no observation.
 Agreement supports only the declared relation. Disagreement
 retains both exact observations and stays unresolved; its exact disagreement procedure
