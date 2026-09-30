@@ -16,9 +16,10 @@ use quire_verification::{
     },
     hybrid_synthesis_provider::{
         ANALYZE_METHOD_RESULT_VERSION, AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity,
-        AnalyzeContentIdentity, AnalyzeMethod, AnalyzeOptionsIdentity, AnalyzeOutcome,
-        AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity, AnalyzeRunIdentity,
-        AnalyzeSubjectIdentity, ProviderConsumption, consume_analyze_result,
+        AnalyzeContentIdentity, AnalyzeImplementationIdentity, AnalyzeMethod,
+        AnalyzeOptionsIdentity, AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult,
+        AnalyzeResultIdentity, AnalyzeRunIdentity, AnalyzeSubjectIdentity,
+        AnalyzeToolchainIdentity, ProviderConsumption, ProviderRevision, consume_analyze_result,
     },
 };
 
@@ -86,11 +87,14 @@ fn graph_for(claim: &EvidenceIdentity) -> EvidenceGraph {
 fn rejected_candidate() -> AnalyzeResult {
     AnalyzeResult {
         contract_version: ANALYZE_METHOD_RESULT_VERSION.into(),
+        provider_revision: ProviderRevision("analyze-it-005".into()),
         method: AnalyzeMethod::CanonicalSynthesis,
         outcome: AnalyzeOutcome::ValidationRejected,
         subject_identity: AnalyzeSubjectIdentity("subject:it-005".into()),
         run_identity: AnalyzeRunIdentity("run:it-005".into()),
         request_identity: AnalyzeRequestIdentity("request:it-005".into()),
+        implementation_identity: AnalyzeImplementationIdentity("implementation:analyze".into()),
+        toolchain_identity: AnalyzeToolchainIdentity("toolchain:rust-1.98.1".into()),
         options_identity: AnalyzeOptionsIdentity("options:it-005".into()),
         assumptions_identity: AnalyzeAssumptionsIdentity("assumptions:it-005".into()),
         bounds_identity: AnalyzeBoundsIdentity("bounds:it-005".into()),

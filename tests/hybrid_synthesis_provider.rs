@@ -6,19 +6,23 @@
 use ix_trace_rs::trace;
 use quire_verification::hybrid_synthesis_provider::{
     ANALYZE_METHOD_RESULT_VERSION, AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity,
-    AnalyzeContentIdentity, AnalyzeMethod, AnalyzeOptionsIdentity, AnalyzeOutcome,
-    AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity, AnalyzeRunIdentity,
-    AnalyzeSubjectIdentity, ProviderConsumption, consume_analyze_result,
+    AnalyzeContentIdentity, AnalyzeImplementationIdentity, AnalyzeMethod, AnalyzeOptionsIdentity,
+    AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity,
+    AnalyzeRunIdentity, AnalyzeSubjectIdentity, AnalyzeToolchainIdentity, ProviderConsumption,
+    ProviderRevision, consume_analyze_result,
 };
 
 fn result(method: AnalyzeMethod, outcome: AnalyzeOutcome) -> AnalyzeResult {
     AnalyzeResult {
         contract_version: ANALYZE_METHOD_RESULT_VERSION.into(),
+        provider_revision: ProviderRevision("analyze-fixture".into()),
         method,
         outcome,
         subject_identity: AnalyzeSubjectIdentity("subject:hybrid-fixture".into()),
         run_identity: AnalyzeRunIdentity("run:analyze-fixture".into()),
         request_identity: AnalyzeRequestIdentity("request:hybrid-fixture".into()),
+        implementation_identity: AnalyzeImplementationIdentity("implementation:analyze".into()),
+        toolchain_identity: AnalyzeToolchainIdentity("toolchain:rust-1.98.1".into()),
         options_identity: AnalyzeOptionsIdentity("options:hybrid-fixture".into()),
         assumptions_identity: AnalyzeAssumptionsIdentity("assumptions:hybrid-fixture".into()),
         bounds_identity: AnalyzeBoundsIdentity("bounds:hybrid-fixture".into()),

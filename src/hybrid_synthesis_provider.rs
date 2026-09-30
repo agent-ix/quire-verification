@@ -7,9 +7,10 @@
 //! reinterpreting, or upgrading a candidate into a proof.
 
 pub use quire_analyze_method_contract::{
-    AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity, AnalyzeContentIdentity, AnalyzeMethod,
-    AnalyzeOptionsIdentity, AnalyzeOutcome, AnalyzeRequestIdentity, AnalyzeResult,
-    AnalyzeResultIdentity, AnalyzeRunIdentity, AnalyzeSubjectIdentity,
+    AnalyzeAssumptionsIdentity, AnalyzeBoundsIdentity, AnalyzeContentIdentity,
+    AnalyzeImplementationIdentity, AnalyzeMethod, AnalyzeOptionsIdentity, AnalyzeOutcome,
+    AnalyzeRequestIdentity, AnalyzeResult, AnalyzeResultIdentity, AnalyzeRunIdentity,
+    AnalyzeSubjectIdentity, AnalyzeToolchainIdentity, ProviderRevision,
 };
 
 /// Shared method-result contract accepted at this provider boundary.
@@ -46,6 +47,8 @@ pub fn consume_analyze_result(result: &AnalyzeResult) -> ProviderConsumption {
         || result.subject_identity.0.is_empty()
         || result.run_identity.0.is_empty()
         || result.request_identity.0.is_empty()
+        || result.implementation_identity.0.is_empty()
+        || result.toolchain_identity.0.is_empty()
         || result.options_identity.0.is_empty()
         || result.assumptions_identity.0.is_empty()
         || result.bounds_identity.0.is_empty()
