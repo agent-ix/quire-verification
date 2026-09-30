@@ -19,7 +19,7 @@ relationships:
 
 ## Scope
 
-Complete Analyze #33 and V1-RUN-018-019 in `quire-analyze`, then pin and consume
+Complete Analyze #33 and V1-RUN-018-019 in `quire-analyze`, then consume
 its interface-001-compatible result contract in development integration.
 
 ## Subtasks
@@ -32,4 +32,4 @@ its interface-001-compatible result contract in development integration.
 
 ## Deliverables
 
-Pinned hybrid and synthesis providers returning the common typed method-result contract.
+Hybrid and synthesis providers returning the common typed method-result contract.

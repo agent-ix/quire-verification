@@ -32,7 +32,7 @@ relationships:
 ## Scope
 
 Complete Verification #38 and V1-EVID-001-006 after all method provider contracts
-are merged and pinned. Task-039 is consumed through the shared pinned contract.
+are merged. Task-039 is consumed through the shared contract.
 
 ## Subtasks
 
