@@ -79,7 +79,7 @@ rejected JavaScript prototype is not evidence.
 | FR-021 | FR-021-AC-1..5 | TC-037, IT-003 | ✅ Implemented; external disposition pending |
 | FR-022 | FR-022-AC-1..5 | TC-039, IT-004 | 🚧 Planned |
 | FR-023 | FR-023-AC-1..4 | TC-040, IT-004 | ✅ Rust boundary implemented; production corpus blocked |
-| FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | 🚧 Rust boundary implemented; EA candidate blocked by TC-031 regression |
+| FR-024 | FR-024-AC-1..4 | TC-041, IT-004 | ✅ Rust boundary implemented |
 | FR-025 | FR-025-AC-1..6 | TC-042, IT-004 | 🚧 Planned |
 | FR-026 | FR-026-AC-1..4 | TC-043, IT-004 | 🚧 Planned |
 | FR-027 | FR-027-AC-1..5 | TC-045, IT-004 | 🚧 Planned |
@@ -111,7 +111,7 @@ rejected JavaScript prototype is not evidence.
 |------------|------------|-----------------|
 | FR-022-CON-1..2 | TC-039 | 🚧 Planned |
 | FR-023-CON-1 | TC-040 | ✅ Complete |
-| FR-024-CON-1..2 | TC-041 | 🚧 Focused TC-041 passes; EA candidate blocked by TC-031 regression |
+| FR-024-CON-1..2 | TC-041 | ✅ Complete |
 | FR-025-CON-1..4 | TC-042 | 🚧 Planned |
 | FR-026-CON-1..2 | TC-043 | 🚧 Planned |
 | FR-027-CON-1..2 | TC-045 | 🚧 Planned |
@@ -164,7 +164,7 @@ rejected JavaScript prototype is not evidence.
 | TC-038 | Bound native parser process execution | Integration | P0 | NFR-006-AC-1..NFR-006-AC-8 | ✅ Complete |
 | TC-039 | Freeze and reject qualification profiles | Property | P0 | FR-022-AC-1..FR-022-AC-5 | 🚧 In progress |
 | TC-040 | Qualify corpus population and lineage | Property | P0 | FR-023-AC-1..FR-023-AC-4 | ✅ Passed |
-| TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | 🚧 Focused tests pass; EA candidate blocked by TC-031 regression |
+| TC-041 | Classify oracle independence and disagreement | Integration | P0 | FR-024-AC-1..FR-024-AC-4 | ✅ Passed |
 | TC-042 | Run generative, metamorphic, differential, and mutation evidence | Property | P0 | FR-025-AC-1..FR-025-AC-6, FR-025-CON-1..FR-025-CON-4, NFR-004-AC-1..NFR-004-AC-3 | 🚧 Planned |
 | TC-043 | Execute and refuse the production chain | Integration | P0 | FR-026-AC-1..FR-026-AC-4 | 🚧 Planned |
 | TC-044 | Measure and reproduce the exact production profile | Benchmark | P0 | NFR-007-AC-1..NFR-007-AC-4, NFR-008-AC-1..NFR-008-AC-2, NFR-008-AC-4 | 🚧 Planned |
