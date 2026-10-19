@@ -114,10 +114,10 @@ independent, shared, derived or unknown. Further reading:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/ecosystem-dark.svg">
-  <img alt="The Quire repositories in four bands. Foundations: quire-exact, quire-semantic-value, quire-walk, quire-canonical, quire-verification-contracts, quire-observation. Language: quire-specification, quire-spec-language, quire-contract-ir. Backends: quire-contract-codegen, quire-contract-runtime, quire-analyze, quire-protocol, quire-mltl. Orchestration: quire-verification, quire-driver, quire-integration." src="docs/images/ecosystem-light.svg">
+  <img alt="The Quire repositories. The main chain runs from the standard, quire-specification, to the compiler, quire-spec-language, then quire-contract-ir, quire-contract-codegen and quire-contract-runtime. quire-spec-language also feeds quire-protocol, and quire-contract-ir feeds quire-analyze. quire-observation feeds quire-protocol and quire-mltl. Above the chain, quire-driver runs it, quire-integration tests it and quire-verification plans verification. Below it, shared libraries used throughout: quire-exact, quire-semantic-value, quire-walk, quire-canonical and quire-verification-contracts." src="docs/images/ecosystem-light.svg">
 </picture>
 
-quire-verification sits in the orchestration band. It depends on
+quire-verification sits above the main chain. It depends on
 `quire-verification-contracts` (the schema and canonicalization boundary),
 `quire-analyze` (method contract) and `engineering-assurance` (native
 execution and evidence), all from `Cargo.toml`. Quoin supplies the catalog and
