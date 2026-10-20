@@ -1,20 +1,13 @@
 # quire-verification
 
-Deciding how to verify a requirement is a planning problem before it is a
-testing problem. A requirement might call for a property test, a fuzz target, a
-metamorphic check or a human inspection, and each of those needs a tool,
-inputs, permissions and a time budget that may not exist yet.
-quire-verification is the Rust crate that turns a requirement into an explicit
+quire-verification is a Rust crate that turns a requirement into an explicit
 verification plan: which techniques apply, which tool capability could run each
-one, and exactly what is still missing.
+one, and what is still missing.
 
-It exists so the layer above never has to guess. Quoin already knows which
-verification methods fit a requirement; what it lacked was a portable,
-versioned way to say "this tool is qualified for this method, this task is
-blocked on a missing harness, this result is stale." This crate defines those
-contracts and plans against them. It does not run tools and it does not decide
-whether evidence is enough: Quoin keeps the evidence, and a person decides
-sufficiency.
+It defines portable, versioned contracts for tool qualification, blocked tasks
+and stale results, and plans against them. Quoin supplies the verification
+methods that fit a requirement and keeps the evidence, and a person decides
+whether the evidence is enough. The crate does not run tools.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.svg">
@@ -23,8 +16,8 @@ sufficiency.
 
 > **Status: prerelease, private repository.** The planning interfaces and
 > evidence assessment are accepted for exact private Rust consumers only. No
-> schema is published, and each native verification tool is still separately
-> gated: a validating fixture never claims a tool ran.
+> schema is published. Each native verification tool is gated separately, and a
+> validating fixture does not claim that a tool ran.
 
 ## The five contracts
 
@@ -33,23 +26,23 @@ and validated through the public `quire-verification-contracts` crate.
 
 | Contract | What it says |
 |---|---|
-| `TechniqueDefinition` | What a verification method means and where it may apply. Keeps Quoin's method id byte for byte. Claims no tool is installed. |
+| `TechniqueDefinition` | What a verification method means and where it may apply. Keeps Quoin's method id byte for byte. Makes no claim that a tool is installed. |
 | `ToolCapability` | Binds one technique to a native producer and adapter, with input kinds, prerequisites, resource limits, qualification state and claim limits. |
-| `SelectionPolicy` | Explainable rules with source provenance and an authored priority (`required`, `recommended`, `optional`), never a computed score. An expired policy adds a freshness prerequisite. |
+| `SelectionPolicy` | Explainable rules with source provenance and an authored priority (`required`, `recommended`, `optional`) and no computed score. An expired policy adds a freshness prerequisite. |
 | `VerificationPlan` | An inventory of properties, then tasks. Each task has one of five input shapes: `state`, `relational`, `trace`, `fault` or `manual`. |
 | `TechniqueResult` | One run's outcome with execution status, logical outcome, activation, assumptions, observation adequacy, exact scope and provenance kept as separate fields. |
 
 ## How a plan is built
 
-Applicability and readiness are separate answers, so "this method fits but we
-cannot run it yet" stays visible instead of being dropped.
+Applicability and readiness are separate answers, so a method that fits but
+cannot run yet stays visible in the plan.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/task-states-dark.svg">
   <img alt="Every plan task carries two independent answers. Applicability is applicable, not-applicable or unknown; readiness is ready, blocked or unsupported. Only a task that is applicable, ready and qualified, within budget, gets a native runner request." src="docs/images/task-states-light.svg">
 </picture>
 
-- Quoin's `inconclusive` advice becomes `unknown`, never `not-applicable`.
+- Quoin's `inconclusive` advice becomes `unknown`.
 - Missing generators, harnesses, tools, permissions, observations or reviewer
   assignments are listed as prerequisites to satisfy.
 - Fault tasks stay blocked without an explicit non-production authorization
@@ -60,9 +53,9 @@ cannot run it yet" stays visible instead of being dropped.
 
 Evidence assessment then compares each result with the plan: exact
 plan/task/run/producer/adapter binding, scope, freshness, and every
-simultaneous finding. Ambiguous duplicate results are reported, not merged.
+simultaneous finding. Ambiguous duplicate results are reported and not merged.
 
-## Using it
+## Usage
 
 The smallest real use is the fixture plan in
 [`tests/verification.rs`](tests/verification.rs), which validates the shared
@@ -93,7 +86,7 @@ permutation invariance. A violated check or a failed execution is kept as its
 own `TechniqueResult`, and an `inspection` result stays `not-run` until a
 person records the disposition.
 
-## Reference
+## Values
 
 | Dimension | Values |
 |---|---|
@@ -110,7 +103,7 @@ independent, shared, derived or unknown. Further reading:
 [contract packet](contracts/README.md) and the
 [historical evaluation report](docs/evaluation-report.md).
 
-## The Quire ecosystem
+## Quire ecosystem
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/ecosystem-dark.svg">
@@ -138,10 +131,10 @@ Acceptance tests carry a compiler-checked `#[trace(...)]` marker from
 specs in [`spec/`](spec/). Implementation is Rust; see [AGENTS.md](AGENTS.md)
 for the language policy.
 
-## Contributing and licence
+## Contributing and license
 
 Every contribution needs a signed CLA; see [CONTRIBUTING.md](CONTRIBUTING.md)
 and [CLA.md](CLA.md). The code is AGPL-3.0-or-later ([LICENSE](LICENSE)); the
 reasoning, and what it leaves undecided for specs and public schemas, is in
-[LICENSE-DECISION.md](LICENSE-DECISION.md). Repository visibility and licence
+[LICENSE-DECISION.md](LICENSE-DECISION.md). Repository visibility and license
 are separate decisions: publication needs a fresh review.
