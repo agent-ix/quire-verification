@@ -37,6 +37,6 @@ No JavaScript or TypeScript executable source remains, no unsafe code compiles,
 all five Rust gates exit successfully, and compiler-checked trace markers back
 every claimed matrix row and each named acceptance criterion. The coverage claim
 states its first-party population and separately identifies vendored dependency
-symbols as outside that population. Maintained contributor
-and license guidance names the implemented Cargo workflow without stale npm or
+symbols as outside that population. Maintained contributor guidance
+names the implemented Cargo workflow without stale npm or
 JavaScript implementation claims.

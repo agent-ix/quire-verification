@@ -62,7 +62,7 @@ with Clippy warnings denied, runs the complete test suite, and checks dependency
 licenses and advisories with `cargo deny`. The same workspace lock and lints govern
 the fuzz targets, and a separate cargo-fuzz build compiles their instrumented entry
 points.
-TC-022 also reads the maintained contributor guidance and license decision,
+TC-022 also reads the maintained contributor guidance,
 requires the current Cargo gate, and rejects stale claims that removed npm manifests or JavaScript
 packages remain current.
 
