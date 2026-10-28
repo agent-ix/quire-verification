@@ -1,6 +1,6 @@
 # Contributor and session guidance
 
-Read README.md, LICENSE-DECISION.md and the owning issue before editing. This is a private bootstrap repository, not a released implementation.
+Read README.md and the owning issue before editing. This is a private bootstrap repository, not a released implementation.
 
 ## Hash / digest / pin antipattern: present, slated for removal
 
