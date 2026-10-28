@@ -134,7 +134,5 @@ for the language policy.
 ## Contributing and license
 
 Every contribution needs a signed CLA; see [CONTRIBUTING.md](CONTRIBUTING.md)
-and [CLA.md](CLA.md). The code is AGPL-3.0-or-later ([LICENSE](LICENSE)); the
-reasoning, and what it leaves undecided for specs and public schemas, is in
-[LICENSE-DECISION.md](LICENSE-DECISION.md). Repository visibility and license
+and [CLA.md](CLA.md). The code is AGPL-3.0-or-later ([LICENSE](LICENSE)). Repository visibility and license
 are separate decisions: publication needs a fresh review.

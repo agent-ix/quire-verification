@@ -2586,18 +2586,6 @@ fn tc_022_qualified_path_configuration_is_rust_and_traced() {
     let contributor_guidance = include_str!("../AGENTS.md");
     assert!(contributor_guidance.contains("cargo test --workspace --all-features --locked"));
     assert!(!contributor_guidance.contains("There is no compiler build/test command yet"));
-    let license_decision = include_str!("../LICENSE-DECISION.md");
-    for removed_dependency_claim in [
-        "The implementation uses Ajv",
-        "uses Ajv and ajv-formats",
-        "transitive dependency set recorded in\n`package-lock.json`",
-        "canonicalize\nunder Apache-2.0 terms",
-    ] {
-        assert!(
-            !license_decision.contains(removed_dependency_claim),
-            "{removed_dependency_claim}"
-        );
-    }
 }
 
 #[trace("TC-023", "NFR-005-AC-1", "NFR-005-AC-2", "NFR-005-AC-3")]

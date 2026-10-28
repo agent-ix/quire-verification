@@ -73,7 +73,7 @@ packages remain current.
 | NFR-004-AC-1 | Governed executable paths, including every qualification fuzz target, contain no JavaScript or TypeScript source files. | Inspection (TC-022) |
 | NFR-004-AC-2 | Formatting, Clippy with denied warnings, the complete Rust test suite, the cargo-fuzz target build, and dependency policy checks all exit successfully. | Test (TC-022) |
 | NFR-004-AC-3 | Every Rust test or fuzz target used as acceptance evidence imports `ix_trace_rs::trace` and carries a compiler-checked bare `#[trace(...)]` marker whose TC and acceptance-criterion arguments are each discovered and bound by `quire coverage --scope . --json`; compiler acceptance alone is insufficient. | Inspection (TC-022) |
-| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate, and `LICENSE-DECISION.md` does not claim that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
+| NFR-004-AC-5 | `AGENTS.md` names the available Cargo build/test gate and does not claim that a removed npm manifest or JavaScript dependency is current. | Test (TC-022) |
 | NFR-004-AC-6 | Trace coverage claims state that the first-party population covers repository-owned Rust under `src/`, `tests/`, and `fuzz/` while dependency sources remain governed by their owning dependency's matrix. | Inspection (TC-022) |
 
 ## Dependencies
