@@ -4,3 +4,5 @@ target/
 .worktrees/
 /.fuzz-target/
 /.mutants-target/
+__pycache__/
+*.pyc

@@ -42,7 +42,7 @@ operations:
 ownership:
   producer: quire-verification emits validated immutable records
   retention_and_sufficiency: Quoin
-  integrated_execution: quire-research issue 78
+  integrated_execution: a cross-lane campaign outside this repository
   decision: authenticated human or explicitly authorized workflow
 invariants:
   - exact source, package, model, binding, implementation, method, run, result, artifact, and decision identities remain distinct

@@ -96,18 +96,19 @@ def task_states():
 
 
 REPOS = [
-    (1, 0, "quire-driver", "the quire command", True),
-    (2, 0, "quire-integration", "tests the whole chain", True),
-    (3, 0, "quire-verification", "plans verification", True),
-    (0, 1, "quire-specification", "the standard", True),
-    (1, 1, "quire-spec-language", "compiler · evaluator", False),
-    (2, 1, "quire-contract-ir", "contract model", False),
-    (3, 1, "quire-contract-codegen", "code · tests · proofs", False),
-    (4, 1, "quire-contract-runtime", "runs generated checks", False),
-    (0, 2, "quire-observation", "qualified observations", False),
-    (1, 2, "quire-protocol", "protocol conformance", True),
-    (2, 2, "quire-analyze", "SMT consistency", False),
-    (0, 3, "quire-mltl", "MLTL over observations", False),
+    (1, 0, "quire-driver", "the quire command"),
+    (2, 0, "quire-integration", "tests the whole chain"),
+    (3, 0, "quire-verification", "plans verification"),
+    (0, 1, "quire-specification", "the standard"),
+    (1, 1, "quire-spec-language", "compiler · evaluator"),
+    (2, 1, "quire-contract-ir", "contract model"),
+    (3, 1, "quire-contract-codegen", "code · tests · proofs"),
+    (4, 1, "quire-contract-runtime", "runs generated checks"),
+    (0, 2, "quire-observation", "qualified observations"),
+    (1, 2, "quire-protocol", "protocol conformance"),
+    (2, 2, "quire-analyze", "SMT consistency"),
+    (0, 3, "quire-mltl", "MLTL over observations"),
+    (1, 3, "quire-eval", "evaluation core"),
 ]
 FEEDS = [
     ("quire-specification", "quire-spec-language"),
@@ -134,18 +135,18 @@ def ecosystem(here="quire-verification"):
         "quire-contract-runtime. quire-spec-language also feeds quire-protocol, and "
         "quire-contract-ir feeds quire-analyze. quire-observation feeds quire-protocol and "
         "quire-mltl. Above the chain, quire-driver runs it, quire-integration tests it and "
-        "quire-verification plans verification. Below it, shared libraries used throughout: "
+        "quire-verification plans verification. quire-eval evaluates checked terms. Below it, shared libraries used throughout: "
         "quire-exact, quire-semantic-value, quire-walk, quire-canonical and "
         "quire-verification-contracts.",
     )
     w, h, step = 176, 50, 201
     rows = {0: 20, 1: 120, 2: 210, 3: 290}
     where = {}
-    for col, row, name, sub, private in REPOS:
+    for col, row, name, sub in REPOS:
         x, y = col * step, rows[row]
         where[name] = (x, y)
         role = "logic" if name == here else "ink"
-        f.box(x, y, w, h, role, name, sub, dashed=private)
+        f.box(x, y, w, h, role, name, sub)
     for a, b in FEEDS:
         (ax, ay), (bx, by) = where[a], where[b]
         if ay == by:
@@ -163,8 +164,7 @@ def ecosystem(here="quire-verification"):
         w0 = round(w0 + spare)
         f.box(x, 390, w0, h, "logic" if name == here else "ink", name)
         x += w0 + gap
-    f.legend(0, 472, [("logic", "this repository", "box"), ("ink", "private", "dash"),
-                      ("model", "feeds", "fill")])
+    f.legend(0, 472, [("logic", "this repository", "box"), ("model", "feeds", "fill")])
     return f
 
 FIGURES = [hero, task_states, ecosystem]

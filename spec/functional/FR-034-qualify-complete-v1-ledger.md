@@ -69,4 +69,4 @@ When complete-V1 qualification is evaluated, the qualification-ledger builder SH
 ## Dependencies
 
 - [FR-032](./FR-032-link-semantic-evidence.md) and [FR-033](./FR-033-preserve-counterexample-lineage.md) own evidence and replay traceability.
-- `ix://agent-ix/quire-research/issues/78` owns the final cross-lane integrated execution campaign.
+- The final cross-lane integrated execution campaign is owned outside this repository.

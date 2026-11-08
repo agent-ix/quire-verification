@@ -76,7 +76,7 @@ produces no production-readiness, deployment, release, or certification claim.
 ## Dependencies
 
 The hybrid/synthesis provider fixture is owned by `ix://agent-ix/quire-analyze/issues/33`.
-The eventual integrated campaign remains `ix://agent-ix/quire-research/issues/78`.
+The final cross-lane integrated execution campaign is outside this repository.
 
 ## Notes
 
