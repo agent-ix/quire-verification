@@ -10,17 +10,30 @@ one, and what is still missing.
 It defines portable, versioned contracts for tool qualification, blocked tasks
 and stale results, and plans against them. Quoin supplies the verification
 methods that fit a requirement and keeps the evidence, and a person decides
-whether the evidence is enough. The crate does not run tools.
+whether the evidence is enough. Native producers run the ready tasks and return
+results for the crate to assess.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.svg">
   <img alt="Quoin's method catalog and its advice for a requirement supply the techniques that apply. quire-verification combines them with tool capabilities and a selection policy into a verification plan whose tasks are ready, blocked or unsupported. A native producer runs the ready tasks, and the technique results come back to be assessed for scope and freshness. Quoin keeps the evidence and a person decides whether it is enough." src="docs/images/hero-light.svg">
 </picture>
 
-> **Status: prerelease, private repository.** The planning interfaces and
-> evidence assessment are accepted for exact private Rust consumers only. No
-> schema is published. Each native verification tool is gated separately, and a
-> validating fixture does not claim that a tool ran.
+## Getting started
+
+Add the crate as a Git dependency (Rust 1.98.1 or newer):
+
+```toml
+[dependencies]
+quire-verification = { git = "https://github.com/agent-ix/quire-verification" }
+```
+
+Or build from a clone:
+
+```sh
+git clone https://github.com/agent-ix/quire-verification
+cd quire-verification
+cargo build --locked
+```
 
 ## The five contracts
 
@@ -29,9 +42,9 @@ and validated through the public `quire-verification-contracts` crate.
 
 | Contract | What it says |
 |---|---|
-| `TechniqueDefinition` | What a verification method means and where it may apply. Keeps Quoin's method id byte for byte. Makes no claim that a tool is installed. |
+| `TechniqueDefinition` | What a verification method means and where it may apply. Keeps Quoin's method id byte for byte. |
 | `ToolCapability` | Binds one technique to a native producer and adapter, with input kinds, prerequisites, resource limits, qualification state and claim limits. |
-| `SelectionPolicy` | Explainable rules with source provenance and an authored priority (`required`, `recommended`, `optional`) and no computed score. An expired policy adds a freshness prerequisite. |
+| `SelectionPolicy` | Explainable rules with source provenance and an authored priority (`required`, `recommended`, `optional`). An expired policy adds a freshness prerequisite. |
 | `VerificationPlan` | An inventory of properties, then tasks. Each task has one of five input shapes: `state`, `relational`, `trace`, `fault` or `manual`. |
 | `TechniqueResult` | One run's outcome with execution status, logical outcome, activation, assumptions, observation adequacy, exact scope and provenance kept as separate fields. |
 
@@ -56,27 +69,31 @@ cannot run yet stays visible in the plan.
 
 Evidence assessment then compares each result with the plan: exact
 plan/task/run/producer/adapter binding, scope, freshness, and every
-simultaneous finding. Ambiguous duplicate results are reported and not merged.
+simultaneous finding. Ambiguous duplicate results are reported.
 
 ## Usage
 
-The smallest real use is the fixture plan in
-[`tests/verification.rs`](tests/verification.rs), which validates the shared
-references a request carries and builds the plan:
+The library entry points take and return JSON values. Each plan request carries
+shared references; the caller validates them and passes the validated set
+along:
 
 ```rust
-let references = validated_fixture_references(request)?;
-build_plan_from_validated(request, &references)
+use quire_verification::catalog::adapt_quoin_catalog;
+use quire_verification::evidence::assess_evidence;
+use quire_verification::planner::build_verification_plan;
+
+// Quoin's catalog export -> the crate's technique definitions
+let techniques = adapt_quoin_catalog(&catalog_export)?;
+// plan request + validated shared references -> VerificationPlan
+let plan = build_verification_plan(&request, &references)?;
+// evidence packet + validated shared references -> assessment
+let assessment = assess_evidence(&packet, &references)?;
 ```
 
-where `request` is the `planRequest` in
-[`fixtures/portfolio.json`](fixtures/portfolio.json) and
-`build_plan_from_validated` is `quire_verification::planner::build_verification_plan`.
-The same test file adapts Quoin's exports with
-`adapt_quoin_catalog(&fixture("quoin-catalog-export.json"))` and assesses
-results with `assess_evidence(&packet, &references)`.
+[`fixtures/portfolio.json`](fixtures/portfolio.json) holds a complete plan
+request in its `planRequest` member.
 
-From the command line:
+The command-line tools run the checked-in fixtures:
 
 ```sh
 cargo run --locked --bin validate-fixtures      # every fixture against the schema
@@ -110,7 +127,7 @@ independent, shared, derived or unknown. Further reading:
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/ecosystem-dark.svg">
-  <img alt="The Quire repositories. The main chain runs from the standard, quire-specification, to the compiler, quire-spec-language, then quire-contract-ir, quire-contract-codegen and quire-contract-runtime. quire-spec-language also feeds quire-protocol, and quire-contract-ir feeds quire-analyze. quire-observation feeds quire-protocol and quire-mltl. Above the chain, quire-driver runs it, quire-integration tests it and quire-verification plans verification. Below it, shared libraries used throughout: quire-exact, quire-semantic-value, quire-walk, quire-canonical and quire-verification-contracts." src="docs/images/ecosystem-light.svg">
+  <img alt="The Quire repositories. The main chain runs from the standard, quire-specification, to the compiler, quire-spec-language, then quire-contract-ir, quire-contract-codegen and quire-contract-runtime. quire-spec-language also feeds quire-protocol, and quire-contract-ir feeds quire-analyze. quire-observation feeds quire-protocol and quire-mltl. Above the chain, quire-driver runs it, quire-integration tests it and quire-verification plans verification. quire-eval evaluates checked terms. Below it, shared libraries used throughout: quire-exact, quire-semantic-value, quire-walk, quire-canonical and quire-verification-contracts." src="docs/images/ecosystem-light.svg">
 </picture>
 
 quire-verification sits above the main chain. It depends on
@@ -129,13 +146,7 @@ cargo fuzz build -D --sanitizer none
 cargo deny check
 ```
 
-Acceptance tests carry a compiler-checked `#[trace(...)]` marker from
-`ix-trace-rs`; `quire coverage --scope . --json` reports them against the
-specs in [`spec/`](spec/). Implementation is Rust; see [AGENTS.md](AGENTS.md)
-for the language policy.
-
 ## Contributing and license
 
 Every contribution needs a signed CLA; see [CONTRIBUTING.md](CONTRIBUTING.md)
-and [CLA.md](CLA.md). The code is AGPL-3.0-or-later ([LICENSE](LICENSE)). Repository visibility and license
-are separate decisions: publication needs a fresh review.
+and [CLA.md](CLA.md). The code is AGPL-3.0-or-later ([LICENSE](LICENSE)).
