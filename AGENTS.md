@@ -1,6 +1,6 @@
 # Contributor and session guidance
 
-Read README.md and the owning issue before editing. This is a private bootstrap repository, not a released implementation.
+Read README.md and the owning issue before editing.
 
 ## Hash / digest / pin antipattern: present, slated for removal
 
@@ -15,7 +15,7 @@ version they ran.
 - Use the first specification issue to establish requirements, acceptance fixtures and scoped implementation/CI work before scaffolding speculative crates.
 - Inspect existing shared model, contract and Quoin interfaces before duplicating them.
 - Do not infer licensing from process or repository boundaries.
-- Keep private research, traces and issue links out of public releases. No public posting, visibility change, or source relicensing without explicit approval.
+- Keep private research, traces and issue-tracker links out of this repository. Source relicensing needs explicit approval.
 - Use isolated worktrees for concurrent code sessions; preserve unrelated edits.
 - Run `cargo test --workspace --all-features --locked` for the complete Rust compiler/test gate; use the additional formatting, Clippy, dependency-policy, and fixture commands documented in README.md for changes in their scope.
 
